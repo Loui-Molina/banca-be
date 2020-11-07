@@ -1,4 +1,4 @@
-export class database {
+ class database {
     private data: data = {};
 
 
@@ -15,14 +15,14 @@ export class database {
 }
 
 
-export interface data {
+ class data {
     creationDate?: Date;
     consortium?: consortium;
     users?: user[];
     lastBackup?: Date;
 }
 
-export interface user {
+ class user {
     creationDate?: Date;
     deletionDate?: Date;
     lastLogin?: Date;
@@ -38,22 +38,22 @@ export interface user {
     preferences?: userPreferences;
 }
 
-export interface consortium {
+ class consortium {
     bankings?: banking[];
     consortiumPrefs?: consortiumPreferences;
 }
 
-export interface banking {
+ class banking {
     owner?: user;
     bankingPreferences?: bankingPreferences;
 }
 
-export interface event {
+ class betEvent {
     creationDate?: Date;
     eventId?: string;
 }
 
-export interface bet {
+ class bet {
     creationDate?: Date;
     amount?: number;
     eventId?: string;
@@ -61,23 +61,23 @@ export interface bet {
     playType?: domenicanLotteryPlays | usLotteryPlays | brasilPlays;
 }
 
-export interface balance {
+ class balance {
     creationDate?: Date;
     modificationDate?: Date;
     amount?: number;
 }
 
-export interface transaction {
+ class transaction {
     transactionId?: string;
     creationDate?: Date;
     amount?: number;
 }
 
-export interface userPreferences {
+ class userPreferences {
     language?: string;
 }
 
-export interface bankingPreferences {
+ class bankingPreferences {
     logo?: ImageBitmap;
     primaryColor?: string;
     secondaryColor?: string;
@@ -86,35 +86,35 @@ export interface bankingPreferences {
     bankingTitleBGColor?: string;
 }
 
-export interface consortiumPreferences {
+ class consortiumPreferences {
     limits?: bettingLimit[];
 }
 
-export interface bettingLimit {
+ class bettingLimit {
     limit?: number;
     blockedNumbers?: blockedNumber;
     lotteryType?: lotteryTypes;
     lotteryPlays?: domenicanLotteryPlays | usLotteryPlays | brasilPlays;
 }
 
-export interface blockedNumber {
+ class blockedNumber {
     number?: number;
     position?: number;
 }
 
-export enum roles {
+ enum roles {
     admin,
     banker,
     punter
 }
 
-export enum lotteryTypes {
+ enum lotteryTypes {
     dominican,
     us,
     brazil
 }
 
-export enum domenicanLotteryPlays {
+ enum domenicanLotteryPlays {
     first,
     second,
     third,
@@ -126,7 +126,7 @@ export enum domenicanLotteryPlays {
     superPale
 }
 
-export enum usLotteryPlays {
+ enum usLotteryPlays {
     cashThreeStraight,
     cashFourStraight,
     pickFiveStraight,
@@ -135,7 +135,7 @@ export enum usLotteryPlays {
     pickFiveBox
 }
 
-export enum brasilPlays {
+ enum brasilPlays {
     singulation,
     bolita
 }
