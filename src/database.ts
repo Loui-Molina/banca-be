@@ -1,33 +1,46 @@
- class database {
-    private data: data = {};
+export class database {
+    users: Map<string, user> = new Map<string, user>();
 
 
-    insertValue = () => {
-    }
-    deleteValue = () => {
-    }
-    updateValue = () => {
-    }
-    getValue = () => {
+    testUser: user = {
+        idUser: 'juancito',
+        balance: {amount: 100}
+
     }
 
+    db: data = {};
 
+
+// insertValue = () => {
+// }
+// deleteValue = () => {
+// }
+// updateValue = () => {
+// }
+// getValue = () => {
+// }
 }
 
 
- class data {
+// Main data object model
+export class data implements dataObject {
     creationDate?: Date;
-    consortium?: consortium;
-    users?: user[];
+    modificationDate?: Date;
+    modificationUserId?: string;
+    lastChange?: Date;
     lastBackup?: Date;
+    consortium?: consortium;
+    users?: Map<string, user>;
 }
 
- class user {
+// Users data object model
+export class user implements dataObject {
     creationDate?: Date;
-    deletionDate?: Date;
+    modificationDate?: Date;
+    modificationUserId?: string;
     lastLogin?: Date;
-    idUser?: number;
-    banking?: string;
+    idUser?: string;
+    bankingId?: string;
     name?: string;
     username?: string;
     password?: string;
@@ -36,85 +49,114 @@
     balance?: balance;
     role?: roles;
     preferences?: userPreferences;
+    transactions?: transaction[];
 }
 
- class consortium {
+export class consortium implements dataObject {
     bankings?: banking[];
     consortiumPrefs?: consortiumPreferences;
+    creationDate?: Date;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- class banking {
-    owner?: user;
+export class banking implements dataObject {
+    ownerId?: string;
     bankingPreferences?: bankingPreferences;
+    creationDate?: Date;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- class betEvent {
+export class betEvent implements dataObject {
     creationDate?: Date;
     eventId?: string;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- class bet {
+export class bet implements dataObject {
     creationDate?: Date;
     amount?: number;
     eventId?: string;
     lotteryType?: lotteryTypes;
     playType?: domenicanLotteryPlays | usLotteryPlays | brasilPlays;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- class balance {
+export class balance implements dataObject {
     creationDate?: Date;
     modificationDate?: Date;
     amount?: number;
+    modificationUserId?: string;
 }
 
- class transaction {
+export class transaction implements dataObject {
     transactionId?: string;
     creationDate?: Date;
     amount?: number;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- class userPreferences {
+export class userPreferences implements dataObject {
     language?: string;
+    creationDate?: Date;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- class bankingPreferences {
+export class bankingPreferences implements dataObject {
     logo?: ImageBitmap;
     primaryColor?: string;
     secondaryColor?: string;
     tertiaryColor?: string;
     bankingTitleColor?: string;
     bankingTitleBGColor?: string;
+    creationDate?: Date;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- class consortiumPreferences {
+export class consortiumPreferences implements dataObject {
     limits?: bettingLimit[];
+    creationDate?: Date;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- class bettingLimit {
+export class bettingLimit implements dataObject {
     limit?: number;
-    blockedNumbers?: blockedNumber;
+    blockedNumbers?: blockedNumber[];
     lotteryType?: lotteryTypes;
     lotteryPlays?: domenicanLotteryPlays | usLotteryPlays | brasilPlays;
+    creationDate?: Date;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- class blockedNumber {
+export class blockedNumber implements dataObject {
     number?: number;
     position?: number;
+    creationDate?: Date;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
 
- enum roles {
+export enum roles {
     admin,
     banker,
     punter
 }
 
- enum lotteryTypes {
+export enum lotteryTypes {
     dominican,
     us,
     brazil
 }
 
- enum domenicanLotteryPlays {
+export enum domenicanLotteryPlays {
     first,
     second,
     third,
@@ -126,7 +168,7 @@
     superPale
 }
 
- enum usLotteryPlays {
+export enum usLotteryPlays {
     cashThreeStraight,
     cashFourStraight,
     pickFiveStraight,
@@ -135,7 +177,13 @@
     pickFiveBox
 }
 
- enum brasilPlays {
+export enum brasilPlays {
     singulation,
     bolita
+}
+
+interface dataObject {
+    creationDate?: Date;
+    modificationDate?: Date;
+    modificationUserId?: string;
 }
