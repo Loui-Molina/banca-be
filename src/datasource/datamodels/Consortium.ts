@@ -12,6 +12,8 @@ export class Consortium implements dataObject {
     lotteries?: Map<string, Lottery>;
     userId: string;
     transactions?: Transaction[];
+
+    // Data object members
     creationDate: Date;
     creationUserId: string;
     deletionDate: Date;

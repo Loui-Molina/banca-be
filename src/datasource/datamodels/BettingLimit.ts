@@ -10,6 +10,8 @@ export class bettingLimit implements dataObject {
     limit?: number;
     lotteryPlays?: DomenicanLotteryPlays | UsLotteryPlays | BrasilPlays;
     appliedBankingsIds?: string[];
+
+    // Data object members
     creationDate: Date;
     creationUserId: string;
     deletionDate: Date;

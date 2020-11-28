@@ -8,6 +8,8 @@ export class Data implements dataObject {
     lastBackup?: Date;
     consortium?: Consortium;
     users?: Map<string, User>;
+
+    // Data object members
     creationDate: Date;
     creationUserId: string;
     deletionDate: Date;

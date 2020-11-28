@@ -9,6 +9,8 @@ export class bet implements dataObject {
     eventId?: string;
     lotteryType?: lotteryTypes;
     playType?: DomenicanLotteryPlays | UsLotteryPlays | BrasilPlays;
+
+    // Data object members
     creationUserId: string;
     deletionDate: Date;
     modificationDate: Date;

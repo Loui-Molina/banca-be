@@ -7,6 +7,8 @@ export class bankingPreferences implements dataObject {
     tertiaryColor?: string;
     bankingTitleColor?: string;
     bankingTitleBGColor?: string;
+
+    // Data object members
     creationDate: Date;
     creationUserId: string;
     deletionDate: Date;

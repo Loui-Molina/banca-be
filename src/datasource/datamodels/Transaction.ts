@@ -13,6 +13,8 @@ export class Transaction implements dataObject {
     type?: transactionType;
     lastBalance?: number;
     actualBalance?: number;
+
+    // Data object members
     creationDate: Date;
     creationUserId: string;
     deletionDate: Date;

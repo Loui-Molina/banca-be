@@ -5,11 +5,6 @@ import {PhoneNumber} from "./PhoneNumber";
 import {Movements} from "./Movements";
 
 export class User implements dataObject {
-    creationDate?: Date;
-    creationUserId?: string;
-    modificationDate?: Date;
-    modificationUserId?: string;
-    deletionDate?: Date;
     lastLogin?: Date;
     bankingId?: string;
     name?: string;
@@ -21,4 +16,11 @@ export class User implements dataObject {
     role?: Roles;
     preferences?: UserPreferences;
     movements?: Movements[];
+
+    // Data object members
+    creationDate?: Date;
+    creationUserId?: string;
+    modificationDate?: Date;
+    modificationUserId?: string;
+    deletionDate?: Date;
 }

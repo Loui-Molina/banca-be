@@ -6,6 +6,8 @@ export class Banking implements dataObject {
     ownerId?: string;
     bankingPreferences?: bankingPreferences;
     transactions?: Transaction[];
+
+    // Data object members
     creationDate: Date;
     creationUserId: string;
     deletionDate: Date;
