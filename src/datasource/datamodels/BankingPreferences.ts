@@ -1,6 +1,6 @@
-import {dataObject} from "./DataObject";
+import {DataObject} from "./DataObject";
 
-export class bankingPreferences implements dataObject {
+export class BankingPreferences implements DataObject {
     logo?: ImageBitmap;
     primaryColor?: string;
     secondaryColor?: string;

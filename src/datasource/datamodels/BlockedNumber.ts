@@ -1,11 +1,13 @@
-import {dataObject} from "./DataObject";
+import {DataObject} from "./DataObject";
 
-export class blockedNumber implements dataObject {
+export class BlockedNumber implements DataObject {
     number?: number;
     position?: number;
 
     // Data object members
-    creationDate?: Date;
-    modificationDate?: Date;
-    modificationUserId?: string;
+    creationDate: Date;
+    creationUserId: string;
+    deletionDate: Date;
+    modificationDate: Date;
+    modificationUserId: string;
 }

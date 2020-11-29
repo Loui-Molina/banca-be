@@ -1,10 +1,10 @@
-import {dataObject} from "./DataObject";
-import { bankingPreferences } from "./BankingPreferences";
+import {DataObject} from "./DataObject";
+import { BankingPreferences } from "./BankingPreferences";
 import {Transaction} from "./Transaction";
 
-export class Banking implements dataObject {
+export class Banking implements DataObject {
     ownerId?: string;
-    bankingPreferences?: bankingPreferences;
+    bankingPreferences?: BankingPreferences;
     transactions?: Transaction[];
 
     // Data object members

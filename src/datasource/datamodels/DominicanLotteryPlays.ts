@@ -1,4 +1,4 @@
-export enum DomenicanLotteryPlays {
+export enum DominicanLotteryPlays  {
     first = "first",
     second = "second",
     third = "third",

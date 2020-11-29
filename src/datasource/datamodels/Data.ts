@@ -1,9 +1,9 @@
 // Main data object model
-import {dataObject} from "./DataObject";
+import {DataObject} from "./DataObject";
 import {User} from "./User";
 import {Consortium} from "./Consortium";
 
-export class Data implements dataObject {
+export class Data implements DataObject {
     lastChange?: Date;
     lastBackup?: Date;
     consortium?: Consortium;

@@ -1,4 +1,4 @@
-export interface dataObject {
+export interface DataObject {
     creationDate: Date;
     creationUserId: string;
     modificationDate: Date;

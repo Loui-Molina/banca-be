@@ -1,6 +1,6 @@
-import {dataObject} from "./DataObject";
+import {DataObject} from "./DataObject";
 
-export class UserPreferences implements dataObject {
+export class UserPreferences implements DataObject {
     language?: string;
 
     // Data object members

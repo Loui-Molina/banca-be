@@ -1,18 +1,15 @@
-import {dataObject} from "./DataObject";
-
-enum transactionType {
-    deposit, // Deposito realizado por el Boludo
-    extraction, // Extraccion realizada por el boludo
-    adjust // en caso de robo, imprevisto, etc
-}
+import {DataObject} from "./DataObject";
+import {TransactionType} from "./TransactionType";
 
 
-export class Transaction implements dataObject {
+export class Transaction implements DataObject {
     transactionId?: string;
     amount?: number;
-    type?: transactionType;
+    type?: TransactionType;
     lastBalance?: number;
     actualBalance?: number;
+    originUserId?: string; //id del usuario donde se genero la transaccion
+    destinationUserId?: string; //id del usuario donde se genero la transaccion
 
     // Data object members
     creationDate: Date;

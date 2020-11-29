@@ -1,13 +1,13 @@
-import {dataObject} from "./DataObject";
-import {consortiumPreferences} from "./ConsortiumPreferences";
+import {DataObject} from "./DataObject";
+import {ConsortiumPreferences} from "./ConsortiumPreferences";
 import {Supervisor} from "./Supervisor";
 import {Banking} from "./Banking";
 import {Transaction} from "./Transaction";
 import {Lottery} from "./Lottery";
 
-export class Consortium implements dataObject {
+export class Consortium implements DataObject {
     supervisors: Map<string, Supervisor>
-    consortiumPrefs?: consortiumPreferences;
+    consortiumPrefs?: ConsortiumPreferences;
     bankings?: Map<string, Banking>;
     lotteries?: Map<string, Lottery>;
     userId: string;

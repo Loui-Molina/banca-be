@@ -1,7 +1,7 @@
 import {Banking} from "./Banking";
-import {dataObject} from "./DataObject";
+import {DataObject} from "./DataObject";
 
-export class Supervisor implements dataObject{
+export class Supervisor implements DataObject{
     userId: string;
     idBanca: string[];
 

@@ -1,14 +1,12 @@
-import {dataObject} from "./DataObject";
-import {blockedNumber} from "./BlockedNumber";
-import {lotteryTypes} from "./LotteryTypes";
-import {DomenicanLotteryPlays} from "./DomenicanLotteryPlays";
+import {DataObject} from "./DataObject";
+import {BlockedNumber} from "./BlockedNumber";
+import {DominicanLotteryPlays} from "./DominicanLotteryPlays";
 import {UsLotteryPlays} from "./UsLotteryPlays";
 import {BrasilPlays} from "./BrasilPlays";
 
-export class bettingLimit implements dataObject {
-    blockedNumbers?: blockedNumber[];
+export class BettingLimit implements DataObject {
     limit?: number;
-    lotteryPlays?: DomenicanLotteryPlays | UsLotteryPlays | BrasilPlays;
+    lotteryPlays?: DominicanLotteryPlays | UsLotteryPlays | BrasilPlays;
     appliedBankingsIds?: string[];
 
     // Data object members

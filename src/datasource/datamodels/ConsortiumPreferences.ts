@@ -1,13 +1,15 @@
-import {dataObject} from "./DataObject";
-import {bettingLimit} from "./BettingLimit";
+import {DataObject} from "./DataObject";
+import {BettingLimit} from "./BettingLimit";
+import {BlockedNumber} from "./BlockedNumber";
 
-export class consortiumPreferences implements dataObject {
-    limits?: bettingLimit[];
+export class ConsortiumPreferences implements DataObject {
+    limits?: BettingLimit[];
+    blockedNumbers?: BlockedNumber[];
 
     // Data object members
-    creationDate?: Date;
-    creationUserId?: string;
-    modificationDate?: Date;
-    modificationUserId?: string;
-    deletionDate?: Date;
+    creationDate: Date;
+    creationUserId: string;
+    deletionDate: Date;
+    modificationDate: Date;
+    modificationUserId: string;
 }
