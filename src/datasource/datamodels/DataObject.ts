@@ -1,4 +1,5 @@
 export interface DataObject {
+    id: string;
     creationDate: Date;
     creationUserId: string;
     modificationDate: Date;

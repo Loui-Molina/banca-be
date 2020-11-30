@@ -10,4 +10,5 @@ export class Movements implements DataObject{
     deletionDate: Date;
     modificationDate: Date;
     modificationUserId: string;
+    id: string;
 }

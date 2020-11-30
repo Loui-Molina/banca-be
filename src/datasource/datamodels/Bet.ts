@@ -1,14 +1,10 @@
 import {DataObject} from "./DataObject";
-import {lotteryTypes} from "./LotteryTypes";
-import {DominicanLotteryPlays} from "./DominicanLotteryPlays";
-import {UsLotteryPlays} from "./UsLotteryPlays";
-import {BrasilPlays} from "./BrasilPlays";
+import {PlayTypes} from "./PlayTypes";
 
 export class Bet implements DataObject {
-    amount?: number;
-    eventId?: string;
-    lotteryType?: lotteryTypes;
-    playType?: DominicanLotteryPlays | UsLotteryPlays | BrasilPlays;
+    plays?: Play[];
+    date?: Date;
+
 
     // Data object members
     creationUserId: string;
@@ -16,4 +12,18 @@ export class Bet implements DataObject {
     modificationDate: Date;
     modificationUserId: string;
     creationDate: Date;
+    id: string;
+}
+
+class Play implements DataObject {
+    playType?: PlayTypes;
+    amount?: number;
+
+
+    creationDate: Date;
+    creationUserId: string;
+    deletionDate: Date;
+    modificationDate: Date;
+    modificationUserId: string;
+    id: string;
 }

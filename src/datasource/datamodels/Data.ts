@@ -15,4 +15,5 @@ export class Data implements DataObject {
     deletionDate: Date;
     modificationDate: Date;
     modificationUserId: string;
+    id: string;
 }

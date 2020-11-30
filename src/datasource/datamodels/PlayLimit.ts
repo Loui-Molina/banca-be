@@ -2,14 +2,12 @@ import {DataObject} from "./DataObject";
 import {DominicanLotteryPrizes} from "./DominicanLotteryPrizes";
 import {UsLotteryPrizes} from "./UsLotteryPrizes";
 import {BrasilPrizes} from "./BrasilPrizes";
-import {OCStatus} from "./OCStatus";
 
-
-// Estado y limite de apuesta en cada jugada
-export class BettingLimit implements DataObject{
+// cantidad de veces que se puede hacer una jugada
+export class PlayLimit implements DataObject {
+    limit?: number;
     playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
-    status: OCStatus;
-    betAmount?: number;
+    appliedBankingsIds?: string[];
 
     // Data object members
     creationDate: Date;

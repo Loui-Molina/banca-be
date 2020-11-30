@@ -14,4 +14,5 @@ export class BankingPreferences implements DataObject {
     deletionDate: Date;
     modificationDate: Date;
     modificationUserId: string;
+    id: string;
 }

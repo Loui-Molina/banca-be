@@ -17,4 +17,5 @@ export class Transaction implements DataObject {
     deletionDate: Date;
     modificationDate: Date;
     modificationUserId: string;
+    id: string;
 }

@@ -9,4 +9,5 @@ export class UserPreferences implements DataObject {
     deletionDate: Date;
     modificationDate: Date;
     modificationUserId: string;
+    id: string;
 }

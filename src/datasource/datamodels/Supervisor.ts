@@ -1,4 +1,3 @@
-import {Banking} from "./Banking";
 import {DataObject} from "./DataObject";
 
 export class Supervisor implements DataObject{
@@ -11,4 +10,5 @@ export class Supervisor implements DataObject{
     deletionDate: Date;
     modificationDate: Date;
     modificationUserId: string;
+    id: string;
 }
