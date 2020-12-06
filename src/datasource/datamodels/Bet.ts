@@ -5,14 +5,13 @@ export class Bet implements DataObject {
     plays?: Play[];
     date?: Date;
 
-
     // Data object members
+    id: string;
     creationUserId: string;
     deletionDate: Date;
     modificationDate: Date;
     modificationUserId: string;
     creationDate: Date;
-    id: string;
 }
 
 class Play implements DataObject {
