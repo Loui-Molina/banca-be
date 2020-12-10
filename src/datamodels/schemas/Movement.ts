@@ -1,6 +1,6 @@
 import { DataObject } from './DataObject';
 
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { LotteryTime } from './LotteryTime';
 
 @Schema()

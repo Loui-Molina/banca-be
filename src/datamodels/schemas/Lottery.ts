@@ -6,7 +6,7 @@ import { PrizeLimit } from './PrizeLimit';
 import { BankingFeeLimit } from './BankingFeeLimit';
 import { Result } from './Result';
 
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Lottery implements DataObject {

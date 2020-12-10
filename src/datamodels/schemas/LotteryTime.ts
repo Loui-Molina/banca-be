@@ -1,6 +1,6 @@
 import { Days } from '../enums/Days';
 
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ConsortiumPreference } from './ConsortiumPreference';
 import { DataObject } from './DataObject';
 

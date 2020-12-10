@@ -1,5 +1,5 @@
 // Los numeros que salieron en la loteria
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DataObject } from './DataObject';
 
 @Schema()

@@ -3,7 +3,7 @@ import { DominicanLotteryPrizes } from '../enums/DominicanLotteryPrizes';
 import { UsLotteryPrizes } from '../enums/UsLotteryPrizes';
 import { BrasilPrizes } from '../enums/BrasilPrizes';
 import { OCStatus } from '../enums/OCStatus';
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 // Estado y limite de apuesta en cada jugada
 

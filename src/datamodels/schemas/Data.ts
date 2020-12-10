@@ -2,7 +2,7 @@
 import { DataObject } from './DataObject';
 import { User } from './User';
 import { Consortium } from './Consortium';
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ConsortiumPreference } from './ConsortiumPreference';
 
 @Schema()

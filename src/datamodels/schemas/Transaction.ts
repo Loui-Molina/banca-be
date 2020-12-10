@@ -1,7 +1,7 @@
 import { DataObject } from './DataObject';
 import { TransactionType } from '../enums/TransactionType';
 
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Transaction implements DataObject {

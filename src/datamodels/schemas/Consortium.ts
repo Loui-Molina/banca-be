@@ -5,7 +5,7 @@ import { Banking } from './Banking';
 import { Transaction } from './Transaction';
 import { Lottery } from './Lottery';
 
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Consortium implements DataObject {

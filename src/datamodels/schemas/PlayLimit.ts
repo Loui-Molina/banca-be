@@ -4,7 +4,7 @@ import { UsLotteryPrizes } from '../enums/UsLotteryPrizes';
 import { BrasilPrizes } from '../enums/BrasilPrizes';
 
 // cantidad de veces que se puede hacer una jugada
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class PlayLimit implements DataObject {

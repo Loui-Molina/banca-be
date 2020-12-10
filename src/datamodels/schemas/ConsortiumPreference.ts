@@ -2,7 +2,7 @@ import { DataObject } from './DataObject';
 import { PlayLimit } from './PlayLimit';
 import { BlockedNumber } from './BlockedNumber';
 
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class ConsortiumPreference implements DataObject {

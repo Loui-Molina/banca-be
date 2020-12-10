@@ -4,7 +4,7 @@ import { UsLotteryPrizes } from '../enums/UsLotteryPrizes';
 import { BrasilPrizes } from '../enums/BrasilPrizes';
 
 // Monto a pagar por cada unidad monetaria al momento de haber un ganador
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class PrizeLimit implements DataObject {
