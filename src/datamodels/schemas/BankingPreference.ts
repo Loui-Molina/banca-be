@@ -3,12 +3,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class BankingPreference implements DataObject {
-  logo?: ImageBitmap;
-  primaryColor?: string;
-  secondaryColor?: string;
-  tertiaryColor?: string;
-  bankingTitleColor?: string;
-  bankingTitleBGColor?: string;
+  @Prop() logo?: ImageBitmap; // TODO check data type
+  @Prop() primaryColor?: string;
+  @Prop() secondaryColor?: string;
+  @Prop() tertiaryColor?: string;
+  @Prop() bankingTitleColor?: string;
+  @Prop() bankingTitleBGColor?: string;
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;

@@ -1,14 +1,13 @@
 import { Days } from '../enums/Days';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ConsortiumPreference } from './ConsortiumPreference';
 import { DataObject } from './DataObject';
 
 @Schema()
 export class LotteryTime implements DataObject {
-  day?: Days[];
-  openTime?: string;
-  closeTime?: string;
+  @Prop({ type: String, enum: Days }) day: Days[];
+  @Prop({ required: true }) openTime?: string;
+  @Prop({ required: true }) closeTime?: string;
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;

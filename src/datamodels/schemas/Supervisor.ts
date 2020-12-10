@@ -4,8 +4,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Supervisor implements DataObject {
-  userId: string;
-  idBanca: string[];
+  @Prop({ required: true }) userId: string;
+  @Prop() idBanca: string[];
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
@@ -14,4 +14,5 @@ export class Supervisor implements DataObject {
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
+
 export const SupervisorSchema = SchemaFactory.createForClass(Supervisor);

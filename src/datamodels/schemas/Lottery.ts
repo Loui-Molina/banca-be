@@ -10,19 +10,23 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Lottery implements DataObject {
-  lotteryId?: string;
-  name?: string;
-  nickname?: string;
-  color?: string;
-  logo?: string;
-  status?: OCStatus;
-  times?: LotteryTime[];
-  bettingLimits?: BettingLimit[]; // Cuanto y a que se le puede apostar
-  prizeLimits?: PrizeLimit[]; // Cuanto se paga a un ganador por cada peso apostado
-  bankingFeeLimits?: BankingFeeLimit[]; // Que porcentaje se le paga a la banca por cada jugada
-  fallback?: number; // Que porcentaje se le paga a la banca por el total de sus ventas
-  lastResults?: string;
-  results?: Map<string, Result>;
+  @Prop({ required: true }) lotteryId: string;
+  @Prop({ required: true }) name: string;
+  @Prop({ required: true }) nickname: string;
+  @Prop({ required: true }) color: string;
+  @Prop() logo?: string;
+  @Prop({ type: String, enum: [OCStatus] }) status: OCStatus;
+  @Prop({ type: LotteryTime, required: true }) times?: LotteryTime[];
+  // Cuanto y a que se le puede apostar
+  @Prop([BettingLimit]) bettingLimits?: BettingLimit[];
+  // Cuanto se paga a un ganador por cada peso apostado
+  @Prop([PrizeLimit]) prizeLimits?: PrizeLimit[];
+  // Que porcentaje se le paga a la banca por cada jugada
+  @Prop([BankingFeeLimit]) bankingFeeLimits?: BankingFeeLimit[];
+  // Que porcentaje se le paga a la banca por el total de sus ventas
+  @Prop() fallback?: number;
+  @Prop() lastResults?: string;
+  @Prop([Result]) results?: Result[];
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;

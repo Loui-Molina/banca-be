@@ -5,8 +5,9 @@ import { DataObject } from './DataObject';
 
 @Schema()
 export class Result implements DataObject {
-  date?: Date;
-  draw?: Draw;
+  @Prop({ require: true }) date?: Date;
+  @Prop({ require: true, type: Draw }) draw?: Draw;
+
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;

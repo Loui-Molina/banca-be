@@ -1,9 +1,8 @@
 import { UserPreference } from './UserPreference';
 import { Roles } from '../enums/Roles';
 import { User } from './User';
-import { SchemaFactory } from '@nestjs/mongoose';
 
-class AdminUser extends User  {
+class AdminUser extends User {
   // User members
   creationDate: Date;
   creationUserId: string;

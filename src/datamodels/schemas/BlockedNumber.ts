@@ -4,8 +4,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class BlockedNumber implements DataObject {
-  number?: number;
-  position?: number;
+  @Prop({ required: true }) number?: number;
+  @Prop() position?: number;
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
@@ -14,4 +14,5 @@ export class BlockedNumber implements DataObject {
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
+
 export const BlockedNumberSchema = SchemaFactory.createForClass(BlockedNumber);

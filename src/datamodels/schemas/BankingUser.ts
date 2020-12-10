@@ -1,10 +1,10 @@
 import { UserPreference } from './UserPreference';
 import { Roles } from '../enums/Roles';
 import { User } from './User';
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Schema } from '@nestjs/mongoose';
 
 @Schema()
-export class BankingUser extends User  {
+export class BankingUser extends User {
   bankingId: string;
 
   // User members

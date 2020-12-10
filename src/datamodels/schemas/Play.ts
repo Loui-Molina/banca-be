@@ -1,16 +1,17 @@
 import { DataObject } from './DataObject';
 import { PlayTypes } from '../enums/PlayTypes';
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Play implements DataObject {
-  playType?: PlayTypes;
-  amount?: number;
+  @Prop({ required: true, type: PlayTypes }) playType?: PlayTypes;
+  @Prop({ required: true }) amount?: number;
 
-  creationDate: Date;
-  creationUserId: string;
-  deletionDate: Date;
-  modificationDate: Date;
-  modificationUserId: string;
+  // Data object members
+  @Prop({ required: true, immutable: true }) creationDate: Date;
+  @Prop({ required: true, immutable: true }) creationUserId: string;
+  @Prop({ required: true }) deletionDate: Date;
+  @Prop({ required: true }) modificationDate: Date;
+  @Prop({ required: true }) modificationUserId: string;
 }
 export const PlaySchema = SchemaFactory.createForClass(Play);

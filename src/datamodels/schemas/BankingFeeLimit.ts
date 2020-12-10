@@ -7,15 +7,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 // Porcentaje que se le paga a cada banca por cada jugada que vende
 @Schema()
 export class BankingFeeLimit implements DataObject {
-/*  @Prop({
-    enum: [
-      DominicanLotteryPrizes,
-      UsLotteryPrizes,
-      BrasilPrizes,
-    ],
-  })*/
+  @Prop({
+    type: String,
+    enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
+  })
   playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes; // TODO check prop
-  @Prop() feePercentage?: number;
+  @Prop({ min: 0, max: 100 }) feePercentage?: number;
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;

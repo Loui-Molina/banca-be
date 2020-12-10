@@ -9,9 +9,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class BettingLimit implements DataObject {
-  playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
-  status: OCStatus;
-  betAmount?: number;
+  @Prop({
+    type: String,
+    enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
+  })
+  playType: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
+  @Prop({ required: true }) status: OCStatus;
+  @Prop({ required: true }) betAmount?: number;
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;

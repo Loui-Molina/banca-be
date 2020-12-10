@@ -4,13 +4,13 @@ import { DataObject } from './DataObject';
 
 @Schema()
 export class Draw implements DataObject {
-  first?: number;
-  second?: number;
-  third?: number;
-  fourth?: number;
-  fifth?: number;
-  sixth?: number;
-  seventh?: number;
+  @Prop() first?: number;
+  @Prop() second?: number;
+  @Prop() third?: number;
+  @Prop() fourth?: number;
+  @Prop() fifth?: number;
+  @Prop() sixth?: number;
+  @Prop() seventh?: number;
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
@@ -19,4 +19,5 @@ export class Draw implements DataObject {
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
+
 export const DrawSchema = SchemaFactory.createForClass(Draw);

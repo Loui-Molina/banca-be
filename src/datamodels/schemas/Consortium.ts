@@ -9,12 +9,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Consortium implements DataObject {
-  supervisors: Map<string, Supervisor>;
-  consortiumPrefs?: ConsortiumPreference;
-  bankings?: Map<string, Banking>;
-  lotteries?: Map<string, Lottery>;
-  userId: string;
-  transactions?: Transaction[];
+  @Prop([Supervisor]) supervisors: Supervisor[];
+  @Prop([ConsortiumPreference]) consortiumPrefs?: ConsortiumPreference;
+  @Prop([Banking]) bankings?: Banking[];
+  @Prop([Lottery]) lotteries?: Lottery[];
+  @Prop({ required: true }) ownerUserId: string;
+  @Prop([Transaction]) transactions?: Transaction[];
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
@@ -23,4 +23,5 @@ export class Consortium implements DataObject {
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
+
 export const ConsortiumSchema = SchemaFactory.createForClass(Consortium);

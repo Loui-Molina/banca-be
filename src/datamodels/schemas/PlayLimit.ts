@@ -2,15 +2,19 @@ import { DataObject } from './DataObject';
 import { DominicanLotteryPrizes } from '../enums/DominicanLotteryPrizes';
 import { UsLotteryPrizes } from '../enums/UsLotteryPrizes';
 import { BrasilPrizes } from '../enums/BrasilPrizes';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 // cantidad de veces que se puede hacer una jugada
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class PlayLimit implements DataObject {
-  limit?: number;
+  @Prop({ required: true }) limit?: number;
+  @Prop({
+    type: String,
+    enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
+  })
   playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
-  appliedBankingsIds?: string[];
+  @Prop() appliedBankingsIds?: string[];
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
@@ -19,4 +23,5 @@ export class PlayLimit implements DataObject {
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
+
 export const PlayLimitSchema = SchemaFactory.createForClass(PlayLimit);
