@@ -2,7 +2,7 @@ import { UserPreference } from './UserPreference';
 import { Roles } from '../enums/Roles';
 import { User } from './User';
 
-class ConsortiumUser implements User {
+class ConsortiumUser extends User  {
   // User members
   creationDate: Date;
   creationUserId: string;

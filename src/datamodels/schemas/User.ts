@@ -1,9 +1,9 @@
 import { DataObject } from './DataObject';
 import { Roles } from '../enums/Roles';
 import { UserPreference } from './UserPreference';
-import { SchemaFactory } from '@nestjs/mongoose';
+import { Injectable } from '@nestjs/common';
 
-export interface User extends DataObject {
+export class User implements DataObject {
   lastLogin?: Date;
   name?: string;
   username?: string;

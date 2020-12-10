@@ -5,7 +5,7 @@ import { Roles } from '../enums/Roles';
 import { User } from './User';
 import { Bet } from './Bet';
 
-class PunterUser implements User {
+class PunterUser extends User  {
   movements?: Movement[];
   phone?: PhoneNumber;
   email?: string;

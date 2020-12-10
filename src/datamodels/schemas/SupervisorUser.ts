@@ -3,7 +3,7 @@ import { Roles } from '../enums/Roles';
 import { User } from './User';
 import { SchemaFactory } from '@nestjs/mongoose';
 
-class SupervisorUser implements User {
+class SupervisorUser extends User  {
   bankingId: string[];
 
   // User members

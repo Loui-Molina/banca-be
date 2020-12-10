@@ -4,7 +4,7 @@ import { User } from './User';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
-export class BankingUser implements User {
+export class BankingUser extends User  {
   bankingId: string;
 
   // User members
