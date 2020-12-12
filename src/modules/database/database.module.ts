@@ -1,6 +1,6 @@
 import {Module} from '@nestjs/common';
 import {MongooseModule} from "@nestjs/mongoose";
-import {BankingData, BankingDataSchema} from "../../datamodels/schemas/BankingData";
+import {BankingData, BankingDataSchema} from "./datamodels/schemas/BankingData";
 import {DatabaseService} from './services/database.service';
 
 @Module({

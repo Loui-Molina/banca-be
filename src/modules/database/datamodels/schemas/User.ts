@@ -14,7 +14,7 @@ export class User  implements DataObject {
     // Data object members
     @Prop({required: true}) creationDate: Date;
     @Prop({required: true}) creationUserId: string;
-    @Prop({required: true}) deletionDate: Date;
+    @Prop() deletionDate: Date;
     @Prop({required: true}) modificationDate: Date;
     @Prop({required: true}) modificationUserId: string;
 }
