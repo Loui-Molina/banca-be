@@ -1,19 +1,22 @@
-import { DataObject } from './DataObject';
-import { Roles } from '../enums/Roles';
-import { UserPreference } from './UserPreference';
+import {DataObject} from './DataObject';
+import {Roles} from '../enums/Roles';
+import {UserPreference} from './UserPreference';
+import {Prop, SchemaFactory} from "@nestjs/mongoose";
 
 export class User implements DataObject {
-  lastLogin?: Date;
-  name?: string;
-  username: string;
-  password: string;
-  role: Roles;
-  preferences?: UserPreference;
+    @Prop() lastLogin?: Date;
+    @Prop() name?: string;
+    @Prop() username: string;
+    @Prop() password: string;
+    @Prop() role: Roles;
+    @Prop() preferences?: UserPreference;
 
-  // Data object members
-  creationDate: Date;
-  creationUserId: string;
-  deletionDate: Date;
-  modificationDate: Date;
-  modificationUserId: string;
+    // Data object members
+    @Prop({required: true}) creationDate: Date;
+    @Prop({required: true}) creationUserId: string;
+    @Prop({required: true}) deletionDate: Date;
+    @Prop({required: true}) modificationDate: Date;
+    @Prop({required: true}) modificationUserId: string;
 }
+
+export const UserSchema = SchemaFactory.createForClass(User);

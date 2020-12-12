@@ -11,7 +11,7 @@ export class BankingFeeLimit implements DataObject {
     type: String,
     enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
   })
-  playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes; // TODO check prop
+  playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
   @Prop({ min: 0, max: 100 }) feePercentage?: number;
 
   // Data object members
