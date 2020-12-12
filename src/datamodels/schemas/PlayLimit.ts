@@ -6,8 +6,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 // cantidad de veces que se puede hacer una jugada
 
+export type PlayLimitDocument = PlayLimit & Document;
 @Schema()
-export class PlayLimit implements DataObject {
+export class PlayLimit  implements DataObject {
   @Prop({ required: true }) limit?: number;
   @Prop({
     type: String,

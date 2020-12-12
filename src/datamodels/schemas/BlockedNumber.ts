@@ -2,8 +2,9 @@ import { DataObject } from './DataObject';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+export type BlockedNumberDocument = BlockedNumber & Document;
 @Schema()
-export class BlockedNumber implements DataObject {
+export class BlockedNumber  implements DataObject {
   @Prop({ required: true }) number?: number;
   @Prop() position?: number;
 

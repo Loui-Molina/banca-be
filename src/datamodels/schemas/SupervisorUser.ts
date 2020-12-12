@@ -18,6 +18,3 @@ class SupervisorUser extends User {
   @Prop({ required: true, immutable: true }) username: string;
 }
 
-export const SupervisorUserSchema = SchemaFactory.createForClass(
-  SupervisorUser,
-);

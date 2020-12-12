@@ -8,8 +8,9 @@ import { Result } from './Result';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+export type LotteryDocument = Lottery & Document;
 @Schema()
-export class Lottery implements DataObject {
+export class Lottery  implements DataObject {
   @Prop({ required: true }) lotteryId: string;
   @Prop({ required: true }) name: string;
   @Prop({ required: true }) nickname: string;

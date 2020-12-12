@@ -7,8 +7,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 // Estado y limite de apuesta en cada jugada
 
+export type BettingLimitDocument = BettingLimit & Document;
 @Schema()
-export class BettingLimit implements DataObject {
+export class BettingLimit  implements DataObject {
   @Prop({
     type: String,
     enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],

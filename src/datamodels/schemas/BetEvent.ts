@@ -1,6 +1,6 @@
 import { DataObject } from './DataObject';
 
-// export class betEvent implements dataObject {
+// export class betEvent  implements DataObject {
 //     // TODO
 //     eventId?: string;
 //     creationDate: Date;

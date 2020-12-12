@@ -2,8 +2,9 @@ import { DataObject } from './DataObject';
 import { PlayTypes } from '../enums/PlayTypes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+export type PlayDocument = Play & Document;
 @Schema()
-export class Play implements DataObject {
+export class Play  implements DataObject {
   @Prop({ required: true, type: PlayTypes }) playType?: PlayTypes;
   @Prop({ required: true }) amount?: number;
 

@@ -3,8 +3,9 @@ import { TransactionType } from '../enums/TransactionType';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+export type TransactionDocument = Transaction & Document;
 @Schema()
-export class Transaction implements DataObject {
+export class Transaction  implements DataObject {
   @Prop() transactionId?: string;
   @Prop({ required: true }) amount?: number;
   @Prop({ type: String, enum: TransactionType }) type?: TransactionType;

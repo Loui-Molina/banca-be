@@ -2,8 +2,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DataObject } from './DataObject';
 
+export type DrawDocument = Draw & Document;
 @Schema()
-export class Draw implements DataObject {
+export class Draw  implements DataObject {
   @Prop() first?: number;
   @Prop() second?: number;
   @Prop() third?: number;
