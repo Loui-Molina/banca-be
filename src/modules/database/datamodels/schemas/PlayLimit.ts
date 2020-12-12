@@ -8,7 +8,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type PlayLimitDocument = PlayLimit & Document;
 @Schema()
-export class PlayLimit  implements DataObject {
+export class PlayLimit implements DataObject {
   @Prop({ required: true }) limit?: number;
   @Prop({
     type: String,

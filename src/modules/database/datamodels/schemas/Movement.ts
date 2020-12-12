@@ -1,11 +1,10 @@
 import { DataObject } from './DataObject';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { LotteryTime } from './LotteryTime';
 
 export type MovementDocument = Movement & Document;
 @Schema()
-export class Movement  implements DataObject {
+export class Movement implements DataObject {
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;

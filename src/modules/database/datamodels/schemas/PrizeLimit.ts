@@ -6,7 +6,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 // Monto a pagar por cada unidad monetaria al momento de haber un ganador
-export class PrizeLimit  implements DataObject {
+export class PrizeLimit implements DataObject {
   @Prop({
     type: String,
     enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],

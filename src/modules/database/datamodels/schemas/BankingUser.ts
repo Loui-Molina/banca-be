@@ -1,7 +1,6 @@
-import {UserPreference} from './UserPreference';
-import {Roles} from '../enums/Roles';
-import {User} from './User';
-import {Schema} from '@nestjs/mongoose';
+import { UserPreference } from './UserPreference';
+import { Roles } from '../enums/Roles';
+import { User } from './User';
 
 export class BankingUser extends User {
   bankingId: string;

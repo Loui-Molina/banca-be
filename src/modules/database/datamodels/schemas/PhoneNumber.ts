@@ -3,7 +3,7 @@ import { DataObject } from './DataObject';
 
 export type PhoneNumberDocument = PhoneNumber & Document;
 @Schema()
-export class PhoneNumber  implements DataObject {
+export class PhoneNumber implements DataObject {
   @Prop() prefix?: number;
   @Prop() regionCode?: number;
   @Prop({ required: true }) phoneNumber?: number;

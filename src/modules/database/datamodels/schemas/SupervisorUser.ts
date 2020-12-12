@@ -1,7 +1,7 @@
 import { UserPreference } from './UserPreference';
 import { Roles } from '../enums/Roles';
 import { User } from './User';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop } from '@nestjs/mongoose';
 
 class SupervisorUser extends User {
   // User members
@@ -17,4 +17,3 @@ class SupervisorUser extends User {
   @Prop({ required: true, immutable: true }) role: Roles.supervisor;
   @Prop({ required: true, immutable: true }) username: string;
 }
-

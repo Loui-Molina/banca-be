@@ -5,7 +5,7 @@ import { DataObject } from './DataObject';
 
 export type ResultDocument = Result & Document;
 @Schema()
-export class Result  implements DataObject {
+export class Result implements DataObject {
   @Prop({ require: true }) date?: Date;
   @Prop({ require: true, type: Draw }) draw?: Draw;
 

@@ -4,7 +4,7 @@ import { Play } from './Play';
 
 export type BetDocument = Bet & Document;
 @Schema()
-export class Bet  implements DataObject {
+export class Bet implements DataObject {
   @Prop({ immutable: true }) plays: Play[];
   @Prop({ immutable: true }) date: Date;
 

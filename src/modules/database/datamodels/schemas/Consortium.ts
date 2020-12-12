@@ -9,7 +9,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type ConsortiumDocument = Consortium & Document;
 @Schema()
-export class Consortium  implements DataObject {
+export class Consortium implements DataObject {
   @Prop([Supervisor]) supervisors: Supervisor[];
   @Prop([ConsortiumPreference]) consortiumPrefs?: ConsortiumPreference;
   @Prop([Banking]) bankings?: Banking[];

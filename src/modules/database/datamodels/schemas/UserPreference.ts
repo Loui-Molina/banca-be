@@ -4,7 +4,7 @@ import { Languages } from '../enums/Languages';
 
 export type UserPreferenceDocument = UserPreference & Document;
 @Schema()
-export class UserPreference  implements DataObject {
+export class UserPreference implements DataObject {
   @Prop({
     type: String,
     enum: Languages,
