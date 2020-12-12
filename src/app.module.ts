@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { HealthCheckModule } from './modules/health-check/health-check.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { TerminusModule } from '@nestjs/terminus';
 
 @Module({
   imports: [
