@@ -8,11 +8,12 @@ import {User} from "./User";
 import * as mongoose from "mongoose";
 
 export type BankingDocument = Banking & Document;
+
 @Schema()
-export class Banking  implements DataObject {
+export class Banking implements DataObject {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: User}) owner: User;
     @Prop({required: true, type: BankingPreference})
-    bankingPreferences?: BankingPreference;
+    @Prop([BankingPreference]) bankingPreferences?: BankingPreference;
     @Prop([Transaction]) transactions?: Transaction[];
     @Prop([Lottery]) lotteries?: Lottery[];
     @Prop([Bet]) bets?: Bet[];

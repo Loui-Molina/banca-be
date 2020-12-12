@@ -1,14 +1,11 @@
-import {Inject, Module} from '@nestjs/common';
+import {Module} from '@nestjs/common';
 import {MongooseModule} from "@nestjs/mongoose";
-import {AppData, AppDataDocument, AppDataSchema} from "../../datamodels/schemas/AppData";
-import {Model} from "mongoose";
+import {BankingData, BankingDataSchema} from "../../datamodels/schemas/BankingData";
+import {DatabaseService} from './services/database.service';
 
 @Module({
-    imports: [MongooseModule.forFeature([{name: AppData.name, schema: {AppDataSchema}}])]
+    imports: [MongooseModule.forFeature([{name: BankingData.name, schema: BankingDataSchema}])],
+    providers: [DatabaseService, BankingData]
 })
 export class DatabaseModule {
-    constructor(@Inject(AppData.name) private appDataModel: Model<AppDataDocument>) {
-        console.log('database test')
-    }
-
 }

@@ -5,10 +5,10 @@ import {Consortium} from './Consortium';
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {Document} from "mongoose";
 
-export type AppDataDocument = AppData & Document;
+export type BankingDataDocument = BankingData & Document;
 
 @Schema()
-export class AppData implements DataObject {
+export class BankingData implements DataObject {
     @Prop([Consortium]) consortium?: Consortium;
     @Prop([User]) users?: User[];
     @Prop({required: true}) initialized: boolean;
@@ -21,4 +21,4 @@ export class AppData implements DataObject {
     @Prop({required: true}) modificationUserId: string;
 }
 
-export const AppDataSchema = SchemaFactory.createForClass(AppData);
+export const BankingDataSchema = SchemaFactory.createForClass(BankingData);

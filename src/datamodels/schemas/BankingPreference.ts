@@ -3,9 +3,10 @@ import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {Document} from "mongoose";
 
 export type BankingPreferenceDocument = BankingPreference & Document;
+
 @Schema()
-export class BankingPreference   implements DataObject {
-    @Prop() logo?: ImageBitmap; // TODO check data type
+export class BankingPreference implements DataObject {
+    @Prop() logo?: string;
     @Prop() primaryColor?: string;
     @Prop() secondaryColor?: string;
     @Prop() tertiaryColor?: string;
