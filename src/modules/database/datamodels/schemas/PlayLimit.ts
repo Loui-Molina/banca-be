@@ -1,9 +1,9 @@
-import {DataObject} from './DataObject';
-import {DominicanLotteryPrizes} from '../enums/DominicanLotteryPrizes';
-import {UsLotteryPrizes} from '../enums/UsLotteryPrizes';
-import {BrasilPrizes} from '../enums/BrasilPrizes';
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document} from 'mongoose';
+import { DataObject } from './DataObject';
+import { DominicanLotteryPrizes } from '../enums/DominicanLotteryPrizes';
+import { UsLotteryPrizes } from '../enums/UsLotteryPrizes';
+import { BrasilPrizes } from '../enums/BrasilPrizes';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 // cantidad de veces que se puede hacer una jugada
 

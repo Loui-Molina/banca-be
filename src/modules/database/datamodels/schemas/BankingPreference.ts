@@ -1,6 +1,6 @@
-import {DataObject} from './DataObject';
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document} from 'mongoose';
+import { DataObject } from './DataObject';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 export type BankingPreferenceDocument = BankingPreference & Document;
 

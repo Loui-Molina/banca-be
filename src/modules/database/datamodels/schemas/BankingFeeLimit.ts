@@ -1,9 +1,9 @@
-import {DataObject} from './DataObject';
-import {DominicanLotteryPrizes} from '../enums/DominicanLotteryPrizes';
-import {UsLotteryPrizes} from '../enums/UsLotteryPrizes';
-import {BrasilPrizes} from '../enums/BrasilPrizes';
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document} from 'mongoose';
+import { DataObject } from './DataObject';
+import { DominicanLotteryPrizes } from '../enums/DominicanLotteryPrizes';
+import { UsLotteryPrizes } from '../enums/UsLotteryPrizes';
+import { BrasilPrizes } from '../enums/BrasilPrizes';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 // Porcentaje que se le paga a cada banca por cada jugada que vende
 export type BankingFeeLimitDocument = BankingFeeLimit & Document;

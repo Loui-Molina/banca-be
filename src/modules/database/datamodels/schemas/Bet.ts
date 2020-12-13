@@ -3,7 +3,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Play } from './Play';
 import { Document } from 'mongoose';
 
-
 export type BetDocument = Bet & Document;
 @Schema()
 export class Bet implements DataObject {
