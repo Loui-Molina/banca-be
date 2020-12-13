@@ -1,9 +1,12 @@
 import { DataObject } from './DataObject';
 import { Roles } from '../enums/Roles';
 import { UserPreference } from './UserPreference';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+export type UserDocument = User & Document;
+
+@Schema()
 export class User implements DataObject {
   @Prop() lastLogin?: Date;
   @Prop() name?: string;
@@ -20,4 +23,4 @@ export class User implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(User).set("collection","users");

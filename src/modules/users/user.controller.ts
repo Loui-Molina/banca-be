@@ -1,15 +1,19 @@
-import { Controller,Request, Delete, Get, Post, UseGuards } from "@nestjs/common";
-import { AuthService } from "../auth/auth.service";
-import { LocalAuthGuard } from "../auth/local-auth.guard";
+import { Body, Controller, Delete, Get, Post, Redirect } from "@nestjs/common";
+import { User } from "../database/datamodels/schemas/User";
+import { UserDto } from "./dtos/user.dto";
+
+import { UserService } from "./user.service";
 
 @Controller('user')
 export class UserController{
+  constructor(private readonly userService: UserService) {}
 
     @Post()
-    createUser() {
-      return 'created';
+    createUser(@Body() user : UserDto) {
+      return this.userService.create(user);
     }
   
+    @Redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=PLahKLy8pQdCM0SiXNn3EfGIXX19QGzUG3', 302)
     @Get()
     getUser() {
       return 'user';
