@@ -1,6 +1,7 @@
 import { UserPreference } from './UserPreference';
 import { Roles } from '../enums/Roles';
 import { User } from './User';
+import { Document } from 'mongoose';
 
 export class BankingUser extends User {
   bankingId: string;
@@ -8,7 +9,7 @@ export class BankingUser extends User {
   // User members
   creationDate: Date;
   creationUserId: string;
-  deletionDate: Date;
+  deletionDate?: Date;
   lastLogin: Date;
   modificationDate: Date;
   modificationUserId: string;

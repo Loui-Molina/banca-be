@@ -2,6 +2,7 @@ import { DataObject } from './DataObject';
 import { TransactionType } from '../enums/TransactionType';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 export type TransactionDocument = Transaction & Document;
 @Schema()
@@ -22,7 +23,7 @@ export class Transaction implements DataObject {
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;
-  @Prop({ required: true }) deletionDate: Date;
+  @Prop() deletionDate?: Date;
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }

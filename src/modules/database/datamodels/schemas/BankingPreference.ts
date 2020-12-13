@@ -1,6 +1,6 @@
-import { DataObject } from './DataObject';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import {DataObject} from './DataObject';
+import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import {Document} from 'mongoose';
 
 export type BankingPreferenceDocument = BankingPreference & Document;
 
@@ -16,7 +16,7 @@ export class BankingPreference implements DataObject {
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;
-  @Prop() deletionDate: Date;
+  @Prop() deletionDate?: Date;
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }

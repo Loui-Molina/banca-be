@@ -15,7 +15,7 @@ class PunterUser extends User {
   // User members
   creationDate: Date;
   creationUserId: string;
-  deletionDate: Date;
+  deletionDate?: Date;
   lastLogin: Date;
   modificationDate: Date;
   modificationUserId: string;

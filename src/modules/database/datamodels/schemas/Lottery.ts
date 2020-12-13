@@ -7,6 +7,7 @@ import { BankingFeeLimit } from './BankingFeeLimit';
 import { Result } from './Result';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 export type LotteryDocument = Lottery & Document;
 @Schema()
@@ -32,7 +33,7 @@ export class Lottery implements DataObject {
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;
-  @Prop({ required: true }) deletionDate: Date;
+  @Prop() deletionDate?: Date;
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }

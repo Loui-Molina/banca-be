@@ -1,6 +1,7 @@
 // Los numeros que salieron en la loteria
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DataObject } from './DataObject';
+import { Document } from 'mongoose';
 
 export type DrawDocument = Draw & Document;
 @Schema()
@@ -16,7 +17,7 @@ export class Draw implements DataObject {
   // Data object members
   @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;
-  @Prop({ required: true }) deletionDate: Date;
+  @Prop() deletionDate?: Date;
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }

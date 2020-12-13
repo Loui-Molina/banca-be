@@ -2,6 +2,7 @@ import { DataObject } from './DataObject';
 import { Roles } from '../enums/Roles';
 import { UserPreference } from './UserPreference';
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 export class User implements DataObject {
   @Prop() lastLogin?: Date;
@@ -14,7 +15,7 @@ export class User implements DataObject {
   // Data object members
   @Prop({ required: true }) creationDate: Date;
   @Prop({ required: true }) creationUserId: string;
-  @Prop() deletionDate: Date;
+  @Prop() deletionDate?: Date;
   @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }

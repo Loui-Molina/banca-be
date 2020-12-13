@@ -5,7 +5,7 @@ import { DataObject } from './DataObject';
 //     eventId?: string;
 //     creationDate: Date;
 //     creationUserId: string;
-//     deletionDate: Date;
+//     deletionDate?: Date;
 //     modificationDate: Date;
 //     modificationUserId: string;
 // }

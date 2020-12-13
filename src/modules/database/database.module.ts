@@ -1,17 +1,15 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import {
-  BankingData,
-  BankingDataSchema,
-} from './datamodels/schemas/BankingData';
-import { DatabaseService } from './services/database.service';
+import {Module} from '@nestjs/common';
+import {MongooseModule} from '@nestjs/mongoose';
+import {DatabaseService} from './services/database.service';
+import {Consortium, ConsortiumSchema} from "./datamodels/schemas/Consortium";
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: BankingData.name, schema: BankingDataSchema },
-    ]),
-  ],
-  providers: [DatabaseService, BankingData],
+    imports: [
+        MongooseModule.forFeature([
+            {name: Consortium.name, schema: ConsortiumSchema},
+        ]),
+    ],
+    providers: [DatabaseService, Consortium],
 })
-export class DatabaseModule {}
+export class DatabaseModule {
+}
