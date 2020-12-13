@@ -12,13 +12,13 @@ import { Document } from 'mongoose';
 export type LotteryDocument = Lottery & Document;
 @Schema()
 export class Lottery implements DataObject {
-  @Prop({ required: true }) lotteryId: string;
+  // @Prop({ required: true }) lotteryId: string;
   @Prop({ required: true }) name: string;
   @Prop({ required: true }) nickname: string;
   @Prop({ required: true }) color: string;
   @Prop() logo?: string;
   @Prop({ type: String, enum: [OCStatus] }) status: OCStatus;
-  @Prop({ type: LotteryTime, required: true }) times?: LotteryTime[];
+  @Prop({ type: LotteryTime, required: true }) times: LotteryTime[];
   // Cuanto y a que se le puede apostar
   @Prop([BettingLimit]) bettingLimits?: BettingLimit[];
   // Cuanto se paga a un ganador por cada peso apostado
