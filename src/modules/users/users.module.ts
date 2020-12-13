@@ -1,14 +1,8 @@
-import { Get, Module, Post } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { UserController } from './user.controller';
 
-@Module({})
+@Module({
+  controllers:[UserController]
+})
 export class UsersModule {
-  @Post()
-  createUser() {
-    return 'created';
-  }
-
-  @Get()
-  getuser() {
-    return 'user';
-  }
 }
