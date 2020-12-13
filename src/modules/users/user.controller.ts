@@ -1,10 +1,10 @@
-import { Controller, Delete, Get, Post } from "@nestjs/common";
+import { Controller,Request, Delete, Get, Post, UseGuards } from "@nestjs/common";
+import { AuthService } from "../auth/auth.service";
+import { LocalAuthGuard } from "../auth/local-auth.guard";
 
 @Controller('user')
 export class UserController{
-    constructor(){
 
-    }
     @Post()
     createUser() {
       return 'created';
