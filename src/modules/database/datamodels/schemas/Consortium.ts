@@ -1,30 +1,37 @@
-import {DataObject} from './DataObject';
-import {ConsortiumPreference} from './ConsortiumPreference';
-import {Supervisor} from './Supervisor';
-import {Banking} from './Banking';
-import {Transaction} from './Transaction';
-import {Lottery} from './Lottery';
-import {Document} from 'mongoose';
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import { ConsortiumPreference } from './ConsortiumPreference';
+import { Supervisor } from './Supervisor';
+import { Banking } from './Banking';
+import { Transaction } from './Transaction';
+import { Lottery } from './Lottery';
+import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type ConsortiumDocument = Consortium & Document;
 
-@Schema()
-export class Consortium implements DataObject {
-    @Prop([Supervisor]) supervisors: Supervisor[];
-    @Prop([ConsortiumPreference]) consortiumPrefs?: ConsortiumPreference;
-    @Prop([Banking]) bankings?: Banking[];
-    @Prop([Lottery]) lotteries?: Lottery[];
-    @Prop({required: true}) ownerUserId: string;
-    @Prop([Transaction]) transactions?: Transaction[];
+// TODO not usefull
 
-    // Data object members
-    @Prop({required: true, immutable: true}) creationDate: Date;
-    @Prop({required: true, immutable: true}) creationUserId: string;
-    @Prop() deletionDate?: Date;
-    @Prop({required: true}) modificationDate: Date;
-    @Prop({required: true}) modificationUserId: string;
-    @Prop({required: true}) _id: number;
+@Schema()
+export class Consortium {
+  @Prop([Supervisor]) supervisors?: Supervisor[];
+  @Prop({ type: ConsortiumPreference }) consortiumPrefs?: ConsortiumPreference;
+  @Prop([Banking]) bankings?: Banking[];
+  @Prop([Lottery]) lotteries?: Lottery[];
+  @Prop({ required: true }) ownerUserId: string;
+  @Prop([Transaction]) transactions?: Transaction[];
+
+  // Data object members
+  @Prop({ required: true, immutable: true, default: 'user1' })
+  creationUserId?: string;
+  @Prop({
+    required: true,
+    default: (user) => {
+      return user._id;
+    },
+  })
+  modificationUserId: string;
+  @Prop() deletionDate?: Date;
 }
 
-export const ConsortiumSchema = SchemaFactory.createForClass(Consortium);
+export const ConsortiumSchema = SchemaFactory.createForClass(Consortium)
+  .set('collection', 'consortium')
+  .set('timestamps', true);

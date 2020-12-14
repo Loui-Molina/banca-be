@@ -8,7 +8,6 @@ class AdminUser extends User {
   creationUserId: string;
   deletionDate?: Date;
   lastLogin: Date;
-  modificationDate: Date;
   modificationUserId: string;
   name: string;
   password: string;

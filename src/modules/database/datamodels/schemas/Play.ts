@@ -10,10 +10,8 @@ export class Play implements DataObject {
   @Prop({ required: true }) amount?: number;
 
   // Data object members
-  @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;
   @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
 export const PlaySchema = SchemaFactory.createForClass(Play);

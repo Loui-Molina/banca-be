@@ -16,11 +16,12 @@ export class User implements DataObject {
   @Prop() preferences?: UserPreference;
 
   // Data object members
-  @Prop({ required: true }) creationDate: Date;
   @Prop({ required: true }) creationUserId: string;
   @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User).set("collection","users");
+export const UserSchema = SchemaFactory.createForClass(User).set(
+  'collection',
+  'users',
+);

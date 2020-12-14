@@ -10,10 +10,8 @@ export class Bet implements DataObject {
   @Prop({ immutable: true }) date: Date;
 
   // Data object members
-  @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;
   @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
 

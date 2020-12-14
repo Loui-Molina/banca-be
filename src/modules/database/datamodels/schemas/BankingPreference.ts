@@ -14,10 +14,8 @@ export class BankingPreference implements DataObject {
   @Prop() bankingTitleBGColor?: string;
 
   // Data object members
-  @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;
   @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
 

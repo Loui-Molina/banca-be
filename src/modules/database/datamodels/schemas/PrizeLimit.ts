@@ -18,10 +18,8 @@ export class PrizeLimit implements DataObject {
   @Prop({ required: true }) paymentAmount?: number;
 
   // Data object members
-  @Prop({ required: true, immutable: true }) creationDate: Date;
   @Prop({ required: true, immutable: true }) creationUserId: string;
   @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationDate: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
 

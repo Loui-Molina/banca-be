@@ -6,24 +6,22 @@ import { UserDto } from './dtos/user.dto';
 
 @Injectable()
 export class UserService {
-  private users : User[];
+  private users: User[];
 
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
-    
+
   async findOne(username: string): Promise<User | undefined> {
-    return this.users.find(user => user.username === username);
+    return this.users.find((user) => user.username === username);
   }
 
   async create(user: UserDto) {
-
     user.creationDate = new Date();
-    user.creationUserId = "1";
+    user.creationUserId = '1';
     user.modificationDate = new Date();
-    user.modificationUserId = "1";
+    user.modificationUserId = '1';
     const newUser = new this.userModel(user);
     await newUser.save();
     console.log(newUser);
-    return "Usuario Creado correctamente";
+    return 'Usuario Creado correctamente';
   }
-      
 }
