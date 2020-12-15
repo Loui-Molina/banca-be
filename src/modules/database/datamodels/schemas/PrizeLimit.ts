@@ -23,4 +23,7 @@ export class PrizeLimit implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const PrizeLimitSchema = SchemaFactory.createForClass(PrizeLimit);
+export const PrizeLimitSchema = SchemaFactory.createForClass(PrizeLimit).set(
+  'timestamps',
+  true,
+);

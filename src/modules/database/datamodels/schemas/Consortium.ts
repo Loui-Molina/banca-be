@@ -1,8 +1,11 @@
-import { ConsortiumPreference } from './ConsortiumPreference';
-import { Supervisor } from './Supervisor';
-import { Banking } from './Banking';
-import { Transaction } from './Transaction';
-import { Lottery } from './Lottery';
+import {
+  ConsortiumPreference,
+  ConsortiumPreferenceSchema,
+} from './ConsortiumPreference';
+import { Supervisor, SupervisorSchema } from './Supervisor';
+import { Banking, BankingSchema } from './Banking';
+import { Transaction, TransactionSchema } from './Transaction';
+import { Lottery, LotterySchema } from './Lottery';
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
@@ -12,23 +15,17 @@ export type ConsortiumDocument = Consortium & Document;
 
 @Schema()
 export class Consortium {
-  @Prop([Supervisor]) supervisors?: Supervisor[];
-  @Prop({ type: ConsortiumPreference }) consortiumPrefs?: ConsortiumPreference;
-  @Prop([Banking]) bankings?: Banking[];
-  @Prop([Lottery]) lotteries?: Lottery[];
+  @Prop({ type: [SupervisorSchema] }) supervisors?: Supervisor[];
+  @Prop({ type: ConsortiumPreferenceSchema })
+  consortiumPrefs?: ConsortiumPreference;
+  @Prop({ type: [BankingSchema] }) bankings?: Banking[];
+  @Prop({ type: [LotterySchema] }) lotteries?: Lottery[];
   @Prop({ required: true }) ownerUserId: string;
-  @Prop([Transaction]) transactions?: Transaction[];
+  @Prop({ type: [TransactionSchema] }) transactions?: Transaction[];
 
   // Data object members
-  @Prop({ required: true, immutable: true, default: 'user1' })
-  creationUserId?: string;
-  @Prop({
-    required: true,
-    default: (user) => {
-      return user._id;
-    },
-  })
-  modificationUserId: string;
+  @Prop({ required: true, immutable: true }) creationUserId: string;
+  @Prop({ required: true }) modificationUserId: string;
   @Prop() deletionDate?: Date;
 }
 

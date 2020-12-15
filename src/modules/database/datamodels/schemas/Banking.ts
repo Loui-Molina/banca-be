@@ -1,24 +1,26 @@
 import { DataObject } from './DataObject';
-import { BankingPreference } from './BankingPreference';
-import { Transaction } from './Transaction';
-import { Lottery } from './Lottery';
-import { Bet } from './Bet';
+import {
+  BankingPreference,
+  BankingPreferenceSchema,
+} from './BankingPreference';
+import { Transaction, TransactionSchema } from './Transaction';
+import { Lottery, LotterySchema } from './Lottery';
+import { Bet, BetSchema } from './Bet';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import { User } from './User';
 import { Document } from 'mongoose';
+import { User, UserSchema } from './User';
 
 export type BankingDocument = Banking & Document;
 
 @Schema()
 export class Banking implements DataObject {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User }) owner: User;
-  @Prop({ required: true, type: BankingPreference })
-  @Prop({type:BankingPreference})
+  // @Prop({type: mongoose.Schema.Types.ObjectId, ref: UserSchema}) owner: User; // TODO CHECK
+  @Prop({ type: BankingPreferenceSchema })
   bankingPreferences?: BankingPreference;
-  @Prop([Transaction]) transactions?: Transaction[];
-  @Prop([Lottery]) lotteries?: Lottery[];
-  @Prop([Bet]) bets?: Bet[];
+  @Prop({ type: [TransactionSchema] }) transactions?: Transaction[];
+  @Prop({ type: [LotterySchema] }) lotteries?: Lottery[];
+  @Prop({ type: [BetSchema] }) bets?: Bet[];
   @Prop({ required: true }) name: string;
   @Prop({ required: true, default: 0 }) balance: number;
 
@@ -28,4 +30,7 @@ export class Banking implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BankingSchema = SchemaFactory.createForClass(Banking);
+export const BankingSchema = SchemaFactory.createForClass(Banking).set(
+  'timestamps',
+  true,
+);

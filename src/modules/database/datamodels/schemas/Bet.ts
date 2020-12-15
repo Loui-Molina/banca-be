@@ -1,12 +1,12 @@
 import { DataObject } from './DataObject';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Play } from './Play';
+import { Play, PlaySchema } from './Play';
 import { Document } from 'mongoose';
 
 export type BetDocument = Bet & Document;
 @Schema()
 export class Bet implements DataObject {
-  @Prop({ immutable: true }) plays: Play[];
+  @Prop({ immutable: true, type: [PlaySchema] }) plays: Play[];
   @Prop({ immutable: true }) date: Date;
 
   // Data object members
@@ -15,4 +15,7 @@ export class Bet implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BetSchema = SchemaFactory.createForClass(Bet);
+export const BetSchema = SchemaFactory.createForClass(Bet).set(
+  'timestamps',
+  true,
+);

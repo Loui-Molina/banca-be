@@ -1,6 +1,6 @@
 import { DataObject } from './DataObject';
 import { Roles } from '../enums/Roles';
-import { UserPreference } from './UserPreference';
+import { UserPreference, UserPreferenceSchema } from './UserPreference';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
@@ -12,8 +12,8 @@ export class User implements DataObject {
   @Prop() name?: string;
   @Prop() username: string;
   @Prop() password: string;
-  @Prop() role: Roles;
-  @Prop() preferences?: UserPreference;
+  @Prop({ type: String, enum: Roles }) role: Roles;
+  @Prop({ type: UserPreferenceSchema }) preferences?: UserPreference;
 
   // Data object members
   @Prop({ required: true }) creationUserId: string;
@@ -21,7 +21,6 @@ export class User implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User).set(
-  'collection',
-  'users',
-);
+export const UserSchema = SchemaFactory.createForClass(User)
+  .set('collection', 'users')
+  .set('timestamps', true);

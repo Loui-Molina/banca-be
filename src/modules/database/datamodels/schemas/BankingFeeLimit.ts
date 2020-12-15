@@ -7,6 +7,7 @@ import { Document } from 'mongoose';
 
 // Porcentaje que se le paga a cada banca por cada jugada que vende
 export type BankingFeeLimitDocument = BankingFeeLimit & Document;
+
 @Schema()
 export class BankingFeeLimit implements DataObject {
   @Prop({
@@ -22,4 +23,6 @@ export class BankingFeeLimit implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BankingFeeSchema = SchemaFactory.createForClass(BankingFeeLimit);
+export const BankingFeeLimitSchema = SchemaFactory.createForClass(
+  BankingFeeLimit,
+).set('timestamps', true);

@@ -1,4 +1,4 @@
-import { Draw } from './Draw';
+import { Draw, DrawSchema } from './Draw';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DataObject } from './DataObject';
@@ -8,7 +8,7 @@ export type ResultDocument = Result & Document;
 @Schema()
 export class Result implements DataObject {
   @Prop({ require: true }) date?: Date;
-  @Prop({ require: true, type: Draw }) draw?: Draw;
+  @Prop({ require: true, type: DrawSchema }) draw?: Draw;
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationUserId: string;
@@ -16,4 +16,7 @@ export class Result implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const ResultSchema = SchemaFactory.createForClass(Result);
+export const ResultSchema = SchemaFactory.createForClass(Result).set(
+  'timestamps',
+  true,
+);

@@ -26,4 +26,7 @@ export class Transaction implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const TransactionSchema = SchemaFactory.createForClass(Transaction);
+export const TransactionSchema = SchemaFactory.createForClass(Transaction).set(
+  'timestamps',
+  true,
+);

@@ -4,6 +4,7 @@ import { Languages } from '../enums/Languages';
 import { Document } from 'mongoose';
 
 export type UserPreferenceDocument = UserPreference & Document;
+
 @Schema()
 export class UserPreference implements DataObject {
   @Prop({
@@ -21,4 +22,4 @@ export class UserPreference implements DataObject {
 
 export const UserPreferenceSchema = SchemaFactory.createForClass(
   UserPreference,
-);
+).set('timestamps', true);

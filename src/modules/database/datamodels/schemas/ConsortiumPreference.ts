@@ -1,6 +1,6 @@
 import { DataObject } from './DataObject';
-import { PlayLimit } from './PlayLimit';
-import { BlockedNumber } from './BlockedNumber';
+import { PlayLimit, PlayLimitSchema } from './PlayLimit';
+import { BlockedNumber, BlockedNumberSchema } from './BlockedNumber';
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
@@ -8,8 +8,8 @@ export type ConsortiumPreferenceDocument = ConsortiumPreference & Document;
 
 @Schema()
 export class ConsortiumPreference implements DataObject {
-  @Prop([PlayLimit]) limits?: PlayLimit[];
-  @Prop([BlockedNumber]) blockedNumbers?: BlockedNumber[];
+  @Prop({ type: [PlayLimitSchema] }) limits?: PlayLimit[];
+  @Prop({ type: [BlockedNumberSchema] }) blockedNumbers?: BlockedNumber[];
 
   // Data object members
   @Prop({ required: true, immutable: true }) creationUserId: string;
@@ -19,4 +19,4 @@ export class ConsortiumPreference implements DataObject {
 
 export const ConsortiumPreferenceSchema = SchemaFactory.createForClass(
   ConsortiumPreference,
-);
+).set('timestamps', true);

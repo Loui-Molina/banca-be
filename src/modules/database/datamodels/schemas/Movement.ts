@@ -11,4 +11,7 @@ export class Movement implements DataObject {
   @Prop() deletionDate?: Date;
   @Prop({ required: true }) modificationUserId: string;
 }
-export const MovementSchema = SchemaFactory.createForClass(Movement);
+export const MovementSchema = SchemaFactory.createForClass(Movement).set(
+  'timestamps',
+  true,
+);

@@ -21,4 +21,4 @@ export class BankingPreference implements DataObject {
 
 export const BankingPreferenceSchema = SchemaFactory.createForClass(
   BankingPreference,
-);
+).set('timestamps', true);

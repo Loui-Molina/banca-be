@@ -3,14 +3,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DatabaseService } from './services/database.service';
 import { Consortium, ConsortiumSchema } from './datamodels/schemas/Consortium';
 import { Lottery, LotterySchema } from './datamodels/schemas/Lottery';
+import { Banking, BankingSchema } from './datamodels/schemas/Banking';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Consortium.name, schema: ConsortiumSchema },
-      { name: Lottery.name, schema: LotterySchema },
+      { name: Banking.name, schema: BankingSchema },
     ]),
   ],
-  providers: [DatabaseService, Consortium, Lottery],
+  providers: [DatabaseService, Consortium, Banking],
 })
 export class DatabaseModule {}

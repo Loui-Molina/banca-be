@@ -1,7 +1,6 @@
 import { UserPreference } from './UserPreference';
 import { Roles } from '../enums/Roles';
 import { User } from './User';
-import { Document } from 'mongoose';
 
 export class BankingUser extends User {
   bankingId: string;

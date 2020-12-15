@@ -15,4 +15,6 @@ export class BlockedNumber implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BlockedNumberSchema = SchemaFactory.createForClass(BlockedNumber);
+export const BlockedNumberSchema = SchemaFactory.createForClass(
+  BlockedNumber,
+).set('timestamps', true);
