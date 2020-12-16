@@ -1,91 +1,62 @@
 import {Injectable} from '@nestjs/common';
-import {Banking, BankingDocument} from '../datamodels/schemas/Banking';
-import {InjectModel} from '@nestjs/mongoose';
-import {Consortium, ConsortiumDocument,} from '../datamodels/schemas/Consortium';
-import {Model} from 'mongoose';
-import {Bet, BetDocument} from '../datamodels/schemas/Bet';
-import {Play, PlayDocument} from '../datamodels/schemas/Play';
-import {PlayTypes} from '../datamodels/enums/PlayTypes';
-import {PlayNumbers, PlayNumbersDocument} from "../datamodels/schemas/PlayNumbers";
+import {Transaction, TransactionDocument} from "../datamodels/schemas/Transaction";
+import {Supervisor, SupervisorDocument} from "../datamodels/schemas/Supervisor";
+import {
+    ConsortiumPreference,
+    ConsortiumPreferenceDocument
+} from "../datamodels/schemas/ConsortiumPreference";
+import {Lottery, LotteryDocument} from "../datamodels/schemas/Lottery";
+import {Banking, BankingDocument} from "../datamodels/schemas/Banking";
+import {InjectModel} from "@nestjs/mongoose";
+import {Model} from "mongoose";
+import {User, UserDocument} from "../datamodels/schemas/User";
 
 @Injectable()
 export class DatabaseService {
-    constructor(
-        @InjectModel(Consortium.name)
-        private readonly consortiumDocumentModel: Model<ConsortiumDocument>,
-        @InjectModel(Banking.name)
-        private readonly bankingDocumentModel: Model<BankingDocument>,
-        @InjectModel(Play.name)
-        private readonly playDocumentModel: Model<PlayDocument>,
-        @InjectModel(Bet.name)
-        private readonly betDocumentModel: Model<BetDocument>,
-        @InjectModel(PlayNumbers.name)
-        private readonly playNumbersDocumentModel: Model<PlayNumbersDocument>,
-    ) {
-        // this.test();
+    constructor(@InjectModel(Supervisor.name)
+                private readonly supervisorDocumentModel: Model<SupervisorDocument>,
+                @InjectModel(ConsortiumPreference.name)
+                private readonly consortiumPreferenceDocumentModel: Model<ConsortiumPreferenceDocument>,
+                @InjectModel(Banking.name)
+                private readonly bankingDocumentModel: Model<BankingDocument>,
+                @InjectModel(Lottery.name)
+                private readonly lotteryDocumentModel: Model<LotteryDocument>,
+                @InjectModel(User.name)
+                private readonly userDocumentModel: Model<UserDocument>,
+                @InjectModel(Transaction.name)
+                private readonly transactionDocumentModel: Model<TransactionDocument>,) {
     }
 
-    async test() {
 
-
-        // const newConsortium = new this.consortiumDocumentModel({
-        //   bankings: [newBanking],
-        //   modificationUserId: 'user',
-        //   creationUserId: 'user',
-        //   ownerUserId: 'user',
-        // } as Consortium);
-        console.log(new Date());
-
-        const newConsortium = await this.consortiumDocumentModel.findOne().exec();
-        const newBanking = new this.bankingDocumentModel({
-            balance: 0,
-            creationUserId: 'user1',
-            modificationUserId: 'user1',
-            name: 'banca de gonza',
-        } as Banking);
-        newBanking.balance = 200;
-        newBanking.bets.push(
-            new this.betDocumentModel({
-                date: new Date(),
-                creationUserId: 'user1',
-                modificationUserId: 'user1',
-                plays: [
-                    new this.playDocumentModel({
-                        amount: 20,
-                        creationUserId: 'user1',
-                        modificationUserId: 'user1',
-                        playType: PlayTypes.pale,
-                        playNumbers: new this.playNumbersDocumentModel({
-                            creationUserId: 'user1',
-                            modificationUserId: 'user1', first: 1, second: 29
-                        } as PlayNumbers)
-                    } as Play),
-                ],
-            } as Bet),
-            new this.betDocumentModel({
-                date: new Date(),
-                creationUserId: 'user1',
-                modificationUserId: 'user1',
-                plays: [
-                    new this.playDocumentModel({
-                        amount: 15,
-                        creationUserId: 'user1',
-                        modificationUserId: 'user1',
-                        playType: PlayTypes.direct,
-                        playNumbers: new this.playNumbersDocumentModel({
-                            creationUserId: 'user1',
-                            modificationUserId: 'user1', first: 1, second: 29
-                        } as PlayNumbers)
-                    } as Play),
-                ],
-            } as Bet),
-        );
-        newConsortium.bankings.push(newBanking);
-        return newConsortium
-            .save()
-            .then((res) => {
-                console.log('res ', res, ' time ', new Date());
-                return res;
-            });
+    getSupervisors(): Promise<Array<SupervisorDocument>> {
+        return this.supervisorDocumentModel.find().exec();
+        // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
     }
+
+    getConsortiumPrefs(): Promise<ConsortiumPreferenceDocument> {
+        return this.consortiumPreferenceDocumentModel.findOne().exec();
+        // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
+    }
+
+    getBankings(): Promise<Array<BankingDocument>> {
+        return this.bankingDocumentModel.find().exec();
+        // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
+    }
+
+
+    getLotteries(): Promise<Array<LotteryDocument>> {
+        return this.lotteryDocumentModel.find().exec();
+        // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
+    }
+
+    getOwnerId(): Promise<UserDocument> {
+        return this.userDocumentModel.findOne().exec();
+        // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
+    }
+
+    getTransactions(): Promise<Array<TransactionDocument>> {
+        return this.transactionDocumentModel.find().exec();
+        // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
+    }
+
 }
