@@ -26,6 +26,6 @@ import { InitializerModule } from './modules/initializer/initializer.module';
   ],
   controllers: [],
   providers: [],
-  exports: [],
+  exports: [DatabaseModule],
 })
 export class AppModule {}
