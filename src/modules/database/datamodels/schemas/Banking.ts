@@ -1,15 +1,14 @@
-import { DataObject } from './DataObject';
+import { DataObject } from '@database/datamodels/schemas/DataObject';
 import {
   BankingPreference,
   BankingPreferenceSchema,
-} from './BankingPreference';
-import { Transaction, TransactionSchema } from './Transaction';
-import { Lottery, LotterySchema } from './Lottery';
-import { Bet, BetSchema } from './Bet';
+} from '@database/datamodels/schemas/BankingPreference';
+import { Transaction, TransactionSchema } from '@database/datamodels/schemas/Transaction';
+import { Lottery, LotterySchema } from '@database/datamodels/schemas/Lottery';
+import { Bet, BetSchema } from '@database/datamodels/schemas/Bet';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
-import { User, UserSchema } from './User';
+
 
 export type BankingDocument = Banking & Document;
 

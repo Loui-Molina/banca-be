@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Banking, BankingDocument } from './datamodels/schemas/Banking';
-import { ConsortiumPreference, ConsortiumPreferenceDocument } from './datamodels/schemas/ConsortiumPreference';
-import { Lottery, LotteryDocument } from './datamodels/schemas/Lottery';
-import { Supervisor, SupervisorDocument } from './datamodels/schemas/Supervisor';
-import { Transaction, TransactionDocument } from './datamodels/schemas/Transaction';
-import { User, UserDocument } from './datamodels/schemas/User';
+import { Banking, BankingDocument } from '@database/datamodels/schemas/Banking';
+import { ConsortiumPreference, ConsortiumPreferenceDocument } from '@database/datamodels/schemas/ConsortiumPreference';
+import { Lottery, LotteryDocument } from '@database/datamodels/schemas/Lottery';
+import { Supervisor, SupervisorDocument } from '@database/datamodels/schemas/Supervisor';
+import { Transaction, TransactionDocument } from '@database/datamodels/schemas/Transaction';
+import { User, UserDocument } from '@database/datamodels/schemas/User';
 
 @Injectable()
 export class DatabaseService {

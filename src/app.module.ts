@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HealthCheckModule } from './modules/health-check/health-check.module';
-import { DatabaseModule } from './modules/database/database.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
+import { HealthCheckModule } from '@health-check/health-check.module';
+import { DatabaseModule } from '@database/database.module';
+import { AuthModule } from '@auth/auth.module';
+import { UsersModule } from '@users/users.module';
 
 @Module({
   imports: [
@@ -11,11 +11,13 @@ import { UsersModule } from './modules/users/users.module';
       useNewUrlParser: true,
       keepAlive: true,
       keepAliveInitialDelay: 300000,
+      connectionName:'banca'
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/users', {
       useNewUrlParser: true,
       keepAlive: true,
       keepAliveInitialDelay: 300000,
+      connectionName:'users'
     }),
     HealthCheckModule,
     DatabaseModule,

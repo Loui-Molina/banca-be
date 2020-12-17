@@ -1,6 +1,6 @@
-import { UserPreference } from './UserPreference';
-import { Roles } from '../enums/Roles';
-import { User } from './User';
+import { UserPreference } from '@database/datamodels/schemas/UserPreference';
+import { Roles } from '@database/datamodels/enums/Roles';
+import { User } from '@database/datamodels/schemas/User';
 
 export class BankingUser extends User {
   bankingId: string;

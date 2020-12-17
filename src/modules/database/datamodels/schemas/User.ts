@@ -1,6 +1,6 @@
-import { DataObject } from './DataObject';
-import { Roles } from '../enums/Roles';
-import { UserPreference, UserPreferenceSchema } from './UserPreference';
+import { DataObject } from '@database/datamodels/schemas/DataObject';
+import { Roles } from '@database/datamodels/enums/Roles';
+import { UserPreference, UserPreferenceSchema } from '@database/datamodels/schemas/UserPreference';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';

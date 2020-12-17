@@ -1,7 +1,7 @@
-import { DataObject } from './DataObject';
-import { DominicanLotteryPrizes } from '../enums/DominicanLotteryPrizes';
-import { UsLotteryPrizes } from '../enums/UsLotteryPrizes';
-import { BrasilPrizes } from '../enums/BrasilPrizes';
+import { DataObject } from '@database/datamodels/schemas/DataObject';
+import { DominicanLotteryPrizes } from '@database/datamodels/enums/DominicanLotteryPrizes';
+import { UsLotteryPrizes } from '@database/datamodels/enums/UsLotteryPrizes';
+import { BrasilPrizes } from '@database/datamodels/enums/BrasilPrizes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 

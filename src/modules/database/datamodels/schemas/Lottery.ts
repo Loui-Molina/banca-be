@@ -1,10 +1,10 @@
-import { DataObject } from './DataObject';
-import { LotteryTime, LotteryTimeSchema } from './LotteryTime';
-import { OCStatus } from '../enums/OCStatus';
-import { BettingLimit, BettingLimitSchema } from './BettingLimit';
-import { PrizeLimit, PrizeLimitSchema } from './PrizeLimit';
-import { BankingFeeLimit, BankingFeeLimitSchema } from './BankingFeeLimit';
-import { Result, ResultSchema } from './Result';
+import { DataObject } from '@database/datamodels/schemas/DataObject';
+import { LotteryTime, LotteryTimeSchema } from '@database/datamodels/schemas/LotteryTime';
+import { OCStatus } from '@database/datamodels/enums/OCStatus';
+import { BettingLimit, BettingLimitSchema } from '@database/datamodels/schemas/BettingLimit';
+import { PrizeLimit, PrizeLimitSchema } from '@database/datamodels/schemas/PrizeLimit';
+import { BankingFeeLimit, BankingFeeLimitSchema } from '@database/datamodels/schemas/BankingFeeLimit';
+import { Result, ResultSchema } from '@database/datamodels/schemas/Result';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';

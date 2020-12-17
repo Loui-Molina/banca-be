@@ -10,6 +10,13 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@src/*": ["src/*"],
+      "@auth/*": ["src/modules/auth/*"],
+      "@users/*": ["src/modules/users/*"],
+      "@health-check/*": ["src/modules/health-check/*"],
+      "@database/*": ["src/modules/database/*"],
+    },
   }
 }

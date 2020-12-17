@@ -1,7 +1,6 @@
-import { Draw, DrawSchema } from './Draw';
-
+import { Draw, DrawSchema } from '@database/datamodels/schemas/Draw';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { DataObject } from './DataObject';
+import { DataObject } from '@database/datamodels/schemas/DataObject';
 import { Document } from 'mongoose';
 
 export type ResultDocument = Result & Document;

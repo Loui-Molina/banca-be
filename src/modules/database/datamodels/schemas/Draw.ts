@@ -1,6 +1,6 @@
 // Los numeros que salieron en la loteria
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { DataObject } from './DataObject';
+import { DataObject } from '@database/datamodels/schemas/DataObject';
 import { Document } from 'mongoose';
 
 export type DrawDocument = Draw & Document;

@@ -1,5 +1,4 @@
-import { DataObject } from './DataObject';
-
+import { DataObject } from '@database/datamodels/schemas/DataObject';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
