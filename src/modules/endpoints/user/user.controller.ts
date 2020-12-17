@@ -9,12 +9,12 @@ export class UserController {
     constructor(private readonly userService: UserService) {
     }
 
-    @Get('all')
+    @Get()
     getAll(): Promise<Array<UserDocument>> {
         return this.userService.getAll();
     }
 
-    @Get('get/:id')
+    @Get(':id')
     get(@Param() params): Promise<User> {
         return this.userService.get(params.id);
     }
@@ -24,12 +24,12 @@ export class UserController {
         return this.userService.getFiltered(q, value);
     }
 
-    @Post('save')
+    @Post()
     save(@Body() userDto: UserDto): Promise<UserDocument> {
         return this.userService.save(userDto);
     }
 
-    @Delete('delete/:id')
+    @Delete(':id')
     delete(@Param() params): Promise<UserDocument> {
         return this.userService.delete(params.id);
     }
