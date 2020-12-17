@@ -13,9 +13,6 @@ export class UserService {
     return this.userModel.find().exec();
   }
 
-  async get(id: string): Promise<User> {
-    return this.userModel.findById(id).exec();
-  }
 
   async getFiltered(q: string, value:string): Promise<Array<UserDocument>> {
     return this.userModel.find({[q]:value}).exec();
@@ -48,5 +45,9 @@ export class UserService {
 
   async delete(id: string): Promise<UserDocument> {
     return this.userModel.findByIdAndRemove(id).exec();
+  }
+
+  async get(id: string): Promise<User> {
+    return this.userModel.findById(id).exec();
   }
 }

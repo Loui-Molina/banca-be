@@ -14,11 +14,6 @@ export class UserController {
         return this.userService.getAll();
     }
 
-    @Get(':id')
-    get(@Param() params): Promise<User> {
-        return this.userService.get(params.id);
-    }
-
     @Get('search')
     getFiltered(@Query('q') q, @Query('value') value): Promise<Array<UserDocument>> {
         return this.userService.getFiltered(q, value);
@@ -32,5 +27,10 @@ export class UserController {
     @Delete(':id')
     delete(@Param() params): Promise<UserDocument> {
         return this.userService.delete(params.id);
+    }
+
+    @Get(':id')
+    get(@Param() params): Promise<User> {
+        return this.userService.get(params.id);
     }
 }
