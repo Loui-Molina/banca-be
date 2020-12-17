@@ -11,13 +11,11 @@ import { UsersModule } from '@users/users.module';
       useNewUrlParser: true,
       keepAlive: true,
       keepAliveInitialDelay: 300000,
-      connectionName:'banca'
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/users', {
       useNewUrlParser: true,
       keepAlive: true,
       keepAliveInitialDelay: 300000,
-      connectionName:'users'
     }),
     HealthCheckModule,
     DatabaseModule,
