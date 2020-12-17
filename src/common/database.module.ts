@@ -1,6 +1,6 @@
 import {Global, Module} from '@nestjs/common';
 import {MongooseModule} from '@nestjs/mongoose';
-import {DatabaseService} from './services/database.service';
+import {DatabaseService} from './database.service';
 import {Supervisor, SupervisorSchema} from "./datamodels/schemas/Supervisor";
 import {
     ConsortiumPreference,

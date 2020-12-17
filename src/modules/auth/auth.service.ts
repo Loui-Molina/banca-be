@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../users/user.service';
+import { UserService } from 'src/modules/endpoints/user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -10,10 +10,13 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(username);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
+    const users = await this.userService.getFiltered('username', username);
+    if(users.length > 0){
+      const user = users.pop();
+      if (user && user.password === pass) {
+        const { password, ...result } = user;
+        return result;
+      }
     }
     return null;
   }

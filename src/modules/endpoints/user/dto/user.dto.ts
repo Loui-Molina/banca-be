@@ -1,4 +1,5 @@
 export class UserDto {
+  _id: string;
   name: string;
   username: string;
   password: string;
@@ -7,3 +8,5 @@ export class UserDto {
   modificationDate: Date;
   modificationUserId: string;
 }
+
+
