@@ -1,36 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {Model} from 'mongoose';
+import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/common/datamodels/schemas/User';
-import {UserReq} from './dto/user.req';
+import { UserReq } from './dto/user.req';
 
 @Injectable()
 export class UserService {
-
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async getAll(): Promise<Array<User>> {
     return this.userModel.find().exec();
   }
 
-
-  async getFiltered(q: string, value:string): Promise<Array<User>> {
-    return this.userModel.find({[q]:value}).exec();
+  async getFiltered(q: string, value: string): Promise<Array<User>> {
+    return this.userModel.find({ [q]: value }).exec();
   }
 
   async save(userReq: UserReq): Promise<User> {
     // TODO GET ACTUAL USER
-    if(userReq._id){
+    if (userReq._id) {
       //UPDATE
-      return this.userModel.findByIdAndUpdate(userReq._id, {
-        username: userReq.username,
-        password: userReq.password,
-        name: userReq.name,
-        modificationDate: new Date(),
-        modificationUserId: '1',
-      }, {
-        new: true
-      });
+      return this.userModel.findByIdAndUpdate(
+        userReq._id,
+        {
+          username: userReq.username,
+          password: userReq.password,
+          name: userReq.name,
+          modificationDate: new Date(),
+          modificationUserId: '1',
+        },
+        {
+          new: true,
+        },
+      );
     } else {
       //CREATE
       const newUser = new this.userModel({
@@ -38,7 +40,7 @@ export class UserService {
         creationDate: new Date(),
         creationUserId: '1',
         modificationDate: new Date(),
-        modificationUserId: '1'
+        modificationUserId: '1',
       });
       await newUser.save();
       return newUser;
@@ -50,6 +52,6 @@ export class UserService {
   }
 
   async get(id: string): Promise<User> {
-    return  await this.userModel.findById(id).exec();
+    return await this.userModel.findById(id).exec();
   }
 }

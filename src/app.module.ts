@@ -1,9 +1,9 @@
-import {Module} from '@nestjs/common';
-import {MongooseModule} from '@nestjs/mongoose';
-import {HealthCheckModule} from './modules/health-check/health-check.module';
-import {DatabaseModule} from './common/database.module';
-import {AuthModule} from './modules/auth/auth.module';
-import {UsersModule} from './modules/endpoints/user/users.module';
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { HealthCheckModule } from './modules/health-check/health-check.module';
+import { DatabaseModule } from './common/database.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/endpoints/user/users.module';
 
 @Module({
   imports: [

@@ -1,8 +1,8 @@
-import {DataObject} from './DataObject';
-import {PlayTypes} from '../enums/PlayTypes';
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document} from 'mongoose';
-import {PlayNumbers, PlayNumbersSchema} from './PlayNumbers';
+import { DataObject } from './DataObject';
+import { PlayTypes } from '../enums/PlayTypes';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+import { PlayNumbers, PlayNumbersSchema } from './PlayNumbers';
 
 export type PlayDocument = Play & Document;
 
