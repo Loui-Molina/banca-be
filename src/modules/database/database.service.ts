@@ -19,8 +19,6 @@ export class DatabaseService {
     private readonly bankingDocumentModel: Model<BankingDocument>,
     @InjectModel(Lottery.name)
     private readonly lotteryDocumentModel: Model<LotteryDocument>,
-    @InjectModel(User.name)
-    private readonly userDocumentModel: Model<UserDocument>,
     @InjectModel(Transaction.name)
     private readonly transactionDocumentModel: Model<TransactionDocument>,
   ) {}
@@ -42,11 +40,6 @@ export class DatabaseService {
 
   getLotteries(): Promise<Array<LotteryDocument>> {
     return this.lotteryDocumentModel.find().exec();
-    // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
-  }
-
-  getOwnerId(): Promise<UserDocument> {
-    return this.userDocumentModel.findOne().exec();
     // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
   }
 
