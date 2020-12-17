@@ -8,7 +8,7 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle('Betting')
     .setDescription('Betting description')
-    .setVersion('1.0')
+    .setVersion('1.0.3')
     .addTag('bets')
     .build();
   const document = SwaggerModule.createDocument(app, options);

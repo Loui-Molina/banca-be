@@ -2,7 +2,7 @@ import {Body, Controller, Delete, Get, Param, Post, Query} from '@nestjs/common'
 import {UserDto} from './dto/user.dto';
 import {UserService} from './user.service';
 import {User, UserDocument} from "src/common/datamodels/schemas/User";
-
+import { plainToClass } from "class-transformer";
 
 @Controller('users')
 export class UserController {
@@ -25,12 +25,12 @@ export class UserController {
     }
 
     @Delete(':id')
-    delete(@Param() params): Promise<UserDocument> {
-        return this.userService.delete(params.id);
+    delete(@Param('id') id: string): Promise<UserDocument> {
+        return this.userService.delete(id);
     }
 
     @Get(':id')
-    get(@Param() params): Promise<User> {
-        return this.userService.get(params.id);
+    get(@Param('id') id: string): UserDto {
+        return plainToClass(UserDto, this.userService.get(id));
     }
 }
