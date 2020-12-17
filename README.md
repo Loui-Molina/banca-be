@@ -16,3 +16,11 @@ CADA ENDPOINT TIENE
 * controller
 * service
 * dtos
+
+
+Configuracion del .env para que funcione la app :
+
+# Database connections
+
+userDB=mongodb://localhost:27017/users
+bancaDB=mongodb://localhost:27017/banca
