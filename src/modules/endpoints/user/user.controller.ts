@@ -1,36 +1,58 @@
 import {Body, Controller, Delete, Get, Param, Post, Query} from '@nestjs/common';
-import {UserDto} from './dto/user.dto';
+import {UserReq} from './dto/user.req';
 import {UserService} from './user.service';
 import {User, UserDocument} from "src/common/datamodels/schemas/User";
-import { plainToClass } from "class-transformer";
+import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiQuery, ApiTags} from "@nestjs/swagger";
 
+
+@ApiTags('users')
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UserService) {
     }
 
     @Get()
-    getAll(): Promise<Array<UserDocument>> {
+    @ApiFoundResponse({
+        description: 'The records has been successfully founded.',
+        type: User,
+    })
+    getAll(): Promise<Array<User>> {
         return this.userService.getAll();
     }
 
     @Get('search')
-    getFiltered(@Query('q') q, @Query('value') value): Promise<Array<UserDocument>> {
+    @ApiFoundResponse({
+        description: 'The records has been successfully founded.',
+        type: User,
+    })
+    getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<User>> {
         return this.userService.getFiltered(q, value);
     }
 
     @Post()
-    save(@Body() userDto: UserDto): Promise<UserDocument> {
-        return this.userService.save(userDto);
+    @ApiCreatedResponse({
+        description: 'The record has been successfully saved.',
+        type: User,
+    })
+    save(@Body() userReq: UserReq): Promise<User> {
+        return this.userService.save(userReq);
     }
 
     @Delete(':id')
-    delete(@Param('id') id: string): Promise<UserDocument> {
+    @ApiOkResponse({
+        description: 'The record has been successfully deleted.',
+        type: User,
+    })
+    delete(@Param('id') id: string): Promise<User> {
         return this.userService.delete(id);
     }
 
     @Get(':id')
-    get(@Param('id') id: string): UserDto {
-        return plainToClass(UserDto, this.userService.get(id));
+    @ApiFoundResponse({
+        description: 'The record has been successfully founded.',
+        type: User,
+    })
+    async get(@Param('id') id: string): Promise<User> {
+        return await this.userService.get(id);
     }
 }

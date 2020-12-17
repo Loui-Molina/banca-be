@@ -2,30 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import { User, UserDocument } from 'src/common/datamodels/schemas/User';
-import { UserDto } from './dto/user.dto';
+import {UserReq} from './dto/user.req';
 
 @Injectable()
 export class UserService {
 
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async getAll(): Promise<Array<UserDocument>> {
+  async getAll(): Promise<Array<User>> {
     return this.userModel.find().exec();
   }
 
 
-  async getFiltered(q: string, value:string): Promise<Array<UserDocument>> {
+  async getFiltered(q: string, value:string): Promise<Array<User>> {
     return this.userModel.find({[q]:value}).exec();
   }
 
-  async save(userDto: UserDto): Promise<UserDocument> {
+  async save(userReq: UserReq): Promise<User> {
     // TODO GET ACTUAL USER
-    if(userDto._id){
+    if(userReq._id){
       //UPDATE
-      return this.userModel.findByIdAndUpdate(userDto._id, {
-        username: userDto.username,
-        password: userDto.password,
-        name: userDto.name,
+      return this.userModel.findByIdAndUpdate(userReq._id, {
+        username: userReq.username,
+        password: userReq.password,
+        name: userReq.name,
         modificationDate: new Date(),
         modificationUserId: '1',
       }, {
@@ -33,21 +33,23 @@ export class UserService {
       });
     } else {
       //CREATE
-      userDto.creationDate = new Date();
-      userDto.creationUserId = '1';
-      userDto.modificationDate = new Date();
-      userDto.modificationUserId = '1';
-      const newUser = new this.userModel(userDto);
+      const newUser = new this.userModel({
+        ...userReq,
+        creationDate: new Date(),
+        creationUserId: '1',
+        modificationDate: new Date(),
+        modificationUserId: '1'
+      });
       await newUser.save();
       return newUser;
     }
   }
 
-  async delete(id: string): Promise<UserDocument> {
+  async delete(id: string): Promise<User> {
     return this.userModel.findByIdAndRemove(id).exec();
   }
 
   async get(id: string): Promise<User> {
-    return this.userModel.findById(id).exec();
+    return  await this.userModel.findById(id).exec();
   }
 }

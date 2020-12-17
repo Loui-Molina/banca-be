@@ -4,25 +4,31 @@ import { UserPreference, UserPreferenceSchema } from './UserPreference';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import {Expose} from "class-transformer";
+import {ApiProperty} from "@nestjs/swagger";
 
 export type UserDocument = User & Document;
 
 @Schema()
 export class User implements DataObject {
-  @Expose()
+  @ApiProperty()
   @Prop() lastLogin?: Date;
-  @Expose()
+  @ApiProperty()
   @Prop() name?: string;
-  @Expose()
+  @ApiProperty()
   @Prop() username: string;
-  @Expose()
+  @ApiProperty()
   @Prop() password: string;
+  @ApiProperty()
   @Prop({ type: String, enum: Roles }) role: Roles;
+  @ApiProperty()
   @Prop({ type: UserPreferenceSchema }) preferences?: UserPreference;
 
   // Data object members
+  @ApiProperty()
   @Prop({ required: true }) creationUserId: string;
+  @ApiProperty()
   @Prop() deletionDate?: Date;
+  @ApiProperty()
   @Prop({ required: true }) modificationUserId: string;
 }
 
