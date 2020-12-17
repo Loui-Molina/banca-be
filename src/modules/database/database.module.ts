@@ -12,7 +12,8 @@ import {
   Transaction,
   TransactionSchema,
 } from '@database/datamodels/schemas/Transaction';
-import { User, UserSchema } from '@database/datamodels/schemas/User';
+import { User, UserSchema } from './datamodels/schemas/User';
+import { UsersModule } from '../users/users.module';
 
 const providersExports = [
   DatabaseService,
@@ -21,7 +22,7 @@ const providersExports = [
   Banking,
   Lottery,
   Transaction,
-  User,
+  User
 ];
 
 @Global()
@@ -33,8 +34,8 @@ const providersExports = [
       { name: Banking.name, schema: BankingSchema },
       { name: Lottery.name, schema: LotterySchema },
       { name: Transaction.name, schema: TransactionSchema },
-      { name: User.name, schema: UserSchema },
-    ]),
+      { name: User.name, schema: UserSchema }, 
+    ],"banca"),
   ],
   providers: providersExports,
   exports: providersExports,
