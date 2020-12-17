@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/modules/database/datamodels/schemas/User';
-import { UserReq } from '@users/dtos/user.req';
+import { UserDto } from '@src/modules/users/dtos/user.dto';
 
 @Injectable()
 export class UserService {
@@ -16,16 +16,16 @@ export class UserService {
     return this.userModel.find({ [q]: value }).exec();
   }
 
-  async save(userReq: UserReq): Promise<User> {
+  async save(userDto: UserDto): Promise<User> {
     // TODO GET ACTUAL USER
-    if (userReq._id) {
+    if (userDto._id) {
       //UPDATE
       return this.userModel.findByIdAndUpdate(
-        userReq._id,
+        userDto._id,
         {
-          username: userReq.username,
-          password: userReq.password,
-          name: userReq.name,
+          username: userDto.username,
+          password: userDto.password,
+          name: userDto.name,
           modificationDate: new Date(),
           modificationUserId: '1',
         },
@@ -36,7 +36,7 @@ export class UserService {
     } else {
       //CREATE
       const newUser = new this.userModel({
-        ...userReq,
+        ...userDto,
         creationDate: new Date(),
         creationUserId: '1',
         modificationDate: new Date(),

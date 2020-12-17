@@ -7,7 +7,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UserReq } from '@users/dtos/user.req';
+import { UserDto } from '@src/modules/users/dtos/user.dto';
 import { UserService } from '@users/user.service';
 import { User } from 'src/modules/database/datamodels/schemas/User';
 import {
@@ -49,8 +49,8 @@ export class UserController {
     description: 'The record has been successfully saved.',
     type: User,
   })
-  save(@Body() userReq: UserReq): Promise<User> {
-    return this.userService.save(userReq);
+  save(@Body() userDto: UserDto): Promise<User> {
+    return this.userService.save(userDto);
   }
 
   @Delete(':id')
