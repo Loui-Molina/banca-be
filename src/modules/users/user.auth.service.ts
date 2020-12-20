@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { AuthCredentialsDto } from "../auth/dtos/auth.credentials.dto";
@@ -16,7 +16,16 @@ export class UserAuthService{
         user.password = password;
         user.creationUserId = "1";
         user.modificationUserId = "1";
-        await user.save();
-
+        try {
+            await user.save();
+        } catch(error){
+            if(error.code === 11000){
+                throw new ConflictException('Username already exists')}
+            else{
+                throw new InternalServerErrorException();
+            }
+        }
+        
+       
     }
 }

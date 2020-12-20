@@ -11,7 +11,7 @@ export type UserDocument = User & Document;
 export class User implements DataObject {
   @ApiProperty() @Prop() lastLogin?: Date;
   @ApiProperty() @Prop() name?: string;
-  @ApiProperty() @Prop() username: string;
+  @ApiProperty() @Prop({unique: true }) username: string;
   @ApiProperty() @Prop() password: string;
   @ApiProperty() @Prop({ type: String, enum: Roles }) role: Roles;
   @ApiProperty()
