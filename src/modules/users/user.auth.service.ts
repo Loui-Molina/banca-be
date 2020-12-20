@@ -4,7 +4,7 @@ import { Model } from "mongoose";
 import * as bcrypt from 'bcrypt';
 import { AuthCredentialsDto } from "../auth/dtos/auth.credentials.dto";
 import { User, UserDocument } from "../database/datamodels/schemas/User";
-import { isHalfWidth } from "class-validator";
+import { Constants } from "../auth/utils/constants";
 
 @Injectable()
 export class UserAuthService{
@@ -23,13 +23,25 @@ export class UserAuthService{
            await user.save();
         } catch(error){
             if(error.code === 11000){
-                throw new ConflictException('Username already exists')}
+                throw new ConflictException(Constants.USERNAME_EXISTS_ERROR)}
             else{
                 throw new InternalServerErrorException();
             }
         }
         
        
+    }
+
+    async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<string>{
+        const { username , password } = authCredentialsDto;
+        const user = await this.userModel.findOne({username});
+        if(user && await user.validatePassword(password)){
+            return user.username;
+        }
+        else{
+            return null;
+        }
+
     }
 
     private async hashPassword(password: string, salt: string): Promise<string>{

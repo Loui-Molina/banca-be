@@ -4,6 +4,7 @@ import { UserPreference, UserPreferenceSchema } from '@database/datamodels/schem
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
 
 export type UserDocument = User & Document;
 
@@ -30,8 +31,16 @@ export class User implements DataObject {
   @ApiProperty()
   @Prop({ required: true })
   modificationUserId: string;
+
+  validatePassword:Function;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
   .set('collection', 'users')
   .set('timestamps', true);
+
+  UserSchema.methods.validatePassword = async function validatePassword(password :string): Promise<boolean>{
+    const hash = await bcrypt.hash(password, this.salt);
+    return hash === this.password;
+  };
