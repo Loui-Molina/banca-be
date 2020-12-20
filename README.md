@@ -29,6 +29,10 @@ APP_DESCRIPTION=Betting for Republic
 APP_VERSION=1
 APP_TAG=Bet
 
+#Token
+
+TOKEN_SECRET_KEY=topSecret51
+
 # Database connections
 
 userDB=mongodb://localhost:27017/users
