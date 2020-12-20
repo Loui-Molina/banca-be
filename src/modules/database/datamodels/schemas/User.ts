@@ -17,7 +17,9 @@ export class User implements DataObject {
   @ApiProperty()
   @Prop({ type: UserPreferenceSchema })
   preferences?: UserPreference;
-
+  @ApiProperty()
+  @Prop()
+  salt: string;
   // Data object members
   @ApiProperty()
   @Prop({ required: true })
