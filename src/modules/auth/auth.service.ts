@@ -1,11 +1,12 @@
 import {  Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Roles } from '../database/datamodels/enums/Roles';
-import { ResponsePayload } from '../users/dtos/response.dto';
-import { UserAuthService } from '../users/user.auth.service';
-import { AuthCredentialsDto } from './dtos/auth.credentials.dto';
-import { JwtPayload } from './jwt.payload.interface';
-import { Constants } from './utils/constants';
+import { Roles } from '@database/datamodels/enums/Roles';
+import { ResponsePayload } from '@users/dtos/response.payload.dto';
+import { UserAuthService } from '@users/user.auth.service';
+import { ConstApp } from '@utils/const.app';
+import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { JwtPayload } from '@auth/jwt.payload.interface';
+import { ResponseDto } from '../utils/dtos/response.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
     private jwtService: JwtService){
   }
   
-  async singUp(authCredentialsDto: AuthCredentialsDto) : Promise<void>{
+  async singUp(authCredentialsDto: AuthCredentialsDto) : Promise<ResponseDto>{
     return this.userAuthService.singUp(authCredentialsDto);
   }
 
@@ -21,7 +22,7 @@ export class AuthService {
     let responsePayload :ResponsePayload = new ResponsePayload();
     responsePayload = await this.userAuthService.validateUserPassword(authCredentialsDto);
     if (!responsePayload.username){
-      throw new UnauthorizedException(Constants.INVALID_CREDENTIALS_ERROR);
+      throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
     }
     //Deberia agregar el rol maybe
     const username : string = responsePayload.username;

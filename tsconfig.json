@@ -17,6 +17,7 @@
       "@users/*": ["src/modules/users/*"],
       "@health-check/*": ["src/modules/health-check/*"],
       "@database/*": ["src/modules/database/*"],
+      "@utils/*": ["src/modules/utils/*"],
     },
   }
 }
