@@ -33,6 +33,7 @@
     "@types/bcrypt": "^3.0.0",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.1",
+    "class-validator": "^0.12.2",
     "fastify-swagger": "^3.5.0",
     "mongoose": "^5.11.6",
     "passport": "^0.4.1",
