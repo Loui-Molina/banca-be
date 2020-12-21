@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Req, UseGuards, ValidationPipe} from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
-import { ResponseDto } from '../utils/dtos/response.dto';
+import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 

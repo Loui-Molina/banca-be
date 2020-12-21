@@ -12,7 +12,7 @@ export class AuthCredentialsDto{
 
     @IsString()
     @MinLength(8)
-    @MaxLength(20)
+    @MaxLength(35)
     @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message:ConstApp.PASSWORD_MESSAGE})
     password: string;
 

@@ -6,7 +6,7 @@ import { UserAuthService } from '@users/user.auth.service';
 import { ConstApp } from '@utils/const.app';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { JwtPayload } from '@auth/jwt.payload.interface';
-import { ResponseDto } from '../utils/dtos/response.dto';
+import { ResponseDto } from '@utils/dtos/response.dto';
 
 @Injectable()
 export class AuthService {

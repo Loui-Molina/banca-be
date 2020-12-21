@@ -7,9 +7,9 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UserDto } from '@src/modules/users/dtos/user.dto';
+import { UserDto } from '@users/dtos/user.dto';
 import { UserService } from '@users/user.service';
-import { User } from 'src/modules/database/datamodels/schemas/User';
+import { User } from '@database/datamodels/schemas/User';
 import {
   ApiCreatedResponse,
   ApiFoundResponse,
