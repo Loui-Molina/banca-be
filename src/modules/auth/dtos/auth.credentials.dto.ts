@@ -19,5 +19,6 @@ export class AuthCredentialsDto{
     @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message:ConstApp.PASSWORD_MESSAGE})
     password: string;
 
+    @ApiProperty({type:String,enum:Roles})
     role:Roles;
 }
