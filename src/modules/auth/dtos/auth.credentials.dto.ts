@@ -1,5 +1,5 @@
-import { Roles } from "@src/modules/database/datamodels/enums/Roles";
-import { ConstApp } from "@src/modules/utils/const.app";
+import { Roles } from "@database/datamodels/enums/Roles";
+import { ConstApp } from "@utils/const.app";
 import { IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 
