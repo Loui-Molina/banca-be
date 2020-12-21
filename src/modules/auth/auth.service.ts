@@ -1,30 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import {  Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/modules/endpoints/user/user.service';
+import { Roles } from '@database/datamodels/enums/Roles';
+import { ResponsePayload } from '@users/dtos/response.payload.dto';
+import { UserAuthService } from '@users/user.auth.service';
+import { ConstApp } from '@utils/const.app';
+import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { JwtPayload } from '@auth/jwt.payload.interface';
+import { ResponseDto } from '@utils/dtos/response.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
-  ) {}
-
-  async validateUser(username: string, pass: string): Promise<any> {
-    const users = await this.userService.getFiltered('username', username);
-    if (users.length > 0) {
-      const user = users.pop();
-      if (user && user.password === pass) {
-        const { password, ...result } = user;
-        return result;
-      }
-    }
-    return null;
+  constructor( private userAuthService: UserAuthService,
+    private jwtService: JwtService){
+  }
+  
+  async singUp(authCredentialsDto: AuthCredentialsDto) : Promise<ResponseDto>{
+    return this.userAuthService.singUp(authCredentialsDto);
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+  async singIn(authCredentialsDto: AuthCredentialsDto): Promise<{accessToken: string}>{
+    let responsePayload :ResponsePayload = new ResponsePayload();
+    responsePayload = await this.userAuthService.validateUserPassword(authCredentialsDto);
+    if (!responsePayload.username){
+      throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
+    }
+    //Deberia agregar el rol maybe
+    const username : string = responsePayload.username;
+    const role : Roles = responsePayload.role;
+    const payload : JwtPayload = { username, role};
+    const accessToken = await this.jwtService.sign(payload);
+    return { accessToken };
   }
 }

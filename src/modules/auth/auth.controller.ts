@@ -1,22 +1,27 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { LocalAuthGuard } from './local-auth.guard';
+import { Body, Controller, Post, Req, UseGuards, ValidationPipe} from '@nestjs/common';
+import { AuthService } from '@auth/auth.service';
+import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { ResponseDto } from '@utils/dtos/response.dto';
+import { AuthGuard } from '@nestjs/passport';
 
-@Controller()
+
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  //@UseGuards(AuthGuard('local'))
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  @Post('/signup')
+  async singUp(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto>{
+      return this.authService.singUp(authCredentialsDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  @Post('/signin')
+  async singIn(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<{accessToken : string}>{
+      return this.authService.singIn(authCredentialsDto);
+  }
+
+  @Post('/test')
+  @UseGuards(AuthGuard())
+  test(@Req()req){
+    console.log(req);
   }
 }

@@ -1,19 +1,20 @@
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import { ApiBasicAuth, DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from '@src/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(app.get('ConfigService').get('APP_GLOBAL_PREFIX'),);
   const options = new DocumentBuilder()
-    .setTitle('Betting')
-    .setDescription('Betting description')
-    .setVersion('1.0.4')
-    .addTag('bets')
+    .setTitle(app.get('ConfigService').get('APP_TITLE'))
+    .setDescription(app.get('ConfigService').get('APP_DESCRIPTION'),)
+    .setVersion(app.get('ConfigService').get('APP_VERSION'),)
+    .addTag(app.get('ConfigService').get('APP_TAG'),)
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup(app.get('ConfigService').get('APP_SWAGGER_SETUP'), app, document);
+
 
   await app.listen(3000);
 }
