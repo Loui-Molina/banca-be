@@ -5,6 +5,7 @@ import { AuthService } from '@auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '@auth/jwt.strategy';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -12,12 +13,14 @@ import { JwtStrategy } from '@auth/jwt.strategy';
     PassportModule.register({
         defaultStrategy:'jwt'
     }),
-    JwtModule.register({
-      secret:'topSecret51',
-      signOptions:{
-        expiresIn: 3600,
-      }
-    })
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('TOKEN_SECRET_KEY')
+        };
+      },
+      inject: [ConfigService]
+    }),
     ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController, ],

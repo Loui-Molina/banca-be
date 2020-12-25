@@ -12,13 +12,13 @@ export class JwtStrategy extends PassportStrategy(Strategy){
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>){
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: 'topSecret51',
+            secretOrKey: process.env.TOKEN_SECRET_KEY,
         });   
     }
     
     async validate(payload: JwtPayload){
         const  { username , role} = payload;
-        const user = await this.userModel.findOne({ username });
+        const user = await this.userModel.findOne({ username, role });
         if (!user){
             throw new UnauthorizedException();
         }
