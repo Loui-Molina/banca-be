@@ -11,19 +11,19 @@ import { ConfigService } from '@nestjs/config';
   imports: [
     UsersModule,
     PassportModule.register({
-        defaultStrategy:'jwt'
+      defaultStrategy: 'jwt',
     }),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {
         return {
-          secret: configService.get<string>('TOKEN_SECRET_KEY')
+          secret: configService.get<string>('TOKEN_SECRET_KEY'),
         };
       },
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
-    ],
+  ],
   providers: [AuthService, JwtStrategy],
-  controllers: [AuthController, ],
+  controllers: [AuthController],
   exports: [AuthService, PassportModule, JwtStrategy],
 })
 export class AuthModule {}

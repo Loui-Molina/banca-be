@@ -15,7 +15,4 @@ export class PhoneNumber implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const PhoneNumberSchema = SchemaFactory.createForClass(PhoneNumber).set(
-  'timestamps',
-  true,
-);
+export const PhoneNumberSchema = SchemaFactory.createForClass(PhoneNumber).set('timestamps', true);

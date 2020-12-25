@@ -19,6 +19,4 @@ export class BankingPreference implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BankingPreferenceSchema = SchemaFactory.createForClass(
-  BankingPreference,
-).set('timestamps', true);
+export const BankingPreferenceSchema = SchemaFactory.createForClass(BankingPreference).set('timestamps', true);

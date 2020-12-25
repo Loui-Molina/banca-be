@@ -1,14 +1,10 @@
 import { DataObject } from '@database/datamodels/schemas/DataObject';
-import {
-  BankingPreference,
-  BankingPreferenceSchema,
-} from '@database/datamodels/schemas/BankingPreference';
+import { BankingPreference, BankingPreferenceSchema } from '@database/datamodels/schemas/BankingPreference';
 import { Transaction, TransactionSchema } from '@database/datamodels/schemas/Transaction';
 import { Lottery, LotterySchema } from '@database/datamodels/schemas/Lottery';
 import { Bet, BetSchema } from '@database/datamodels/schemas/Bet';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-
 
 export type BankingDocument = Banking & Document;
 
@@ -29,7 +25,4 @@ export class Banking implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BankingSchema = SchemaFactory.createForClass(Banking).set(
-  'timestamps',
-  true,
-);
+export const BankingSchema = SchemaFactory.createForClass(Banking).set('timestamps', true);

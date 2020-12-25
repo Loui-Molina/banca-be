@@ -20,7 +20,4 @@ export class Draw implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const DrawSchema = SchemaFactory.createForClass(Draw).set(
-  'timestamps',
-  true,
-);
+export const DrawSchema = SchemaFactory.createForClass(Draw).set('timestamps', true);

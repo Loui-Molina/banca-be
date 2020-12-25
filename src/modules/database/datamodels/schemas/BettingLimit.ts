@@ -26,6 +26,4 @@ export class BettingLimit implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BettingLimitSchema = SchemaFactory.createForClass(
-  BettingLimit,
-).set('timestamps', true);
+export const BettingLimitSchema = SchemaFactory.createForClass(BettingLimit).set('timestamps', true);

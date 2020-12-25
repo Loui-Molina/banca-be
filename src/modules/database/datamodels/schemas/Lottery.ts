@@ -37,7 +37,4 @@ export class Lottery implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const LotterySchema = SchemaFactory.createForClass(Lottery).set(
-  'timestamps',
-  true,
-);
+export const LotterySchema = SchemaFactory.createForClass(Lottery).set('timestamps', true);

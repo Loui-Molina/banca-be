@@ -1,26 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Banking, BankingDocument } from '@database/datamodels/schemas/Banking';
-import { ConsortiumPreference, ConsortiumPreferenceDocument } from '@database/datamodels/schemas/ConsortiumPreference';
-import { Lottery, LotteryDocument } from '@database/datamodels/schemas/Lottery';
 import { Supervisor, SupervisorDocument } from '@database/datamodels/schemas/Supervisor';
-import { Transaction, TransactionDocument } from '@database/datamodels/schemas/Transaction';
-import { User, UserDocument } from '@database/datamodels/schemas/User';
 
 @Injectable()
 export class DatabaseService {
   constructor(
     @InjectModel(Supervisor.name)
-    private readonly supervisorDocumentModel: Model<SupervisorDocument>,
-    @InjectModel(ConsortiumPreference.name)
+    private readonly supervisorDocumentModel: Model<SupervisorDocument> /*@InjectModel(ConsortiumPreference.name)
     private readonly consortiumPreferenceDocumentModel: Model<ConsortiumPreferenceDocument>,
     @InjectModel(Banking.name)
     private readonly bankingDocumentModel: Model<BankingDocument>,
     @InjectModel(Lottery.name)
     private readonly lotteryDocumentModel: Model<LotteryDocument>,
     @InjectModel(Transaction.name)
-    private readonly transactionDocumentModel: Model<TransactionDocument>,
+    private readonly transactionDocumentModel: Model<TransactionDocument>,*/,
   ) {}
 
   getSupervisors(): Promise<Array<SupervisorDocument>> {
@@ -28,7 +22,7 @@ export class DatabaseService {
     // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
   }
 
-  getConsortiumPrefs(): Promise<ConsortiumPreferenceDocument> {
+  /*getConsortiumPrefs(): Promise<ConsortiumPreferenceDocument> {
     return this.consortiumPreferenceDocumentModel.findOne().exec();
     // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
   }
@@ -46,5 +40,5 @@ export class DatabaseService {
   getTransactions(): Promise<Array<TransactionDocument>> {
     return this.transactionDocumentModel.find().exec();
     // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
-  }
+  }*/
 }

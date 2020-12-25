@@ -17,34 +17,16 @@ export class UserService {
   }
 
   async save(userDto: UserDto): Promise<User> {
-    // TODO GET ACTUAL USER
-    if (userDto._id) {
-      //UPDATE
-      return this.userModel.findByIdAndUpdate(
-        userDto._id,
-        {
-          username: userDto.username,
-          password: userDto.password,
-          name: userDto.name,
-          modificationDate: new Date(),
-          modificationUserId: '1',
-        },
-        {
-          new: true,
-        },
-      );
-    } else {
-      //CREATE
-      const newUser = new this.userModel({
-        ...userDto,
-        creationDate: new Date(),
-        creationUserId: '1',
-        modificationDate: new Date(),
-        modificationUserId: '1',
-      });
-      await newUser.save();
-      return newUser;
-    }
+    //CREATE
+    const newUser = new this.userModel({
+      ...userDto,
+      creationDate: new Date(),
+      creationUserId: '1',
+      modificationDate: new Date(),
+      modificationUserId: '1',
+    });
+    await newUser.save();
+    return newUser;
   }
 
   async delete(id: string): Promise<User> {
@@ -54,4 +36,21 @@ export class UserService {
   async get(id: string): Promise<User> {
     return await this.userModel.findById(id).exec();
   }
+
+  //TODO UPDATE USER
+  /* if (userDto._id) {
+        //UPDATE
+        return this.userModel.findByIdAndUpdate(
+          userDto._id,
+          {
+            username: userDto.username,
+            password: userDto.password,
+            name: userDto.name,
+            modificationDate: new Date(),
+            modificationUserId: '1',
+          },
+          {
+            new: true,
+          },
+        );*/
 }
