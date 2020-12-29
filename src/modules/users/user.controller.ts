@@ -34,8 +34,8 @@ export class UserController {
     description: 'The record has been successfully created.',
     type: User,
   })
-  create(@Body() userDto: UserDto): Promise<User> {
-    return this.userService.create(userDto);
+  create(@Body() dto: UserDto): Promise<User> {
+    return this.userService.create(dto);
   }
 
   @Put()
@@ -43,8 +43,8 @@ export class UserController {
     description: 'The record has been successfully updated.',
     type: User,
   })
-  update(@Body() userDto: UserDto): Promise<User> {
-    return this.userService.update(userDto);
+  update(@Body() dto: UserDto): Promise<User> {
+    return this.userService.update(dto);
   }
 
   @Delete(':id')

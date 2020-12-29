@@ -2,7 +2,7 @@ import { DataObject } from '@database/datamodels/schemas/DataObject';
 import { Roles } from '@database/datamodels/enums/Roles';
 import { UserPreference, UserPreferenceSchema } from '@database/datamodels/schemas/UserPreference';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import {Document, ObjectId} from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 
@@ -10,6 +10,7 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User implements DataObject {
+  @ApiProperty() _id?: ObjectId;
   @ApiProperty() @Prop() lastLogin?: Date;
   @ApiProperty() @Prop() name?: string;
   @ApiProperty() @Prop({ unique: true }) username: string;

@@ -16,25 +16,25 @@ export class UserService {
     return this.userModel.find({ [q]: value }).exec();
   }
 
-  async create(userDto: UserDto): Promise<User> {
-    const newUser = new this.userModel({
-      ...userDto,
+  async create(dto: UserDto): Promise<User> {
+    const newObject = new this.userModel({
+      ...dto,
       creationDate: new Date(),
       creationUserId: '1',
       modificationDate: new Date(),
       modificationUserId: '1',
     });
-    await newUser.save();
-    return newUser;
+    await newObject.save();
+    return newObject;
   }
 
-  async update(userDto: UserDto): Promise<User> {
+  async update(dto: UserDto): Promise<User> {
     return this.userModel.findByIdAndUpdate(
-        userDto._id,
+        dto._id,
         {
-          username: userDto.username,
-          password: userDto.password,
-          name: userDto.name,
+          username: dto.username,
+          password: dto.password,
+          name: dto.name,
           modificationDate: new Date(),
           modificationUserId: '1',
         },
