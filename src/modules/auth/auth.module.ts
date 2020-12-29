@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { UsersModule } from '@users/users.module';
 import { AuthController } from '@auth/auth.controller';
 import { AuthService } from '@auth/auth.service';
@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '@auth/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 
+@Global()
 @Module({
   imports: [
     UsersModule,
@@ -17,6 +18,9 @@ import { ConfigService } from '@nestjs/config';
       useFactory: async (configService: ConfigService) => {
         return {
           secret: configService.get<string>('TOKEN_SECRET_KEY'),
+          signOptions:{
+            expiresIn : configService.get<string>('TOKEN_EXPIRES')
+          }
         };
       },
       inject: [ConfigService],

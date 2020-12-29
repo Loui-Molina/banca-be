@@ -41,6 +41,6 @@ import { UtilsModule } from '@utils/utils.module';
   ],
   controllers: [],
   providers: [],
-  exports: [DatabaseModule, UsersModule, UtilsModule],
+  exports: [DatabaseModule, UsersModule, UtilsModule, AuthModule],
 })
 export class AppModule {}

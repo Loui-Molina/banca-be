@@ -32,6 +32,7 @@ APP_TAG=Bet
 #Token
 
 TOKEN_SECRET_KEY=topSecret51
+TOKEN_EXPIRES=300s
 
 # Database connections
 
