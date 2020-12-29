@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UserService } from '@users/user.service';
 import { User } from '@database/datamodels/schemas/User';
@@ -31,11 +31,20 @@ export class UserController {
 
   @Post()
   @ApiCreatedResponse({
-    description: 'The record has been successfully saved.',
+    description: 'The record has been successfully created.',
     type: User,
   })
-  save(@Body() userDto: UserDto): Promise<User> {
-    return this.userService.save(userDto);
+  create(@Body() userDto: UserDto): Promise<User> {
+    return this.userService.create(userDto);
+  }
+
+  @Put()
+  @ApiCreatedResponse({
+    description: 'The record has been successfully updated.',
+    type: User,
+  })
+  update(@Body() userDto: UserDto): Promise<User> {
+    return this.userService.update(userDto);
   }
 
   @Delete(':id')

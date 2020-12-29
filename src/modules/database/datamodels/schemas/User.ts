@@ -14,7 +14,7 @@ export class User implements DataObject {
   @ApiProperty() @Prop() name?: string;
   @ApiProperty() @Prop({ unique: true }) username: string;
   @ApiProperty() @Prop({ required: true }) password: string;
-  @ApiProperty() @Prop({ type: String, enum: Roles }) role: Roles;
+  @ApiProperty({ type: String, enum: Roles }) @Prop({ type: String, enum: Roles }) role: Roles;
   @ApiProperty()
   @Prop({ type: UserPreferenceSchema })
   preferences?: UserPreference;

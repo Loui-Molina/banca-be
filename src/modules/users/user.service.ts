@@ -16,8 +16,7 @@ export class UserService {
     return this.userModel.find({ [q]: value }).exec();
   }
 
-  async save(userDto: UserDto): Promise<User> {
-    //CREATE
+  async create(userDto: UserDto): Promise<User> {
     const newUser = new this.userModel({
       ...userDto,
       creationDate: new Date(),
@@ -29,6 +28,22 @@ export class UserService {
     return newUser;
   }
 
+  async update(userDto: UserDto): Promise<User> {
+    return this.userModel.findByIdAndUpdate(
+        userDto._id,
+        {
+          username: userDto.username,
+          password: userDto.password,
+          name: userDto.name,
+          modificationDate: new Date(),
+          modificationUserId: '1',
+        },
+        {
+          new: true,
+        },
+    )
+  }
+
   async delete(id: string): Promise<User> {
     return this.userModel.findByIdAndRemove(id).exec();
   }
@@ -36,21 +51,4 @@ export class UserService {
   async get(id: string): Promise<User> {
     return await this.userModel.findById(id).exec();
   }
-
-  //TODO UPDATE USER
-  /* if (userDto._id) {
-        //UPDATE
-        return this.userModel.findByIdAndUpdate(
-          userDto._id,
-          {
-            username: userDto.username,
-            password: userDto.password,
-            name: userDto.name,
-            modificationDate: new Date(),
-            modificationUserId: '1',
-          },
-          {
-            new: true,
-          },
-        );*/
 }
