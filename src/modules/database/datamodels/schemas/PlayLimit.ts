@@ -24,7 +24,4 @@ export class PlayLimit implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const PlayLimitSchema = SchemaFactory.createForClass(PlayLimit).set(
-  'timestamps',
-  true,
-);
+export const PlayLimitSchema = SchemaFactory.createForClass(PlayLimit).set('timestamps', true);

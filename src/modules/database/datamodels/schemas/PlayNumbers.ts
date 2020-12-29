@@ -21,7 +21,4 @@ export class PlayNumbers implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const PlayNumbersSchema = SchemaFactory.createForClass(PlayNumbers).set(
-  'timestamps',
-  true,
-);
+export const PlayNumbersSchema = SchemaFactory.createForClass(PlayNumbers).set('timestamps', true);

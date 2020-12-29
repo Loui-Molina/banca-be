@@ -1,6 +1,6 @@
-import { Roles } from "@database/datamodels/enums/Roles";
+import { Roles } from '@database/datamodels/enums/Roles';
 
-export interface JwtPayload{
-    username:string;
-    role:Roles;
+export interface JwtPayload {
+  username: string;
+  role: Roles;
 }

@@ -7,7 +7,6 @@ import { UsersModule } from '@users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,22 +17,22 @@ import { UtilsModule } from '@utils/utils.module';
       imports: [ConfigModule],
       connectionName: 'banca',
       useFactory: async (config: ConfigService) => ({
-       uri: config.get('bancaDB'),
-       useNewUrlParser: true,
-       useUnifiedTopology: true,
+        uri: config.get('bancaDB'),
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
       }),
       inject: [ConfigService],
-     }),
-     MongooseModule.forRootAsync({
+    }),
+    MongooseModule.forRootAsync({
       imports: [ConfigModule],
       connectionName: 'user',
       useFactory: async (config: ConfigService) => ({
-       uri: config.get('userDB'),
-       useNewUrlParser: true,
-       useUnifiedTopology: true,
+        uri: config.get('userDB'),
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
       }),
       inject: [ConfigService],
-     }),
+    }),
     HealthCheckModule,
     DatabaseModule,
     AuthModule,
@@ -42,6 +41,6 @@ import { UtilsModule } from '@utils/utils.module';
   ],
   controllers: [],
   providers: [],
-  exports: [DatabaseModule,UsersModule,UtilsModule],
+  exports: [DatabaseModule, UsersModule, UtilsModule, AuthModule],
 })
 export class AppModule {}

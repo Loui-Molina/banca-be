@@ -23,6 +23,4 @@ export class BankingFeeLimit implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BankingFeeLimitSchema = SchemaFactory.createForClass(
-  BankingFeeLimit,
-).set('timestamps', true);
+export const BankingFeeLimitSchema = SchemaFactory.createForClass(BankingFeeLimit).set('timestamps', true);

@@ -12,9 +12,9 @@ export type UserDocument = User & Document;
 export class User implements DataObject {
   @ApiProperty() @Prop() lastLogin?: Date;
   @ApiProperty() @Prop() name?: string;
-  @ApiProperty() @Prop({unique: true }) username: string;
+  @ApiProperty() @Prop({ unique: true }) username: string;
   @ApiProperty() @Prop({ required: true }) password: string;
-  @ApiProperty() @Prop({ type: String, enum: Roles}) role: Roles;
+  @ApiProperty() @Prop({ type: String, enum: Roles }) role: Roles;
   @ApiProperty()
   @Prop({ type: UserPreferenceSchema })
   preferences?: UserPreference;
@@ -32,15 +32,12 @@ export class User implements DataObject {
   @Prop({ required: true })
   modificationUserId: string;
 
-  validatePassword:Function;
-
+  validatePassword: Function;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User)
-  .set('collection', 'users')
-  .set('timestamps', true);
+export const UserSchema = SchemaFactory.createForClass(User).set('collection', 'users').set('timestamps', true);
 
-  UserSchema.methods.validatePassword = async function validatePassword(password :string): Promise<boolean>{
-    const hash = await bcrypt.hash(password, this.salt);
-    return hash === this.password;
-  };
+UserSchema.methods.validatePassword = async function validatePassword(password: string): Promise<boolean> {
+  const hash = await bcrypt.hash(password, this.salt);
+  return hash === this.password;
+};

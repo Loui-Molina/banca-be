@@ -2,6 +2,21 @@
   "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
   "spaces": 2,
   "generator-cli": {
-    "version": "4.3.1"
+    "version": "4.3.1",
+    "storageDir": "../banca-fe/local-packages/banca-api",
+    "generators": {
+      "v2.0": {
+        "generatorName": "typescript-angular",
+        "output": "#{cwd}/../banca-fe/local-packages/banca-api",
+        "glob": "open-api.json",
+        "additionalProperties": {
+          "ngVersion": "6.1.7",
+          "npmName": "restClient",
+          "supportsES6": "true",
+          "npmVersion": "6.9.0",
+          "withInterfaces": true
+        }
+      }
+    }
   }
 }

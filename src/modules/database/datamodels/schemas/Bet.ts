@@ -15,7 +15,4 @@ export class Bet implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BetSchema = SchemaFactory.createForClass(Bet).set(
-  'timestamps',
-  true,
-);
+export const BetSchema = SchemaFactory.createForClass(Bet).set('timestamps', true);

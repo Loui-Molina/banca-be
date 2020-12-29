@@ -15,7 +15,4 @@ export class Result implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const ResultSchema = SchemaFactory.createForClass(Result).set(
-  'timestamps',
-  true,
-);
+export const ResultSchema = SchemaFactory.createForClass(Result).set('timestamps', true);

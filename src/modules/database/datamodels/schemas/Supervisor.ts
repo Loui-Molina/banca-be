@@ -14,7 +14,4 @@ export class Supervisor implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const SupervisorSchema = SchemaFactory.createForClass(Supervisor).set(
-  'timestamps',
-  true,
-);
+export const SupervisorSchema = SchemaFactory.createForClass(Supervisor).set('timestamps', true);

@@ -6,11 +6,30 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2020",
+    // Target latest version of ECMAScript.
+    "target": "esnext",
     "sourceMap": true,
+    // path to output directory
     "outDir": "./dist",
+    // enable strict null checks as a best practice
+    "strictNullChecks": false,
+    // Search under node_modules for non-relative imports.
+    "moduleResolution": "node",
+    // Process & infer types from .js files.
+    "allowJs": true,
     "baseUrl": "./",
     "incremental": true,
+    "alwaysStrict": true,
+    "allowUnreachableCode": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    //UnusedClasses
+    //"noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
     "paths": {
       "@src/*": ["src/*"],
       "@auth/*": ["src/modules/auth/*"],

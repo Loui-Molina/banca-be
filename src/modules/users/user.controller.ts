@@ -1,25 +1,13 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UserService } from '@users/user.service';
 import { User } from '@database/datamodels/schemas/User';
-import {
-  ApiCreatedResponse,
-  ApiFoundResponse,
-  ApiOkResponse,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('users')
 @Controller('users')
+@UseGuards(AuthGuard())
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -37,10 +25,7 @@ export class UserController {
     description: 'The records has been successfully founded.',
     type: User,
   })
-  getFiltered(
-    @Query('q') q: string,
-    @Query('value') value: string,
-  ): Promise<Array<User>> {
+  getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<User>> {
     return this.userService.getFiltered(q, value);
   }
 

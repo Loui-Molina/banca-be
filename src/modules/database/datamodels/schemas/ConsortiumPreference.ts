@@ -17,6 +17,4 @@ export class ConsortiumPreference implements DataObject {
   @Prop({ required: true }) modificationUserId: string;
 }
 
-export const ConsortiumPreferenceSchema = SchemaFactory.createForClass(
-  ConsortiumPreference,
-).set('timestamps', true);
+export const ConsortiumPreferenceSchema = SchemaFactory.createForClass(ConsortiumPreference).set('timestamps', true);

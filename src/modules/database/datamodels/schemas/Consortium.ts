@@ -1,7 +1,4 @@
-import {
-  ConsortiumPreference,
-  ConsortiumPreferenceSchema,
-} from './ConsortiumPreference';
+import { ConsortiumPreference, ConsortiumPreferenceSchema } from './ConsortiumPreference';
 import { Supervisor, SupervisorSchema } from './Supervisor';
 import { Banking, BankingSchema } from './Banking';
 import { Transaction, TransactionSchema } from './Transaction';

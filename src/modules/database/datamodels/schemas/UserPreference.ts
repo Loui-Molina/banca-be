@@ -28,6 +28,4 @@ export class UserPreference implements DataObject {
   modificationUserId: string;
 }
 
-export const UserPreferenceSchema = SchemaFactory.createForClass(
-  UserPreference,
-).set('timestamps', true);
+export const UserPreferenceSchema = SchemaFactory.createForClass(UserPreference).set('timestamps', true);

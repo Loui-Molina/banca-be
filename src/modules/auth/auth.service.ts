@@ -1,4 +1,4 @@
-import {  Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Roles } from '@database/datamodels/enums/Roles';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
@@ -10,24 +10,21 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 
 @Injectable()
 export class AuthService {
-  constructor( private userAuthService: UserAuthService,
-    private jwtService: JwtService){
-  }
-  
-  async singUp(authCredentialsDto: AuthCredentialsDto) : Promise<ResponseDto>{
+  constructor(private userAuthService: UserAuthService, private jwtService: JwtService) {}
+
+  async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
     return this.userAuthService.singUp(authCredentialsDto);
   }
 
-  async singIn(authCredentialsDto: AuthCredentialsDto): Promise<{accessToken: string}>{
-    let responsePayload :ResponsePayload = new ResponsePayload();
+  async singIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
+    let responsePayload: ResponsePayload = new ResponsePayload();
     responsePayload = await this.userAuthService.validateUserPassword(authCredentialsDto);
-    if (!responsePayload.username){
+    if (!responsePayload.username) {
       throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
     }
-    //Deberia agregar el rol maybe
-    const username : string = responsePayload.username;
-    const role : Roles = responsePayload.role;
-    const payload : JwtPayload = { username, role};
+    const username: string = responsePayload.username;
+    const role: Roles = responsePayload.role;
+    const payload: JwtPayload = { username, role };
     const accessToken = await this.jwtService.sign(payload);
     return { accessToken };
   }
