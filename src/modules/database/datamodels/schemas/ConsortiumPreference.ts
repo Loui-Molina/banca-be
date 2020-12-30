@@ -8,13 +8,13 @@ export type ConsortiumPreferenceDocument = ConsortiumPreference & Document;
 
 @Schema()
 export class ConsortiumPreference implements DataObject {
-  @Prop({ type: [PlayLimitSchema] }) limits?: PlayLimit[];
-  @Prop({ type: [BlockedNumberSchema] }) blockedNumbers?: BlockedNumber[];
+    @Prop({ type: [PlayLimitSchema] }) limits?: PlayLimit[];
+    @Prop({ type: [BlockedNumberSchema] }) blockedNumbers?: BlockedNumber[];
 
-  // Data object members
-  @Prop({ required: true, immutable: true }) creationUserId: string;
-  @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationUserId: string;
+    // Data object members
+    @Prop({ required: true, immutable: true }) creationUserId: string;
+    @Prop() deletionDate?: Date;
+    @Prop({ required: true }) modificationUserId: string;
 }
 
 export const ConsortiumPreferenceSchema = SchemaFactory.createForClass(ConsortiumPreference).set('timestamps', true);

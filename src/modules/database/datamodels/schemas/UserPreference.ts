@@ -8,24 +8,24 @@ export type UserPreferenceDocument = UserPreference & Document;
 
 @Schema()
 export class UserPreference implements DataObject {
-  @ApiProperty()
-  @Prop({
-    type: String,
-    enum: Languages,
-    default: Languages.spanish,
-  })
-  language?: Languages;
+    @ApiProperty()
+    @Prop({
+        type: String,
+        enum: Languages,
+        default: Languages.spanish,
+    })
+    language?: Languages;
 
-  // Data object members
-  @ApiProperty()
-  @Prop({ required: true, immutable: true })
-  creationUserId: string;
-  @ApiProperty()
-  @Prop()
-  deletionDate?: Date;
-  @ApiProperty()
-  @Prop({ required: true })
-  modificationUserId: string;
+    // Data object members
+    @ApiProperty()
+    @Prop({ required: true, immutable: true })
+    creationUserId: string;
+    @ApiProperty()
+    @Prop()
+    deletionDate?: Date;
+    @ApiProperty()
+    @Prop({ required: true })
+    modificationUserId: string;
 }
 
 export const UserPreferenceSchema = SchemaFactory.createForClass(UserPreference).set('timestamps', true);

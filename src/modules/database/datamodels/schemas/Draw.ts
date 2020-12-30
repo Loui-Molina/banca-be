@@ -6,18 +6,18 @@ import { Document } from 'mongoose';
 export type DrawDocument = Draw & Document;
 @Schema()
 export class Draw implements DataObject {
-  @Prop() first?: number;
-  @Prop() second?: number;
-  @Prop() third?: number;
-  @Prop() fourth?: number;
-  @Prop() fifth?: number;
-  @Prop() sixth?: number;
-  @Prop() seventh?: number;
+    @Prop() first?: number;
+    @Prop() second?: number;
+    @Prop() third?: number;
+    @Prop() fourth?: number;
+    @Prop() fifth?: number;
+    @Prop() sixth?: number;
+    @Prop() seventh?: number;
 
-  // Data object members
-  @Prop({ required: true, immutable: true }) creationUserId: string;
-  @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationUserId: string;
+    // Data object members
+    @Prop({ required: true, immutable: true }) creationUserId: string;
+    @Prop() deletionDate?: Date;
+    @Prop({ required: true }) modificationUserId: string;
 }
 
 export const DrawSchema = SchemaFactory.createForClass(Draw).set('timestamps', true);

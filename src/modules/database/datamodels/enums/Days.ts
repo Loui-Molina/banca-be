@@ -1,9 +1,9 @@
 export enum Days {
-  mon,
-  tue,
-  wed,
-  thu,
-  fri,
-  sat,
-  sun,
+    mon,
+    tue,
+    wed,
+    thu,
+    fri,
+    sat,
+    sun,
 }

@@ -10,18 +10,18 @@ import { Document } from 'mongoose';
 export type PlayLimitDocument = PlayLimit & Document;
 @Schema()
 export class PlayLimit implements DataObject {
-  @Prop({ required: true }) limit?: number;
-  @Prop({
-    type: String,
-    enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
-  })
-  playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
-  @Prop() appliedBankingsIds?: string[];
+    @Prop({ required: true }) limit?: number;
+    @Prop({
+        type: String,
+        enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
+    })
+    playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
+    @Prop() appliedBankingsIds?: string[];
 
-  // Data object members
-  @Prop({ required: true, immutable: true }) creationUserId: string;
-  @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationUserId: string;
+    // Data object members
+    @Prop({ required: true, immutable: true }) creationUserId: string;
+    @Prop() deletionDate?: Date;
+    @Prop({ required: true }) modificationUserId: string;
 }
 
 export const PlayLimitSchema = SchemaFactory.createForClass(PlayLimit).set('timestamps', true);

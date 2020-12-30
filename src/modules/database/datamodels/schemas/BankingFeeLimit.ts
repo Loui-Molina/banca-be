@@ -10,17 +10,17 @@ export type BankingFeeLimitDocument = BankingFeeLimit & Document;
 
 @Schema()
 export class BankingFeeLimit implements DataObject {
-  @Prop({
-    type: String,
-    enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
-  })
-  playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
-  @Prop({ min: 0, max: 100 }) feePercentage?: number;
+    @Prop({
+        type: String,
+        enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
+    })
+    playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
+    @Prop({ min: 0, max: 100 }) feePercentage?: number;
 
-  // Data object members
-  @Prop({ required: true, immutable: true }) creationUserId: string;
-  @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationUserId: string;
+    // Data object members
+    @Prop({ required: true, immutable: true }) creationUserId: string;
+    @Prop() deletionDate?: Date;
+    @Prop({ required: true }) modificationUserId: string;
 }
 
 export const BankingFeeLimitSchema = SchemaFactory.createForClass(BankingFeeLimit).set('timestamps', true);
