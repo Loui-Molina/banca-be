@@ -5,7 +5,7 @@ import { ConsortiumController } from '@src/modules/consortiums/consortium.contro
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/Consortium';
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], 'user')],
+    imports: [MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], 'banca')],
     providers: [ConsortiumService],
     controllers: [ConsortiumController],
     exports: [ConsortiumService, MongooseModule],
