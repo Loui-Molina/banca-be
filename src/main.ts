@@ -3,18 +3,18 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from '@src/app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.enableCors();
-  app.setGlobalPrefix(app.get('ConfigService').get('APP_GLOBAL_PREFIX'));
-  const options = new DocumentBuilder()
-    .setTitle(app.get('ConfigService').get('APP_TITLE'))
-    .setDescription(app.get('ConfigService').get('APP_DESCRIPTION'))
-    .setVersion(app.get('ConfigService').get('APP_VERSION'))
-    .addTag(app.get('ConfigService').get('APP_TAG'))
-    .build();
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup(app.get('ConfigService').get('APP_SWAGGER_SETUP'), app, document);
+    const app = await NestFactory.create(AppModule);
+    app.enableCors();
+    app.setGlobalPrefix(app.get('ConfigService').get('APP_GLOBAL_PREFIX'));
+    const options = new DocumentBuilder()
+        .setTitle(app.get('ConfigService').get('APP_TITLE'))
+        .setDescription(app.get('ConfigService').get('APP_DESCRIPTION'))
+        .setVersion(app.get('ConfigService').get('APP_VERSION'))
+        .addTag(app.get('ConfigService').get('APP_TAG'))
+        .build();
+    const document = SwaggerModule.createDocument(app, options);
+    SwaggerModule.setup(app.get('ConfigService').get('APP_SWAGGER_SETUP'), app, document);
 
-  await app.listen(3000);
+    await app.listen(3000);
 }
 bootstrap();

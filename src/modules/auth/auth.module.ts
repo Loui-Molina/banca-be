@@ -9,25 +9,25 @@ import { ConfigService } from '@nestjs/config';
 
 @Global()
 @Module({
-  imports: [
-    UsersModule,
-    PassportModule.register({
-      defaultStrategy: 'jwt',
-    }),
-    JwtModule.registerAsync({
-      useFactory: async (configService: ConfigService) => {
-        return {
-          secret: configService.get<string>('TOKEN_SECRET_KEY'),
-          signOptions:{
-            expiresIn : configService.get<string>('TOKEN_EXPIRES')
-          }
-        };
-      },
-      inject: [ConfigService],
-    }),
-  ],
-  providers: [AuthService, JwtStrategy],
-  controllers: [AuthController],
-  exports: [AuthService, PassportModule, JwtStrategy],
+    imports: [
+        UsersModule,
+        PassportModule.register({
+            defaultStrategy: 'jwt',
+        }),
+        JwtModule.registerAsync({
+            useFactory: async (configService: ConfigService) => {
+                return {
+                    secret: configService.get<string>('TOKEN_SECRET_KEY'),
+                    signOptions: {
+                        expiresIn: configService.get<string>('TOKEN_EXPIRES'),
+                    },
+                };
+            },
+            inject: [ConfigService],
+        }),
+    ],
+    providers: [AuthService, JwtStrategy],
+    controllers: [AuthController],
+    exports: [AuthService, PassportModule, JwtStrategy],
 })
 export class AuthModule {}

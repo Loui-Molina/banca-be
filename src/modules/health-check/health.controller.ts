@@ -3,11 +3,11 @@ import { HealthCheck, HealthCheckResult, HealthCheckService, MongooseHealthIndic
 
 @Controller('health')
 export class HealthController {
-  constructor(private healthCheck: HealthCheckService, private mongooseHealth: MongooseHealthIndicator) {}
+    constructor(private healthCheck: HealthCheckService, private mongooseHealth: MongooseHealthIndicator) {}
 
-  @Get()
-  @HealthCheck()
-  async check(): Promise<HealthCheckResult> {
-    return this.healthCheck.check([() => this.mongooseHealth.pingCheck('mongoDB')]);
-  }
+    @Get()
+    @HealthCheck()
+    async check(): Promise<HealthCheckResult> {
+        return this.healthCheck.check([() => this.mongooseHealth.pingCheck('mongoDB')]);
+    }
 }

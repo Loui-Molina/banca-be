@@ -10,22 +10,22 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private userAuthService: UserAuthService, private jwtService: JwtService) {}
+    constructor(private userAuthService: UserAuthService, private jwtService: JwtService) {}
 
-  async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
-    return this.userAuthService.singUp(authCredentialsDto);
-  }
-
-  async singIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
-    let responsePayload: ResponsePayload = new ResponsePayload();
-    responsePayload = await this.userAuthService.validateUserPassword(authCredentialsDto);
-    if (!responsePayload.username) {
-      throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
+    async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
+        return this.userAuthService.singUp(authCredentialsDto);
     }
-    const username: string = responsePayload.username;
-    const role: Roles = responsePayload.role;
-    const payload: JwtPayload = { username, role };
-    const accessToken = await this.jwtService.sign(payload);
-    return { accessToken };
-  }
+
+    async singIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
+        let responsePayload: ResponsePayload = new ResponsePayload();
+        responsePayload = await this.userAuthService.validateUserPassword(authCredentialsDto);
+        if (!responsePayload.username) {
+            throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
+        }
+        const username: string = responsePayload.username;
+        const role: Roles = responsePayload.role;
+        const payload: JwtPayload = { username, role };
+        const accessToken = await this.jwtService.sign(payload);
+        return { accessToken };
+    }
 }

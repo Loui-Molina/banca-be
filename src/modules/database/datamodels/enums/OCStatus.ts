@@ -1,4 +1,4 @@
 export enum OCStatus {
-  open = 'open',
-  closed = 'closed',
+    open = 'open',
+    closed = 'closed',
 }

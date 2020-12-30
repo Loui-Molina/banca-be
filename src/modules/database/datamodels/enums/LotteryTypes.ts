@@ -1,5 +1,5 @@
 export enum LotteryTypes {
-  dominican = 'dominican',
-  us = 'us',
-  brazil = 'brazil',
+    dominican = 'dominican',
+    us = 'us',
+    brazil = 'brazil',
 }

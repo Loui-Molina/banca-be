@@ -11,19 +11,19 @@ const providersExports = [DatabaseService, Supervisor, ConsortiumPreference, Ban
 
 @Global()
 @Module({
-  imports: [
-    MongooseModule.forFeature(
-      [
-        { name: Supervisor.name, schema: SupervisorSchema },
-        { name: ConsortiumPreference.name, schema: ConsortiumPreferenceSchema },
-        { name: Banking.name, schema: BankingSchema },
-        { name: Lottery.name, schema: LotterySchema },
-        { name: Transaction.name, schema: TransactionSchema },
-      ],
-      'banca',
-    ),
-  ],
-  providers: providersExports,
-  exports: providersExports,
+    imports: [
+        MongooseModule.forFeature(
+            [
+                { name: Supervisor.name, schema: SupervisorSchema },
+                { name: ConsortiumPreference.name, schema: ConsortiumPreferenceSchema },
+                { name: Banking.name, schema: BankingSchema },
+                { name: Lottery.name, schema: LotterySchema },
+                { name: Transaction.name, schema: TransactionSchema },
+            ],
+            'banca',
+        ),
+    ],
+    providers: providersExports,
+    exports: providersExports,
 })
 export class DatabaseModule {}

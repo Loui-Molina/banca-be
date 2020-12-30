@@ -3,18 +3,18 @@ import { Roles } from '@database/datamodels/enums/Roles';
 import { User } from '@database/datamodels/schemas/User';
 
 export class BankingUser extends User {
-  bankingId: string;
+    bankingId: string;
 
-  // User members
-  creationDate: Date;
-  creationUserId: string;
-  deletionDate?: Date;
-  lastLogin: Date;
-  modificationDate: Date;
-  modificationUserId: string;
-  name: string;
-  password: string;
-  preferences: UserPreference;
-  role: Roles.banker;
-  username: string;
+    // User members
+    creationDate: Date;
+    creationUserId: string;
+    deletionDate?: Date;
+    lastLogin: Date;
+    modificationDate: Date;
+    modificationUserId: string;
+    name: string;
+    password: string;
+    preferences: UserPreference;
+    role: Roles.banker;
+    username: string;
 }

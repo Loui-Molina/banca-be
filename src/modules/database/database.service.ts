@@ -5,9 +5,9 @@ import { Supervisor, SupervisorDocument } from '@database/datamodels/schemas/Sup
 
 @Injectable()
 export class DatabaseService {
-  constructor(
-    @InjectModel(Supervisor.name)
-    private readonly supervisorDocumentModel: Model<SupervisorDocument> /*@InjectModel(ConsortiumPreference.name)
+    constructor(
+        @InjectModel(Supervisor.name)
+        private readonly supervisorDocumentModel: Model<SupervisorDocument> /*@InjectModel(ConsortiumPreference.name)
     private readonly consortiumPreferenceDocumentModel: Model<ConsortiumPreferenceDocument>,
     @InjectModel(Banking.name)
     private readonly bankingDocumentModel: Model<BankingDocument>,
@@ -15,14 +15,14 @@ export class DatabaseService {
     private readonly lotteryDocumentModel: Model<LotteryDocument>,
     @InjectModel(Transaction.name)
     private readonly transactionDocumentModel: Model<TransactionDocument>,*/,
-  ) {}
+    ) {}
 
-  getSupervisors(): Promise<Array<SupervisorDocument>> {
-    return this.supervisorDocumentModel.find().exec();
-    // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
-  }
+    getSupervisors(): Promise<Array<SupervisorDocument>> {
+        return this.supervisorDocumentModel.find().exec();
+        // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
+    }
 
-  /*getConsortiumPrefs(): Promise<ConsortiumPreferenceDocument> {
+    /*getConsortiumPrefs(): Promise<ConsortiumPreferenceDocument> {
     return this.consortiumPreferenceDocumentModel.findOne().exec();
     // TODO MAKE RETURN SOMETHING IF THERE IS NOTHING
   }

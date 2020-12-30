@@ -12,18 +12,18 @@ export type BettingLimitDocument = BettingLimit & Document;
 
 @Schema()
 export class BettingLimit implements DataObject {
-  @Prop({
-    type: String,
-    enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
-  })
-  playType: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
-  @Prop({ type: String, enum: OCStatus }) status: OCStatus;
-  @Prop({ required: true }) betAmount?: number;
+    @Prop({
+        type: String,
+        enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
+    })
+    playType: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
+    @Prop({ type: String, enum: OCStatus }) status: OCStatus;
+    @Prop({ required: true }) betAmount?: number;
 
-  // Data object members
-  @Prop({ required: true, immutable: true }) creationUserId: string;
-  @Prop() deletionDate?: Date;
-  @Prop({ required: true }) modificationUserId: string;
+    // Data object members
+    @Prop({ required: true, immutable: true }) creationUserId: string;
+    @Prop() deletionDate?: Date;
+    @Prop({ required: true }) modificationUserId: string;
 }
 
 export const BettingLimitSchema = SchemaFactory.createForClass(BettingLimit).set('timestamps', true);
