@@ -21,6 +21,8 @@ export class Consortium {
     @ApiProperty() @Prop({ type: [LotterySchema] }) lotteries?: Lottery[];
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) ownerUserId: ObjectId;
     @ApiProperty() @Prop({ required: true }) name: string;
+    @ApiProperty() @Prop({ required: true, default: false}) status: boolean;
+    @ApiProperty() @Prop() firstTransactionDate?: Date;
     @ApiProperty() @Prop({ type: [TransactionSchema] }) transactions?: Transaction[];
 
     // Data object members
