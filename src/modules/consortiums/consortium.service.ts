@@ -78,6 +78,7 @@ export class ConsortiumService {
             {
                 name: dto.name,
                 ownerUserId: dto.ownerUserId,
+                status: dto.status,
                 modificationUserId: dto.ownerUserId //TODO Use logged user for this
             },
             {
