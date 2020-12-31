@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
 import { ConsortiumModule } from '@src/modules/consortiums/consortium.module';
 import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
+import {LotteryModule} from "@src/modules/lotterys/lottery.module";
 
 @Module({
     imports: [
@@ -37,6 +38,7 @@ import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
         }),
         HealthCheckModule,
         DatabaseModule,
+        LotteryModule,
         AuthModule,
         UsersModule,
         ConsortiumModule,
@@ -45,6 +47,6 @@ import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
     ],
     controllers: [],
     providers: [],
-    exports: [DatabaseModule, UsersModule, ConsortiumModule, DashboardModule, UtilsModule, AuthModule],
+    exports: [DatabaseModule, UsersModule, ConsortiumModule, LotteryModule, DashboardModule, UtilsModule, AuthModule],
 })
 export class AppModule {}

@@ -1,0 +1,94 @@
+import {BadRequestException, Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {LotteryDto} from "@src/modules/lotterys/dtos/lottery.dto";
+import {Lottery, LotteryDocument} from "@database/datamodels/schemas/Lottery";
+import {LotteryTime, LotteryTimeDocument} from "@database/datamodels/schemas/LotteryTime";
+import {LotteryTimeDto} from "@src/modules/lotterys/dtos/lotteryTime.dto";
+import {ExceptionHandler} from "@nestjs/core/errors/exception-handler";
+
+@Injectable()
+export class LotteryService {
+    constructor(
+        @InjectModel(Lottery.name) private lotteryModel: Model<LotteryDocument>,
+        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTimeDocument>,
+    ) {
+    }
+
+    async getAll(): Promise<Array<LotteryDto>> {
+        //TODO CHECK WHY IS IT ALL IN THE SAME COLLECTION AND IF IT WORKS ON SEPARATE ONES
+        return this.lotteryModel.aggregate([{$match: {}},
+            {
+                $project: {
+                    _id: '$_id',
+                    name: '$name',
+                    nickname: '$nickname',
+                    color: '$color',
+                    creationUserId: '$creationUserId',
+                    modificationUserId: '$modificationUserId',
+                    status: '$status',
+                    time: '$time'
+                }
+            }]);
+    }
+
+    async getFiltered(q: string, value: string): Promise<Array<LotteryDto>> {
+        return this.lotteryModel.aggregate([{$match: {[q]: value}},
+            {
+                $project: {
+                    _id: '$_id',
+                    name: '$name',
+                    nickname: '$nickname',
+                    color: '$color',
+                    creationUserId: '$creationUserId',
+                    modificationUserId: '$modificationUserId',
+                    status: '$status',
+                    time: '$time'
+                }
+            }])
+    }
+
+    async create(dto: LotteryDto): Promise<Lottery> {
+        const time: LotteryTime = new this.lotteryTimeModel({
+            day: dto.time.day,
+            openTime: dto.time.openTime,
+            closeTime: dto.time.closeTime
+        });
+        const newObject = new this.lotteryModel({
+            name:dto.name,
+            nickname:dto.nickname,
+            color:dto.color,
+            status:dto.status,
+            time: time,
+            creationUserId: '1', //TODO Use logged user for this
+            modificationUserId: '1', //TODO Use logged user for this
+        });
+        await newObject.save();
+        return newObject;
+    }
+
+    async update(dto: LotteryDto): Promise<Lottery> {
+        return this.lotteryModel.findByIdAndUpdate(
+            dto._id,
+            {
+                name: dto.name,
+                nickname: dto.nickname,
+                color: dto.color,
+                status: dto.status,
+                time: dto.time,
+                modificationUserId: '1' //TODO Use logged user for this
+            },
+            {
+                new: false,
+            },
+        );
+    }
+
+    async delete(id: string): Promise<Lottery> {
+        return this.lotteryModel.findByIdAndRemove(id).exec();
+    }
+
+    async get(id: string): Promise<Lottery> {
+        return await this.lotteryModel.findById(id).exec();
+    }
+}
