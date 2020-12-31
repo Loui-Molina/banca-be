@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {LotteryService} from "@src/modules/lotterys/lottery.service";
-import {LotteryDto} from "@src/modules/lotterys/dtos/lottery.dto";
+import {LotteryService} from "@src/modules/lotteries/lottery.service";
+import {LotteryDto} from "@src/modules/lotteries/dtos/lottery.dto";
 import {Lottery} from "@database/datamodels/schemas/Lottery";
 
-@ApiTags('lotterys')
-@Controller('lotterys')
+@ApiTags('lotteries')
+@Controller('lotteries')
 @UseGuards(AuthGuard())
 export class LotteryController {
     constructor(private readonly lotteryService: LotteryService) {}

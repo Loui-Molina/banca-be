@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import {LotteryService} from "@src/modules/lotterys/lottery.service";
+import {LotteryService} from "@src/modules/lotteries/lottery.service";
 import {Lottery, LotterySchema} from "@database/datamodels/schemas/Lottery";
-import {LotteryController} from "@src/modules/lotterys/lottery.controller";
+import {LotteryController} from "@src/modules/lotteries/lottery.controller";
 import {LotteryTime, LotteryTimeSchema} from "@database/datamodels/schemas/LotteryTime";
 
 @Module({
@@ -12,6 +12,6 @@ import {LotteryTime, LotteryTimeSchema} from "@database/datamodels/schemas/Lotte
     ],
     providers: [LotteryService],
     controllers: [LotteryController],
-    exports: [LotteryService, MongooseModule],
+    exports: [MongooseModule],
 })
 export class LotteryModule {}

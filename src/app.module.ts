@@ -8,7 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
 import { ConsortiumModule } from '@src/modules/consortiums/consortium.module';
 import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
-import {LotteryModule} from "@src/modules/lotterys/lottery.module";
+import {LotteryModule} from "@src/modules/lotteries/lottery.module";
 
 @Module({
     imports: [

@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
-import {LotteryDto} from "@src/modules/lotterys/dtos/lottery.dto";
+import {LotteryDto} from "@src/modules/lotteries/dtos/lottery.dto";
 import {Lottery, LotteryDocument} from "@database/datamodels/schemas/Lottery";
 import {LotteryTime, LotteryTimeDocument} from "@database/datamodels/schemas/LotteryTime";
 
