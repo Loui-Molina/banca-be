@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import {LotteryTimeDto} from "@src/modules/lotterys/dtos/lotteryTime.dto";
+import {Days} from "@database/datamodels/enums/Days";
 
 export class LotteryDto {
     @ApiProperty({required:false}) _id?: ObjectId;
@@ -8,5 +8,7 @@ export class LotteryDto {
     @ApiProperty() nickname: string;
     @ApiProperty() color: string;
     @ApiProperty() status: boolean;
-    @ApiProperty({type: LotteryTimeDto}) time: LotteryTimeDto;
+    @ApiProperty({required:false}) openTime?: string;
+    @ApiProperty({required:false}) closeTime?: string;
+    @ApiProperty({type: Number, enum:Days, isArray:true}) day: Days[];
 }

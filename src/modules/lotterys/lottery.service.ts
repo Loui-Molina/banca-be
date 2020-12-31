@@ -1,11 +1,9 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {LotteryDto} from "@src/modules/lotterys/dtos/lottery.dto";
 import {Lottery, LotteryDocument} from "@database/datamodels/schemas/Lottery";
 import {LotteryTime, LotteryTimeDocument} from "@database/datamodels/schemas/LotteryTime";
-import {LotteryTimeDto} from "@src/modules/lotterys/dtos/lotteryTime.dto";
-import {ExceptionHandler} from "@nestjs/core/errors/exception-handler";
 
 @Injectable()
 export class LotteryService {
@@ -27,7 +25,9 @@ export class LotteryService {
                     creationUserId: '$creationUserId',
                     modificationUserId: '$modificationUserId',
                     status: '$status',
-                    time: '$time'
+                    openTime: '$time.openTime',
+                    closeTime: '$time.closeTime',
+                    day: '$time.day'
                 }
             }]);
     }
@@ -43,16 +43,18 @@ export class LotteryService {
                     creationUserId: '$creationUserId',
                     modificationUserId: '$modificationUserId',
                     status: '$status',
-                    time: '$time'
+                    openTime: '$time.openTime',
+                    closeTime: '$time.closeTime',
+                    day: '$time.day'
                 }
             }])
     }
 
     async create(dto: LotteryDto): Promise<Lottery> {
         const time: LotteryTime = new this.lotteryTimeModel({
-            day: dto.time.day,
-            openTime: dto.time.openTime,
-            closeTime: dto.time.closeTime
+            day: dto.day,
+            openTime: dto.openTime,
+            closeTime: dto.closeTime
         });
         const newObject = new this.lotteryModel({
             name:dto.name,
@@ -68,6 +70,11 @@ export class LotteryService {
     }
 
     async update(dto: LotteryDto): Promise<Lottery> {
+        const time: LotteryTime = new this.lotteryTimeModel({
+            day: dto.day,
+            openTime: dto.openTime,
+            closeTime: dto.closeTime
+        });
         return this.lotteryModel.findByIdAndUpdate(
             dto._id,
             {
@@ -75,7 +82,7 @@ export class LotteryService {
                 nickname: dto.nickname,
                 color: dto.color,
                 status: dto.status,
-                time: dto.time,
+                time: time,
                 modificationUserId: '1' //TODO Use logged user for this
             },
             {
