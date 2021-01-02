@@ -36,7 +36,7 @@ export class ConsortiumService {
             }]);
     }
 
-    async getFiltered(q: string, value: string): Promise<Array<Consortium>> {
+    async getFiltered(q: string, value: string): Promise<Array<ConsortiumDto>> {
         return this.consortiumModel.aggregate([{$match: {[q]: value}},
             {
                 $lookup: {

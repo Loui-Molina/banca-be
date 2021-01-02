@@ -7,6 +7,8 @@ import { Document, ObjectId } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
+import * as bcrypt from "bcrypt";
+import {UserSchema} from "@database/datamodels/schemas/User";
 
 export type ConsortiumDocument = Consortium & Document;
 
@@ -38,3 +40,13 @@ export class Consortium {
 export const ConsortiumSchema = SchemaFactory.createForClass(Consortium)
     .set('collection', 'consortium')
     .set('timestamps', true);
+
+
+ConsortiumSchema.methods.calculateBalance = async function calculateBalance(): Promise<number> {
+    let balance = 0;
+    const transactions: Transaction[] = this.transactions;
+    for(let i = 0; i < transactions.length; i++){
+        balance += transactions[i].amount;
+    }
+    return balance;
+};
