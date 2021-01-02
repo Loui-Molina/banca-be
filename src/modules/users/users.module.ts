@@ -4,11 +4,12 @@ import { User, UserSchema } from '@src/modules/database/datamodels/schemas/user'
 import { UserController } from '@users/user.controller';
 import { UserService } from '@users/user.service';
 import { UserAuthService } from '@users/user.auth.service';
-import { AuthModule } from '@auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
+import {AuthService} from "@auth/auth.service";
 
 @Module({
     imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'), forwardRef(() => AuthModule),],
-    providers: [UserService, UserAuthService],
+    providers: [UserService, AuthService, UserAuthService],
     controllers: [UserController],
     exports: [MongooseModule,UserAuthService],
 })

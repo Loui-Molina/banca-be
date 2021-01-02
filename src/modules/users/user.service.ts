@@ -1,15 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, Req, UseGuards} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
+import {Role} from "@database/datamodels/enums/role";
+import {AuthService} from "@auth/auth.service";
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private authService: AuthService) {}
 
-    async getAll(): Promise<Array<User>> {
-        return this.userModel.find().exec();
+    async getAll(request: any): Promise<Array<User>> {
+        const user = await this.authService.getLoggedUser(request);
+        let isAdmin: boolean = false;
+        if (user.role === Role.admin){
+            isAdmin = true;
+        }
+        return this.userModel.find({ role: Role.admin }).exec();
     }
 
     async getFiltered(q: string, value: string): Promise<Array<User>> {

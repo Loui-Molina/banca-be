@@ -1,10 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards, ValidationPipe} from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { User } from '@src/modules/database/datamodels/schemas/user';
+import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse} from '@nestjs/swagger';
+import { User } from '@database/datamodels/schemas/User';
+import {ConstApp} from "@utils/const.app";
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +26,17 @@ export class AuthController {
     async singIn(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
         return this.authService.singIn(authCredentialsDto);
     }
+
+    @Get('/loggedUser')
+    @UseGuards(AuthGuard())
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: User,
+    })
+    getLoggedUser(@Req() request: any): Promise<User> {
+        return this.authService.getLoggedUser(request);
+    }
+
 
     @Post('/test')
     @UseGuards(AuthGuard())

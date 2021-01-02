@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {Injectable, UnauthorizedException, UseGuards} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { UserAuthService } from '@users/user.auth.service';
@@ -7,10 +7,14 @@ import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '../database/datamodels/enums/role';
+import {User} from "@database/datamodels/schemas/User";
+import {UserService} from "@users/user.service";
+import {AuthGuard} from "@nestjs/passport";
+import {RolesGuard} from "@auth/guards/roles.guard";
 
 @Injectable()
 export class AuthService {
-    constructor(private userAuthService: UserAuthService, private jwtService: JwtService) {}
+    constructor(private userAuthService: UserAuthService, private jwtService: JwtService, private userService: UserService) {}
 
     async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
         return this.userAuthService.singUp(authCredentialsDto);
@@ -27,5 +31,10 @@ export class AuthService {
         const payload: JwtPayload = { username, role };
         const accessToken = await this.jwtService.signAsync(payload);
         return { accessToken };
+    }
+
+    async getLoggedUser(request: any){
+        const user = request.user;
+        return await this.userService.get(user._id);
     }
 }
