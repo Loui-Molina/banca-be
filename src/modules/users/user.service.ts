@@ -17,7 +17,9 @@ export class UserService {
             filter = { role: { $ne: Role.admin } };
             const consortiums = await this.consortiumService.getFiltered('ownerUserId', user.id);
             const consortium = consortiums.length === 1 ? consortiums.pop() : null;
-
+            // consortium.bankings.map(banking => {
+            //     banking.
+            // });
         }
         return this.userModel.find(filter).exec();
     }

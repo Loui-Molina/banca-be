@@ -9,10 +9,12 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
 import {User, UserDocument} from "@src/modules/database/datamodels/schemas/u1ser";
 import {UserService} from "@users/user.service";
+import {InjectModel} from "@nestjs/mongoose";
+import {Model} from "mongoose";
 
 @Injectable()
 export class AuthService {
-    constructor(private userAuthService: UserAuthService, private jwtService: JwtService) {}
+    constructor(private userAuthService: UserAuthService, private jwtService: JwtService, @InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
     async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
         return this.userAuthService.singUp(authCredentialsDto);
@@ -32,6 +34,6 @@ export class AuthService {
     }
 
     async getLoggedUser(user: UserDocument){
-        return new User(); //await this.userService.get(user.id);
+        return await this.userModel.findById(user.id).exec();
     }
 }

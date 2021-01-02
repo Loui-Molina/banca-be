@@ -15,6 +15,6 @@ import {ConsortiumModule} from "@src/modules/consortiums/consortium.module";
     ],
     providers: [UserService, AuthService, UserAuthService],
     controllers: [UserController],
-    exports: [MongooseModule,UserAuthService],
+    exports: [UserService, MongooseModule, UserAuthService],
 })
 export class UsersModule {}
