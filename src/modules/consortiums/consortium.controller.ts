@@ -24,9 +24,9 @@ export class ConsortiumController {
     @Get('search')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: ConsortiumDto,
+        type: Consortium,
     })
-    getFiltered(@Query('q') q: string, @Query('value') value: any): Promise<Array<ConsortiumDto>> {
+    getFiltered(@Query('q') q: string, @Query('value') value: any): Promise<Array<Consortium>> {
         return this.consortiumService.getFiltered(q, value);
     }
 

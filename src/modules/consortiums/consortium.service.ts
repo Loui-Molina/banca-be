@@ -36,30 +36,8 @@ export class ConsortiumService {
             }]);
     }
 
-    async getFiltered(q: string, value: any): Promise<Array<ConsortiumDto>> {
-        return this.consortiumModel.aggregate([{$match: {[q]: value}},
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'ownerUserId',
-                    foreignField: '_id',
-                    as: 'owner'
-                }
-            },
-            {$unwind: '$owner'},
-            {
-                $project: {
-                    creationUserId: '$creationUserId',
-                    modificationUserId: '$modificationUserId',
-                    ownerUserId: '$owner._id',
-                    ownerName: '$owner.username',
-                    _id: '$_id',
-                    name: '$name',
-                    createdAt: '$createdAt',
-                    status: '$status',
-                    firstTransactionDate: '$firstTransactionDate'
-                }
-            }])
+    async getFiltered(q: string, value: any): Promise<Array<Consortium>> {
+        return this.consortiumModel.find({ [q]: value }).exec();
     }
 
     async create(dto: ConsortiumDto): Promise<Consortium> {

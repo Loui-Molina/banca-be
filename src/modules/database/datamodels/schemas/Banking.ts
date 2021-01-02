@@ -12,7 +12,7 @@ export type BankingDocument = Banking & Document;
 
 @Schema()
 export class Banking implements DataObject {
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: UserSchema}) owner: ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId }) ownerUserId: ObjectId;
     @Prop({ type: BankingPreferenceSchema })
     bankingPreferences?: BankingPreference;
     @Prop({ type: [TransactionSchema] }) transactions?: Transaction[];
