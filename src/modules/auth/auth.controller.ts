@@ -1,9 +1,9 @@
-import { Body, Controller, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { User } from '@database/datamodels/schemas/User';
 
 @Controller('auth')
@@ -11,6 +11,8 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post('/signup')
+    @HttpCode(HttpStatus.CREATED)
+    @ApiOkResponse({ type: ResponseDto, description: 'Successfully Registered' })
     @ApiCreatedResponse({
         description: 'The record has been successfully saved.',
         type: ResponseDto,

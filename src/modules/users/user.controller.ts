@@ -4,14 +4,18 @@ import { UserService } from '@users/user.service';
 import { User } from '@database/datamodels/schemas/User';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '../database/datamodels/enums/role';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @ApiTags('users')
 @Controller('users')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RolesGuard)
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
+    @Roles(Role.admin,Role.banker)
     @ApiFoundResponse({
         description: 'The records has been successfully founded.',
         type: User,
