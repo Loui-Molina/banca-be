@@ -1,6 +1,6 @@
 import { UserPreference } from '@database/datamodels/schemas/UserPreference';
-import { Roles } from '@database/datamodels/enums/Roles';
 import { User } from '@database/datamodels/schemas/User';
+import { Role } from '@database/datamodels/enums/role';
 
 class ConsortiumUser extends User {
     // User members
@@ -13,6 +13,6 @@ class ConsortiumUser extends User {
     name: string;
     password: string;
     preferences: UserPreference;
-    role: Roles.consortium;
+    role: Role.consortium;
     username: string;
 }

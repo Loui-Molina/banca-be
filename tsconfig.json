@@ -20,12 +20,11 @@
     "baseUrl": "./",
     "incremental": true,
     "alwaysStrict": true,
-    "allowUnreachableCode": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     //UnusedClasses
     //"noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,

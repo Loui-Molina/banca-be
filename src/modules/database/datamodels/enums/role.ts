@@ -1,4 +1,4 @@
-export enum Roles {
+export enum Role {
     admin = 'admin', //WE-US
     banker = 'banker', //The boludo attendant
     punter = 'punter', //the boludo

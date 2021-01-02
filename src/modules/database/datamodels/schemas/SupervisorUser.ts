@@ -1,7 +1,7 @@
 import { UserPreference } from '@database/datamodels/schemas/UserPreference';
-import { Roles } from '@database/datamodels/enums/Roles';
 import { User } from '@database/datamodels/schemas/User';
 import { Prop } from '@nestjs/mongoose';
+import { Role } from '@database/datamodels/enums/role';
 
 class SupervisorUser extends User {
     // User members
@@ -14,6 +14,6 @@ class SupervisorUser extends User {
     @Prop({ required: true }) name: string;
     @Prop({ required: true }) password: string;
     @Prop({ required: true }) preferences: UserPreference;
-    @Prop({ required: true, immutable: true }) role: Roles.supervisor;
+    @Prop({ required: true, immutable: true }) role: Role.supervisor;
     @Prop({ required: true, immutable: true }) username: string;
 }

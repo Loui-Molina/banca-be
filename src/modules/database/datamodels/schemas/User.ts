@@ -1,10 +1,10 @@
 import { DataObject } from '@database/datamodels/schemas/DataObject';
-import { Roles } from '@database/datamodels/enums/Roles';
 import { UserPreference, UserPreferenceSchema } from '@database/datamodels/schemas/UserPreference';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
+import { Role } from '@database/datamodels/enums/role';
 
 export type UserDocument = User & Document;
 
@@ -15,7 +15,7 @@ export class User implements DataObject {
     @ApiProperty() @Prop() name?: string;
     @ApiProperty() @Prop({ unique: true }) username: string;
     @ApiProperty() @Prop({ required: true }) password: string;
-    @ApiProperty({ type: String, enum: Roles }) @Prop({ type: String, enum: Roles }) role: Roles;
+    @ApiProperty({ type: String, enum: Role }) @Prop({ type: String, enum: Role }) role: Role;
     @ApiProperty()
     @Prop({ type: UserPreferenceSchema })
     preferences?: UserPreference;

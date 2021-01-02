@@ -1,5 +1,5 @@
-import { Roles } from '@database/datamodels/enums/Roles';
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '@src/modules/database/datamodels/enums/role';
 import { ConstApp } from '@utils/const.app';
 import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
@@ -17,6 +17,6 @@ export class AuthCredentialsDto {
     // @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: ConstApp.PASSWORD_MESSAGE })
     password: string;
 
-    @ApiProperty({ type: String, enum: Roles })
-    role: Roles;
+    @ApiProperty({ type: String, enum: Role })
+    role: Role;
 }
