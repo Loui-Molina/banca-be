@@ -4,6 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 import { Consortium } from '@database/datamodels/schemas/Consortium';
 import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
+import {ConstApp} from "@utils/const.app";
 
 @ApiTags('consortiums')
 @Controller('consortiums')
@@ -13,7 +14,7 @@ export class ConsortiumController {
 
     @Get()
     @ApiFoundResponse({
-        description: 'The records has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: ConsortiumDto,
     })
     getAll(): Promise<Array<ConsortiumDto>> {
@@ -22,7 +23,7 @@ export class ConsortiumController {
 
     @Get('search')
     @ApiFoundResponse({
-        description: 'The records has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: Consortium,
     })
     getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<Consortium>> {
@@ -31,7 +32,7 @@ export class ConsortiumController {
 
     @Post()
     @ApiCreatedResponse({
-        description: 'The record has been successfully created.',
+        description: ConstApp.DEFAULT_POST_OK,
         type: Consortium,
     })
     create(@Body() dto: ConsortiumDto): Promise<Consortium> {
@@ -40,7 +41,7 @@ export class ConsortiumController {
 
     @Put()
     @ApiCreatedResponse({
-        description: 'The record has been successfully updated.',
+        description: ConstApp.DEFAULT_PUT_OK,
         type: Consortium,
     })
     update(@Body() dto: ConsortiumDto): Promise<Consortium> {
@@ -49,7 +50,7 @@ export class ConsortiumController {
 
     @Delete(':id')
     @ApiOkResponse({
-        description: 'The record has been successfully deleted.',
+        description: ConstApp.DEFAULT_DELETE_OK,
         type: Consortium,
     })
     delete(@Param('id') id: string): Promise<Consortium> {
@@ -58,7 +59,7 @@ export class ConsortiumController {
 
     @Get(':id')
     @ApiFoundResponse({
-        description: 'The record has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: Consortium,
     })
     async get(@Param('id') id: string): Promise<Consortium> {
