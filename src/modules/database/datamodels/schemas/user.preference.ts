@@ -1,6 +1,6 @@
-import { DataObject } from '@database/datamodels/schemas/DataObject';
+import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Languages } from '@database/datamodels/enums/Languages';
+import { Languages } from '@src/modules/database/datamodels/enums/languages';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 

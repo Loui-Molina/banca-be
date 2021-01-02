@@ -1,10 +1,9 @@
-import { DataObject } from '@database/datamodels/schemas/DataObject';
-import { LotteryTime, LotteryTimeSchema } from '@database/datamodels/schemas/LotteryTime';
-import { BettingLimit, BettingLimitSchema } from '@database/datamodels/schemas/BettingLimit';
-import { PrizeLimit, PrizeLimitSchema } from '@database/datamodels/schemas/PrizeLimit';
-import { BankingFeeLimit, BankingFeeLimitSchema } from '@database/datamodels/schemas/BankingFeeLimit';
-import { Result, ResultSchema } from '@database/datamodels/schemas/Result';
-
+import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
+import { LotteryTime, LotteryTimeSchema } from '@src/modules/database/datamodels/schemas/lottery.time';
+import { BettingLimit, BettingLimitSchema } from '@src/modules/database/datamodels/schemas/betting.limit';
+import { PrizeLimit, PrizeLimitSchema } from '@src/modules/database/datamodels/schemas/prize.limit';
+import { BankingFeeLimit, BankingFeeLimitSchema } from '@src/modules/database/datamodels/schemas/banking.fee.limit';
+import { Result, ResultSchema } from '@src/modules/database/datamodels/schemas/result';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import {ApiProperty} from "@nestjs/swagger";

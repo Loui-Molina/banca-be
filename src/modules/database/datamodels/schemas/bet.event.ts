@@ -1,4 +1,4 @@
-import { DataObject } from './DataObject';
+import { DataObject } from './data.object';
 
 // export class betEvent  implements DataObject {
 //     // TODO

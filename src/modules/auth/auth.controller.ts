@@ -4,7 +4,7 @@ import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { User } from '@database/datamodels/schemas/User';
+import { User } from '@src/modules/database/datamodels/schemas/user';
 
 @Controller('auth')
 export class AuthController {

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { DataObject } from '@database/datamodels/schemas/DataObject';
+import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { Document } from 'mongoose';
 
 export type PhoneNumberDocument = PhoneNumber & Document;

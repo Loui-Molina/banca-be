@@ -1,14 +1,14 @@
-import { ConsortiumPreference, ConsortiumPreferenceSchema } from './ConsortiumPreference';
-import { Supervisor, SupervisorSchema } from './Supervisor';
-import { Banking, BankingSchema } from './Banking';
-import { Transaction, TransactionSchema } from './Transaction';
-import { Lottery, LotterySchema } from './Lottery';
+import { ConsortiumPreference, ConsortiumPreferenceSchema } from './consortium.preference';
+import { Supervisor, SupervisorSchema } from './supervisor';
+import { Banking, BankingSchema } from './banking';
+import { Transaction, TransactionSchema } from './transaction';
+import { Lottery, LotterySchema } from './lottery';
 import { Document, ObjectId } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
 import * as bcrypt from "bcrypt";
-import {UserSchema} from "@database/datamodels/schemas/User";
+import {UserSchema} from "@src/modules/database/datamodels/schemas/user";
 
 export type ConsortiumDocument = Consortium & Document;
 
