@@ -7,7 +7,7 @@ import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
-import {User, UserDocument} from "@database/datamodels/schemas/User";
+import {User, UserDocument} from "@src/modules/database/datamodels/schemas/u1ser";
 import {UserService} from "@users/user.service";
 
 @Injectable()

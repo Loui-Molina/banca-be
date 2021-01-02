@@ -2,10 +2,10 @@ import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DatabaseService } from '@database/database.service';
 import { ConsortiumPreference, ConsortiumPreferenceSchema } from '@src/modules/database/datamodels/schemas/consortium.preference';
-import {Supervisor, SupervisorSchema} from "@database/datamodels/schemas/Supervisor";
-import {Transaction, TransactionSchema} from "@database/datamodels/schemas/Transaction";
-import {Lottery, LotterySchema} from "@database/datamodels/schemas/Lottery";
-import {Banking, BankingSchema} from "@database/datamodels/schemas/Banking";
+import {Supervisor, SupervisorSchema} from "@src/modules/database/datamodels/schemas/s1upervisor";
+import {Transaction, TransactionSchema} from "@src/modules/database/datamodels/schemas/t1ransaction";
+import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/l1ottery";
+import {Banking, BankingSchema} from "@src/modules/database/datamodels/schemas/b1anking";
 
 const providersExports = [DatabaseService, Supervisor, ConsortiumPreference, Banking, Lottery, Transaction];
 
