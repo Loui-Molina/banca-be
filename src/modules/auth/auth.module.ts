@@ -2,11 +2,12 @@ import { forwardRef, Global, Module } from '@nestjs/common';
 import { UsersModule } from '@users/users.module';
 import { AuthController } from '@auth/auth.controller';
 import { AuthService } from '@auth/auth.service';
-import { JwtModule } from '@nestjs/jwt';
+import {JwtModule, JwtService} from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '@auth/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
-import {UserService} from "@users/user.service";
+import {MongooseModule} from "@nestjs/mongoose";
+import {User, UserSchema} from "@database/datamodels/schemas/User";
 
 @Global()
 @Module({
@@ -15,6 +16,7 @@ import {UserService} from "@users/user.service";
         PassportModule.register({
             defaultStrategy: 'jwt',
         }),
+        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'), forwardRef(() => AuthModule),
         JwtModule.registerAsync({
             useFactory: async (configService: ConfigService) => {
                 return {
@@ -26,10 +28,12 @@ import {UserService} from "@users/user.service";
             },
             inject: [ConfigService],
         }),
+        UsersModule,
+        JwtStrategy
     ],
-    providers: [AuthService, JwtStrategy, UserService],
+    providers: [AuthService, JwtService ],
     controllers: [AuthController], 
-    exports: [AuthService, PassportModule.register({
+    exports: [AuthService, UsersModule, PassportModule.register({
         defaultStrategy: 'jwt',
     }), JwtStrategy],
 })
