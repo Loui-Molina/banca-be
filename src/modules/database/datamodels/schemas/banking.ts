@@ -2,11 +2,11 @@ import { DataObject } from '@src/modules/database/datamodels/schemas/data.object
 import { BankingPreference, BankingPreferenceSchema } from '@src/modules/database/datamodels/schemas/banking.preference';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import {Document, ObjectId} from 'mongoose';
-import {Transaction, TransactionSchema} from "@src/modules/database/datamodels/schemas/t1ransaction";
-import {Bet, BetSchema} from "@src/modules/database/datamodels/schemas/b1et";
-import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/l1ottery";
+import {Transaction, TransactionSchema} from "@src/modules/database/datamodels/schemas/transaction";
+import {Bet, BetSchema} from "@src/modules/database/datamodels/schemas/bet";
+import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
 import * as mongoose from "mongoose";
-import {UserSchema} from "@src/modules/database/datamodels/schemas/u1ser";
+import {UserSchema} from "@src/modules/database/datamodels/schemas/user";
 
 export type BankingDocument = Banking & Document;
 

@@ -5,7 +5,7 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse} from '@nestjs/swagger';
 import {ConstApp} from "@utils/const.app";
-import {User, UserDocument} from "@src/modules/database/datamodels/schemas/u1ser";
+import {User, UserDocument} from "@src/modules/database/datamodels/schemas/user";
 import {AuthUser} from "@src/common/decorators/auth.user.decorator";
 
 @Controller('auth')

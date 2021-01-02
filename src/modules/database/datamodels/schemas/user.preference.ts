@@ -2,7 +2,7 @@ import { DataObject } from '@src/modules/database/datamodels/schemas/data.object
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import {Languages} from "@src/modules/database/datamodels/enums/l1anguages";
+import { Languages } from '@database/datamodels/enums/languages';
 
 export type UserPreferenceDocument = UserPreference & Document;
 

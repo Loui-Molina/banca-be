@@ -5,8 +5,8 @@ import {DashboardDiagramDto} from "@src/modules/dashboard/dtos/dashboard.dto";
 import {DashboardDiagramNodeDto} from "@src/modules/dashboard/dtos/dashboard.node.dto";
 import {DashboardDiagramLinkDto} from "@src/modules/dashboard/dtos/dashboard.link.dto";
 import {DashboardDiagramClusterDto} from "@src/modules/dashboard/dtos/dashboard.cluster.dto";
-import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/c1onsortium";
-import {Banking, BankingDocument} from "@src/modules/database/datamodels/schemas/b1anking";
+import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/consortium";
+import {Banking, BankingDocument} from "@src/modules/database/datamodels/schemas/banking";
 
 @Injectable()
 export class DashboardService {

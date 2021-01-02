@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {Supervisor, SupervisorDocument} from "@src/modules/database/datamodels/schemas/s1upervisor";
+import {Supervisor, SupervisorDocument} from "@src/modules/database/datamodels/schemas/supervisor";
 
 @Injectable()
 export class DatabaseService {

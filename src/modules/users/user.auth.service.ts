@@ -6,7 +6,7 @@ import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { ConstApp } from '@utils/const.app';
 import { ResponseDto } from '@utils/dtos/response.dto';
-import {User, UserDocument} from "@src/modules/database/datamodels/schemas/u1ser";
+import {User, UserDocument} from "@src/modules/database/datamodels/schemas/user";
 
 @Injectable()
 export class UserAuthService {

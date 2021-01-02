@@ -6,7 +6,7 @@ import { BankingFeeLimit, BankingFeeLimitSchema } from '@src/modules/database/da
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import {ApiProperty} from "@nestjs/swagger";
-import {Result, ResultSchema} from "@src/modules/database/datamodels/schemas/r1esult";
+import {Result, ResultSchema} from "@src/modules/database/datamodels/schemas/result";
 
 export type LotteryDocument = Lottery & Document;
 

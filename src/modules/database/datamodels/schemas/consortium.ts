@@ -3,10 +3,10 @@ import { Document, ObjectId } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
-import {Transaction, TransactionSchema} from "@src/modules/database/datamodels/schemas/t1ransaction";
-import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/l1ottery";
-import {Supervisor, SupervisorSchema} from "@src/modules/database/datamodels/schemas/s1upervisor";
-import {Banking, BankingSchema} from "@src/modules/database/datamodels/schemas/b1anking";
+import {Transaction, TransactionSchema} from "@src/modules/database/datamodels/schemas/transaction";
+import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
+import {Supervisor, SupervisorSchema} from "@src/modules/database/datamodels/schemas/supervisor";
+import {Banking, BankingSchema} from "@src/modules/database/datamodels/schemas/banking";
 
 export type ConsortiumDocument = Consortium & Document;
 

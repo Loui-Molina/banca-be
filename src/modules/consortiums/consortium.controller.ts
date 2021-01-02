@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
 import {ConstApp} from "@utils/const.app";
-import {Consortium} from "@src/modules/database/datamodels/schemas/c1onsortium";
+import {Consortium} from "@src/modules/database/datamodels/schemas/consortium";
 
 @ApiTags('consortiums')
 @Controller('consortiums')

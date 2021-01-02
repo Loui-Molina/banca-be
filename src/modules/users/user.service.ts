@@ -1,7 +1,7 @@
 import {Injectable, Req, UseGuards} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/u1ser';
+import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
 import {Role} from "@database/datamodels/enums/role";
 import {AuthService} from "@auth/auth.service";
