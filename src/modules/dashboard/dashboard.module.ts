@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Consortium, ConsortiumSchema } from '@src/modules/database/datamodels/schemas/consortium';
 import {DashboardService} from "@src/modules/dashboard/dashboard.service";
 import {DashboardController} from "@src/modules/dashboard/dashboard.controller";
-import {Banking, BankingSchema} from "@src/modules/database/datamodels/schemas/banking";
+import {Consortium, ConsortiumSchema} from "@database/datamodels/schemas/Consortium";
+import {Banking, BankingSchema} from "@database/datamodels/schemas/Banking";
 
 @Module({
     imports: [

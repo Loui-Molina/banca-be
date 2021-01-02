@@ -1,8 +1,7 @@
-import { Days } from '@src/modules/database/datamodels/enums/days';
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import {ApiProperty} from "@nestjs/swagger";
+import {Days} from "@database/datamodels/enums/Days";
 
 export type LotteryTimeDocument = LotteryTime & Document;
 @Schema()

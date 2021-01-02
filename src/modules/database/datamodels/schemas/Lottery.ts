@@ -3,10 +3,10 @@ import { LotteryTime, LotteryTimeSchema } from '@src/modules/database/datamodels
 import { BettingLimit, BettingLimitSchema } from '@src/modules/database/datamodels/schemas/betting.limit';
 import { PrizeLimit, PrizeLimitSchema } from '@src/modules/database/datamodels/schemas/prize.limit';
 import { BankingFeeLimit, BankingFeeLimitSchema } from '@src/modules/database/datamodels/schemas/banking.fee.limit';
-import { Result, ResultSchema } from '@src/modules/database/datamodels/schemas/result';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import {ApiProperty} from "@nestjs/swagger";
+import {Result, ResultSchema} from "@database/datamodels/schemas/Result";
 
 export type LotteryDocument = Lottery & Document;
 

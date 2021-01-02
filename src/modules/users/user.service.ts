@@ -11,12 +11,11 @@ import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
 export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private authService: AuthService, private consortiumService: ConsortiumService) {}
 
-    async getAll(request: any): Promise<Array<User>> {
-        const user = await this.authService.getLoggedUser(request);
+    async getAll(user: UserDocument): Promise<Array<User>> {
         let filter = null;
         if (user.role !== Role.admin){
             filter = { role: { $ne: Role.admin } };
-            const consortiums = await this.consortiumService.getFiltered('ownerUserId', user._id);
+            const consortiums = await this.consortiumService.getFiltered('ownerUserId', user.id);
             const consortium = consortiums.length === 1 ? consortiums.pop() : null;
 
         }

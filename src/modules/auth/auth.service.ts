@@ -6,15 +6,13 @@ import { ConstApp } from '@utils/const.app';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
-import { Role } from '../database/datamodels/enums/role';
-import {User} from "@database/datamodels/schemas/User";
+import { Role } from '@database/datamodels/enums/role';
+import {User, UserDocument} from "@database/datamodels/schemas/User";
 import {UserService} from "@users/user.service";
-import {AuthGuard} from "@nestjs/passport";
-import {RolesGuard} from "@auth/guards/roles.guard";
 
 @Injectable()
 export class AuthService {
-    constructor(private userAuthService: UserAuthService, private jwtService: JwtService, private userService: UserService) {}
+    constructor(private userAuthService: UserAuthService, private jwtService: JwtService) {}
 
     async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
         return this.userAuthService.singUp(authCredentialsDto);
@@ -33,8 +31,7 @@ export class AuthService {
         return { accessToken };
     }
 
-    async getLoggedUser(request: any){
-        const user = request.user;
-        return await this.userService.get(user._id);
+    async getLoggedUser(user: UserDocument){
+        return new User(); //await this.userService.get(user.id);
     }
 }

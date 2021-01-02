@@ -3,8 +3,8 @@ import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@n
 import { AuthGuard } from '@nestjs/passport';
 import {LotteryService} from "@src/modules/lotteries/lottery.service";
 import {LotteryDto} from "@src/modules/lotteries/dtos/lottery.dto";
-import {Lottery} from "@src/modules/database/datamodels/schemas/lottery";
 import {ConstApp} from "@utils/const.app";
+import {Lottery} from "@database/datamodels/schemas/Lottery";
 
 @ApiTags('lotteries')
 @Controller('lotteries')

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import {Days} from "@src/modules/database/datamodels/enums/days";
+import {Days} from "@database/datamodels/enums/Days";
 
 export class LotteryDto {
     @ApiProperty({required:false}) _id?: ObjectId;

@@ -1,12 +1,12 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model } from 'mongoose';
-import {Consortium, ConsortiumDocument} from '@src/modules/database/datamodels/schemas/consortium';
 import {DashboardDiagramDto} from "@src/modules/dashboard/dtos/dashboard.dto";
 import {DashboardDiagramNodeDto} from "@src/modules/dashboard/dtos/dashboard.node.dto";
-import {Banking, BankingDocument} from "@src/modules/database/datamodels/schemas/banking";
 import {DashboardDiagramLinkDto} from "@src/modules/dashboard/dtos/dashboard.link.dto";
 import {DashboardDiagramClusterDto} from "@src/modules/dashboard/dtos/dashboard.cluster.dto";
+import {Consortium, ConsortiumDocument} from "@database/datamodels/schemas/Consortium";
+import {Banking, BankingDocument} from "@database/datamodels/schemas/Banking";
 
 @Injectable()
 export class DashboardService {

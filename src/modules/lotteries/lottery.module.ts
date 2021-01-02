@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {LotteryService} from "@src/modules/lotteries/lottery.service";
-import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
 import {LotteryController} from "@src/modules/lotteries/lottery.controller";
 import {LotteryTime, LotteryTimeSchema} from "@src/modules/database/datamodels/schemas/lottery.time";
+import {Lottery, LotterySchema} from "@database/datamodels/schemas/Lottery";
 
 @Module({
     imports: [

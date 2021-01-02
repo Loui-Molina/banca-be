@@ -1,9 +1,10 @@
-import { Movement } from '@src/modules/database/datamodels/schemas/movement';
+
 import { PhoneNumber } from '@src/modules/database/datamodels/schemas/phone.number';
 import { UserPreference } from '@src/modules/database/datamodels/schemas/user.preference';
-import { User } from '@src/modules/database/datamodels/schemas/user';
-import { Bet } from '@src/modules/database/datamodels/schemas/bet';
 import { Role } from '@database/datamodels/enums/role';
+import {User} from "@database/datamodels/schemas/User";
+import {Movement} from "@database/datamodels/schemas/Movement";
+import {Bet} from "@database/datamodels/schemas/Bet";
 
 class PunterUser extends User {
     movements?: Movement[];

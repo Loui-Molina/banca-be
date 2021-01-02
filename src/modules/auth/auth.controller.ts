@@ -5,7 +5,8 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse} from '@nestjs/swagger';
 import {ConstApp} from "@utils/const.app";
-import {User} from "@database/datamodels/schemas/User";
+import {User, UserDocument} from "@database/datamodels/schemas/User";
+import {AuthUser} from "@src/common/decorators/auth.user.decorator";
 
 @Controller('auth')
 export class AuthController {
@@ -33,8 +34,8 @@ export class AuthController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getLoggedUser(@Req() request: any): Promise<User> {
-        return this.authService.getLoggedUser(request);
+    getLoggedUser(@AuthUser() user : UserDocument): Promise<User> {
+        return this.authService.getLoggedUser(user);
     }
 
 

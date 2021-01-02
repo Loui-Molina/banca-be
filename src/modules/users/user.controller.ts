@@ -1,7 +1,7 @@
 import {Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards} from '@nestjs/common';
 import {UserDto} from '@users/dtos/user.dto';
 import {UserService} from '@users/user.service';
-import {User} from '@database/datamodels/schemas/User';
+import {User, UserDocument} from '@database/datamodels/schemas/User';
 import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags} from '@nestjs/swagger';
 import {AuthGuard} from '@nestjs/passport';
 import {Roles} from '@src/common/decorators/roles.decorator';
@@ -9,6 +9,7 @@ import {Role} from '@database/datamodels/enums/role';
 import {RolesGuard} from '@auth/guards/roles.guard';
 import {ConstApp} from '@utils/const.app';
 import {AuthService} from "@auth/auth.service";
+import {AuthUser} from "@src/common/decorators/auth.user.decorator";
 
 @ApiTags('users')
 @Controller('users')
@@ -22,8 +23,8 @@ export class UserController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getAll(@Req() request: any): Promise<Array<User>> {
-        return this.userService.getAll(request);
+    getAll(@AuthUser() user : UserDocument): Promise<Array<User>> {
+        return this.userService.getAll(user);
     }
 
     @Get('search')
