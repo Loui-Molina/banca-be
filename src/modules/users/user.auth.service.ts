@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { ConstApp } from '@utils/const.app';
 import { ResponseDto } from '@utils/dtos/response.dto';
+import {User, UserDocument} from "@database/datamodels/schemas/User";
 
 @Injectable()
 export class UserAuthService {

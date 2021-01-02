@@ -1,22 +1,26 @@
 import {Injectable, Req, UseGuards} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { User, UserDocument } from '@database/datamodels/schemas/User';
 import { UserDto } from '@users/dtos/user.dto';
 import {Role} from "@database/datamodels/enums/role";
 import {AuthService} from "@auth/auth.service";
+import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private authService: AuthService) {}
+    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private authService: AuthService, private consortiumService: ConsortiumService) {}
 
     async getAll(request: any): Promise<Array<User>> {
         const user = await this.authService.getLoggedUser(request);
-        let isAdmin: boolean = false;
-        if (user.role === Role.admin){
-            isAdmin = true;
+        let filter = null;
+        if (user.role !== Role.admin){
+            filter = { role: { $ne: Role.admin } };
+            const consortiums = await this.consortiumService.getFiltered('ownerUserId', user._id);
+            const consortium = consortiums.length === 1 ? consortiums.pop() : null;
+
         }
-        return this.userModel.find({ role: Role.admin }).exec();
+        return this.userModel.find(filter).exec();
     }
 
     async getFiltered(q: string, value: string): Promise<Array<User>> {

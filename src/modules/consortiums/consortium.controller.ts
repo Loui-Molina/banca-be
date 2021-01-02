@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
-import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
 import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
 import {ConstApp} from "@utils/const.app";
+import {Consortium} from "@database/datamodels/schemas/Consortium";
 
 @ApiTags('consortiums')
 @Controller('consortiums')
@@ -26,7 +26,7 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_GET_OK,
         type: ConsortiumDto,
     })
-    getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<ConsortiumDto>> {
+    getFiltered(@Query('q') q: string, @Query('value') value: any): Promise<Array<ConsortiumDto>> {
         return this.consortiumService.getFiltered(q, value);
     }
 
