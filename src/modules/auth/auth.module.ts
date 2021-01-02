@@ -8,6 +8,7 @@ import { JwtStrategy } from '@auth/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import {MongooseModule} from "@nestjs/mongoose";
 import {User, UserSchema} from "@database/datamodels/schemas/User";
+import {JWT_MODULE_OPTIONS} from "@nestjs/jwt/dist/jwt.constants";
 
 @Global()
 @Module({
@@ -28,13 +29,13 @@ import {User, UserSchema} from "@database/datamodels/schemas/User";
             },
             inject: [ConfigService],
         }),
-        UsersModule,
-        JwtStrategy
+        UsersModule
     ],
-    providers: [AuthService, JwtService ],
+    providers: [AuthService],
     controllers: [AuthController], 
-    exports: [AuthService, UsersModule, PassportModule.register({
+    exports: [JwtModule, AuthService,
+        PassportModule.register({
         defaultStrategy: 'jwt',
-    }), JwtStrategy],
+    })],
 })
 export class AuthModule {}
