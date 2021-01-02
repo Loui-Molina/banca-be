@@ -3,6 +3,7 @@ import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@n
 import { AuthGuard } from '@nestjs/passport';
 import {DashboardDiagramDto} from "@src/modules/dashboard/dtos/dashboardDiagram.dto";
 import {DashboardService} from "@src/modules/dashboard/dashboard.service";
+import {ConstApp} from "@utils/const.app";
 
 @ApiTags('dashboard')
 @Controller('dashboard')
@@ -12,7 +13,7 @@ export class DashboardController {
 
     @Get()
     @ApiFoundResponse({
-        description: 'The records has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: DashboardDiagramDto,
     })
     getDashboardDiagram(): Promise<DashboardDiagramDto> {

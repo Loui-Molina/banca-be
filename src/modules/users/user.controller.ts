@@ -4,6 +4,7 @@ import { UserService } from '@users/user.service';
 import { User } from '@database/datamodels/schemas/User';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import {ConstApp} from "@utils/const.app";
 
 @ApiTags('users')
 @Controller('users')
@@ -13,7 +14,7 @@ export class UserController {
 
     @Get()
     @ApiFoundResponse({
-        description: 'The records has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
     getAll(): Promise<Array<User>> {
@@ -22,7 +23,7 @@ export class UserController {
 
     @Get('search')
     @ApiFoundResponse({
-        description: 'The records has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
     getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<User>> {
@@ -31,7 +32,7 @@ export class UserController {
 
     @Post()
     @ApiCreatedResponse({
-        description: 'The record has been successfully created.',
+        description: ConstApp.DEFAULT_POST_OK,
         type: User,
     })
     create(@Body() dto: UserDto): Promise<User> {
@@ -40,7 +41,7 @@ export class UserController {
 
     @Put()
     @ApiCreatedResponse({
-        description: 'The record has been successfully updated.',
+        description: ConstApp.DEFAULT_PUT_OK,
         type: User,
     })
     update(@Body() dto: UserDto): Promise<User> {
@@ -49,7 +50,7 @@ export class UserController {
 
     @Delete(':id')
     @ApiOkResponse({
-        description: 'The record has been successfully deleted.',
+        description: ConstApp.DEFAULT_DELETE_OK,
         type: User,
     })
     delete(@Param('id') id: string): Promise<User> {
@@ -58,7 +59,7 @@ export class UserController {
 
     @Get(':id')
     @ApiFoundResponse({
-        description: 'The record has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
     async get(@Param('id') id: string): Promise<User> {

@@ -4,6 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import {LotteryService} from "@src/modules/lotteries/lottery.service";
 import {LotteryDto} from "@src/modules/lotteries/dtos/lottery.dto";
 import {Lottery} from "@database/datamodels/schemas/Lottery";
+import {ConstApp} from "@utils/const.app";
 
 @ApiTags('lotteries')
 @Controller('lotteries')
@@ -13,7 +14,7 @@ export class LotteryController {
 
     @Get()
     @ApiFoundResponse({
-        description: 'The records has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: LotteryDto,
     })
     getAll(): Promise<Array<LotteryDto>> {
@@ -22,7 +23,7 @@ export class LotteryController {
 
     @Get('search')
     @ApiFoundResponse({
-        description: 'The records has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: LotteryDto,
     })
     getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<LotteryDto>> {
@@ -31,7 +32,7 @@ export class LotteryController {
 
     @Post()
     @ApiCreatedResponse({
-        description: 'The record has been successfully created.',
+        description: ConstApp.DEFAULT_POST_OK,
         type: Lottery,
     })
     create(@Body() dto: LotteryDto): Promise<Lottery> {
@@ -40,7 +41,7 @@ export class LotteryController {
 
     @Put()
     @ApiCreatedResponse({
-        description: 'The record has been successfully updated.',
+        description: ConstApp.DEFAULT_PUT_OK,
         type: Lottery,
     })
     update(@Body() dto: LotteryDto): Promise<Lottery> {
@@ -49,7 +50,7 @@ export class LotteryController {
 
     @Delete(':id')
     @ApiOkResponse({
-        description: 'The record has been successfully deleted.',
+        description: ConstApp.DEFAULT_DELETE_OK,
         type: Lottery,
     })
     delete(@Param('id') id: string): Promise<Lottery> {
@@ -58,7 +59,7 @@ export class LotteryController {
 
     @Get(':id')
     @ApiFoundResponse({
-        description: 'The record has been successfully founded.',
+        description: ConstApp.DEFAULT_GET_OK,
         type: Lottery,
     })
     async get(@Param('id') id: string): Promise<Lottery> {
