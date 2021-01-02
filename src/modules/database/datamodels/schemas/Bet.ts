@@ -1,6 +1,6 @@
-import { DataObject } from '@database/datamodels/schemas/DataObject';
+import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Play, PlaySchema } from '@database/datamodels/schemas/Play';
+import { Play, PlaySchema } from '@src/modules/database/datamodels/schemas/play';
 import { Document } from 'mongoose';
 
 export type BetDocument = Bet & Document;

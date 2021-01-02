@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
-import { Consortium } from '@database/datamodels/schemas/Consortium';
+import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
 import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
 import {ConstApp} from "@utils/const.app";
 

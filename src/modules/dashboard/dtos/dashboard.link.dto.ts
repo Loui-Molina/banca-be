@@ -1,6 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {Consortium} from "@database/datamodels/schemas/Consortium";
-import { ObjectId } from 'mongoose';
 
 export class DashboardDiagramLinkDto {
     @ApiProperty() id: string;

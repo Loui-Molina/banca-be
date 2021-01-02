@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get ,UseGuards } from '@nestjs/common';
+import { ApiFoundResponse,  ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {DashboardDiagramDto} from "@src/modules/dashboard/dtos/dashboardDiagram.dto";
+import {DashboardDiagramDto} from "@src/modules/dashboard/dtos/dashboard.dto";
 import {DashboardService} from "@src/modules/dashboard/dashboard.service";
 import {ConstApp} from "@utils/const.app";
 

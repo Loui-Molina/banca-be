@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UserService } from '@users/user.service';
-import { User } from '@database/datamodels/schemas/User';
+import { User } from '@src/modules/database/datamodels/schemas/user';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '@src/common/decorators/roles.decorator';
@@ -16,7 +16,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
-    @Roles(Role.admin,Role.banker)
+    @Roles(Role.admin, Role.banker)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,

@@ -1,5 +1,5 @@
-import { DataObject } from '@database/datamodels/schemas/DataObject';
-import { UserPreference, UserPreferenceSchema } from '@database/datamodels/schemas/UserPreference';
+import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
+import { UserPreference, UserPreferenceSchema } from '@src/modules/database/datamodels/schemas/user.preference';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';

@@ -1,8 +1,8 @@
-import { DataObject } from '@database/datamodels/schemas/DataObject';
-import { PlayTypes } from '@database/datamodels/enums/PlayTypes';
+import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
+import { PlayTypes } from '@src/modules/database/datamodels/enums/play.types';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { PlayNumbers, PlayNumbersSchema } from '@database/datamodels/schemas/PlayNumbers';
+import { PlayNumbers, PlayNumbersSchema } from '@src/modules/database/datamodels/schemas/play.numbers';
 
 export type PlayDocument = Play & Document;
 

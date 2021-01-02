@@ -1,8 +1,8 @@
-import { DataObject } from '@database/datamodels/schemas/DataObject';
-import { BankingPreference, BankingPreferenceSchema } from '@database/datamodels/schemas/BankingPreference';
-import { Transaction, TransactionSchema } from '@database/datamodels/schemas/Transaction';
-import { Lottery, LotterySchema } from '@database/datamodels/schemas/Lottery';
-import { Bet, BetSchema } from '@database/datamodels/schemas/Bet';
+import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
+import { BankingPreference, BankingPreferenceSchema } from '@src/modules/database/datamodels/schemas/banking.preference';
+import { Transaction, TransactionSchema } from '@src/modules/database/datamodels/schemas/transaction';
+import { Lottery, LotterySchema } from '@src/modules/database/datamodels/schemas/lottery';
+import { Bet, BetSchema } from '@src/modules/database/datamodels/schemas/bet';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 

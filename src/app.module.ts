@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HealthCheckModule } from '@health-check/health-check.module';
+import { HealthCheckModule } from '@src/modules/health-check/health.check.module';
 import { DatabaseModule } from '@database/database.module';
 import { AuthModule } from '@auth/auth.module';
 import { UsersModule } from '@users/users.module';

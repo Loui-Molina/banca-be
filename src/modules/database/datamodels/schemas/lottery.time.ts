@@ -1,7 +1,6 @@
-import { Days } from '@database/datamodels/enums/Days';
+import { Days } from '@src/modules/database/datamodels/enums/days';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { DataObject } from '@database/datamodels/schemas/DataObject';
 import { Document } from 'mongoose';
 import {ApiProperty} from "@nestjs/swagger";
 
