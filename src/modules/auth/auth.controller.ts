@@ -3,9 +3,9 @@ import { AuthService } from '@auth/auth.service';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse} from '@nestjs/swagger';
-import { User } from '@database/datamodels/schemas/User';
-import {ConstApp} from "@utils/const.app";
+import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -40,7 +40,7 @@ export class AuthController {
 
     @Post('/test')
     @UseGuards(AuthGuard())
-    test(@Req() req: any) {
-        console.log(req);
+    test(@AuthUser() user : UserDocument) {
+        console.log(user);
     }
 }
