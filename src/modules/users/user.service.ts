@@ -11,23 +11,8 @@ import {User, UserDocument} from "@database/datamodels/schemas/user";
 export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private authService: AuthService, private consortiumService: ConsortiumService) {}
 
-    async getAll(user: UserDocument): Promise<Array<User>> {
-        let filter = null;
-        if (user.role !== Role.admin){
-            const consortiums = await this.consortiumService.getFiltered('ownerUserId', user.id);
-            const consortium = consortiums.length === 1 ? consortiums.pop() : null;
-            const listUsers: Array<ObjectId> = []
-            consortium.bankings.map(banking => {
-                listUsers.push(banking.ownerUserId);
-            });
-            filter = {
-                $and: [
-                    {role: {$ne: Role.admin}},
-                    {id: { $in: listUsers }}
-                ]
-            };
-        }
-        return this.userModel.find(filter).exec();
+    async getAll(): Promise<Array<User>> {
+        return this.userModel.find().exec();
     }
 
     async getFiltered(q: string, value: string): Promise<Array<User>> {
@@ -35,6 +20,7 @@ export class UserService {
     }
 
     async create(dto: UserDto): Promise<User> {
+        //TODO crear usuario con signUp
         const newObject = new this.userModel({
             ...dto,
             creationDate: new Date(),

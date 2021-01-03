@@ -9,6 +9,8 @@ import { UtilsModule } from '@utils/utils.module';
 import { ConsortiumModule } from '@src/modules/consortiums/consortium.module';
 import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
 import {LotteryModule} from "@src/modules/lotteries/lottery.module";
+import {TransactionModule} from "@src/modules/transactions/transaction.module";
+import {ResultsModule} from "@src/modules/results/results.module";
 
 @Module({
     imports: [
@@ -39,14 +41,25 @@ import {LotteryModule} from "@src/modules/lotteries/lottery.module";
         HealthCheckModule,
         DatabaseModule,
         LotteryModule,
+        ResultsModule,
         AuthModule,
         UsersModule,
         ConsortiumModule,
+        TransactionModule,
         DashboardModule,
         UtilsModule,
     ],
     controllers: [],
     providers: [],
-    exports: [DatabaseModule, UsersModule, ConsortiumModule, LotteryModule, DashboardModule, UtilsModule, AuthModule],
+    exports: [
+        DatabaseModule,
+        UsersModule,
+        ConsortiumModule,
+        TransactionModule,
+        LotteryModule,
+        DashboardModule,
+        UtilsModule,
+        AuthModule
+    ],
 })
 export class AppModule {}

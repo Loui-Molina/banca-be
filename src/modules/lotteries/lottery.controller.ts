@@ -5,6 +5,8 @@ import {LotteryService} from "@src/modules/lotteries/lottery.service";
 import {LotteryDto} from "@src/modules/lotteries/dtos/lottery.dto";
 import {ConstApp} from "@utils/const.app";
 import {Lottery} from "@src/modules/database/datamodels/schemas/lottery";
+import {AuthUser} from "@src/common/decorators/auth.user.decorator";
+import {UserDocument} from "@database/datamodels/schemas/user";
 
 @ApiTags('lotteries')
 @Controller('lotteries')
@@ -35,8 +37,8 @@ export class LotteryController {
         description: ConstApp.DEFAULT_POST_OK,
         type: Lottery,
     })
-    create(@Body() dto: LotteryDto): Promise<Lottery> {
-        return this.lotteryService.create(dto);
+    create(@Body() dto: LotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
+        return this.lotteryService.create(dto, loggedUser);
     }
 
     @Put()
@@ -44,8 +46,8 @@ export class LotteryController {
         description: ConstApp.DEFAULT_PUT_OK,
         type: Lottery,
     })
-    update(@Body() dto: LotteryDto): Promise<Lottery> {
-        return this.lotteryService.update(dto);
+    update(@Body() dto: LotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
+        return this.lotteryService.update(dto, loggedUser);
     }
 
     @Delete(':id')

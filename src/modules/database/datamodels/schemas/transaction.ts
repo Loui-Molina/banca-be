@@ -1,28 +1,27 @@
 import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { TransactionType } from '@src/modules/database/datamodels/enums/transaction.type';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import {Document, ObjectId} from 'mongoose';
+import {ApiProperty} from "@nestjs/swagger";
+import * as mongoose from "mongoose";
 
 export type TransactionDocument = Transaction & Document;
 @Schema()
 export class Transaction implements DataObject {
-    @Prop() transactionId?: string;
-    @Prop({ required: true }) amount?: number;
-    @Prop({ type: String, enum: TransactionType }) type?: TransactionType;
-    @Prop({ required: true }) lastBalance?: number;
-    @Prop({ required: true }) actualBalance?: number;
+    @ApiProperty() _id?: ObjectId;
+    @ApiProperty() @Prop({ required: true }) amount?: number;
+    @ApiProperty({ type: String, enum: TransactionType }) @Prop({ type: String, enum: TransactionType }) type?: TransactionType;
+    @ApiProperty() @Prop({ required: true }) lastBalance?: number;
+    @ApiProperty() @Prop({ required: true }) actualBalance?: number;
     //id del usuario donde se genero la transaccion
-    @Prop({ required: true }) originUserId?: string;
+    @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) originUserId?: ObjectId;
     //id del usuario donde se genero la  transaccion
-    @Prop({ required: true }) destinationUserId?: string;
-
-    // id field to be used incrementally
-    // @Prop({_id: true})_id: number; // TODO CHECK
+    @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) destinationUserId?: ObjectId;
 
     // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string;
-    @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string;
+    @ApiProperty() @Prop({ required: true, immutable: true }) creationUserId: string;
+    @ApiProperty() @Prop() deletionDate?: Date;
+    @ApiProperty() @Prop({ required: true }) modificationUserId: string;
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction).set('timestamps', true);

@@ -7,6 +7,7 @@ import {Bet, BetSchema} from "@src/modules/database/datamodels/schemas/bet";
 import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
 import * as mongoose from "mongoose";
 import {UserSchema} from "@src/modules/database/datamodels/schemas/user";
+import {ApiProperty} from "@nestjs/swagger";
 
 export type BankingDocument = Banking & Document;
 
@@ -20,6 +21,9 @@ export class Banking implements DataObject {
     @Prop({ type: [BetSchema] }) bets?: Bet[];
     @Prop({ required: true }) name: string;
     @Prop({ required: true, default: 0 }) balance: number;
+
+    // Que porcentaje se le paga a la banca por el total de sus ventas
+    @ApiProperty() @Prop({ min: 0, max: 100 }) fallbackPercentage?: number;
 
     // Data object members
     @Prop({ required: true, immutable: true }) creationUserId: string;

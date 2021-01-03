@@ -18,17 +18,17 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getAll(@AuthUser() user : UserDocument): Promise<Array<User>> {
-        return this.userService.getAll(user);
+    getAll(): Promise<Array<User>> {
+        return this.userService.getAll();
     }
 
     @Get('search')
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
@@ -38,7 +38,7 @@ export class UserController {
     }
 
     @Post()
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_POST_OK,
         type: User,
@@ -48,7 +48,7 @@ export class UserController {
     }
 
     @Put()
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
         type: User,
@@ -58,7 +58,7 @@ export class UserController {
     }
 
     @Delete(':id')
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiOkResponse({
         description: ConstApp.DEFAULT_DELETE_OK,
         type: User,
@@ -68,7 +68,7 @@ export class UserController {
     }
 
     @Get(':id')
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,

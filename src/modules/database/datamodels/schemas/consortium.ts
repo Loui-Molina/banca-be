@@ -4,9 +4,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
 import {Transaction, TransactionSchema} from "@src/modules/database/datamodels/schemas/transaction";
-import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
 import {Supervisor, SupervisorSchema} from "@src/modules/database/datamodels/schemas/supervisor";
 import {Banking, BankingSchema} from "@src/modules/database/datamodels/schemas/banking";
+import {ConsortiumLottery, ConsortiumLotterySchema} from "@database/datamodels/schemas/consortium.lottery";
 
 export type ConsortiumDocument = Consortium & Document;
 
@@ -18,7 +18,7 @@ export class Consortium {
     @ApiProperty()
     consortiumPrefs?: ConsortiumPreference;
     @ApiProperty() @Prop({ type: [BankingSchema] }) bankings?: Banking[];
-    @ApiProperty() @Prop({ type: [LotterySchema] }) lotteries?: Lottery[];
+    @ApiProperty() @Prop({ type: [ConsortiumLotterySchema] }) consortiumLotteries?: ConsortiumLottery[];
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) ownerUserId: ObjectId;
     @ApiProperty() @Prop({ required: true }) name: string;
     @ApiProperty() @Prop({ required: true, default: false}) status: boolean;
