@@ -3,8 +3,10 @@ import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@n
 import { AuthGuard } from '@nestjs/passport';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
-import {ConstApp} from "@utils/const.app";
-import {Consortium} from "@src/modules/database/datamodels/schemas/consortium";
+import {AuthUser} from "@src/common/decorators/auth.user.decorator";
+import {UserDocument} from "@database/datamodels/schemas/user";
+import { ConstApp } from '@utils/const.app';
+import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
 
 @ApiTags('consortiums')
 @Controller('consortiums')
@@ -35,8 +37,8 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_POST_OK,
         type: Consortium,
     })
-    create(@Body() dto: ConsortiumDto): Promise<Consortium> {
-        return this.consortiumService.create(dto);
+    create(@Body() dto: ConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
+        return this.consortiumService.create(dto, loggedUser);
     }
 
     @Put()
@@ -44,8 +46,8 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_PUT_OK,
         type: Consortium,
     })
-    update(@Body() dto: ConsortiumDto): Promise<Consortium> {
-        return this.consortiumService.update(dto);
+    update(@Body() dto: ConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
+        return this.consortiumService.update(dto, loggedUser);
     }
 
     @Delete(':id')

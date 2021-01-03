@@ -5,6 +5,7 @@ import { BrasilPrizes } from '@src/modules/database/datamodels/enums/brasil.priz
 import { OCStatus } from '@src/modules/database/datamodels/enums/oc.status';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import {PlayTypes} from "@database/datamodels/enums/play.types";
 
 // Estado y limite de apuesta en cada jugada
 
@@ -14,9 +15,9 @@ export type BettingLimitDocument = BettingLimit & Document;
 export class BettingLimit implements DataObject {
     @Prop({
         type: String,
-        enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
+        enum: PlayTypes,
     })
-    playType: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
+    playType: PlayTypes;
     @Prop({ type: String, enum: OCStatus }) status: OCStatus;
     @Prop({ required: true }) betAmount?: number;
 

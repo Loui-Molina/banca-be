@@ -1,33 +1,21 @@
-import {Injectable, Req, UseGuards} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import {Model, ObjectId} from 'mongoose';
-import { UserDto } from '@users/dtos/user.dto';
-import {Role} from "@database/datamodels/enums/role";
+import {Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {User, UserDocument} from '@src/modules/database/datamodels/schemas/user';
+import {UserDto} from '@users/dtos/user.dto';
 import {AuthService} from "@auth/auth.service";
 import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
-import {User, UserDocument} from "@database/datamodels/schemas/user";
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private authService: AuthService, private consortiumService: ConsortiumService) {}
+    constructor(
+        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        private authService: AuthService,
+        private consortiumService: ConsortiumService,
+    ) {}
 
-    async getAll(user: UserDocument): Promise<Array<User>> {
-        let filter = null;
-        if (user.role !== Role.admin){
-            const consortiums = await this.consortiumService.getFiltered('ownerUserId', user.id);
-            const consortium = consortiums.length === 1 ? consortiums.pop() : null;
-            const listUsers: Array<ObjectId> = []
-            consortium.bankings.map(banking => {
-                listUsers.push(banking.ownerUserId);
-            });
-            filter = {
-                $and: [
-                    {role: {$ne: Role.admin}},
-                    {id: { $in: listUsers }}
-                ]
-            };
-        }
-        return this.userModel.find(filter).exec();
+    async getAll(): Promise<Array<User>> {
+        return this.userModel.find().exec();
     }
 
     async getFiltered(q: string, value: string): Promise<Array<User>> {
@@ -35,6 +23,7 @@ export class UserService {
     }
 
     async create(dto: UserDto): Promise<User> {
+        //TODO crear usuario con signUp
         const newObject = new this.userModel({
             ...dto,
             creationDate: new Date(),
