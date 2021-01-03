@@ -5,10 +5,9 @@ import { AuthService } from '@auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
-import {MongooseModule} from "@nestjs/mongoose";
-import {User, UserSchema} from "@src/modules/database/datamodels/schemas/user";
-import {JwtStrategy} from "@auth/jwt.strategy";
-
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from '@src/modules/database/datamodels/schemas/user';
+import { JwtStrategy } from '@auth/jwt.strategy';
 
 @Global()
 @Module({
@@ -28,12 +27,18 @@ import {JwtStrategy} from "@auth/jwt.strategy";
             },
             inject: [ConfigService],
         }),
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'), forwardRef(() => AuthModule),
+        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'),
+        forwardRef(() => AuthModule),
     ],
     providers: [AuthService, JwtStrategy],
     controllers: [AuthController],
-    exports: [JwtModule, AuthService, PassportModule.register({
-        defaultStrategy: 'jwt',
-    }), JwtStrategy],
+    exports: [
+        JwtModule,
+        AuthService,
+        PassportModule.register({
+            defaultStrategy: 'jwt',
+        }),
+        JwtStrategy,
+    ],
 })
 export class AuthModule {}

@@ -1,4 +1,3 @@
-
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@src/modules/database/datamodels/enums/role';
 

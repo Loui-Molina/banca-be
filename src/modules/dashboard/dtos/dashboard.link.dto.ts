@@ -5,7 +5,6 @@ export class DashboardDiagramLinkDto {
     @ApiProperty() source: string;
     @ApiProperty() target: string;
 
-
     constructor(id: string, source: string, target: string) {
         this.id = id;
         this.source = source;

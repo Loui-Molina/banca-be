@@ -1,4 +1,4 @@
-import { Role } from "../database/datamodels/enums/role";
+import { Role } from '../database/datamodels/enums/role';
 
 export interface JwtPayload {
     username: string;

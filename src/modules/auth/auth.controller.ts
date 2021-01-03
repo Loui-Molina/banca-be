@@ -1,12 +1,12 @@
-import {Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards, ValidationPipe} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse} from '@nestjs/swagger';
-import {ConstApp} from "@utils/const.app";
-import {User, UserDocument} from "@src/modules/database/datamodels/schemas/user";
-import {AuthUser} from "@src/common/decorators/auth.user.decorator";
+import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ConstApp } from '@utils/const.app';
+import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -34,14 +34,13 @@ export class AuthController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getLoggedUser(@AuthUser() user : UserDocument): Promise<User> {
+    getLoggedUser(@AuthUser() user: UserDocument): Promise<User> {
         return this.authService.getLoggedUser(user);
     }
 
-
     @Post('/test')
     @UseGuards(AuthGuard())
-    test(@AuthUser() user : UserDocument) {
+    test(@AuthUser() user: UserDocument) {
         console.log(user);
     }
 }

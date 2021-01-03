@@ -1,6 +1,6 @@
 import { UserPreference } from '@src/modules/database/datamodels/schemas/user.preference';
 import { Role } from '@database/datamodels/enums/role';
-import {User} from "@src/modules/database/datamodels/schemas/user";
+import { User } from '@src/modules/database/datamodels/schemas/user';
 
 class AdminUser extends User {
     // User members
