@@ -1,11 +1,11 @@
 import {Injectable, Req, UseGuards} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import {Model, ObjectId} from 'mongoose';
 import { UserDto } from '@users/dtos/user.dto';
 import {Role} from "@database/datamodels/enums/role";
 import {AuthService} from "@auth/auth.service";
 import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
+import {User, UserDocument} from "@database/datamodels/schemas/user";
 
 @Injectable()
 export class UserService {
@@ -14,12 +14,18 @@ export class UserService {
     async getAll(user: UserDocument): Promise<Array<User>> {
         let filter = null;
         if (user.role !== Role.admin){
-            filter = { role: { $ne: Role.admin } };
             const consortiums = await this.consortiumService.getFiltered('ownerUserId', user.id);
             const consortium = consortiums.length === 1 ? consortiums.pop() : null;
-            // consortium.bankings.map(banking => {
-            //     banking.
-            // });
+            const listUsers: Array<ObjectId> = []
+            consortium.bankings.map(banking => {
+                listUsers.push(banking.ownerUserId);
+            });
+            filter = {
+                $and: [
+                    {role: {$ne: Role.admin}},
+                    {id: { $in: listUsers }}
+                ]
+            };
         }
         return this.userModel.find(filter).exec();
     }
