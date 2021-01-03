@@ -11,5 +11,4 @@ export class ConsortiumDto {
     @ApiProperty() createdAt: Date;
     @ApiProperty() status: boolean;
     @ApiProperty() firstTransactionDate: Date;
-
 }

@@ -1,20 +1,21 @@
 import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Document, Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { ConstApp } from '@utils/const.app';
 import { ResponseDto } from '@utils/dtos/response.dto';
-import {User, UserDocument} from "@src/modules/database/datamodels/schemas/user";
+import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { UserCreatedEntity } from '@users/entities/user.created.entity';
 
 @Injectable()
 export class UserAuthService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-    async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
+    async singUp(authCredentialsDto: AuthCredentialsDto): Promise<UserCreatedEntity> {
         const { username, password, role } = authCredentialsDto;
-        let response: ResponseDto = new ResponseDto();
+        let userCreated: UserCreatedEntity = new UserCreatedEntity();
         const user = new this.userModel();
         user.username = username;
         user.salt = await bcrypt.genSalt();
@@ -23,7 +24,7 @@ export class UserAuthService {
         user.creationUserId = '1';
         user.modificationUserId = '1';
         try {
-            await user.save();
+            userCreated.user = await user.save();
         } catch (error) {
             if (error.code === 11000) {
                 throw new ConflictException(ConstApp.USERNAME_EXISTS_ERROR);
@@ -31,9 +32,8 @@ export class UserAuthService {
                 throw new InternalServerErrorException();
             }
         }
-        response.message = ConstApp.USER_CREATED_OK;
-        response.statusCode = 201;
-        return response;
+        userCreated.response = { message: ConstApp.USER_CREATED_OK, statusCode: 201 } as ResponseDto;
+        return userCreated;
     }
 
     async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<ResponsePayload> {

@@ -1,4 +1,4 @@
-import {Injectable, UnauthorizedException, UseGuards} from '@nestjs/common';
+import { Injectable, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { UserAuthService } from '@users/user.auth.service';
@@ -7,17 +7,21 @@ import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
-import {User, UserDocument} from "@src/modules/database/datamodels/schemas/user";
-import {UserService} from "@users/user.service";
-import {InjectModel} from "@nestjs/mongoose";
-import {Model} from "mongoose";
+import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { UserService } from '@users/user.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class AuthService {
-    constructor(private userAuthService: UserAuthService, private jwtService: JwtService, @InjectModel(User.name) private userModel: Model<UserDocument>) {}
+    constructor(
+        private userAuthService: UserAuthService,
+        private jwtService: JwtService,
+        @InjectModel(User.name) private userModel: Model<UserDocument>,
+    ) {}
 
     async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
-        return this.userAuthService.singUp(authCredentialsDto);
+        return this.userAuthService.singUp(authCredentialsDto).then((createdUser) => createdUser.response);
     }
 
     async singIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
@@ -33,7 +37,7 @@ export class AuthService {
         return { accessToken };
     }
 
-    async getLoggedUser(user: UserDocument){
+    async getLoggedUser(user: UserDocument) {
         return await this.userModel.findById(user.id).exec();
     }
 }

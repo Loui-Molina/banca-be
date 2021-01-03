@@ -22,12 +22,12 @@ Configuracion del .env para que funcione la app :
 
 # App Configuration
 
-APP_SWAGGER_SETUP=api
-APP_GLOBAL_PREFIX=api
-APP_TITLE=Betting
-APP_DESCRIPTION=Betting for Republic
-APP_VERSION=1.0.2
-APP_TAG=Bet
+APP_SWAGGER_SETUP=api  
+APP_GLOBAL_PREFIX=api  
+APP_TITLE=Betting  
+APP_DESCRIPTION=B teaing  
+APP_VERSION=1.0.3  
+APP_TAG=Bet  
 
 #Token
 

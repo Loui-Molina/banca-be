@@ -7,8 +7,9 @@ import { UsersModule } from '@users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
 import { ConsortiumModule } from '@src/modules/consortiums/consortium.module';
-import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
-import {LotteryModule} from "@src/modules/lotteries/lottery.module";
+import { DashboardModule } from '@src/modules/dashboard/dashboard.module';
+import { LotteryModule } from '@src/modules/lotteries/lottery.module';
+import { BankingModule } from '@src/modules/banking/banking.module';
 
 @Module({
     imports: [
@@ -44,6 +45,7 @@ import {LotteryModule} from "@src/modules/lotteries/lottery.module";
         ConsortiumModule,
         DashboardModule,
         UtilsModule,
+        BankingModule,
     ],
     controllers: [],
     providers: [],

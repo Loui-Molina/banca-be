@@ -1,26 +1,26 @@
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model} from 'mongoose';
-import {ConsortiumDto} from '@src/modules/consortiums/dtos/consortium.dto';
-import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/consortium";
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
+import { Consortium, ConsortiumDocument } from '@src/modules/database/datamodels/schemas/consortium';
 
 @Injectable()
 export class ConsortiumService {
-    constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>) {
-    }
+    constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {
         //TODO CHECK WHY IS IT ALL IN THE SAME COLLECTION AND IF IT WORKS ON SEPARATE ONES
-        return this.consortiumModel.aggregate([{$match: {}},
+        return this.consortiumModel.aggregate([
+            { $match: {} },
             {
                 $lookup: {
                     from: 'users',
                     localField: 'ownerUserId',
                     foreignField: '_id',
-                    as: 'owner'
-                }
+                    as: 'owner',
+                },
             },
-            {$unwind: '$owner'},
+            { $unwind: '$owner' },
             {
                 $project: {
                     creationUserId: '$creationUserId',
@@ -31,9 +31,10 @@ export class ConsortiumService {
                     name: '$name',
                     createdAt: '$createdAt',
                     status: '$status',
-                    firstTransactionDate: '$firstTransactionDate'
-                }
-            }]);
+                    firstTransactionDate: '$firstTransactionDate',
+                },
+            },
+        ]);
     }
 
     async getFiltered(q: string, value: any): Promise<Array<Consortium>> {
@@ -57,7 +58,7 @@ export class ConsortiumService {
                 name: dto.name,
                 ownerUserId: dto.ownerUserId,
                 status: dto.status,
-                modificationUserId: dto.ownerUserId //TODO Use logged user for this
+                modificationUserId: dto.ownerUserId, //TODO Use logged user for this
             },
             {
                 new: false,

@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {LotteryService} from "@src/modules/lotteries/lottery.service";
-import {LotteryDto} from "@src/modules/lotteries/dtos/lottery.dto";
-import {ConstApp} from "@utils/const.app";
-import {Lottery} from "@src/modules/database/datamodels/schemas/lottery";
+import { LotteryService } from '@src/modules/lotteries/lottery.service';
+import { LotteryDto } from '@src/modules/lotteries/dtos/lottery.dto';
+import { ConstApp } from '@utils/const.app';
+import { Lottery } from '@src/modules/database/datamodels/schemas/lottery';
 
 @ApiTags('lotteries')
 @Controller('lotteries')
