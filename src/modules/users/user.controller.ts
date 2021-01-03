@@ -1,15 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
-import { UserDto } from '@users/dtos/user.dto';
-import { UserService } from '@users/user.service';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '@src/common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { ConstApp } from '@utils/const.app';
-import { AuthService } from '@auth/auth.service';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
+import {UserDto} from '@users/dtos/user.dto';
+import {UserService} from '@users/user.service';
+import {User, UserDocument} from '@src/modules/database/datamodels/schemas/user';
+import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags} from '@nestjs/swagger';
+import {AuthGuard} from '@nestjs/passport';
+import {Roles} from '@src/common/decorators/roles.decorator';
+import {Role} from '@database/datamodels/enums/role';
+import {RolesGuard} from '@auth/guards/roles.guard';
+import {ConstApp} from '@utils/const.app';
+import {AuthUser} from '@src/common/decorators/auth.user.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -18,7 +17,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
@@ -28,7 +27,7 @@ export class UserController {
     }
 
     @Get('search')
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
@@ -38,7 +37,7 @@ export class UserController {
     }
 
     @Post()
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_POST_OK,
         type: User,
@@ -48,7 +47,7 @@ export class UserController {
     }
 
     @Put()
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
         type: User,
@@ -58,7 +57,7 @@ export class UserController {
     }
 
     @Delete(':id')
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiOkResponse({
         description: ConstApp.DEFAULT_DELETE_OK,
         type: User,
@@ -68,7 +67,7 @@ export class UserController {
     }
 
     @Get(':id')
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,

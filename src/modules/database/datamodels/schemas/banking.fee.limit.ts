@@ -4,6 +4,7 @@ import { UsLotteryPrizes } from '@src/modules/database/datamodels/enums/us.lotte
 import { BrasilPrizes } from '@src/modules/database/datamodels/enums/brasil.prizes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import {PlayTypes} from "@database/datamodels/enums/play.types";
 
 // Porcentaje que se le paga a cada banca por cada jugada que vende
 export type BankingFeeLimitDocument = BankingFeeLimit & Document;
@@ -12,9 +13,9 @@ export type BankingFeeLimitDocument = BankingFeeLimit & Document;
 export class BankingFeeLimit implements DataObject {
     @Prop({
         type: String,
-        enum: [DominicanLotteryPrizes, UsLotteryPrizes, BrasilPrizes],
+        enum: PlayTypes,
     })
-    playType?: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes;
+    playType?: PlayTypes;
     @Prop({ min: 0, max: 100 }) feePercentage?: number;
 
     // Data object members

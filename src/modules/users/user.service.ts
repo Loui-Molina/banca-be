@@ -1,11 +1,10 @@
-import { Injectable, Req, UseGuards } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
-import { UserDto } from '@users/dtos/user.dto';
-import { Role } from '@database/datamodels/enums/role';
-import { AuthService } from '@auth/auth.service';
-import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
+import {Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {User, UserDocument} from '@src/modules/database/datamodels/schemas/user';
+import {UserDto} from '@users/dtos/user.dto';
+import {AuthService} from "@auth/auth.service";
+import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
 
 @Injectable()
 export class UserService {
@@ -15,17 +14,8 @@ export class UserService {
         private consortiumService: ConsortiumService,
     ) {}
 
-    async getAll(user: UserDocument): Promise<Array<User>> {
-        let filter = null;
-        if (user.role !== Role.admin) {
-            filter = { role: { $ne: Role.admin } };
-            const consortiums = await this.consortiumService.getFiltered('ownerUserId', user.id);
-            const consortium = consortiums.length === 1 ? consortiums.pop() : null;
-            // consortium.bankings.map(banking => {
-            //     banking.
-            // });
-        }
-        return this.userModel.find(filter).exec();
+    async getAll(): Promise<Array<User>> {
+        return this.userModel.find().exec();
     }
 
     async getFiltered(q: string, value: string): Promise<Array<User>> {
@@ -33,6 +23,7 @@ export class UserService {
     }
 
     async create(dto: UserDto): Promise<User> {
+        //TODO crear usuario con signUp
         const newObject = new this.userModel({
             ...dto,
             creationDate: new Date(),

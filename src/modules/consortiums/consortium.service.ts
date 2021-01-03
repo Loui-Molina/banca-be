@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
-import { Consortium, ConsortiumDocument } from '@src/modules/database/datamodels/schemas/consortium';
+import {Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {ConsortiumDto} from '@src/modules/consortiums/dtos/consortium.dto';
+import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/consortium";
+import {UserDocument} from "@database/datamodels/schemas/user";
 
 @Injectable()
 export class ConsortiumService {
@@ -17,8 +18,8 @@ export class ConsortiumService {
                     from: 'users',
                     localField: 'ownerUserId',
                     foreignField: '_id',
-                    as: 'owner',
-                },
+                    as: 'owner'
+                }
             },
             { $unwind: '$owner' },
             {
@@ -41,24 +42,26 @@ export class ConsortiumService {
         return this.consortiumModel.find({ [q]: value }).exec();
     }
 
-    async create(dto: ConsortiumDto): Promise<Consortium> {
+    async create(dto: ConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
+        //CREATE user
         const newObject = new this.consortiumModel({
             ...dto,
-            creationUserId: dto.ownerUserId, //TODO Use logged user for this
-            modificationUserId: dto.ownerUserId, //TODO Use logged user for this
+            creationUserId: loggedUser._id,
+            modificationUserId: loggedUser._id,
         });
         await newObject.save();
         return newObject;
     }
 
-    async update(dto: ConsortiumDto): Promise<Consortium> {
+    async update(dto: ConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
+        //UPDATE USER
         return this.consortiumModel.findByIdAndUpdate(
             dto._id,
             {
                 name: dto.name,
-                ownerUserId: dto.ownerUserId,
+                // ownerUserId: dto.ownerUserId, //TODO falta
                 status: dto.status,
-                modificationUserId: dto.ownerUserId, //TODO Use logged user for this
+                modificationUserId: loggedUser._id
             },
             {
                 new: false,
