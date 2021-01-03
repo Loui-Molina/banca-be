@@ -22,8 +22,8 @@ export class UserController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getAll(@AuthUser() user: UserDocument): Promise<Array<User>> {
-        return this.userService.getAll(user);
+    getAll(): Promise<Array<User>> {
+        return this.userService.getAll();
     }
 
     @Get('search')

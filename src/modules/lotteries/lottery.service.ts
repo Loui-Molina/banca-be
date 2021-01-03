@@ -4,8 +4,9 @@ import {Model} from 'mongoose';
 import {LotteryDto} from "@src/modules/lotteries/dtos/lottery.dto";
 import {LotteryTime, LotteryTimeDocument} from "@src/modules/database/datamodels/schemas/lottery.time";
 import {Lottery, LotteryDocument} from "@src/modules/database/datamodels/schemas/lottery";
-import {Result, ResultDocument } from '../database/datamodels/schemas/result';
-import { DrawDocument } from '../database/datamodels/schemas/draw';
+import {Result, ResultDocument } from '@database/datamodels/schemas/result';
+import {Draw, DrawDocument} from '@database/datamodels/schemas/draw';
+import {UserDocument} from "@database/datamodels/schemas/user";
 
 @Injectable()
 export class LotteryService {
