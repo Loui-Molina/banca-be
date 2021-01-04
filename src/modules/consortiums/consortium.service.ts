@@ -3,14 +3,18 @@ import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {ConsortiumDto} from '@src/modules/consortiums/dtos/consortium.dto';
 import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/consortium";
-import {UserDocument} from "@database/datamodels/schemas/user";
+import {User, UserDocument} from "@database/datamodels/schemas/user";
+import {CreateConsortiumDto} from "@src/modules/consortiums/dtos/create.consortium.dto";
+import {UserAuthService} from "@users/user.auth.service";
 import {UserService} from "@users/user.service";
+import {Role} from "@database/datamodels/enums/role";
 
 @Injectable()
 export class ConsortiumService {
     constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-                /*private userService: UserService*/) {
-    }
+                @InjectModel(User.name) private userModel: Model<UserDocument>,
+                private userAuthService: UserAuthService
+                ) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {
         let consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find({}).exec();
@@ -21,10 +25,14 @@ export class ConsortiumService {
         return this.consortiumModel.find({[q]: value}).exec();
     }
 
-    async create(dto: ConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
+    async create(dto: CreateConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
         //CREATE user
+        dto.user.role = Role.consortium
+        const createdUser = (await this.userAuthService.singUp(dto.user, loggedUser)).user;
         const newObject = new this.consortiumModel({
-            ...dto,
+            name: dto.name,
+            status: dto.status,
+            ownerUserId: createdUser.id,
             creationUserId: loggedUser._id,
             modificationUserId: loggedUser._id,
         });
@@ -32,20 +40,16 @@ export class ConsortiumService {
         return newObject;
     }
 
-    async update(dto: ConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
-        //UPDATE USER
-        return this.consortiumModel.findByIdAndUpdate(
-            dto._id,
-            {
-                name: dto.name,
-                // ownerUserId: dto.ownerUserId, //TODO falta
-                status: dto.status,
-                modificationUserId: loggedUser._id
-            },
-            {
-                new: false,
-            },
-        );
+    async update(dto: CreateConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
+        //UPDATE user
+        await this.userAuthService.updateUsername(dto.ownerUserId, dto.user.username, loggedUser);
+
+        const consortium = await this.consortiumModel.findById(dto._id);
+        consortium.name = dto.name;
+        consortium.status = dto.status;
+        consortium.modificationUserId = loggedUser._id;
+        await consortium.save();
+        return consortium;
     }
 
     async delete(id: string): Promise<Consortium> {

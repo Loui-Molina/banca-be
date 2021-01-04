@@ -31,7 +31,7 @@ export class BankingService {
         let createdUser: UserDocument;
         try {
             if (consortium) {
-                createdUser = (await this.userAuthService.singUp({...createBankingDto.user})).user;
+                createdUser = (await this.userAuthService.singUp({...createBankingDto.user}, loggedUser)).user;
                 let newBaking: BankingDto = createBankingDto.banking;
                 consortium.bankings.push({
                     name: newBaking.name,
