@@ -55,7 +55,7 @@ export class UserService {
         return this.userModel.findByIdAndRemove(id).exec();
     }
 
-    async get(id: string): Promise<User> {
+    async get(id: any): Promise<User> {
         return await this.userModel.findById(id).exec();
     }
 }

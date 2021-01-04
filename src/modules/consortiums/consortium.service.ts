@@ -4,10 +4,9 @@ import {Model} from 'mongoose';
 import {ConsortiumDto} from '@src/modules/consortiums/dtos/consortium.dto';
 import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/consortium";
 import {User, UserDocument} from "@database/datamodels/schemas/user";
-import {CreateConsortiumDto} from "@src/modules/consortiums/dtos/create.consortium.dto";
 import {UserAuthService} from "@users/user.auth.service";
-import {UserService} from "@users/user.service";
 import {Role} from "@database/datamodels/enums/role";
+import {CreateConsortiumDto} from "@src/modules/consortiums/dtos/create.consortium.dto";
 
 @Injectable()
 export class ConsortiumService {
@@ -61,14 +60,15 @@ export class ConsortiumService {
     }
 
     async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
-        // let foundUser = (await this.userService.getFiltered('_id', consortium.ownerUserId)).pop();
+        let foundUser = await this.userModel.findById(consortium.ownerUserId);
         return {
             name: consortium.name,
+            ownerUsername: foundUser.username,
             _id: consortium._id,
             ownerId: consortium.ownerUserId,
             status: consortium.status,
             createdAt: consortium.createdAt,
-            // ownerName: foundUser.username
+            ownerName: foundUser.name
         } as ConsortiumDto;
     }
 }

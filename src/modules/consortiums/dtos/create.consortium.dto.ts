@@ -4,7 +4,7 @@ import {AuthCredentialsDto} from "@auth/dtos/auth.credentials.dto";
 
 export class CreateConsortiumDto {
     @ApiProperty() user: AuthCredentialsDto;
-    @ApiProperty() _id: ObjectId;
+    @ApiProperty({required: false}) _id: ObjectId;
     @ApiProperty({required: false}) ownerUserId?: ObjectId;
     @ApiProperty() name: string;
     @ApiProperty() status: boolean;

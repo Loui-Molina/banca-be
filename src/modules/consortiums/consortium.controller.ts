@@ -7,7 +7,8 @@ import {AuthUser} from "@src/common/decorators/auth.user.decorator";
 import {UserDocument} from "@database/datamodels/schemas/user";
 import { ConstApp } from '@utils/const.app';
 import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
-import {CreateConsortiumDto} from "@src/modules/consortiums/dtos/create.consortium.dto";
+import { CreateConsortiumDto } from "@src/modules/consortiums/dtos/create.consortium.dto";
+
 
 @ApiTags('consortiums')
 @Controller('consortiums')
