@@ -62,23 +62,22 @@ export class BankingService {
             default:
                 return [];
         }
-        let bankings: BankingDto[] = await this.consortiumModel.aggregate([
+        let bankings= await this.consortiumModel.aggregate([
             {$match: filter},
-            {$unwind: '$bankings'}/*,
+            {$unwind: '$bankings'},
             {
                 $project: {
-                    _id:'$banking._id',
-                    name:'$banking.name',
-                    status:'$banking.status',
-                    ownerUserId:'$banking.ownerUserId',
-                    creationDate:'$banking.createdAt',
-                    startOfOperation:'$banking.firstTransactionDate',
-                    showPercentage:'$banking.showPercentage',
+                    _id:'$bankings._id',
+                    name:'$bankings.name',
+                    status:'$bankings.status',
+                    ownerUserId:'$bankings.ownerUserId',
+                    creationDate:'$bankings.createdAt',
+                    startOfOperation:'$bankings.firstTransactionDate',
+                    showPercentage:'$bankings.showPercentage',
                 }
-            }*/]);
+            }]);
         console.log(bankings)
         let bankingDtos = bankings.map(bankings => this.mapToUser(bankings));
-        console.log(bankingDtos)
         return bankingDtos;
     }
 
