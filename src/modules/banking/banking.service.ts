@@ -49,6 +49,7 @@ export class BankingService {
         throw new BadRequestException();
     }
 
+    // TODO FIX UP
     async findAll(loggedUser: UserDocument): Promise<BankingDto[]> {
         let filter;
         switch (loggedUser.role) {
@@ -63,7 +64,7 @@ export class BankingService {
         }
         let bankings: BankingDto[] = await this.consortiumModel.aggregate([
             {$match: filter},
-            {$unwind: '$bankings'},
+            {$unwind: '$bankings'}/*,
             {
                 $project: {
                     _id:'$banking._id',
@@ -74,7 +75,7 @@ export class BankingService {
                     startOfOperation:'$banking.firstTransactionDate',
                     showPercentage:'$banking.showPercentage',
                 }
-            }]);
+            }*/]);
         console.log(bankings)
         let bankingDtos = bankings.map(bankings => this.mapToUser(bankings));
         console.log(bankingDtos)
