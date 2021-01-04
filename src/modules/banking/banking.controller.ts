@@ -4,7 +4,6 @@ import {CreateBankingDto} from './dto/create-banking.dto';
 import {ApiCreatedResponse, ApiFoundResponse, ApiTags} from '@nestjs/swagger';
 import {AuthGuard} from '@nestjs/passport';
 import {ConstApp} from '@utils/const.app';
-import {ObjectId} from 'mongoose';
 import {BankingDto} from '@src/modules/banking/dto/banking.dto';
 import {AuthUser} from '@src/common/decorators/auth.user.decorator';
 import {UserDocument} from '@database/datamodels/schemas/user';
@@ -24,12 +23,12 @@ export class BankingController {
         return this.bankingService.create(createBankingDto, user);
     }
 
-    @Post('/findAll')
+    @Get('/findAll')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: BankingDto,
     })
-    findAll(@Body() consortium: ObjectId, @AuthUser() user: UserDocument) {
+    findAll(@AuthUser() user: UserDocument) {
         return this.bankingService.findAll(user);
     }
 
