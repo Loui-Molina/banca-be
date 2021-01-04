@@ -49,32 +49,50 @@ export class BankingService {
         throw new BadRequestException();
     }
 
-    async findAll(loggedUser: UserDocument): Promise<Banking[]> {
+    async findAll(loggedUser: UserDocument): Promise<BankingDto[]> {
         let filter;
         switch (loggedUser.role) {
             case Role.admin:
                 filter = {};
                 break;
             case Role.consortium:
-                filter = {_id: loggedUser._id};
+                filter = {ownerUserId: loggedUser._id};
                 break;
             default:
                 return [];
         }
-        let bankings = await this.consortiumModel.aggregate([{$match: {}}]);
-        console.log(bankings)
-        return bankings; // TODO improve, join and unwind
+        let bankings: BankingDto[] = await this.consortiumModel.aggregate([
+            {$match: filter},
+            {$unwind: '$bankings'},
+            {
+                $project: {
+                    _id:'$banking._id',
+                    name:'$banking.name',
+                    status:'$banking.status',
+                    ownerUserId:'$banking.ownerUserId',
+                    creationDate:'$banking.createdAt',
+                    startOfOperation:'$banking.firstTransactionDate',
+                    showPercentage:'$banking.showPercentage',
+                }
+            }]);
+        let bankingDtos = bankings.map(bankings => this.mapToUser(bankings));
+        console.log(bankingDtos)
+        return bankingDtos;
     }
 
     findOne(id: string) {
         return `This action returns a #${id} banking`;
     }
 
-    update(id: string, updateBankingDto: BankingDto) {
-        return `This action updates a #${id} banking`;
+    update(updateBankingDto: BankingDto) {
+        return `This action updates a #${updateBankingDto._id} banking`;
     }
 
     remove(id: string) {
         return `This action removes a #${id} banking`;
+    }
+
+    private mapToUser(banking: BankingDto): BankingDto {
+        return banking;
     }
 }

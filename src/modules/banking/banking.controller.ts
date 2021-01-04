@@ -1,15 +1,13 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, Req } from '@nestjs/common';
-import { BankingService } from './banking.service';
-import { CreateBankingDto } from './dto/create-banking.dto';
-import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { ConstApp } from '@utils/const.app';
-import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
-import { Consortium } from '@database/datamodels/schemas/consortium';
-import { ObjectId } from 'mongoose';
-import { BankingDto } from '@src/modules/banking/dto/banking.dto';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
+import {BankingService} from './banking.service';
+import {CreateBankingDto} from './dto/create-banking.dto';
+import {ApiCreatedResponse, ApiFoundResponse, ApiTags} from '@nestjs/swagger';
+import {AuthGuard} from '@nestjs/passport';
+import {ConstApp} from '@utils/const.app';
+import {ObjectId} from 'mongoose';
+import {BankingDto} from '@src/modules/banking/dto/banking.dto';
+import {AuthUser} from '@src/common/decorators/auth.user.decorator';
+import {UserDocument} from '@database/datamodels/schemas/user';
 
 @Controller('banking')
 @ApiTags('banking')
@@ -44,13 +42,13 @@ export class BankingController {
         return this.bankingService.findOne(id);
     }
 
-    @Put(':id')
+    @Put()
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
         type: BankingDto,
     })
-    update(@Param('id') id: string, @Body() updateBankingDto: BankingDto) {
-        return this.bankingService.update(id, updateBankingDto);
+    update(@Body() updateBankingDto: BankingDto) {
+        return this.bankingService.update(updateBankingDto);
     }
 
     @Delete(':id')

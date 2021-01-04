@@ -4,42 +4,21 @@ import {Model} from 'mongoose';
 import {ConsortiumDto} from '@src/modules/consortiums/dtos/consortium.dto';
 import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/consortium";
 import {UserDocument} from "@database/datamodels/schemas/user";
+import {UserService} from "@users/user.service";
 
 @Injectable()
 export class ConsortiumService {
-    constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>) {}
+    constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
+                /*private userService: UserService*/) {
+    }
 
     async getAll(): Promise<Array<ConsortiumDto>> {
-        //TODO CHECK WHY IS IT ALL IN THE SAME COLLECTION AND IF IT WORKS ON SEPARATE ONES
-        return this.consortiumModel.aggregate([
-            { $match: {} },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'ownerUserId',
-                    foreignField: '_id',
-                    as: 'owner'
-                }
-            },
-            { $unwind: '$owner' },
-            {
-                $project: {
-                    creationUserId: '$creationUserId',
-                    modificationUserId: '$modificationUserId',
-                    ownerUserId: '$owner._id',
-                    ownerName: '$owner.username',
-                    _id: '$_id',
-                    name: '$name',
-                    createdAt: '$createdAt',
-                    status: '$status',
-                    firstTransactionDate: '$firstTransactionDate',
-                },
-            },
-        ]);
+        let consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find({}).exec();
+        return Promise.all(consortiums.map(consortium => this.mapToUser(consortium)));
     }
 
     async getFiltered(q: string, value: any): Promise<Array<Consortium>> {
-        return this.consortiumModel.find({ [q]: value }).exec();
+        return this.consortiumModel.find({[q]: value}).exec();
     }
 
     async create(dto: ConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
@@ -75,5 +54,17 @@ export class ConsortiumService {
 
     async get(id: string): Promise<Consortium> {
         return await this.consortiumModel.findById(id).exec();
+    }
+
+    async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
+        // let foundUser = (await this.userService.getFiltered('_id', consortium.ownerUserId)).pop();
+        return {
+            name: consortium.name,
+            _id: consortium._id,
+            ownerId: consortium.ownerUserId,
+            status: consortium.status,
+            createdAt: consortium.createdAt,
+            // ownerName: foundUser.username
+        } as ConsortiumDto;
     }
 }

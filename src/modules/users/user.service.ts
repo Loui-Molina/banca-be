@@ -18,7 +18,7 @@ export class UserService {
         return this.userModel.find().exec();
     }
 
-    async getFiltered(q: string, value: string): Promise<Array<User>> {
+    async getFiltered(q: string, value: any): Promise<Array<User>> {
         return this.userModel.find({ [q]: value }).exec();
     }
 
