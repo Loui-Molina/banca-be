@@ -7,7 +7,7 @@ import {ApiProperty} from "@nestjs/swagger";
 export type ResultDocument = Result & Document;
 @Schema()
 export class Result implements DataObject {
-    @ApiProperty() @Prop({ require: true }) date?: Date;
+    @ApiProperty() @Prop({ require: true }) date: Date;
     @ApiProperty() @Prop({ require: true, type: DrawSchema }) draw?: Draw;
 
     // Data object members

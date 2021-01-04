@@ -17,6 +17,7 @@ export class Lottery implements DataObject {
     @ApiProperty() @Prop() logo?: string;
     @ApiProperty() @Prop() status: boolean;
     @ApiProperty() @Prop({ type: LotteryTimeSchema }) time: LotteryTime;
+    @ApiProperty() @Prop({ required: true }) playTime?: string;
     @ApiProperty() @Prop() lastDraw?: Draw;
     @ApiProperty() @Prop({ type: [ResultSchema] }) results?: Result[];
 
