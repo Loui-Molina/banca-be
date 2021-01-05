@@ -1,11 +1,11 @@
 import {Module} from '@nestjs/common';
-import {BankingService} from './banking.service';
-import {BankingController} from './banking.controller';
+import {BankingService} from '@src/modules/banking/banking.service';
+import {BankingController} from '@src/modules/banking/banking.controller';
 import {MongooseModule} from '@nestjs/mongoose';
 import {Consortium, ConsortiumSchema} from '@database/datamodels/schemas/consortium';
 import {UsersModule} from "@users/users.module";
 import {ConsortiumModule} from "@src/modules/consortiums/consortium.module";
-import { AuthUserModule } from '../auth.user/auth.user.module';
+import {AuthUserModule} from '@src/modules/auth.user/auth.user.module';
 
 @Module({
     imports: [
