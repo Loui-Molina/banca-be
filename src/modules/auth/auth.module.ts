@@ -6,6 +6,8 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from '@auth/jwt.strategy';
 import { AuthUserModule } from '../auth.user/auth.user.module';
+import { User, UserSchema } from '../database/datamodels/schemas/user';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Global()
 @Module({

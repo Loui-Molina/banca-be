@@ -22,6 +22,7 @@ import { UsersModule } from '../users/users.module';
     controllers:[],
     providers:[],
     exports:[
+        UsersModule,
         DatabaseModule,
         LotteryModule,
         ResultsModule,

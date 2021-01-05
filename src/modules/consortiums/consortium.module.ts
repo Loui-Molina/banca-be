@@ -12,11 +12,10 @@ import { AuthUserModule } from '../auth.user/auth.user.module';
     imports: [     
         UsersModule,  AuthUserModule,
         MongooseModule.forFeature([{name: Consortium.name, schema: ConsortiumSchema}], 'banca'),
-        MongooseModule.forFeature([{name: User.name, schema: UserSchema}], 'user'),
     ],
     providers: [ConsortiumService],
     controllers: [ConsortiumController],
-    exports: [ConsortiumService, MongooseModule],
+    exports: [ConsortiumService],
 })
 export class ConsortiumModule {
 }
