@@ -1,15 +1,15 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
-import {LotteryDto} from "@src/modules/lotteries/dtos/lottery.dto";
-import {LotteryTime, LotteryTimeDocument} from "@src/modules/database/datamodels/schemas/lottery.time";
-import {Lottery, LotteryDocument} from "@src/modules/database/datamodels/schemas/lottery";
+import {AdminLotteryDto} from "@src/modules/lotteries/admin/dtos/admin.lottery.dto";
+import {LotteryTime, LotteryTimeDocument} from "@database/datamodels/schemas/lottery.time";
+import {Lottery, LotteryDocument} from "@database/datamodels/schemas/lottery";
 import {Result, ResultDocument } from '@database/datamodels/schemas/result';
 import {Draw, DrawDocument} from '@database/datamodels/schemas/draw';
 import {UserDocument} from "@database/datamodels/schemas/user";
 
 @Injectable()
-export class LotteryService {
+export class AdminLotteryService {
     constructor(
         @InjectModel(Lottery.name) private lotteryModel: Model<LotteryDocument>,
         @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTimeDocument>,
@@ -17,7 +17,7 @@ export class LotteryService {
         @InjectModel(Draw.name) private drawModel: Model<DrawDocument>,
     ) {    }
 
-    async getAll(): Promise<Array<LotteryDto>> {
+    async getAll(): Promise<Array<AdminLotteryDto>> {
         return this.lotteryModel.aggregate([{$match: {}},
             {
                 $project: {
@@ -37,7 +37,7 @@ export class LotteryService {
             }]);
     }
 
-    async getFiltered(q: string, value: string): Promise<Array<LotteryDto>> {
+    async getFiltered(q: string, value: string): Promise<Array<AdminLotteryDto>> {
         return this.lotteryModel.aggregate([
             { $match: { [q]: value } },
             {
@@ -58,7 +58,7 @@ export class LotteryService {
             }])
     }
 
-    async create(dto: LotteryDto, loggedUser: UserDocument): Promise<Lottery> {
+    async create(dto: AdminLotteryDto, loggedUser: UserDocument): Promise<Lottery> {
         const time: LotteryTime = new this.lotteryTimeModel({
             day: dto.day,
             openTime: dto.openTime,
@@ -78,7 +78,7 @@ export class LotteryService {
         return newObject;
     }
 
-    async update(dto: LotteryDto, loggedUser: UserDocument): Promise<Lottery> {
+    async update(dto: AdminLotteryDto, loggedUser: UserDocument): Promise<Lottery> {
         const time: LotteryTime = new this.lotteryTimeModel({
             day: dto.day,
             openTime: dto.openTime,

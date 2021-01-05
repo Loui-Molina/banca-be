@@ -9,7 +9,7 @@ import { UtilsModule } from '@utils/utils.module';
 import { ConsortiumModule } from '@src/modules/consortiums/consortium.module';
 import { BankingModule } from '@src/modules/banking/banking.module';
 import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
-import {LotteryModule} from "@src/modules/lotteries/lottery.module";
+import {AdminLotteryModule} from "@src/modules/lotteries/admin/admin.lottery.module";
 import {TransactionModule} from "@src/modules/transactions/transaction.module";
 import {ResultsModule} from "@src/modules/results/results.module";
 
@@ -41,7 +41,7 @@ import {ResultsModule} from "@src/modules/results/results.module";
         }),
         HealthCheckModule,
         DatabaseModule,
-        LotteryModule,
+        AdminLotteryModule,
         ResultsModule,
         AuthModule,
         UsersModule,
@@ -58,7 +58,7 @@ import {ResultsModule} from "@src/modules/results/results.module";
         UsersModule,
         ConsortiumModule,
         TransactionModule,
-        LotteryModule,
+        AdminLotteryModule,
         DashboardModule,
         UtilsModule,
         AuthModule

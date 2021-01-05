@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import {LotteryService} from "@src/modules/lotteries/lottery.service";
-import {LotteryController} from "@src/modules/lotteries/lottery.controller";
-import {LotteryTime, LotteryTimeSchema} from "@src/modules/database/datamodels/schemas/lottery.time";
-import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
+import {LotteryTime, LotteryTimeSchema} from "@database/datamodels/schemas/lottery.time";
+import {Lottery, LotterySchema} from "@database/datamodels/schemas/lottery";
 import {Result, ResultSchema } from '@database/datamodels/schemas/result';
 import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
+import {ConsortiumLotteryService} from "@src/modules/lotteries/consortium/consortium.lottery.service";
+import {ConsortiumLotteryController} from "@src/modules/lotteries/consortium/consortium.lottery.controller";
 
 @Module({
     imports: [
@@ -14,8 +14,8 @@ import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
         MongooseModule.forFeature([{ name: Result.name, schema: ResultSchema }], 'banca'),
         MongooseModule.forFeature([{ name: Draw.name, schema: DrawSchema }], 'banca'),
     ],
-    providers: [LotteryService],
-    controllers: [LotteryController],
+    providers: [ConsortiumLotteryService],
+    controllers: [ConsortiumLotteryController],
     exports: [MongooseModule],
 })
-export class LotteryModule {}
+export class ConsortiumLotteryModule {}

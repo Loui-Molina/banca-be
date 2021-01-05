@@ -52,6 +52,10 @@ export class ConsortiumService {
     }
 
     async delete(id: string): Promise<Consortium> {
+        //DELETE user
+        const consortium = await this.get(id);
+        await this.userAuthService.deleteUser(consortium.ownerUserId);
+
         return this.consortiumModel.findByIdAndRemove(id).exec();
     }
 

@@ -44,6 +44,12 @@ export class UserAuthService {
         return user;
     }
 
+    async deleteUser(id: ObjectId){
+        const user = await this.userModel.findById(id).exec();
+        await user.delete();
+        return user;
+    }
+
     async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = authCredentialsDto;
         const user = await this.userModel.findOne({ username });
