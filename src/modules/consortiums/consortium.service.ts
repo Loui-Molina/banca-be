@@ -4,17 +4,17 @@ import {Model} from 'mongoose';
 import {ConsortiumDto} from '@src/modules/consortiums/dtos/consortium.dto';
 import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/consortium";
 import {User, UserDocument} from "@database/datamodels/schemas/user";
-import {UserAuthService} from "@users/user.auth.service";
+import {AuthUserService} from "@src/modules/auth.user/auth.user..service";
 import {Role} from "@database/datamodels/enums/role";
 import {CreateConsortiumDto} from "@src/modules/consortiums/dtos/create.consortium.dto";
 import {UserService} from "@users/user.service";
 
 @Injectable()
 export class ConsortiumService {
-    constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-                // @InjectModel(User.name) private userModel: Model<UserDocument>,
-                private userAuthService: UserAuthService,
-                private userService: UserService
+   constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
+                @InjectModel(User.name) private userModel: Model<UserDocument>,
+                private userAuthService: AuthUserService,
+                private userService : UserService,
                 ) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {
@@ -61,7 +61,7 @@ export class ConsortiumService {
         return await this.consortiumModel.findById(id).exec();
     }
 
-    async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
+   async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
         let foundUser = (await this.userService.getFiltered('_id',consortium.ownerUserId)).pop();
         return {
             name: consortium.name,

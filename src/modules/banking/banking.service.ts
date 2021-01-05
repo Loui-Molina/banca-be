@@ -3,7 +3,7 @@ import {CreateBankingDto} from './dto/create-banking.dto';
 import {InjectModel} from '@nestjs/mongoose';
 import {Consortium, ConsortiumDocument} from '@database/datamodels/schemas/consortium';
 import {Model} from 'mongoose';
-import {UserAuthService} from '@users/user.auth.service';
+import {AuthUserService} from '@src/modules/auth.user/auth.user..service';
 import {BankingDto} from '@src/modules/banking/dto/banking.dto';
 import {UserDocument} from '@database/datamodels/schemas/user';
 import {Role} from '@database/datamodels/enums/role';
@@ -14,7 +14,7 @@ import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
 export class BankingService {
     constructor(
         @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-        private userAuthService: UserAuthService,
+        private userAuthService: AuthUserService,
         private userService: UserService,
         private consortiumService: ConsortiumService
     ) {

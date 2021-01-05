@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {Document, Model, ObjectId} from 'mongoose';
+import { Model, ObjectId} from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
@@ -10,7 +10,7 @@ import { User, UserDocument } from '@src/modules/database/datamodels/schemas/use
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
 
 @Injectable()
-export class UserAuthService {
+export class AuthUserService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
     async singUp(authCredentialsDto: AuthCredentialsDto, loggedUser: UserDocument = null): Promise<UserCreatedEntity> {
