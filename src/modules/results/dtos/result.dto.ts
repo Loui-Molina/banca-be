@@ -1,9 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {Lottery} from "@database/datamodels/schemas/lottery";
 import {Draw, DrawSchema} from "@database/datamodels/schemas/draw";
+import {ObjectId} from "mongoose";
 
 export class ResultDto {
-    @ApiProperty() lottery: Lottery;
+    @ApiProperty() _id: ObjectId;
+    @ApiProperty() lotteryId: ObjectId;
+    @ApiProperty() lotteryName: string;
     @ApiProperty() date?: Date;
+    @ApiProperty() createdAt?: Date;
     @ApiProperty() draw?: Draw;
 }

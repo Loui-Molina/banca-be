@@ -1,24 +1,20 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
-import {Model} from 'mongoose';
+import {Model, Schema} from 'mongoose';
 import {User, UserDocument} from '@src/modules/database/datamodels/schemas/user';
 import {UserDto} from '@users/dtos/user.dto';
-import {AuthService} from "@auth/auth.service";
-import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel(User.name) private userModel: Model<UserDocument>,
-        private authService: AuthService,
-        private consortiumService: ConsortiumService,
     ) {}
 
     async getAll(): Promise<Array<User>> {
         return this.userModel.find().exec();
     }
 
-    async getFiltered(q: string, value: string): Promise<Array<User>> {
+    async getFiltered(q: string, value: any): Promise<Array<User>> {
         return this.userModel.find({ [q]: value }).exec();
     }
 
@@ -55,7 +51,7 @@ export class UserService {
         return this.userModel.findByIdAndRemove(id).exec();
     }
 
-    async get(id: string): Promise<User> {
+    async get(id: any): Promise<User> {
         return await this.userModel.findById(id).exec();
     }
 }

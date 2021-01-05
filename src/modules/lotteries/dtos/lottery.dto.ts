@@ -9,6 +9,7 @@ export class LotteryDto {
     @ApiProperty() name: string;
     @ApiProperty() nickname: string;
     @ApiProperty() color: string;
+    @ApiProperty() playTime: string;
     @ApiProperty() status: boolean;
     @ApiProperty() @Prop({ type: [ResultSchema] }) results?: Result[];
     @ApiProperty({required:false}) openTime?: string;

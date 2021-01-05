@@ -1,21 +1,20 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import {CreateBankingDto} from './dto/create-banking.dto';
-import {InjectModel} from '@nestjs/mongoose';
-import {Consortium, ConsortiumDocument} from '@database/datamodels/schemas/consortium';
-import {Model} from 'mongoose';
-import {UserAuthService} from '@users/user.auth.service';
-import {BankingDto} from '@src/modules/banking/dto/banking.dto';
-import {UserDocument} from '@database/datamodels/schemas/user';
-import {Role} from '@database/datamodels/enums/role';
-import {Banking} from '@database/datamodels/schemas/banking';
-import {UserService} from "@users/user.service";
-import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { CreateBankingDto } from './dto/create-banking.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Consortium, ConsortiumDocument } from '@database/datamodels/schemas/consortium';
+import { Model } from 'mongoose';
+import { AuthUserService } from '@src/modules/auth.user/auth.user..service';
+import { BankingDto } from '@src/modules/banking/dto/banking.dto';
+import { UserDocument } from '@database/datamodels/schemas/user';
+import { Role } from '@database/datamodels/enums/role';
+import { UserService } from '@users/user.service';
+import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 
 @Injectable()
 export class BankingService {
     constructor(
         @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-        private userAuthService: UserAuthService,
+        private userAuthService: AuthUserService,
         private userService: UserService,
         private consortiumService: ConsortiumService
     ) {
@@ -31,7 +30,7 @@ export class BankingService {
         let createdUser: UserDocument;
         try {
             if (consortium) {
-                createdUser = (await this.userAuthService.singUp({...createBankingDto.user})).user;
+                createdUser = (await this.userAuthService.singUp({...createBankingDto.user}, loggedUser)).user;
                 let newBaking: BankingDto = createBankingDto.banking;
                 consortium.bankings.push({
                     name: newBaking.name,
@@ -49,32 +48,50 @@ export class BankingService {
         throw new BadRequestException();
     }
 
-    async findAll(loggedUser: UserDocument): Promise<Banking[]> {
+    // TODO FIX UP
+    async findAll(loggedUser: UserDocument): Promise<BankingDto[]> {
         let filter;
         switch (loggedUser.role) {
             case Role.admin:
                 filter = {};
                 break;
             case Role.consortium:
-                filter = {_id: loggedUser._id};
+                filter = {ownerUserId: loggedUser._id};
                 break;
             default:
                 return [];
         }
-        let bankings = await this.consortiumModel.aggregate([{$match: {}}]);
-        console.log(bankings)
-        return bankings; // TODO improve, join and unwind
+        let bankings= await this.consortiumModel.aggregate([
+            {$match: filter},
+            {$unwind: '$bankings'},
+            {
+                $project: {
+                    _id:'$bankings._id',
+                    name:'$bankings.name',
+                    status:'$bankings.status',
+                    ownerUserId:'$bankings.ownerUserId',
+                    creationDate:'$bankings.createdAt',
+                    startOfOperation:'$bankings.firstTransactionDate',
+                    showPercentage:'$bankings.showPercentage',
+                }
+            }]);
+        return Promise.all(bankings.map(bankings => this.mapToUser(bankings)));
     }
 
     findOne(id: string) {
         return `This action returns a #${id} banking`;
     }
 
-    update(id: string, updateBankingDto: BankingDto) {
-        return `This action updates a #${id} banking`;
+    update(updateBankingDto: BankingDto) {
+        return `This action updates a #${updateBankingDto._id} banking`;
     }
 
     remove(id: string) {
         return `This action removes a #${id} banking`;
+    }
+
+    private async mapToUser(banking: BankingDto): Promise<BankingDto> {
+        let ownerUser = (await this.userService.getFiltered('_id', banking.ownerUserId)).pop();
+        return {...banking, ownerUsername: ownerUser.username};
     }
 }
