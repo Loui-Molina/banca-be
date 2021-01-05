@@ -65,6 +65,7 @@ export class ConsortiumService {
             name: consortium.name,
             ownerUsername: foundUser.username,
             _id: consortium._id,
+            firstTransactionDate: consortium.firstTransactionDate,
             ownerId: consortium.ownerUserId,
             status: consortium.status,
             createdAt: consortium.createdAt,
