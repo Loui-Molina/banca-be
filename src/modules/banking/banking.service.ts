@@ -1,8 +1,8 @@
 import {BadRequestException, Injectable} from '@nestjs/common';
-import {CreateBankingDto} from './dto/create-banking.dto';
+import {CreateBankingDto} from './dto/create.banking.dto';
 import {InjectModel} from '@nestjs/mongoose';
 import {Consortium, ConsortiumDocument} from '@database/datamodels/schemas/consortium';
-import {Model} from 'mongoose';
+import {Model, Types} from 'mongoose';
 import {UserAuthService} from '@users/user.auth.service';
 import {BankingDto} from '@src/modules/banking/dto/banking.dto';
 import {UserDocument} from '@database/datamodels/schemas/user';
@@ -10,6 +10,9 @@ import {Role} from '@database/datamodels/enums/role';
 import {Banking, BankingDocument} from '@database/datamodels/schemas/banking';
 import {UserService} from "@users/user.service";
 import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
+import {DeleteBankingDto} from "@src/modules/banking/dto/delete.banking.dto";
+import {UpdateBankingDto} from "@src/modules/banking/dto/update.banking.dto";
+import * as mongoose from "mongoose";
 
 @Injectable()
 export class BankingService {
@@ -34,8 +37,7 @@ export class BankingService {
                 createdUser = (await this.userAuthService.singUp({...createBankingDto.user}, loggedUser)).user;
                 let newBaking: BankingDto = createBankingDto.banking;
                 consortium.bankings.push({
-                    name: newBaking.name,
-                    balance: 0,
+                    ...newBaking,
                     creationUserId: loggedUser._id,
                     modificationUserId: loggedUser._id,
                     ownerUserId: createdUser._id,
@@ -49,7 +51,6 @@ export class BankingService {
         throw new BadRequestException();
     }
 
-    // TODO FIX UP
     async findAll(loggedUser: UserDocument): Promise<BankingDto[]> {
         let filter;
         switch (loggedUser.role) {
@@ -62,41 +63,79 @@ export class BankingService {
             default:
                 return [];
         }
-        let bankings= await this.consortiumModel.aggregate([
+        let bankings = await this.consortiumModel.aggregate([
             {$match: filter},
             {$unwind: '$bankings'},
             {
                 $project: {
-                    _id:'$bankings._id',
-                    name:'$bankings.name',
-                    status:'$bankings.status',
-                    ownerUserId:'$bankings.ownerUserId',
-                    creationDate:'$bankings.createdAt',
-                    startOfOperation:'$bankings.firstTransactionDate',
-                    showPercentage:'$bankings.showPercentage',
+                    _id: '$bankings._id',
+                    name: '$bankings.name',
+                    status: '$bankings.status',
+                    ownerUserId: '$bankings.ownerUserId',
+                    creationDate: '$bankings.createdAt',
+                    startOfOperation: '$bankings.firstTransactionDate',
+                    showPercentage: '$bankings.showPercentage',
                     selectedConsortium: '$_id'
                 }
             }]);
-        let bankingDtos = bankings.map(bankings => this.mapToUser(bankings));
-        return bankingDtos;
+        return Promise.all(bankings.map(bankings => this.mapToUser(bankings)));
     }
 
-    findOne(id: string) {
-        return `This action returns a #${id} banking`;
+    async getFiltered(field: string, value: any, loggedUser: UserDocument) {
+        let filter;
+        switch (loggedUser.role) {
+            case Role.admin:
+                filter = {};
+                break;
+            case Role.consortium:
+                filter = {ownerUserId: loggedUser._id};
+                break;
+            default:
+                return [];
+        }
+        let consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find(filter).exec();
+
+        return consortiums.filter(
+            consortium => consortium.bankings.filter(
+                (banking: BankingDocument) => banking[field as keyof BankingDocument] === value)
+        );
     }
 
-    async update(updateBankingDto: BankingDto) {
+    async update(updateBankingDto: UpdateBankingDto) {
+        console.log(updateBankingDto)
         let consortium: ConsortiumDocument = (await this.consortiumModel.findById(updateBankingDto.selectedConsortium));
-        consortium.bankings.splice(consortium.bankings.findIndex((banking:BankingDocument) => banking._id === updateBankingDto._id ),1)
-        consortium.save();
+        consortium.bankings.map(
+            (banking: BankingDocument, index: number) => {
+                if ((updateBankingDto._id).toString() === (banking._id).toString()) {
+                    banking.name = (updateBankingDto.name) ? updateBankingDto.name : banking.name;
+                    banking.status = (updateBankingDto.status) ? updateBankingDto.status : banking.status;
+                    banking.ownerUserId = (updateBankingDto.ownerUserId) ? updateBankingDto.ownerUserId : banking.ownerUserId;
+                    banking.showPercentage = (updateBankingDto.showPercentage) ? updateBankingDto.showPercentage : banking.showPercentage;
+                    // consortium.markModified('bankings');
+                    console.log(`update name ${updateBankingDto.name}`);
+                    console.log('update name ${updateBankingDto.name}');
+                    console.log(banking)
+                }
+                return banking;
+            });
+        console.log(consortium.isModified())
+        await consortium.save();
         return updateBankingDto;
     }
 
-    remove(id: string) {
-        return `This action removes a #${id} banking`;
+    async remove(deleteBankingDto: DeleteBankingDto) {
+        let consortium: ConsortiumDocument = (await this.consortiumModel.findById(deleteBankingDto.consortiumId));
+        consortium.bankings.splice(
+            consortium.bankings.findIndex((banking: BankingDocument) => banking._id === deleteBankingDto.bankingId),
+            1)
+        consortium.save();
     }
 
-    private mapToUser(banking: BankingDto): BankingDto {
+    private async mapToUser(banking: BankingDto): Promise<BankingDto> {
+        let bankingUser = (await this.userService.getFiltered('_id', banking.ownerUserId)).pop();
+        if (bankingUser) {
+            banking.ownerUsername = bankingUser.username;
+        }
         return banking;
     }
 }

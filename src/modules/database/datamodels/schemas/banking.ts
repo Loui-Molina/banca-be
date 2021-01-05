@@ -19,8 +19,9 @@ export class Banking implements DataObject {
     @Prop({ type: [LotterySchema] }) lotteries?: Lottery[];
     @Prop({ type: [BetSchema] }) bets?: Bet[];
     @Prop({ required: true }) name: string;
-    @Prop({ required: true, default: 0 }) balance: number;
+    @Prop({ required: true, default: 0 }) balance?: number;
     @ApiProperty() @Prop() startOfOperation?: Date;
+    @ApiProperty() @Prop({ required: true, default: false }) status?: boolean;
 
 
     // Que porcentaje se le paga a la banca por el total de sus ventas

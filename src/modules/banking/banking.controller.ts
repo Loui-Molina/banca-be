@@ -1,12 +1,14 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
 import {BankingService} from './banking.service';
-import {CreateBankingDto} from './dto/create-banking.dto';
+import {CreateBankingDto} from './dto/create.banking.dto';
 import {ApiCreatedResponse, ApiFoundResponse, ApiTags} from '@nestjs/swagger';
 import {AuthGuard} from '@nestjs/passport';
 import {ConstApp} from '@utils/const.app';
 import {BankingDto} from '@src/modules/banking/dto/banking.dto';
 import {AuthUser} from '@src/common/decorators/auth.user.decorator';
 import {UserDocument} from '@database/datamodels/schemas/user';
+import {DeleteBankingDto} from "@src/modules/banking/dto/delete.banking.dto";
+import {UpdateBankingDto} from "@src/modules/banking/dto/update.banking.dto";
 
 @Controller('banking')
 @ApiTags('banking')
@@ -32,13 +34,14 @@ export class BankingController {
         return this.bankingService.findAll(user);
     }
 
-    @Get(':id')
+    @Get('search')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: BankingDto,
     })
-    findOne(@Param('id') id: string) {
-        return this.bankingService.findOne(id);
+    //TODO CHANGE PARAM TO RECEIVE AN OBJECT
+    findOne(@Query('field') field: string, @Query('value') value: any,@AuthUser() user: UserDocument) {
+        return this.bankingService.getFiltered(field, value,user);
     }
 
     @Put()
@@ -46,16 +49,16 @@ export class BankingController {
         description: ConstApp.DEFAULT_PUT_OK,
         type: BankingDto,
     })
-    update(@Body() updateBankingDto: BankingDto) {
+    update(@Body() updateBankingDto: UpdateBankingDto) {
         return this.bankingService.update(updateBankingDto);
     }
 
-    @Delete(':id')
+    @Delete()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: BankingDto,
     })
-    remove(@Param('id') id: string) {
-        return this.bankingService.remove(id);
+    remove(@Body() removeDto: DeleteBankingDto) {
+        return this.bankingService.remove(removeDto);
     }
 }
