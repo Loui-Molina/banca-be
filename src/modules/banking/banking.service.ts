@@ -7,7 +7,6 @@ import {UserAuthService} from '@users/user.auth.service';
 import {BankingDto} from '@src/modules/banking/dto/banking.dto';
 import {UserDocument} from '@database/datamodels/schemas/user';
 import {Role} from '@database/datamodels/enums/role';
-import {Banking} from '@database/datamodels/schemas/banking';
 import {UserService} from "@users/user.service";
 import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
 
@@ -76,9 +75,7 @@ export class BankingService {
                     showPercentage:'$bankings.showPercentage',
                 }
             }]);
-        console.log(bankings)
-        let bankingDtos = bankings.map(bankings => this.mapToUser(bankings));
-        return bankingDtos;
+        return Promise.all(bankings.map(bankings => this.mapToUser(bankings)));
     }
 
     findOne(id: string) {
@@ -93,7 +90,8 @@ export class BankingService {
         return `This action removes a #${id} banking`;
     }
 
-    private mapToUser(banking: BankingDto): BankingDto {
-        return banking;
+    private async mapToUser(banking: BankingDto): Promise<BankingDto> {
+        let ownerUser = (await this.userService.getFiltered('_id', banking.ownerUserId)).pop();
+        return {...banking, ownerUsername: ownerUser.username};
     }
 }

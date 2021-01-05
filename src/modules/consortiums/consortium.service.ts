@@ -7,12 +7,14 @@ import {User, UserDocument} from "@database/datamodels/schemas/user";
 import {UserAuthService} from "@users/user.auth.service";
 import {Role} from "@database/datamodels/enums/role";
 import {CreateConsortiumDto} from "@src/modules/consortiums/dtos/create.consortium.dto";
+import {UserService} from "@users/user.service";
 
 @Injectable()
 export class ConsortiumService {
     constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-                @InjectModel(User.name) private userModel: Model<UserDocument>,
-                private userAuthService: UserAuthService
+                // @InjectModel(User.name) private userModel: Model<UserDocument>,
+                private userAuthService: UserAuthService,
+                private userService: UserService
                 ) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {
@@ -60,7 +62,7 @@ export class ConsortiumService {
     }
 
     async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
-        let foundUser = await this.userModel.findById(consortium.ownerUserId);
+        let foundUser = (await this.userService.getFiltered('_id',consortium.ownerUserId)).pop();
         return {
             name: consortium.name,
             ownerUsername: foundUser.username,
