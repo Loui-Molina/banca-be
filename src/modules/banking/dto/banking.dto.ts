@@ -12,4 +12,5 @@ export class BankingDto {
     @ApiProperty() startOfOperation?: Date;
     @ApiProperty() showPercentage?: boolean;
     @ApiProperty() language?: Languages;
+    @ApiProperty() selectedConsortium?: ObjectId;
 }

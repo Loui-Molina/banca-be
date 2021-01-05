@@ -7,7 +7,7 @@ import {UserAuthService} from '@users/user.auth.service';
 import {BankingDto} from '@src/modules/banking/dto/banking.dto';
 import {UserDocument} from '@database/datamodels/schemas/user';
 import {Role} from '@database/datamodels/enums/role';
-import {Banking} from '@database/datamodels/schemas/banking';
+import {Banking, BankingDocument} from '@database/datamodels/schemas/banking';
 import {UserService} from "@users/user.service";
 import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
 
@@ -74,9 +74,9 @@ export class BankingService {
                     creationDate:'$bankings.createdAt',
                     startOfOperation:'$bankings.firstTransactionDate',
                     showPercentage:'$bankings.showPercentage',
+                    selectedConsortium: '$_id'
                 }
             }]);
-        console.log(bankings)
         let bankingDtos = bankings.map(bankings => this.mapToUser(bankings));
         return bankingDtos;
     }
@@ -85,8 +85,11 @@ export class BankingService {
         return `This action returns a #${id} banking`;
     }
 
-    update(updateBankingDto: BankingDto) {
-        return `This action updates a #${updateBankingDto._id} banking`;
+    async update(updateBankingDto: BankingDto) {
+        let consortium: ConsortiumDocument = (await this.consortiumModel.findById(updateBankingDto.selectedConsortium));
+        consortium.bankings.splice(consortium.bankings.findIndex((banking:BankingDocument) => banking._id === updateBankingDto._id ),1)
+        consortium.save();
+        return updateBankingDto;
     }
 
     remove(id: string) {
