@@ -7,6 +7,8 @@ import {AuthUser} from "@src/common/decorators/auth.user.decorator";
 import {UserDocument} from "@database/datamodels/schemas/user";
 import { ConstApp } from '@utils/const.app';
 import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
+import { CreateConsortiumDto } from "@src/modules/consortiums/dtos/create.consortium.dto";
+
 
 @ApiTags('consortiums')
 @Controller('consortiums')
@@ -37,7 +39,7 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_POST_OK,
         type: Consortium,
     })
-    create(@Body() dto: ConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
+    create(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
         return this.consortiumService.create(dto, loggedUser);
     }
 
@@ -46,7 +48,7 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_PUT_OK,
         type: Consortium,
     })
-    update(@Body() dto: ConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
+    update(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
         return this.consortiumService.update(dto, loggedUser);
     }
 
