@@ -52,6 +52,10 @@ export class ConsortiumService {
     }
 
     async delete(id: string): Promise<Consortium> {
+        //DELETE user
+        const consortium = await this.get(id);
+        await this.userAuthService.deleteUser(consortium.ownerUserId);
+
         return this.consortiumModel.findByIdAndRemove(id).exec();
     }
 
@@ -62,14 +66,15 @@ export class ConsortiumService {
     async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
         let foundUser = await this.userModel.findById(consortium.ownerUserId);
         return {
-            name: consortium.name,
-            ownerUsername: foundUser.username,
             _id: consortium._id,
+            name: consortium.name,
             firstTransactionDate: consortium.firstTransactionDate,
-            ownerId: consortium.ownerUserId,
             status: consortium.status,
             createdAt: consortium.createdAt,
-            ownerName: foundUser.name
+            bankings: consortium.bankings,
+            ownerId: consortium.ownerUserId,
+            ownerName: foundUser.name,
+            ownerUsername: foundUser.username,
         } as ConsortiumDto;
     }
 }
