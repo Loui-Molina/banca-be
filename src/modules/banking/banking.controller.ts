@@ -39,7 +39,6 @@ export class BankingController {
         description: ConstApp.DEFAULT_GET_OK,
         type: BankingDto,
     })
-    //TODO CHANGE PARAM TO RECEIVE AN OBJECT
     findOne(@Query('field') field: string, @Query('value') value: any,@AuthUser() user: UserDocument) {
         return this.bankingService.getFiltered(field, value,user);
     }
