@@ -1,24 +1,24 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import {CreateBankingDto} from './dto/create.banking.dto';
-import {InjectModel} from '@nestjs/mongoose';
-import {Consortium, ConsortiumDocument} from '@database/datamodels/schemas/consortium';
-import {Model, Types} from 'mongoose';
-import {UserAuthService} from '@users/user.auth.service';
-import {BankingDto} from '@src/modules/banking/dto/banking.dto';
-import {UserDocument} from '@database/datamodels/schemas/user';
-import {Role} from '@database/datamodels/enums/role';
-import {Banking, BankingDocument} from '@database/datamodels/schemas/banking';
+import {BadRequestException, Injectable} from "@nestjs/common";
+import {UserDocument} from "@database/datamodels/schemas/user";
 import {UserService} from "@users/user.service";
+import {InjectModel} from "@nestjs/mongoose";
+import {CreateBankingDto} from "@src/modules/banking/dto/create.banking.dto";
+import {Role} from "@database/datamodels/enums/role";
+import {Consortium, ConsortiumDocument} from "@database/datamodels/schemas/consortium";
+import {Model} from "mongoose";
 import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
-import {DeleteBankingDto} from "@src/modules/banking/dto/delete.banking.dto";
+import {BankingDto} from "@src/modules/banking/dto/banking.dto";
 import {UpdateBankingDto} from "@src/modules/banking/dto/update.banking.dto";
-import * as mongoose from "mongoose";
+import {BankingDocument} from "@database/datamodels/schemas/banking";
+import {DeleteBankingDto} from "@src/modules/banking/dto/delete.banking.dto";
+import { AuthUserService } from "../auth.user/auth.user..service";
+
 
 @Injectable()
 export class BankingService {
     constructor(
         @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-        private userAuthService: UserAuthService,
+        private userAuthService: AuthUserService,
         private userService: UserService,
         private consortiumService: ConsortiumService
     ) {

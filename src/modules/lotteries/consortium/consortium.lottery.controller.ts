@@ -9,6 +9,7 @@ import {ConsortiumLotteryService} from "@src/modules/lotteries/consortium/consor
 import {ConsortiumLotteryDto} from "@src/modules/lotteries/consortium/dtos/consortium.lottery.dto";
 import {Roles} from "@src/common/decorators/roles.decorator";
 import {Role} from "@database/datamodels/enums/role";
+import {ConsortiumUpdateLotteryDto} from "@src/modules/lotteries/consortium/dtos/consortium.update.lottery.dto";
 
 @ApiTags('consortium/lotteries')
 @Controller('consortium/lotteries')
@@ -22,37 +23,17 @@ export class ConsortiumLotteryController {
         type: ConsortiumLotteryDto,
     })
     @Roles(Role.consortium)
-    getAll(): Promise<Array<ConsortiumLotteryDto>> {
-        return this.lotteryService.getAll();
-    }
-
-    @Get('search')
-    @ApiFoundResponse({
-        description: ConstApp.DEFAULT_GET_OK,
-        type: ConsortiumLotteryDto,
-    })
-    @Roles(Role.consortium)
-    getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<ConsortiumLotteryDto>> {
-        return this.lotteryService.getFiltered(q, value);
-    }
-
-    @Post()
-    @ApiCreatedResponse({
-        description: ConstApp.DEFAULT_POST_OK,
-        type: Lottery,
-    })
-    @Roles(Role.consortium)
-    create(@Body() dto: ConsortiumLotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
-        return this.lotteryService.create(dto, loggedUser);
+    getAll(@AuthUser() loggedUser : UserDocument): Promise<Array<ConsortiumLotteryDto>> {
+        return this.lotteryService.getAll(loggedUser);
     }
 
     @Put()
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
-        type: Lottery,
+        type: ConsortiumUpdateLotteryDto,
     })
     @Roles(Role.consortium)
-    update(@Body() dto: ConsortiumLotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
+    update(@Body() dto: ConsortiumUpdateLotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
         return this.lotteryService.update(dto, loggedUser);
     }
 

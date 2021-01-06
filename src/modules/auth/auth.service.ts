@@ -1,21 +1,22 @@
-import { Injectable, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
-import { UserAuthService } from '@users/user.auth.service';
+import { AuthUserService } from '@src/modules/auth.user/auth.user..service';
 import { ConstApp } from '@utils/const.app';
-import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
-import { UserService } from '@users/user.service';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import {AuthCredentialsDto} from "@auth/dtos/auth.credentials.dto";
+
+
 
 @Injectable()
 export class AuthService {
     constructor(
-        private userAuthService: UserAuthService,
+        private userAuthService: AuthUserService,
         private jwtService: JwtService,
         @InjectModel(User.name) private userModel: Model<UserDocument>,
     ) {}
