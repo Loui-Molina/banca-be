@@ -8,12 +8,10 @@ import { UtilsModule } from '@utils/utils.module';
 import { ManagerModule } from './modules/manager/manager.module';
 import { AuthUserModule } from './modules/auth.user/auth.user.module';
 import { ConsortiumModule } from '@src/modules/consortiums/consortium.module';
-import { BankingModule } from '@src/modules/banking/banking.module';
 import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
-import {AdminLotteryModule} from "@src/modules/lotteries/admin/admin.lottery.module";
 import {TransactionModule} from "@src/modules/transactions/transaction.module";
 import {ResultsModule} from "@src/modules/results/results.module";
-import {ConsortiumLotteryModule} from "@src/modules/lotteries/consortium/consortium.lottery.module";
+import {DatabaseModule} from "@database/database.module";
 
 @Module({
     imports: [
@@ -44,8 +42,6 @@ import {ConsortiumLotteryModule} from "@src/modules/lotteries/consortium/consort
         ManagerModule,
         HealthCheckModule,
         DatabaseModule,
-        LotteryModule,
-        ResultsModule,
         AuthModule,
         AuthUserModule,
         UsersModule,
@@ -55,10 +51,6 @@ import {ConsortiumLotteryModule} from "@src/modules/lotteries/consortium/consort
     providers: [],
     exports: [
         UsersModule,
-        ConsortiumModule,
-        TransactionModule,
-        LotteryModule,
-        DashboardModule,
         UtilsModule,
         AuthModule,
         AuthUserModule,
