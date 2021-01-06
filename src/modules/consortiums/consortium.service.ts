@@ -4,7 +4,7 @@ import {Model} from 'mongoose';
 import {ConsortiumDto} from '@src/modules/consortiums/dtos/consortium.dto';
 import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/consortium";
 import {User, UserDocument} from "@database/datamodels/schemas/user";
-import {AuthUserService} from "@src/modules/auth.user/auth.user..service";
+import {AuthUserService} from "@src/modules/auth.user/auth.user.service";
 import {Role} from "@database/datamodels/enums/role";
 import {CreateConsortiumDto} from "@src/modules/consortiums/dtos/create.consortium.dto";
 import {UserService} from "@users/user.service";

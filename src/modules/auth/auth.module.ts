@@ -5,9 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from '@auth/jwt.strategy';
-import { AuthUserModule } from '../auth.user/auth.user.module';
-import { User, UserSchema } from '../database/datamodels/schemas/user';
-import { MongooseModule } from '@nestjs/mongoose';
+import { AuthUserModule } from '@auth.user/auth.user.module';
+import { TokenService } from './token.service';
 
 @Global()
 @Module({
@@ -28,7 +27,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         }),
         AuthUserModule,
     ],
-    providers: [AuthService, JwtStrategy],
+    providers: [AuthService, JwtStrategy,TokenService],
     controllers: [AuthController],
     exports: [
         JwtModule,

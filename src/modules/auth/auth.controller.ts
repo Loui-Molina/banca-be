@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
@@ -7,10 +7,14 @@ import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse } from '@nestjs/swa
 import { ConstApp } from '@utils/const.app';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { ResponseSignInDto } from './dtos/response.sign.in.dto';
+import { RefreshTokenRequestDto } from './dtos/refresh.token.request.dto';
+import { TokenService } from './token.service';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(private readonly authService: AuthService,
+        private readonly tokenService: TokenService) {}
 
     @Post('/signup')
     @HttpCode(HttpStatus.CREATED)
@@ -24,7 +28,7 @@ export class AuthController {
     }
 
     @Post('/signin')
-    async singIn(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
+    async singIn(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<ResponseSignInDto> {
         return this.authService.singIn(authCredentialsDto);
     }
 
@@ -42,5 +46,15 @@ export class AuthController {
     @UseGuards(AuthGuard())
     test(@AuthUser() user: UserDocument) {
         console.log(user);
+    }
+
+    @Get('/refreshToken')
+    @UseGuards(AuthGuard())
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: String,
+    })
+    getToken(@Body() refreshTokenRequestDto: RefreshTokenRequestDto): Promise<ResponseSignInDto> {
+        return this.tokenService.getRefreshToken(refreshTokenRequestDto);
     }
 }

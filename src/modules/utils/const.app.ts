@@ -14,4 +14,5 @@ export class ConstApp {
     //ERROR MESSAGES
     public static readonly USERNAME_EXISTS_ERROR = 'Username already exists';
     public static readonly INVALID_CREDENTIALS_ERROR = 'Invalid credentials';
+    public static readonly REFRESH_TOKEN_ERROR = "Error to create refresh token";
 }
