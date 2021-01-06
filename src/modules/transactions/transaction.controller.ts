@@ -41,24 +41,6 @@ export class TransactionController {
         return this.transactionService.create(dto, loggedUser);
     }
 
-    @Put()
-    @ApiCreatedResponse({
-        description: ConstApp.DEFAULT_PUT_OK,
-        type: Transaction,
-    })
-    update(@Body() dto: TransactionDto, @AuthUser() loggedUser : UserDocument): Promise<Transaction> {
-        return this.transactionService.update(dto, loggedUser);
-    }
-
-    @Delete(':id')
-    @ApiOkResponse({
-        description: ConstApp.DEFAULT_DELETE_OK,
-        type: Transaction,
-    })
-    delete(@Param('id') id: string): Promise<Transaction> {
-        return this.transactionService.delete(id);
-    }
-
     @Get(':id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,

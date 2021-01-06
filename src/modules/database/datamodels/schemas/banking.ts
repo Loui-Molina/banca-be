@@ -8,6 +8,7 @@ import {Bet, BetSchema} from "@src/modules/database/datamodels/schemas/bet";
 import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
 import {ApiProperty} from "@nestjs/swagger";
 import {BankingFeeLimit, BankingFeeLimitSchema} from "@database/datamodels/schemas/banking.fee.limit";
+import {ConsortiumSchema} from "@database/datamodels/schemas/consortium";
 
 export type BankingDocument = Banking & Document;
 
@@ -35,6 +36,17 @@ export class Banking implements DataObject {
     @Prop({ required: true, immutable: true }) creationUserId: string;
     @Prop() deletionDate?: Date;
     @Prop({ required: true }) modificationUserId: string;
+
+    calculateBalance?: Function;
 }
 
 export const BankingSchema = SchemaFactory.createForClass(Banking);
+
+BankingSchema.methods.calculateBalance = async function calculateBalance(): Promise<number> {
+    let balance = 0;
+    const transactions: Transaction[] = this.transactions;
+    for (let i = 0; i < transactions.length; i++) {
+        balance += transactions[i].amount;
+    }
+    return balance;
+};

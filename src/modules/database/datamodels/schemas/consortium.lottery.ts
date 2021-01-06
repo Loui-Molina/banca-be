@@ -11,6 +11,7 @@ export type ConsortiumLotteryDocument = ConsortiumLottery & Document;
 
 @Schema({timestamps: true})
 export class ConsortiumLottery implements DataObject {
+    @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) lotteryId?: ObjectId;
     @ApiProperty({isArray:true}) @Prop({ required: false, type: [mongoose.SchemaTypes.ObjectId] }) bankingIds?: ObjectId[];
 

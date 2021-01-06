@@ -21,12 +21,12 @@ export class DashboardService {
         const bankingIds: string[] = [];
         const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find().exec();
         consortiums.forEach((item) => {
-            res.nodes.push(new DashboardDiagramNodeDto(item.id, item.name));
-            consortiumIds.push(item.id);
+            res.nodes.push(new DashboardDiagramNodeDto(item._id.toString(), item.name));
+            consortiumIds.push(item._id.toString());
             item.bankings.forEach((banking: BankingDocument) => {
-                bankingIds.push(banking.id);
-                res.nodes.push(new DashboardDiagramNodeDto(banking.id, banking.name));
-                res.links.push(new DashboardDiagramLinkDto(item.id + banking.id, item.id, banking.id));
+                bankingIds.push(banking._id.toString());
+                res.nodes.push(new DashboardDiagramNodeDto(banking._id.toString(), banking.name));
+                res.links.push(new DashboardDiagramLinkDto(item._id.toString() + banking._id.toString(), item._id.toString(), banking._id.toString()));
             });
         });
         if (consortiumIds.length > 0) {

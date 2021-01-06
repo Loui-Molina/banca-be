@@ -34,6 +34,8 @@ export class Consortium {
     @ApiProperty() createdAt?: Date;
     @ApiProperty() updatedAt?: Date;
     @ApiProperty() @Prop() deletionDate?: Date;
+
+    calculateBalance?: Function;
 }
 
 export const ConsortiumSchema = SchemaFactory.createForClass(Consortium)
