@@ -15,6 +15,7 @@ export type BankingDocument = Banking & Document;
 @Schema({ timestamps: true })
 export class Banking implements DataObject {
     @ApiProperty() _id?: ObjectId;
+    @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) consortiumId: ObjectId;
     @Prop({ type: mongoose.Schema.Types.ObjectId }) ownerUserId: ObjectId;
     @Prop({ type: BankingPreferenceSchema })
     bankingPreferences?: BankingPreference;

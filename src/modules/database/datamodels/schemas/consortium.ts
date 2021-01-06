@@ -18,7 +18,6 @@ export class Consortium {
     @Prop({ type: ConsortiumPreferenceSchema })
     @ApiProperty()
     consortiumPrefs?: ConsortiumPreference;
-    @ApiProperty() @Prop({ type: [BankingSchema] }) bankings?: Banking[];
     @ApiProperty() @Prop({ type: [ConsortiumLotterySchema] }) consortiumLotteries?: ConsortiumLottery[];
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) ownerUserId: ObjectId;
     @ApiProperty() @Prop({ required: true, unique: true }) name: string;
