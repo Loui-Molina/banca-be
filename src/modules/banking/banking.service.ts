@@ -35,12 +35,13 @@ export class BankingService {
             if (consortium) {
                 createdUser = (await this.userAuthService.singUp({...createBankingDto.user}, loggedUser)).user;
                 let newBaking: BankingDto = createBankingDto.banking;
-                consortium.bankings.push({
-                    ...newBaking,
-                    creationUserId: loggedUser._id,
-                    modificationUserId: loggedUser._id,
-                    ownerUserId: createdUser._id,
-                });
+                //TODO
+                // consortium.bankings.push({
+                //     ...newBaking,
+                //     creationUserId: loggedUser._id,
+                //     modificationUserId: loggedUser._id,
+                //     ownerUserId: createdUser._id,
+                // });
                 await consortium.save();
                 return newBaking;
             }
@@ -92,31 +93,32 @@ export class BankingService {
             default:
                 return [];
         }
-        let consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find(filter).exec();
-
-        return consortiums.filter(
-            consortium => consortium.bankings.filter(
-                (banking: BankingDocument) => banking[field as keyof BankingDocument] === value)
-        );
+        const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find(filter).exec();
+        //TODO aca retorno los consortiums nose q retornabas antes
+        return consortiums;
+        // return consortiums.filter(
+        //     TODO consortium => consortium.bankings.filter(
+        //         (banking: BankingDocument) => banking[field as keyof BankingDocument] === value)
+        // );
     }
 
     async update(updateBankingDto: UpdateBankingDto) {
-        console.log(updateBankingDto)
         let consortium: ConsortiumDocument = (await this.consortiumModel.findById(updateBankingDto.selectedConsortium));
-        consortium.bankings.map(
-            (banking: BankingDocument, index: number) => {
-                if ((updateBankingDto._id).toString() === (banking._id).toString()) {
-                    banking.name = (updateBankingDto.name) ? updateBankingDto.name : banking.name;
-                    banking.status = (updateBankingDto.status) ? updateBankingDto.status : banking.status;
-                    banking.ownerUserId = (updateBankingDto.ownerUserId) ? updateBankingDto.ownerUserId : banking.ownerUserId;
-                    banking.showPercentage = (updateBankingDto.showPercentage) ? updateBankingDto.showPercentage : banking.showPercentage;
-                    // consortium.markModified('bankings');
-                    console.log(`update name ${updateBankingDto.name}`);
-                    console.log('update name ${updateBankingDto.name}');
-                    console.log(banking)
-                }
-                return banking;
-            });
+        // TODO
+        // consortium.bankings.map(
+        //     (banking: BankingDocument, index: number) => {
+        //         if ((updateBankingDto._id).toString() === (banking._id).toString()) {
+        //             banking.name = (updateBankingDto.name) ? updateBankingDto.name : banking.name;
+        //             banking.status = (updateBankingDto.status) ? updateBankingDto.status : banking.status;
+        //             banking.ownerUserId = (updateBankingDto.ownerUserId) ? updateBankingDto.ownerUserId : banking.ownerUserId;
+        //             banking.showPercentage = (updateBankingDto.showPercentage) ? updateBankingDto.showPercentage : banking.showPercentage;
+        //             // consortium.markModified('bankings');
+        //             console.log(`update name ${updateBankingDto.name}`);
+        //             console.log('update name ${updateBankingDto.name}');
+        //             console.log(banking)
+        //         }
+        //         return banking;
+        //     });
         console.log(consortium.isModified())
         await consortium.save();
         return updateBankingDto;
@@ -124,9 +126,10 @@ export class BankingService {
 
     async remove(deleteBankingDto: DeleteBankingDto) {
         let consortium: ConsortiumDocument = (await this.consortiumModel.findById(deleteBankingDto.consortiumId));
-        consortium.bankings.splice(
-            consortium.bankings.findIndex((banking: BankingDocument) => banking._id === deleteBankingDto.bankingId),
-            1)
+        //TODO
+        // consortium.bankings.splice(
+        //     consortium.bankings.findIndex((banking: BankingDocument) => banking._id === deleteBankingDto.bankingId),
+        //     1)
         consortium.save();
     }
 

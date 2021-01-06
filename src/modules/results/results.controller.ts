@@ -8,6 +8,8 @@ import {Result} from "@database/datamodels/schemas/result";
 import {ResultsService} from "@src/modules/results/results.service";
 import {ResultDto} from "@src/modules/results/dtos/result.dto";
 import {AddResultDto} from "@src/modules/results/dtos/add.result.dto";
+import {Roles} from "@src/common/decorators/roles.decorator";
+import {Role} from "@database/datamodels/enums/role";
 
 @ApiTags('results')
 @Controller('results')
@@ -30,6 +32,7 @@ export class ResultsController {
         description: ConstApp.DEFAULT_POST_OK,
         type: Result,
     })
+    @Roles(Role.admin)
     create(@Body() dto: AddResultDto, @AuthUser() loggedUser : UserDocument): Promise<Result> {
         return this.resultService.create(dto, loggedUser);
     }

@@ -4,6 +4,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { DashboardDiagramDto } from '@src/modules/dashboard/dtos/dashboard.dto';
 import { DashboardService } from '@src/modules/dashboard/dashboard.service';
 import { ConstApp } from '@utils/const.app';
+import {Roles} from "@src/common/decorators/roles.decorator";
+import {Role} from "@database/datamodels/enums/role";
 
 @ApiTags('dashboard')
 @Controller('dashboard')
@@ -16,6 +18,7 @@ export class DashboardController {
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardDiagramDto,
     })
+    @Roles(Role.admin)
     getDashboardDiagram(): Promise<DashboardDiagramDto> {
         return this.dashboardService.getDashboardDiagram();
     }

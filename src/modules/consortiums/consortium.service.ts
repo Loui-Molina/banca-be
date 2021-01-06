@@ -8,11 +8,13 @@ import {AuthUserService} from "@src/modules/auth.user/auth.user..service";
 import {Role} from "@database/datamodels/enums/role";
 import {CreateConsortiumDto} from "@src/modules/consortiums/dtos/create.consortium.dto";
 import {UserService} from "@users/user.service";
+import {Banking, BankingDocument} from "@database/datamodels/schemas/banking";
 
 @Injectable()
 export class ConsortiumService {
    constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
                 @InjectModel(User.name) private userModel: Model<UserDocument>,
+                @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
                 private userAuthService: AuthUserService,
                 private userService : UserService,
                 ) {}
@@ -57,6 +59,11 @@ export class ConsortiumService {
         //DELETE user
         const consortium = await this.get(id);
         await this.userAuthService.deleteUser(consortium.ownerUserId);
+        const bankings = await this.bankingModel.find({consortiumId:consortium._id}).exec();
+        bankings.map(banking => {
+            this.userAuthService.deleteUser(banking.ownerUserId);
+            this.bankingModel.findByIdAndRemove({id:banking._id}).exec();
+        });
 
         return this.consortiumModel.findByIdAndRemove(id).exec();
     }
@@ -67,13 +74,14 @@ export class ConsortiumService {
 
    async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
         let foundUser = (await this.userService.getFiltered('_id',consortium.ownerUserId)).pop();
+        const bankings = await this.bankingModel.find({consortiumId:consortium._id}).exec();
         return {
             _id: consortium._id,
             name: consortium.name,
             firstTransactionDate: consortium.firstTransactionDate,
             status: consortium.status,
             createdAt: consortium.createdAt,
-            bankings: consortium.bankings,
+            bankings: bankings,
             ownerId: consortium.ownerUserId,
             ownerName: foundUser.name,
             ownerUsername: foundUser.username,

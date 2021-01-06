@@ -1,12 +1,14 @@
 import {BadRequestException, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
-import {TransactionDto} from '@src/modules/transactions/dtos/transaction.dto';
+import {CreateTransactionDto} from '@src/modules/transactions/dtos/create.transaction.dto';
 import {Transaction, TransactionDocument} from "@src/modules/database/datamodels/schemas/transaction";
 import {UserDocument} from "@database/datamodels/schemas/user";
 import {TransactionType} from "@database/datamodels/enums/transaction.type";
 import {Consortium, ConsortiumDocument} from "@database/datamodels/schemas/consortium";
 import {Banking, BankingDocument} from "@database/datamodels/schemas/banking";
+import {TransactionDto} from "@src/modules/transactions/dtos/transaction.dto";
+import {TransactionObjects} from "@database/datamodels/enums/transaction.objects";
 
 @Injectable()
 export class TransactionService {
@@ -17,20 +19,86 @@ export class TransactionService {
     ) {
     }
 
-    async getAll(): Promise<Array<Transaction>> {
-        return this.transactionModel.find().exec();
+    async getAll(): Promise<Array<TransactionDto>> {
+        const consortiums: Consortium[] = await this.consortiumModel.find().exec();
+        const transactionsDto: TransactionDto[] = [];
+        /*consortiums.map((consortium: Consortium) => {
+            const transactions = consortium.transactions;
+            transactions.map((transaction) => {
+                const originPromise = this.searchObject(transaction.originId, transaction.originObject);
+                const destinationPromise = this.searchObject(transaction.originId, transaction.originObject);
+                originPromise.then(origin => {
+                    destinationPromise.then(destination => {
+
+                        transactionsDto.push({
+                            _id: transaction._id,
+                            type: transaction.type,
+                            originId: transaction.originId,
+                            destinationId: transaction.destinationId,
+                            originObject: transaction.originObject,
+                            amount: transaction.amount,
+                            originName: origin.name,
+                            destinationObject: transaction.destinationObject,
+                            destinationName: destination.name,
+                        });
+                    });
+                });
+            })
+            consortium.bankings.map((banking: Banking) => {
+                const transactionsB = banking.transactions;
+                transactionsB.map((transaction) => {
+                    const originPromise = this.searchObject(transaction.originId, transaction.originObject);
+                    const destinationPromise = this.searchObject(transaction.originId, transaction.originObject);
+                    originPromise.then(origin => {
+                        destinationPromise.then(destination => {
+                            transactionsDto.push({
+                                _id: transaction._id,
+                                type: transaction.type,
+                                originId: transaction.originId,
+                                destinationId: transaction.destinationId,
+                                originObject: transaction.originObject,
+                                amount: transaction.amount,
+                                originName: origin.name,
+                                destinationObject: transaction.destinationObject,
+                                destinationName: destination.name,
+                            });
+                        });
+                    });
+                })
+            });
+        });*/
+        return transactionsDto;
+    }
+
+    private async searchObject(id: any, transactionObjects:TransactionObjects): Promise<Consortium | Banking> {
+        if(transactionObjects === TransactionObjects.consortium){
+            return await this.consortiumModel.findById(id).exec();
+        }
+        if(transactionObjects === TransactionObjects.banking){
+            const consortiums: Consortium[] = await this.consortiumModel.find().exec();
+            consortiums.map((consortium: Consortium) => {
+                // @ts-ignore
+                consortium.bankings.map((banking: Banking) => {
+                    if(banking._id.toString() === id.toString()){
+                        return banking;
+                    }
+                });
+            });
+            return null;
+        }
+        return null;
     }
 
     async getFiltered(q: string, value: any): Promise<Array<Transaction>> {
         return this.transactionModel.find({ [q]: value }).exec();
     }
 
-    async create(dto: TransactionDto, loggedUser: UserDocument): Promise<Transaction> {
+    async create(dto: CreateTransactionDto, loggedUser: UserDocument): Promise<Transaction> {
         const originObject = await this.consortiumModel.findById(dto.originId);
         if(!originObject){
             throw new BadRequestException();
         }
-        const destinationObject = originObject.bankings.find(banking => banking._id.toString() === dto.destinationId.toString());
+        /* const destinationObject = originObject.bankings.find(banking => banking._id.toString() === dto.destinationId.toString());
         if(!destinationObject){
             throw new BadRequestException();
         }
@@ -62,8 +130,9 @@ export class TransactionService {
         });
         originObject.transactions.push(transactionOrigin);
         destinationObject.transactions.push(transactionDestination);
-        await originObject.save();
-        return transactionDestination;
+        await originObject.save();*/
+        //return transactionDestination;
+        return null;
     }
 
     async get(id: string): Promise<Transaction> {

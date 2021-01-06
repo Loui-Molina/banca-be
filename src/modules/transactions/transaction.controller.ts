@@ -2,11 +2,12 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { TransactionService } from '@src/modules/transactions/transaction.service';
-import { TransactionDto } from '@src/modules/transactions/dtos/transaction.dto';
+import { CreateTransactionDto } from '@src/modules/transactions/dtos/create.transaction.dto';
 import {ConstApp} from "@utils/const.app";
 import {Transaction} from "@src/modules/database/datamodels/schemas/transaction";
 import {AuthUser} from "@src/common/decorators/auth.user.decorator";
 import {UserDocument} from "@database/datamodels/schemas/user";
+import {TransactionDto} from "@src/modules/transactions/dtos/transaction.dto";
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -17,9 +18,9 @@ export class TransactionController {
     @Get()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: Transaction,
+        type: TransactionDto,
     })
-    getAll(): Promise<Array<Transaction>> {
+    getAll(): Promise<Array<TransactionDto>> {
         return this.transactionService.getAll();
     }
 
@@ -37,7 +38,7 @@ export class TransactionController {
         description: ConstApp.DEFAULT_POST_OK,
         type: Transaction,
     })
-    create(@Body() dto: TransactionDto, @AuthUser() loggedUser : UserDocument): Promise<Transaction> {
+    create(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser : UserDocument): Promise<Transaction> {
         return this.transactionService.create(dto, loggedUser);
     }
 

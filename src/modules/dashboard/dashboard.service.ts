@@ -20,13 +20,16 @@ export class DashboardService {
         const consortiumIds: string[] = [];
         const bankingIds: string[] = [];
         const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find().exec();
-        consortiums.forEach((item) => {
-            res.nodes.push(new DashboardDiagramNodeDto(item._id.toString(), item.name));
-            consortiumIds.push(item._id.toString());
-            item.bankings.forEach((banking: BankingDocument) => {
-                bankingIds.push(banking._id.toString());
-                res.nodes.push(new DashboardDiagramNodeDto(banking._id.toString(), banking.name));
-                res.links.push(new DashboardDiagramLinkDto(item._id.toString() + banking._id.toString(), item._id.toString(), banking._id.toString()));
+        const bankings: Array<BankingDocument> = await this.bankingModel.find().exec();
+        consortiums.forEach((consortium, index) => {
+            res.nodes.push(new DashboardDiagramNodeDto(consortium._id.toString(), consortium.name));
+            consortiumIds.push(consortium._id.toString());
+            bankings.forEach((banking: BankingDocument, index2) => {
+                if(banking.consortiumId.toString() === consortium._id.toString()){
+                    bankingIds.push(banking._id.toString());
+                    res.nodes.push(new DashboardDiagramNodeDto(banking._id.toString(), banking.name));
+                    res.links.push(new DashboardDiagramLinkDto('link' + (index+1).toString() + (index2+1).toString(), consortium._id.toString(), banking._id.toString()));
+                }
             });
         });
         if (consortiumIds.length > 0) {

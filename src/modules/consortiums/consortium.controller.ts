@@ -8,6 +8,8 @@ import {UserDocument} from "@database/datamodels/schemas/user";
 import { ConstApp } from '@utils/const.app';
 import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
 import { CreateConsortiumDto } from "@src/modules/consortiums/dtos/create.consortium.dto";
+import {Roles} from "@src/common/decorators/roles.decorator";
+import {Role} from "@database/datamodels/enums/role";
 
 
 @ApiTags('consortiums')
@@ -21,6 +23,7 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_GET_OK,
         type: ConsortiumDto,
     })
+    @Roles(Role.admin)
     getAll(): Promise<Array<ConsortiumDto>> {
         return this.consortiumService.getAll();
     }
@@ -30,6 +33,7 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_GET_OK,
         type: Consortium,
     })
+    @Roles(Role.admin)
     getFiltered(@Query('q') q: string, @Query('value') value: any): Promise<Array<Consortium>> {
         return this.consortiumService.getFiltered(q, value);
     }
@@ -39,6 +43,7 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_POST_OK,
         type: Consortium,
     })
+    @Roles(Role.admin)
     create(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
         return this.consortiumService.create(dto, loggedUser);
     }
@@ -48,6 +53,7 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_PUT_OK,
         type: Consortium,
     })
+    @Roles(Role.admin)
     update(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
         return this.consortiumService.update(dto, loggedUser);
     }
@@ -57,6 +63,7 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_DELETE_OK,
         type: Consortium,
     })
+    @Roles(Role.admin)
     delete(@Param('id') id: string): Promise<Consortium> {
         return this.consortiumService.delete(id);
     }
@@ -66,6 +73,7 @@ export class ConsortiumController {
         description: ConstApp.DEFAULT_GET_OK,
         type: Consortium,
     })
+    @Roles(Role.admin)
     async get(@Param('id') id: string): Promise<Consortium> {
         return await this.consortiumService.get(id);
     }
