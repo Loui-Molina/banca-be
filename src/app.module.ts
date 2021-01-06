@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HealthCheckModule } from '@src/modules/health-check/health.check.module';
-import { DatabaseModule } from '@database/database.module';
 import { AuthModule } from '@auth/auth.module';
 import { UsersModule } from '@users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
+import { ManagerModule } from './modules/manager/manager.module';
+import { AuthUserModule } from './modules/auth.user/auth.user.module';
 import { ConsortiumModule } from '@src/modules/consortiums/consortium.module';
 import { BankingModule } from '@src/modules/banking/banking.module';
 import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
@@ -40,31 +41,27 @@ import {ConsortiumLotteryModule} from "@src/modules/lotteries/consortium/consort
             }),
             inject: [ConfigService],
         }),
+        ManagerModule,
         HealthCheckModule,
         DatabaseModule,
-        AdminLotteryModule,
-        ConsortiumLotteryModule,
+        LotteryModule,
         ResultsModule,
         AuthModule,
+        AuthUserModule,
         UsersModule,
-        ConsortiumModule,
-        TransactionModule,
-        DashboardModule,
         UtilsModule,
-        BankingModule,
     ],
     controllers: [],
     providers: [],
     exports: [
-        DatabaseModule,
         UsersModule,
         ConsortiumModule,
         TransactionModule,
-        AdminLotteryModule,
-        ConsortiumLotteryModule,
+        LotteryModule,
         DashboardModule,
         UtilsModule,
-        AuthModule
+        AuthModule,
+        AuthUserModule,
     ],
 })
 export class AppModule {}
