@@ -1,34 +1,38 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {LotteryService} from "@src/modules/lotteries/lottery.service";
-import {LotteryDto} from "@src/modules/lotteries/dtos/lottery.dto";
+import {AdminLotteryService} from "@src/modules/lotteries/admin/admin.lottery.service";
+import {AdminLotteryDto} from "@src/modules/lotteries/admin/dtos/admin.lottery.dto";
 import {ConstApp} from "@utils/const.app";
-import {Lottery} from "@src/modules/database/datamodels/schemas/lottery";
+import {Lottery} from "@database/datamodels/schemas/lottery";
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { UserDocument } from '@database/datamodels/schemas/user';
+import {Roles} from "@src/common/decorators/roles.decorator";
+import {Role} from "@database/datamodels/enums/role";
 
-@ApiTags('lotteries')
-@Controller('lotteries')
+@ApiTags('admin/lotteries')
+@Controller('admin/lotteries')
 @UseGuards(AuthGuard())
-export class LotteryController {
-    constructor(private readonly lotteryService: LotteryService) {}
+export class AdminLotteryController {
+    constructor(private readonly lotteryService: AdminLotteryService) {}
 
     @Get()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: LotteryDto,
+        type: AdminLotteryDto,
     })
-    getAll(): Promise<Array<LotteryDto>> {
+    @Roles(Role.admin)
+    getAll(): Promise<Array<AdminLotteryDto>> {
         return this.lotteryService.getAll();
     }
 
     @Get('search')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: LotteryDto,
+        type: AdminLotteryDto,
     })
-    getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<LotteryDto>> {
+    @Roles(Role.admin)
+    getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<AdminLotteryDto>> {
         return this.lotteryService.getFiltered(q, value);
     }
 
@@ -37,7 +41,8 @@ export class LotteryController {
         description: ConstApp.DEFAULT_POST_OK,
         type: Lottery,
     })
-    create(@Body() dto: LotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
+    @Roles(Role.admin)
+    create(@Body() dto: AdminLotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
         return this.lotteryService.create(dto, loggedUser);
     }
 
@@ -46,7 +51,8 @@ export class LotteryController {
         description: ConstApp.DEFAULT_PUT_OK,
         type: Lottery,
     })
-    update(@Body() dto: LotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
+    @Roles(Role.admin)
+    update(@Body() dto: AdminLotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
         return this.lotteryService.update(dto, loggedUser);
     }
 
@@ -55,6 +61,7 @@ export class LotteryController {
         description: ConstApp.DEFAULT_DELETE_OK,
         type: Lottery,
     })
+    @Roles(Role.admin)
     delete(@Param('id') id: string): Promise<Lottery> {
         return this.lotteryService.delete(id);
     }
@@ -64,6 +71,7 @@ export class LotteryController {
         description: ConstApp.DEFAULT_GET_OK,
         type: Lottery,
     })
+    @Roles(Role.admin)
     async get(@Param('id') id: string): Promise<Lottery> {
         return await this.lotteryService.get(id);
     }

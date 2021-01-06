@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
 import { ConstApp } from '@utils/const.app';
-import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
@@ -14,7 +13,7 @@ import { ResponseSignInDto } from './dtos/response.sign.in.dto';
 import { randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { RefreshToken, RefreshTokenDocument } from '../database/datamodels/schemas/refresh.token';
-import { RefreshTokenRequestDto } from './dtos/refresh.token.request.dto';
+import { AuthCredentialsDto } from './dtos/auth.credentials.dto';
 
 
 @Injectable()
