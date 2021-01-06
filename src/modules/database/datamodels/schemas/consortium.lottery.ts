@@ -12,14 +12,13 @@ export type ConsortiumLotteryDocument = ConsortiumLottery & Document;
 @Schema({timestamps: true})
 export class ConsortiumLottery implements DataObject {
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) lotteryId?: ObjectId;
+    @ApiProperty({isArray:true}) @Prop({ required: false, type: [mongoose.SchemaTypes.ObjectId] }) bankingIds?: ObjectId[];
 
     // Cuanto y a que se le puede apostar
     @ApiProperty() @Prop({ type: [BettingLimitSchema] }) bettingLimits?: BettingLimit[];
     // Cuanto se paga a un ganador por cada peso apostado
     @ApiProperty() @Prop({ type: [PrizeLimitSchema] }) prizeLimits?: PrizeLimit[];
 
-    // Que porcentaje se le paga a la banca por cada jugada
-    @ApiProperty() @Prop({ type: [BankingFeeLimitSchema] }) bankingFeeLimits?: BankingFeeLimit[];
 
     // TODO falta limite para c/numero pj  Se puede jugar solo 100 dolares como maximo a un numero
 

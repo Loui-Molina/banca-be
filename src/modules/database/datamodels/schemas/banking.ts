@@ -7,11 +7,13 @@ import {Transaction, TransactionSchema} from "@src/modules/database/datamodels/s
 import {Bet, BetSchema} from "@src/modules/database/datamodels/schemas/bet";
 import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
 import {ApiProperty} from "@nestjs/swagger";
+import {BankingFeeLimit, BankingFeeLimitSchema} from "@database/datamodels/schemas/banking.fee.limit";
 
 export type BankingDocument = Banking & Document;
 
 @Schema({ timestamps: true })
 export class Banking implements DataObject {
+    @ApiProperty() _id?: ObjectId;
     @Prop({ type: mongoose.Schema.Types.ObjectId }) ownerUserId: ObjectId;
     @Prop({ type: BankingPreferenceSchema })
     bankingPreferences?: BankingPreference;
@@ -23,6 +25,8 @@ export class Banking implements DataObject {
     @ApiProperty() @Prop() startOfOperation?: Date;
 
 
+    // Que porcentaje se le paga a la banca por cada jugada
+    @ApiProperty() @Prop({ type: [BankingFeeLimitSchema] }) bankingFeeLimits?: BankingFeeLimit[];
     // Que porcentaje se le paga a la banca por el total de sus ventas
     @Prop({ min: 0, max: 100 }) fallbackPercentage?: number;
     @Prop() showPercentage?: boolean;

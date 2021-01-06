@@ -76,7 +76,6 @@ export class BankingService {
                     showPercentage:'$bankings.showPercentage',
                 }
             }]);
-        console.log(bankings)
         let bankingDtos = bankings.map(bankings => this.mapToUser(bankings));
         return bankingDtos;
     }

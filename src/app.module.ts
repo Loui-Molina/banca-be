@@ -12,6 +12,7 @@ import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
 import {AdminLotteryModule} from "@src/modules/lotteries/admin/admin.lottery.module";
 import {TransactionModule} from "@src/modules/transactions/transaction.module";
 import {ResultsModule} from "@src/modules/results/results.module";
+import {ConsortiumLotteryModule} from "@src/modules/lotteries/consortium/consortium.lottery.module";
 
 @Module({
     imports: [
@@ -42,6 +43,7 @@ import {ResultsModule} from "@src/modules/results/results.module";
         HealthCheckModule,
         DatabaseModule,
         AdminLotteryModule,
+        ConsortiumLotteryModule,
         ResultsModule,
         AuthModule,
         UsersModule,
@@ -59,6 +61,7 @@ import {ResultsModule} from "@src/modules/results/results.module";
         ConsortiumModule,
         TransactionModule,
         AdminLotteryModule,
+        ConsortiumLotteryModule,
         DashboardModule,
         UtilsModule,
         AuthModule
