@@ -28,7 +28,6 @@ export class BankingService {
         if (loggedUser.role === Role.consortium) {
             createBankingDto.consortiumId =
                 (await this.consortiumService.getFiltered('ownerUserId', loggedUser._id)).pop()._id;
-            //TODO DONT GET CLOSE, IT WILL STEAL FROM YOU
         }
         let consortium = await this.consortiumModel.findOne({_id: createBankingDto.consortiumId}).exec();
         let createdUser: UserDocument;

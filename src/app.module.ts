@@ -5,13 +5,9 @@ import { AuthModule } from '@auth/auth.module';
 import { UsersModule } from '@users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
-import { ManagerModule } from './modules/manager/manager.module';
-import { AuthUserModule } from './modules/auth.user/auth.user.module';
-import { ConsortiumModule } from '@src/modules/consortiums/consortium.module';
-import {DashboardModule} from "@src/modules/dashboard/dashboard.module";
-import {TransactionModule} from "@src/modules/transactions/transaction.module";
-import {ResultsModule} from "@src/modules/results/results.module";
-import {DatabaseModule} from "@database/database.module";
+import { ManagerModule } from '@src/modules/manager/manager.module';
+import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
+import { DatabaseModule } from '@database/database.module';
 
 @Module({
     imports: [
