@@ -14,6 +14,7 @@ import { randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { RefreshToken, RefreshTokenDocument } from '../database/datamodels/schemas/refresh.token';
 import { AuthCredentialsDto } from './dtos/auth.credentials.dto';
+import { TokenService } from './token.service';
 
 
 @Injectable()
@@ -25,8 +26,9 @@ export class AuthService {
         private readonly configService : ConfigService,
         private userAuthService: AuthUserService,
         private jwtService: JwtService,
+        private readonly tokenService : TokenService,
         @InjectModel(User.name) private userModel: Model<UserDocument>,
-        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,
+
     ) {}
 
     async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
@@ -37,13 +39,13 @@ export class AuthService {
         let responsePayload: ResponsePayload = new ResponsePayload();
         let responseSignInDto: ResponseSignInDto = new ResponseSignInDto();
         responsePayload = await this.userAuthService.validateUserPassword(authCredentialsDto);
-        if (!responsePayload.username) {
+        if (!responsePayload.userId) {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
         }
-        const username: string = responsePayload.username;
+        const userId: string = responsePayload.userId;
         const role: Role = responsePayload.role;
-        const payload: JwtPayload = { username, role };
-        const refreshToken = await this.createRefreshToken();
+        const payload: JwtPayload = { userId, role };
+        const refreshToken = await this.tokenService.createRefreshToken(userId);
         const accessToken = await this.jwtService.signAsync(payload);
         responseSignInDto.accessToken = accessToken;
         responseSignInDto.expiresIn = this.configService.get<string>('TOKEN_EXPIRES');
@@ -55,17 +57,4 @@ export class AuthService {
         return await this.userModel.findById(user.id).exec();
     }
     
-    async createRefreshToken(){
-       
-        try{
-            const refreshTokenModel = new this.refreshTokenModel();
-            const value = randomBytes(64).toString('hex');
-            refreshTokenModel.refreshTokenId = value;
-            return  refreshTokenModel.save();
-        }catch(error){
-            this.logger.error(ConstApp.REFRESH_TOKEN_ERROR + error);
-            throw new InternalServerErrorException(ConstApp.REFRESH_TOKEN_ERROR);
-        }
-    }
-
 }

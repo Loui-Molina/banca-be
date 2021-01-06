@@ -10,6 +10,7 @@ import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from './dtos/response.sign.in.dto';
 import { RefreshTokenRequestDto } from './dtos/refresh.token.request.dto';
 import { TokenService } from './token.service';
+import { ExtractJwt } from 'passport-jwt';
 
 @Controller('auth')
 export class AuthController {
@@ -54,7 +55,8 @@ export class AuthController {
         description: ConstApp.DEFAULT_GET_OK,
         type: String,
     })
-    getToken(@Body() refreshTokenRequestDto: RefreshTokenRequestDto): Promise<ResponseSignInDto> {
-        return this.tokenService.getRefreshToken(refreshTokenRequestDto);
+    getToken(@Req() req:any, @Body() refreshTokenRequestDto: RefreshTokenRequestDto): Promise<ResponseSignInDto> {
+        const oldAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);    
+        return this.tokenService.getRefreshToken(oldAccessToken, refreshTokenRequestDto);
     }
 }

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {  Model, ObjectId, Types} from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -12,6 +12,9 @@ import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas
 
 @Injectable()
 export class AuthUserService {
+
+    private readonly logger : Logger = new Logger(AuthUserService.name);
+
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(RefreshToken.name) private refreshTokenModel : Model<RefreshTokenDocument>,) {}
 
@@ -34,7 +37,7 @@ export class AuthUserService {
             refreshToken.ipAddress = "";
             await refreshToken.save();
         } catch (error) {
-            console.log(error);
+            this.logger.error(error);
             if (error.code === 11000) {
                 throw new ConflictException(ConstApp.USERNAME_EXISTS_ERROR);
             } else {
@@ -62,9 +65,10 @@ export class AuthUserService {
     async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = authCredentialsDto;
         const user = await this.userModel.findOne({ username });
+        this.logger.log(user);
         let responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
-            responsePayload.username = user.username;
+            responsePayload.userId = user.id;
             responsePayload.role = user.role;
             return responsePayload;
         } else {
