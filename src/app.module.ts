@@ -5,8 +5,9 @@ import { AuthModule } from '@auth/auth.module';
 import { UsersModule } from '@users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
-import { ManagerModule } from './modules/manager/manager.module';
-import { AuthUserModule } from './modules/auth.user/auth.user.module';
+import { ManagerModule } from '@src/modules/manager/manager.module';
+import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
+import { DatabaseModule } from '@database/database.module';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import { AuthUserModule } from './modules/auth.user/auth.user.module';
         }),
         ManagerModule,
         HealthCheckModule,
+        DatabaseModule,
         AuthModule,
         AuthUserModule,
         UsersModule,
