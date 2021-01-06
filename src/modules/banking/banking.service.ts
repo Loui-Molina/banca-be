@@ -126,6 +126,8 @@ export class BankingService {
 
     async remove(deleteBankingDto: DeleteBankingDto) {
         let consortium: ConsortiumDocument = (await this.consortiumModel.findById(deleteBankingDto.consortiumId));
+        //TODO eliminar usuario de banca
+
         //TODO
         // consortium.bankings.splice(
         //     consortium.bankings.findIndex((banking: BankingDocument) => banking._id === deleteBankingDto.bankingId),
