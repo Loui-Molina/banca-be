@@ -10,6 +10,7 @@ export type TransactionDocument = Transaction & Document;
 @Schema()
 export class Transaction implements DataObject {
     @ApiProperty() _id?: ObjectId;
+    @ApiProperty() createdAt?: Date;
     @ApiProperty() @Prop({ required: true }) amount?: number;
     @ApiProperty({ type: String, enum: TransactionType }) @Prop({ type: String, enum: TransactionType }) type?: TransactionType;
 

@@ -6,13 +6,12 @@ import {Consortium, ConsortiumSchema} from '@database/datamodels/schemas/consort
 import {UsersModule} from "@users/users.module";
 import {ConsortiumModule} from "@src/modules/consortiums/consortium.module";
 import {AuthUserModule} from '@src/modules/auth.user/auth.user.module';
+import {Banking, BankingSchema} from "@database/datamodels/schemas/banking";
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{
-            name: Consortium.name,
-            schema: ConsortiumSchema
-        }], 'banca'),
+        MongooseModule.forFeature([{name: Consortium.name, schema: ConsortiumSchema}], 'banca'),
+        MongooseModule.forFeature([{name: Banking.name, schema: BankingSchema}], 'banca'),
         UsersModule,
         AuthUserModule,
         ConsortiumModule],

@@ -1,14 +1,16 @@
 import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
 import {BankingService} from './banking.service';
 import {CreateBankingDto} from './dto/create.banking.dto';
-import {ApiCreatedResponse, ApiFoundResponse, ApiTags} from '@nestjs/swagger';
+import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags} from '@nestjs/swagger';
 import {AuthGuard} from '@nestjs/passport';
 import {ConstApp} from '@utils/const.app';
 import {BankingDto} from '@src/modules/banking/dto/banking.dto';
 import {AuthUser} from '@src/common/decorators/auth.user.decorator';
 import {UserDocument} from '@database/datamodels/schemas/user';
-import {DeleteBankingDto} from "@src/modules/banking/dto/delete.banking.dto";
 import {UpdateBankingDto} from "@src/modules/banking/dto/update.banking.dto";
+import {Banking} from "@database/datamodels/schemas/banking";
+import {Roles} from "@src/common/decorators/roles.decorator";
+import {Role} from "@database/datamodels/enums/role";
 
 @Controller('banking')
 @ApiTags('banking')
@@ -16,20 +18,13 @@ import {UpdateBankingDto} from "@src/modules/banking/dto/update.banking.dto";
 export class BankingController {
     constructor(private readonly bankingService: BankingService) {}
 
-    @Post('/create')
-    @ApiCreatedResponse({
-        description: ConstApp.DEFAULT_PUT_OK,
-        type: BankingDto,
-    })
-    create(@Body() createBankingDto: CreateBankingDto, @AuthUser() user: UserDocument) {
-        return this.bankingService.create(createBankingDto, user);
-    }
 
     @Get('/findAll')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: BankingDto,
     })
+    @Roles(Role.admin, Role.consortium)
     findAll(@AuthUser() user: UserDocument) {
         return this.bankingService.findAll(user);
     }
@@ -39,25 +34,38 @@ export class BankingController {
         description: ConstApp.DEFAULT_GET_OK,
         type: BankingDto,
     })
-    findOne(@Query('field') field: string, @Query('value') value: any,@AuthUser() user: UserDocument) {
+    @Roles(Role.admin, Role.consortium)
+    findOne(@Query('field') field: string, @Query('value') value: any,@AuthUser() user: UserDocument): Promise<BankingDto[]> {
         return this.bankingService.getFiltered(field, value,user);
+    }
+
+    @Post()
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_POST_OK,
+        type: Banking,
+    })
+    @Roles(Role.admin, Role.consortium)
+    create(@Body() createBankingDto: CreateBankingDto, @AuthUser() user: UserDocument): Promise<Banking> {
+        return this.bankingService.create(createBankingDto, user);
     }
 
     @Put()
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
-        type: BankingDto,
+        type: Banking,
     })
-    update(@Body() updateBankingDto: UpdateBankingDto) {
-        return this.bankingService.update(updateBankingDto);
+    @Roles(Role.admin, Role.consortium)
+    update(@Body() updateBankingDto: UpdateBankingDto, @AuthUser() user: UserDocument): Promise<Banking> {
+        return this.bankingService.update(updateBankingDto, user);
     }
 
-    @Delete()
-    @ApiFoundResponse({
+    @Delete(':id')
+    @ApiOkResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: BankingDto,
+        type: Banking,
     })
-    remove(@Body() removeDto: DeleteBankingDto) {
-        return this.bankingService.remove(removeDto);
+    @Roles(Role.admin, Role.consortium)
+    delete(@Param('id') id: string, @AuthUser() user: UserDocument): Promise<Banking> {
+        return this.bankingService.delete(id, user);
     }
 }

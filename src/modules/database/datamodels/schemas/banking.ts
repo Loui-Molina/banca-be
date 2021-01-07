@@ -37,6 +37,7 @@ export class Banking implements DataObject {
     // Data object members
     @Prop({ required: true, immutable: true }) creationUserId: string;
     @Prop() deletionDate?: Date;
+    @ApiProperty() createdAt?: Date;
     @Prop({ required: true }) modificationUserId: string;
 
     calculateBalance?: Function;

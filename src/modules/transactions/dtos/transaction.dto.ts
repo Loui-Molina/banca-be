@@ -8,7 +8,10 @@ export class TransactionDto {
     @ApiProperty({ type: String, enum: TransactionType, required: false }) type?: TransactionType;
     @ApiProperty() originId: ObjectId;
     @ApiProperty() destinationId: ObjectId;
+    @ApiProperty() createdAt: Date;
     @ApiProperty({ type: Number }) amount: number;
+    @ApiProperty({ type: Number }) actualBalance: number;
+    @ApiProperty({ type: Number }) lastBalance: number;
     @ApiProperty({ type: String, enum: TransactionObjects }) originObject: TransactionObjects;
     @ApiProperty() originName: string;
     @ApiProperty({ type: String, enum: TransactionObjects }) destinationObject: TransactionObjects;

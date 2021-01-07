@@ -22,51 +22,36 @@ export class TransactionService {
     async getAll(): Promise<Array<TransactionDto>> {
         const consortiums: Consortium[] = await this.consortiumModel.find().exec();
         const transactionsDto: TransactionDto[] = [];
-        /*consortiums.map((consortium: Consortium) => {
+        consortiums.map((consortium: Consortium) => {
             const transactions = consortium.transactions;
             transactions.map((transaction) => {
-                const originPromise = this.searchObject(transaction.originId, transaction.originObject);
-                const destinationPromise = this.searchObject(transaction.originId, transaction.originObject);
-                originPromise.then(origin => {
-                    destinationPromise.then(destination => {
-
-                        transactionsDto.push({
-                            _id: transaction._id,
-                            type: transaction.type,
-                            originId: transaction.originId,
-                            destinationId: transaction.destinationId,
-                            originObject: transaction.originObject,
-                            amount: transaction.amount,
-                            originName: origin.name,
-                            destinationObject: transaction.destinationObject,
-                            destinationName: destination.name,
-                        });
-                    });
+                // const originPromise = this.searchObject(transaction.originId, transaction.originObject);
+                // const destinationPromise = this.searchObject(transaction.originId, transaction.originObject);
+                transactionsDto.push({
+                    _id: transaction._id,
+                    type: transaction.type,
+                    amount: transaction.amount,
+                    lastBalance: transaction.lastBalance,
+                    actualBalance: transaction.actualBalance,
+                    originId: transaction.originId,
+                    destinationId: transaction.destinationId,
+                    originObject: transaction.originObject,
+                    destinationObject: transaction.destinationObject,
+                    originName: 'TODO',
+                    destinationName: 'TODO',
+                    createdAt: transaction.createdAt,
                 });
             })
-            consortium.bankings.map((banking: Banking) => {
-                const transactionsB = banking.transactions;
-                transactionsB.map((transaction) => {
-                    const originPromise = this.searchObject(transaction.originId, transaction.originObject);
-                    const destinationPromise = this.searchObject(transaction.originId, transaction.originObject);
-                    originPromise.then(origin => {
-                        destinationPromise.then(destination => {
-                            transactionsDto.push({
-                                _id: transaction._id,
-                                type: transaction.type,
-                                originId: transaction.originId,
-                                destinationId: transaction.destinationId,
-                                originObject: transaction.originObject,
-                                amount: transaction.amount,
-                                originName: origin.name,
-                                destinationObject: transaction.destinationObject,
-                                destinationName: destination.name,
-                            });
-                        });
-                    });
-                })
-            });
-        });*/
+        });
+        // _id: transaction._id,
+        // type: transaction.type,
+        // originId: transaction.originId,
+        // destinationId: transaction.destinationId,
+        // originObject: transaction.originObject,
+        // amount: transaction.amount,
+        // originName: origin.name,
+        // destinationObject: transaction.destinationObject,
+        // destinationName: destination.name,
         return transactionsDto;
     }
 
@@ -75,16 +60,7 @@ export class TransactionService {
             return await this.consortiumModel.findById(id).exec();
         }
         if(transactionObjects === TransactionObjects.banking){
-            const consortiums: Consortium[] = await this.consortiumModel.find().exec();
-            consortiums.map((consortium: Consortium) => {
-                // @ts-ignore
-                consortium.bankings.map((banking: Banking) => {
-                    if(banking._id.toString() === id.toString()){
-                        return banking;
-                    }
-                });
-            });
-            return null;
+            return await this.bankingModel.findById(id).exec();
         }
         return null;
     }
