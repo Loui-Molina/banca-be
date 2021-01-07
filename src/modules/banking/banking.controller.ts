@@ -61,7 +61,7 @@ export class BankingController {
 
     @Delete(':id')
     @ApiOkResponse({
-        description: ConstApp.DEFAULT_GET_OK,
+        description: ConstApp.DEFAULT_DELETE_OK,
         type: Banking,
     })
     @Roles(Role.admin, Role.consortium)
