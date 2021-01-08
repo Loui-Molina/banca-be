@@ -21,10 +21,11 @@ export class ConsortiumService {
     ) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {
-        let consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find({}).exec();
+        const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find({}).exec();
         return Promise.all(consortiums.map((consortium) => this.mapToUser(consortium)));
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
     async getFiltered(q: string, value: any): Promise<Array<Consortium>> {
         return this.consortiumModel.find({ [q]: value }).exec();
     }
@@ -76,7 +77,7 @@ export class ConsortiumService {
     }
 
     async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
-        let foundUser = (await this.userService.getFiltered('_id', consortium.ownerUserId)).pop();
+        const foundUser = (await this.userService.getFiltered('_id', consortium.ownerUserId)).pop();
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         return {
             _id: consortium._id,
@@ -84,7 +85,7 @@ export class ConsortiumService {
             firstTransactionDate: consortium.firstTransactionDate,
             status: consortium.status,
             createdAt: consortium.createdAt,
-            bankings: bankings,
+            bankings,
             ownerId: consortium.ownerUserId,
             ownerName: foundUser.name,
             ownerUsername: foundUser.username,

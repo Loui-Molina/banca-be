@@ -10,7 +10,13 @@ import { ConsortiumLottery, ConsortiumLotterySchema } from '@database/datamodels
 
 export type ConsortiumDocument = Consortium & Document;
 
-@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
+@Schema({
+    timestamps: true,
+    optimisticConcurrency: true,
+    useNestedStrict: true,
+    strict: true,
+    collection: 'consortiums',
+})
 export class Consortium {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop({ type: [SupervisorSchema] }) supervisors?: Supervisor[];

@@ -14,7 +14,7 @@ import { BankingFeeLimit, BankingFeeLimitSchema } from '@database/datamodels/sch
 
 export type BankingDocument = Banking & Document;
 
-@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true, collection: 'bankings' })
 export class Banking implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) consortiumId: ObjectId;

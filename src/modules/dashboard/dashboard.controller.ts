@@ -12,6 +12,7 @@ import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { UserDocument } from '@database/datamodels/schemas/user';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
 import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
+import {DashboardWidgetsDto} from "@src/modules/dashboard/dtos/dashboard.widgets.dto";
 
 @ApiTags('dashboard')
 @Controller('dashboard')
@@ -44,7 +45,7 @@ export class DashboardController {
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardBankingDto,
     })
-    //@Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin, Role.consortium)
     getBankingsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardBankingDto[]> {
         return this.dashboardService.getBankingsStatistics(loggedUser);
     }
@@ -64,8 +65,38 @@ export class DashboardController {
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardGraphBankingDto,
     })
-    //@Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin, Role.consortium)
     getGraphBankingStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardGraphBankingDto[]> {
         return this.dashboardService.getGraphBankingStatistics(loggedUser);
+    }
+
+    @Get('getAdminWidgetsStatistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardWidgetsDto,
+    })
+    @Roles(Role.admin)
+    getAdminWidgetsStatistics(): Promise<DashboardWidgetsDto> {
+        return this.dashboardService.getAdminWidgetsStatistics();
+    }
+
+    @Get('getConsortiumWidgetsStatistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardWidgetsDto,
+    })
+    @Roles(Role.consortium)
+    getConsortiumWidgetsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+        return this.dashboardService.getConsortiumWidgetsStatistics(loggedUser);
+    }
+
+    @Get('getBankingWidgetsStatistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardWidgetsDto,
+    })
+    @Roles(Role.banker)
+    getBankingWidgetsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+        return this.dashboardService.getBankingWidgetsStatistics(loggedUser);
     }
 }

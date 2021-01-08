@@ -9,10 +9,11 @@ import { Consortium, ConsortiumDocument } from '@src/modules/database/datamodels
 import { Banking, BankingDocument } from '@src/modules/database/datamodels/schemas/banking';
 import { DashboardConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.consortium.dto';
 import { DashboardBankingDto } from '@src/modules/dashboard/dtos/dashboard.banking.dto';
-import {User, UserDocument} from '@database/datamodels/schemas/user';
+import { User, UserDocument } from '@database/datamodels/schemas/user';
 import { Role } from '@database/datamodels/enums/role';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
-import {DashboardGraphBankingDto} from "@src/modules/dashboard/dtos/dashboard.graph.banking.dto";
+import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
+import {DashboardWidgetsDto} from "@src/modules/dashboard/dtos/dashboard.widgets.dto";
 
 @Injectable()
 export class DashboardService {
@@ -65,6 +66,65 @@ export class DashboardService {
             });
         }
         return consortiumsDto;
+    }
+
+    async getAdminWidgetsStatistics(): Promise<DashboardWidgetsDto> {
+        const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find().exec();
+        let balance = 0;
+        let losses = 0;
+        let profits = 0;
+        let ticketsSold = 0;
+        for await (const consortium of consortiums) {
+            balance += await consortium.calculateBalance();
+            losses += 1;
+            profits += 1;
+            ticketsSold += 1;
+        }
+        return {
+            balance,
+            losses,
+            profits,
+            ticketsSold,
+        };
+    }
+
+    async getConsortiumWidgetsStatistics(loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+        const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id }).exec();
+        if (consortiums.length === 0) {
+            throw new BadRequestException();
+        }
+        const consortium = consortiums.pop();
+        const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+        let balance = 0;
+        let losses = 0;
+        let profits = 0;
+        let ticketsSold = 0;
+        for await (const banking of bankings) {
+            balance += await banking.calculateBalance();
+            losses += 1;
+            profits += 1;
+            ticketsSold += 1;
+        }
+        return {
+            balance,
+            losses,
+            profits,
+            ticketsSold,
+        };
+    }
+
+    async getBankingWidgetsStatistics(loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+        const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
+        if (bankings.length === 0) {
+            throw new BadRequestException();
+        }
+        const banking = bankings.pop();
+        return {
+            balance: await banking.calculateBalance(),
+            losses: 0,
+            profits: 0,
+            ticketsSold: 0,
+        };
     }
 
     async getBankingsStatistics(loggedUser: UserDocument): Promise<DashboardBankingDto[]> {
@@ -132,4 +192,5 @@ export class DashboardService {
         }
         return bankingsDto;
     }
+
 }
