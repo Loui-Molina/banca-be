@@ -62,9 +62,10 @@ export class ConsortiumService {
         const bankings = await this.bankingModel.find({consortiumId:consortium._id}).exec();
         bankings.map(banking => {
             this.userAuthService.deleteUser(banking.ownerUserId);
-            this.bankingModel.findByIdAndRemove({id:banking._id}).exec();
         });
-
+        bankings.map(banking => {
+            this.bankingModel.findByIdAndRemove(banking._id).exec();
+        });
         return this.consortiumModel.findByIdAndRemove(id).exec();
     }
 

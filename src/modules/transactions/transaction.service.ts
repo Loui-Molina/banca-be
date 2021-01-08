@@ -4,11 +4,11 @@ import {Model} from 'mongoose';
 import {CreateTransactionDto} from '@src/modules/transactions/dtos/create.transaction.dto';
 import {Transaction, TransactionDocument} from "@src/modules/database/datamodels/schemas/transaction";
 import {UserDocument} from "@database/datamodels/schemas/user";
-import {TransactionType} from "@database/datamodels/enums/transaction.type";
 import {Consortium, ConsortiumDocument} from "@database/datamodels/schemas/consortium";
 import {Banking, BankingDocument} from "@database/datamodels/schemas/banking";
 import {TransactionDto} from "@src/modules/transactions/dtos/transaction.dto";
 import {TransactionObjects} from "@database/datamodels/enums/transaction.objects";
+import {TransactionType} from "@database/datamodels/enums/transaction.type";
 
 @Injectable()
 export class TransactionService {
@@ -21,12 +21,24 @@ export class TransactionService {
 
     async getAll(): Promise<Array<TransactionDto>> {
         const consortiums: Consortium[] = await this.consortiumModel.find().exec();
+        const bankings: Banking[] = await this.bankingModel.find().exec();
         const transactionsDto: TransactionDto[] = [];
         consortiums.map((consortium: Consortium) => {
-            const transactions = consortium.transactions;
-            transactions.map((transaction) => {
-                // const originPromise = this.searchObject(transaction.originId, transaction.originObject);
-                // const destinationPromise = this.searchObject(transaction.originId, transaction.originObject);
+            consortium.transactions.map((transaction) => {
+                let originName;
+                let destinationName;
+                switch (consortium._id.toString()) {
+                    case transaction.originId.toString():
+                        //Consorcio es origen
+                        originName = consortium.name;
+                        destinationName = bankings.filter(banking => banking._id.toString() === transaction.destinationId.toString()).pop().name;
+                        break;
+                    case transaction.destinationId.toString():
+                        //Consorcio es destino
+                        destinationName = consortium.name;
+                        originName = bankings.filter(banking => banking._id.toString() === transaction.originId.toString()).pop().name;
+                        break;
+                }
                 transactionsDto.push({
                     _id: transaction._id,
                     type: transaction.type,
@@ -37,45 +49,71 @@ export class TransactionService {
                     destinationId: transaction.destinationId,
                     originObject: transaction.originObject,
                     destinationObject: transaction.destinationObject,
-                    originName: 'TODO',
-                    destinationName: 'TODO',
+                    originName: originName,
+                    destinationName: destinationName,
                     createdAt: transaction.createdAt,
                 });
             })
         });
-        // _id: transaction._id,
-        // type: transaction.type,
-        // originId: transaction.originId,
-        // destinationId: transaction.destinationId,
-        // originObject: transaction.originObject,
-        // amount: transaction.amount,
-        // originName: origin.name,
-        // destinationObject: transaction.destinationObject,
-        // destinationName: destination.name,
+        bankings.map((banking: Banking) => {
+            banking.transactions.map((transaction) => {
+                let originName;
+                let destinationName;
+                switch (banking._id.toString()) {
+                    case transaction.originId.toString():
+                        //Consorcio es origen
+                        originName = banking.name;
+                        destinationName = consortiums.filter(consortium => consortium._id.toString() === transaction.destinationId.toString()).pop().name;
+                        break;
+                    case transaction.destinationId.toString():
+                        //Consorcio es destino
+                        destinationName = banking.name;
+                        originName = consortiums.filter(consortium => consortium._id.toString() === transaction.originId.toString()).pop().name;
+                        break;
+                }
+                transactionsDto.push({
+                    _id: transaction._id,
+                    type: transaction.type,
+                    amount: transaction.amount,
+                    lastBalance: transaction.lastBalance,
+                    actualBalance: transaction.actualBalance,
+                    originId: transaction.originId,
+                    destinationId: transaction.destinationId,
+                    originObject: transaction.originObject,
+                    destinationObject: transaction.destinationObject,
+                    originName: originName,
+                    destinationName: destinationName,
+                    createdAt: transaction.createdAt,
+                });
+            })
+        });
+        transactionsDto.sort(function(a,b){
+            // @ts-ignore
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
         return transactionsDto;
     }
 
-    private async searchObject(id: any, transactionObjects:TransactionObjects): Promise<Consortium | Banking> {
-        if(transactionObjects === TransactionObjects.consortium){
-            return await this.consortiumModel.findById(id).exec();
-        }
-        if(transactionObjects === TransactionObjects.banking){
-            return await this.bankingModel.findById(id).exec();
-        }
-        return null;
-    }
-
     async getFiltered(q: string, value: any): Promise<Array<Transaction>> {
-        return this.transactionModel.find({ [q]: value }).exec();
+        return this.transactionModel.find({[q]: value}).exec();
     }
 
     async create(dto: CreateTransactionDto, loggedUser: UserDocument): Promise<Transaction> {
-        const originObject = await this.consortiumModel.findById(dto.originId);
-        if(!originObject){
-            throw new BadRequestException();
+        let originObject;
+        if (dto.originObject === TransactionObjects.consortium) {
+            originObject = await this.consortiumModel.findById(dto.originId);
         }
-        /* const destinationObject = originObject.bankings.find(banking => banking._id.toString() === dto.destinationId.toString());
-        if(!destinationObject){
+        if (dto.originObject === TransactionObjects.banking) {
+            originObject = await this.bankingModel.findById(dto.originId);
+        }
+        let destinationObject;
+        if (dto.destinationObject === TransactionObjects.consortium) {
+            destinationObject = await this.consortiumModel.findById(dto.destinationId);
+        }
+        if (dto.destinationObject === TransactionObjects.banking) {
+            destinationObject = await this.bankingModel.findById(dto.destinationId);
+        }
+        if (!destinationObject || !originObject) {
             throw new BadRequestException();
         }
         const originBalance = await originObject.calculateBalance();
@@ -90,7 +128,7 @@ export class TransactionService {
             creationUserId: loggedUser._id,
             modificationUserId: loggedUser._id,
             lastBalance: originBalance,
-            actualBalance: originBalance + dto.amount * -1
+            actualBalance: originBalance + (dto.amount * -1)
         });
         const transactionDestination = new this.transactionModel({
             type: TransactionType.deposit,
@@ -106,9 +144,9 @@ export class TransactionService {
         });
         originObject.transactions.push(transactionOrigin);
         destinationObject.transactions.push(transactionDestination);
-        await originObject.save();*/
-        //return transactionDestination;
-        return null;
+        await originObject.save();
+        await destinationObject.save();
+        return transactionDestination;
     }
 
     async get(id: string): Promise<Transaction> {

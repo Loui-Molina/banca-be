@@ -8,6 +8,8 @@ import {Transaction} from "@src/modules/database/datamodels/schemas/transaction"
 import {AuthUser} from "@src/common/decorators/auth.user.decorator";
 import {UserDocument} from "@database/datamodels/schemas/user";
 import {TransactionDto} from "@src/modules/transactions/dtos/transaction.dto";
+import {Roles} from "@src/common/decorators/roles.decorator";
+import {Role} from "@database/datamodels/enums/role";
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -20,6 +22,7 @@ export class TransactionController {
         description: ConstApp.DEFAULT_GET_OK,
         type: TransactionDto,
     })
+    @Roles(Role.admin)
     getAll(): Promise<Array<TransactionDto>> {
         return this.transactionService.getAll();
     }
@@ -29,6 +32,7 @@ export class TransactionController {
         description: ConstApp.DEFAULT_GET_OK,
         type: Transaction,
     })
+    @Roles(Role.admin)
     getFiltered(@Query('q') q: string, @Query('value') value: any): Promise<Array<Transaction>> {
         return this.transactionService.getFiltered(q, value);
     }
@@ -38,6 +42,7 @@ export class TransactionController {
         description: ConstApp.DEFAULT_POST_OK,
         type: Transaction,
     })
+    @Roles(Role.admin)
     create(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser : UserDocument): Promise<Transaction> {
         return this.transactionService.create(dto, loggedUser);
     }
@@ -47,6 +52,7 @@ export class TransactionController {
         description: ConstApp.DEFAULT_GET_OK,
         type: Transaction,
     })
+    @Roles(Role.admin)
     async get(@Param('id') id: string): Promise<Transaction> {
         return await this.transactionService.get(id);
     }

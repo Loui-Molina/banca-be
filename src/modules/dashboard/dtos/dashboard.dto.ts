@@ -4,7 +4,7 @@ import { DashboardDiagramLinkDto } from '@src/modules/dashboard/dtos/dashboard.l
 import { DashboardDiagramClusterDto } from '@src/modules/dashboard/dtos/dashboard.cluster.dto';
 
 export class DashboardDiagramDto {
-    @ApiProperty() nodes: DashboardDiagramNodeDto[] = [];
-    @ApiProperty() links: DashboardDiagramLinkDto[] = [];
-    @ApiProperty() clusters: DashboardDiagramClusterDto[] = [];
+    @ApiProperty({type:DashboardDiagramNodeDto, isArray: true}) nodes: DashboardDiagramNodeDto[] = [];
+    @ApiProperty({type:DashboardDiagramLinkDto, isArray: true}) links: DashboardDiagramLinkDto[] = [];
+    @ApiProperty({type:DashboardDiagramClusterDto, isArray: true}) clusters: DashboardDiagramClusterDto[] = [];
 }
