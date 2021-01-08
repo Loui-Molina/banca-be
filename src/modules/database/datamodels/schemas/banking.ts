@@ -8,11 +8,10 @@ import {Bet, BetSchema} from "@src/modules/database/datamodels/schemas/bet";
 import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
 import {ApiProperty} from "@nestjs/swagger";
 import {BankingFeeLimit, BankingFeeLimitSchema} from "@database/datamodels/schemas/banking.fee.limit";
-import {ConsortiumSchema} from "@database/datamodels/schemas/consortium";
 
 export type BankingDocument = Banking & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class Banking implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) consortiumId: ObjectId;
@@ -48,8 +47,8 @@ export const BankingSchema = SchemaFactory.createForClass(Banking);
 BankingSchema.methods.calculateBalance = async function calculateBalance(): Promise<number> {
     let balance = 0;
     const transactions: Transaction[] = this.transactions;
-    for (let i = 0; i < transactions.length; i++) {
-        balance += transactions[i].amount;
-    }
+    transactions.forEach(item => {
+        balance += item.amount;
+    });
     return balance;
 };

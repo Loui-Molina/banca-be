@@ -8,23 +8,22 @@ import { Draw } from '@database/datamodels/schemas/draw';
 
 export type LotteryDocument = Lottery & Document;
 
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class Lottery implements DataObject {
-    @ApiProperty() _id?: ObjectId;
-    @ApiProperty() @Prop({ required: true }) name: string;
-    @ApiProperty() @Prop({ required: true }) nickname: string;
-    @ApiProperty() @Prop({ required: true }) color: string;
-    @ApiProperty() @Prop() logo?: string;
-    @ApiProperty() @Prop() status: boolean;
-    @ApiProperty() @Prop({ type: LotteryTimeSchema }) time: LotteryTime;
-    @ApiProperty() @Prop({ required: true }) playTime?: string;
-    @ApiProperty() @Prop() lastDraw?: Draw;
-    @ApiProperty() @Prop({ type: [ResultSchema] }) results?: Result[];
+    @Prop({ required: true }) name: string;
+    @Prop({ required: true }) nickname: string;
+    @Prop({ required: true }) color: string;
+    @Prop() logo?: string;
+    @Prop() status: boolean;
+    @Prop({ type: LotteryTimeSchema }) time: LotteryTime;
+    @Prop({ required: true }) playTime?: string;
+    @Prop() lastDraw?: Draw;
+    @Prop({ type: [ResultSchema] }) results?: Result[];
 
     // Data object members
-    @ApiProperty() @Prop({ required: true, immutable: true }) creationUserId: string;
-    @ApiProperty() @Prop() deletionDate?: Date;
-    @ApiProperty() @Prop({ required: true }) modificationUserId: string;
+    @Prop({ required: true, immutable: true }) creationUserId: string;
+    @Prop() deletionDate?: Date;
+    @Prop({ required: true }) modificationUserId: string;
 }
 
-export const LotterySchema = SchemaFactory.createForClass(Lottery).set('timestamps', true);
+export const LotterySchema = SchemaFactory.createForClass(Lottery);

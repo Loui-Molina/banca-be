@@ -4,91 +4,84 @@ import {UserService} from "@users/user.service";
 import {InjectModel} from "@nestjs/mongoose";
 import {CreateBankingDto} from "@src/modules/banking/dto/create.banking.dto";
 import {Role} from "@database/datamodels/enums/role";
-import {Consortium, ConsortiumDocument} from "@database/datamodels/schemas/consortium";
-import {Model, ObjectId} from "mongoose";
+import {Model} from "mongoose";
 import {BankingDto} from "@src/modules/banking/dto/banking.dto";
 import {UpdateBankingDto} from "@src/modules/banking/dto/update.banking.dto";
 import {Banking, BankingDocument} from "@database/datamodels/schemas/banking";
-import { AuthUserService } from "../auth.user/auth.user..service";
-
+import {AuthUserService} from "../auth.user/auth.user..service";
+import {ConsortiumService} from "@src/modules/consortiums/consortium.service";
 
 @Injectable()
 export class BankingService {
     constructor(
-        @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
         @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
         private userAuthService: AuthUserService,
-        private userService: UserService
-    ) {
+        private userService: UserService,
+        private consortiumService: ConsortiumService) {
     }
 
 
     async findAll(loggedUser: UserDocument): Promise<BankingDto[]> {
-        let bankings = [];
+        let filter;
         switch (loggedUser.role) {
             case Role.admin:
-                bankings = await this.bankingModel.find().exec();
+                filter = {};
                 break;
             case Role.consortium:
-                const consortiums = await this.consortiumModel.find({ownerUserId: loggedUser._id}).exec();
-                if(consortiums.length === 0){
-                    throw new BadRequestException();
-                }
-                const consortium = consortiums.pop();
-                bankings = await this.bankingModel.find({consortiumId:consortium._id}).exec();
+                filter = {ownerUserId: loggedUser._id};
                 break;
             default:
                 throw new BadRequestException();
         }
-        //TODO no se trae el username
-        return Promise.all(bankings.map(banking => this.mapToUser(banking)));
+        const bankings: Array<BankingDocument> = await this.bankingModel.find(filter).exec();
+        return Promise.all(bankings.map(banking => this.mapBanking(banking)));
     }
 
     async getFiltered(field: string, value: any, loggedUser: UserDocument): Promise<BankingDto[]> {
-        let bankings = [];
+        let filter;
         switch (loggedUser.role) {
             case Role.admin:
-                bankings = await this.bankingModel.find().exec();
+                filter = {[field]: value};
                 break;
             case Role.consortium:
-                const consortiums = await this.consortiumModel.find({ownerUserId: loggedUser._id}).exec();
-                if(consortiums.length === 0){
-                    throw new BadRequestException();
-                }
-                const consortium = consortiums.pop();
-                bankings = await this.bankingModel.find({consortiumId:consortium._id}).exec();
+                filter = {[field]: value, ownerUserId: loggedUser._id};
                 break;
             default:
                 throw new BadRequestException();
         }
-
+        const bankings: Array<BankingDocument> = await this.bankingModel.find({[field]: value}).exec();
         return Promise.all(bankings.filter((banking: BankingDocument) =>
-            banking[field as keyof BankingDocument] === value).map(banking => this.mapToUser(banking)));
+            banking[field as keyof BankingDocument] === value).map(banking => this.mapBanking(banking)));
     }
 
     async create(createBankingDto: CreateBankingDto, loggedUser: UserDocument): Promise<Banking> {
-        //TODO handle transaction
-        const consortium = await this.getConsortiumOfUser(createBankingDto.consortiumId, loggedUser);
+        const consortium = await this.consortiumService.getConsortiumForUser(createBankingDto.consortiumId, loggedUser);
 
-        //The rol is harcoded to prevent issues
+        //The rol is hardcoded to prevent issues
         createBankingDto.user.role = Role.banker
-        const createdUser = (await this.userAuthService.singUp(createBankingDto.user, loggedUser)).user;
-        const newObject = new this.bankingModel({
-            name: createBankingDto.banking.name,
-            status: createBankingDto.banking.status,
-            consortiumId: consortium._id,
-            ownerUserId: createdUser.id,
-            showPercentage: createBankingDto.banking.showPercentage,
-            creationUserId: loggedUser._id,
-            modificationUserId: loggedUser._id,
-        });
-        await newObject.save();
+
+        let createdUser: UserDocument;
+        let newObject: BankingDocument;
+        try {
+            createdUser = (await this.userAuthService.singUp(createBankingDto.user, loggedUser)).user;
+            newObject = new this.bankingModel({
+                name: createBankingDto.banking.name,
+                status: createBankingDto.banking.status,
+                consortiumId: consortium._id,
+                ownerUserId: createdUser.id,
+                showPercentage: createBankingDto.banking.showPercentage,
+                creationUserId: loggedUser._id,
+                modificationUserId: loggedUser._id,
+            });
+            await newObject.save();
+        } catch (e) {
+            await this.userService.delete(createdUser._id);
+        }
         return newObject;
     }
 
     async update(updateBankingDto: UpdateBankingDto, loggedUser: UserDocument): Promise<Banking> {
-        //TODO handle transaction
-        const consortium = await this.getConsortiumOfUser(updateBankingDto.selectedConsortium, loggedUser);
+        const consortium = await this.consortiumService.getConsortiumForUser(updateBankingDto.selectedConsortium, loggedUser);
 
         //TODO UPDATE user
         //await this.userAuthService.updateUsername(updateBankingDto.ownerUserId, updateBankingDto.user.username, loggedUser);
@@ -96,60 +89,47 @@ export class BankingService {
         banking.name = updateBankingDto.name;
         banking.status = updateBankingDto.status;
         banking.showPercentage = updateBankingDto.showPercentage;
-        //Solo si es admin se modifica este parametro sino se pisa con el mismo
-        banking.consortiumId = consortium._id;
+        banking.consortiumId = (loggedUser.role === Role.admin) ? consortium._id : banking.consortiumId;
         banking.modificationUserId = loggedUser._id;
+        //TODO checkear que el modificatedAt cambie
         await banking.save();
         return banking;
     }
 
     async delete(id: string, loggedUser: UserDocument) {
         const banking = await this.bankingModel.findById(id).exec();
-        if(loggedUser.role === Role.consortium) {
-            const consortiums = await this.consortiumModel.find({ownerUserId: loggedUser._id}).exec();
-            if(consortiums.length === 0){
+        if (loggedUser.role === Role.consortium) {
+            const consortiums = await this.consortiumService.getFiltered('ownerUserId', loggedUser._id);
+            if (consortiums.length === 0) {
                 throw new BadRequestException();
             }
             const consortium = consortiums.pop();
-            if(consortium.id.toString() !== banking.consortiumId.toString()){
+            if (consortium._id.toString() !== banking.consortiumId.toString()) {
                 //Cant modify a bank that is not yours
                 throw new BadRequestException();
             }
         }
-
         await this.userAuthService.deleteUser(banking.ownerUserId);
         return this.bankingModel.findByIdAndRemove(id).exec();
     }
 
-    private async mapToUser(banking: BankingDto): Promise<BankingDto> {
+    private async mapBanking(banking: BankingDto): Promise<BankingDto> {
+        // we get the username of the assigned user
         let bankingUser = (await this.userService.getFiltered('_id', banking.ownerUserId)).pop();
+        let mappedBanking: BankingDto;
         if (bankingUser) {
-            banking.ownerUsername = bankingUser.username;
+            mappedBanking = {
+                _id: banking._id,
+                consortiumId: banking.consortiumId,
+                createdAt: banking.createdAt,
+                name: banking.name,
+                ownerUserId: banking.ownerUserId,
+                showPercentage: banking.showPercentage,
+                startOfOperation: banking.startOfOperation,
+                status: banking.status,
+                ownerUsername: bankingUser.username
+            };
         }
-        return banking;
-    }
-
-
-    private async getConsortiumOfUser(consortiumId: ObjectId, loggedUser: UserDocument): Promise<Consortium> {
-        let consortium: Consortium;
-        if(loggedUser.role === Role.consortium) {
-            //If is consortiums selects his consortium
-            const consortiums = await this.consortiumModel.find({ownerUserId: loggedUser._id}).exec();
-            if(consortiums.length === 0){
-                throw new BadRequestException();
-            }
-            consortium = consortiums.pop();
-            if(consortiumId && consortium._id.toString() !== consortiumId.toString()){
-                //Doesnt have permission to modify another consortium
-                throw new BadRequestException();
-            }
-        } else {
-            //If is admin
-            consortium = await this.consortiumModel.findOne({_id: consortiumId}).exec()
-            if(!consortium){
-                throw new BadRequestException();
-            }
-        }
-        return consortium
+        return mappedBanking;
     }
 }

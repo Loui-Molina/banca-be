@@ -9,7 +9,7 @@ import {PlayTypes} from "@database/datamodels/enums/play.types";
 // Porcentaje que se le paga a cada banca por cada jugada que vende
 export type BankingFeeLimitDocument = BankingFeeLimit & Document;
 
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class BankingFeeLimit implements DataObject {
     @Prop({
         type: String,
@@ -24,4 +24,4 @@ export class BankingFeeLimit implements DataObject {
     @Prop({ required: true }) modificationUserId: string;
 }
 
-export const BankingFeeLimitSchema = SchemaFactory.createForClass(BankingFeeLimit).set('timestamps', true);
+export const BankingFeeLimitSchema = SchemaFactory.createForClass(BankingFeeLimit);

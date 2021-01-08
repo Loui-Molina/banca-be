@@ -8,7 +8,7 @@ import {ApiProperty} from "@nestjs/swagger";
 
 export type PrizeLimitDocument = PrizeLimit & Document;
 
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 // Monto a pagar por cada unidad monetaria al momento de haber un ganador
 export class PrizeLimit implements DataObject {
     @ApiProperty({
@@ -59,4 +59,4 @@ export class PrizeLimit implements DataObject {
     @ApiProperty({required: false}) @Prop({required: true}) modificationUserId: string;
 }
 
-export const PrizeLimitSchema = SchemaFactory.createForClass(PrizeLimit).set('timestamps', true);
+export const PrizeLimitSchema = SchemaFactory.createForClass(PrizeLimit);

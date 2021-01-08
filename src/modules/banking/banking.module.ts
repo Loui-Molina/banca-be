@@ -10,7 +10,6 @@ import {Banking, BankingSchema} from "@database/datamodels/schemas/banking";
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{name: Consortium.name, schema: ConsortiumSchema}], 'banca'),
         MongooseModule.forFeature([{name: Banking.name, schema: BankingSchema}], 'banca'),
         UsersModule,
         AuthUserModule,

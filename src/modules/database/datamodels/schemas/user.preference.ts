@@ -6,7 +6,7 @@ import { Languages } from '@database/datamodels/enums/languages';
 
 export type UserPreferenceDocument = UserPreference & Document;
 
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class UserPreference implements DataObject {
     @ApiProperty()
     @Prop({
@@ -28,4 +28,4 @@ export class UserPreference implements DataObject {
     modificationUserId: string;
 }
 
-export const UserPreferenceSchema = SchemaFactory.createForClass(UserPreference).set('timestamps', true);
+export const UserPreferenceSchema = SchemaFactory.createForClass(UserPreference);

@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 import {ApiProperty} from "@nestjs/swagger";
 
 export type DrawDocument = Draw & Document;
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class Draw implements DataObject {
     // Los numeros que salieron en la loteria
     @ApiProperty() @Prop() first?: number;
@@ -21,4 +21,4 @@ export class Draw implements DataObject {
     @ApiProperty() @Prop({ required: true }) modificationUserId: string;
 }
 
-export const DrawSchema = SchemaFactory.createForClass(Draw).set('timestamps', true);
+export const DrawSchema = SchemaFactory.createForClass(Draw);

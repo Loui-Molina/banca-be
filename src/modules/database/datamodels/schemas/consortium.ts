@@ -10,7 +10,7 @@ import {ConsortiumLottery, ConsortiumLotterySchema} from "@database/datamodels/s
 
 export type ConsortiumDocument = Consortium & Document;
 
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class Consortium {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop({ type: [SupervisorSchema] }) supervisors?: Supervisor[];
@@ -37,15 +37,13 @@ export class Consortium {
     calculateBalance?: Function;
 }
 
-export const ConsortiumSchema = SchemaFactory.createForClass(Consortium)
-    .set('collection', 'consortium')
-    .set('timestamps', true);
+export const ConsortiumSchema = SchemaFactory.createForClass(Consortium);
 
 ConsortiumSchema.methods.calculateBalance = async function calculateBalance(): Promise<number> {
     let balance = 0;
     const transactions: Transaction[] = this.transactions;
-    for (let i = 0; i < transactions.length; i++) {
-        balance += transactions[i].amount;
-    }
+    transactions.forEach(item => {
+        balance += item.amount;
+    });
     return balance;
 };
