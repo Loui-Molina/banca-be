@@ -9,9 +9,10 @@ import { Consortium, ConsortiumDocument } from '@src/modules/database/datamodels
 import { Banking, BankingDocument } from '@src/modules/database/datamodels/schemas/banking';
 import { DashboardConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.consortium.dto';
 import { DashboardBankingDto } from '@src/modules/dashboard/dtos/dashboard.banking.dto';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import {User, UserDocument} from '@database/datamodels/schemas/user';
 import { Role } from '@database/datamodels/enums/role';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
+import {DashboardGraphBankingDto} from "@src/modules/dashboard/dtos/dashboard.graph.banking.dto";
 
 @Injectable()
 export class DashboardService {
@@ -104,5 +105,31 @@ export class DashboardService {
             });
         }
         return consortiumsDto;
+    }
+
+    async getGraphBankingStatistics(loggedUser: UserDocument): Promise<DashboardGraphBankingDto[]> {
+        const bankingsDto: DashboardGraphBankingDto[] = [];
+        let bankings: Array<BankingDocument> = [];
+        if (loggedUser.role === Role.consortium) {
+            //If is consortium
+            const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id }).exec();
+            if (consortiums.length === 0) {
+                throw new BadRequestException();
+            }
+            const consortium = consortiums.pop();
+            bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+        } else {
+            //If is admin
+            bankings = await this.bankingModel.find().exec();
+        }
+        for await (const banking of bankings) {
+            const balance = await banking.calculateBalance();
+            bankingsDto.push({
+                _id: banking._id,
+                name: banking.name,
+                value: balance,
+            });
+        }
+        return bankingsDto;
     }
 }

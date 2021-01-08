@@ -11,6 +11,7 @@ import { DashboardBankingDto } from '@src/modules/dashboard/dtos/dashboard.banki
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { UserDocument } from '@database/datamodels/schemas/user';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
+import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
 
 @ApiTags('dashboard')
 @Controller('dashboard')
@@ -43,7 +44,7 @@ export class DashboardController {
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardBankingDto,
     })
-    @Roles(Role.admin, Role.consortium)
+    //@Roles(Role.admin, Role.consortium)
     getBankingsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardBankingDto[]> {
         return this.dashboardService.getBankingsStatistics(loggedUser);
     }
@@ -56,5 +57,15 @@ export class DashboardController {
     @Roles(Role.admin)
     getGraphConsortiumStatistics(): Promise<DashboardGraphConsortiumDto[]> {
         return this.dashboardService.getGraphConsortiumStatistics();
+    }
+
+    @Get('getGraphBankingStatistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardGraphBankingDto,
+    })
+    //@Roles(Role.admin, Role.consortium)
+    getGraphBankingStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardGraphBankingDto[]> {
+        return this.dashboardService.getGraphBankingStatistics(loggedUser);
     }
 }
