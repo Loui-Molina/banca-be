@@ -5,7 +5,7 @@ import {Draw, DrawSchema} from "@src/modules/database/datamodels/schemas/draw";
 import {ApiProperty} from "@nestjs/swagger";
 
 export type ResultDocument = Result & Document;
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class Result implements DataObject {
     @ApiProperty() @Prop({ require: true }) date: Date;
     @ApiProperty() @Prop({ require: true, type: DrawSchema }) draw?: Draw;
@@ -16,4 +16,4 @@ export class Result implements DataObject {
     @ApiProperty() @Prop({ required: true }) modificationUserId: string;
 }
 
-export const ResultSchema = SchemaFactory.createForClass(Result).set('timestamps', true);
+export const ResultSchema = SchemaFactory.createForClass(Result);

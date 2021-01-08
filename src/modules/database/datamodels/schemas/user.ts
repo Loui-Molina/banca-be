@@ -8,7 +8,7 @@ import { Role } from '@database/datamodels/enums/role';
 
 export type UserDocument = User & Document;
 
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class User implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop() lastLogin?: Date;
@@ -36,7 +36,7 @@ export class User implements DataObject {
     validatePassword: Function;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User).set('collection', 'users').set('timestamps', true);
+export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.methods.validatePassword = async function validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

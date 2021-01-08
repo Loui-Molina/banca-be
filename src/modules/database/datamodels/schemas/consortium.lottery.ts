@@ -9,7 +9,7 @@ import * as mongoose from "mongoose";
 
 export type ConsortiumLotteryDocument = ConsortiumLottery & Document;
 
-@Schema({timestamps: true})
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class ConsortiumLottery implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) lotteryId?: ObjectId;

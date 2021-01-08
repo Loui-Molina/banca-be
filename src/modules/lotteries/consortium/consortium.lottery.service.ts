@@ -56,7 +56,7 @@ export class ConsortiumLotteryService {
     }
 
     async update(dto: ConsortiumUpdateLotteryDto, loggedUser: UserDocument): Promise<Lottery> {
-        const lottery = await this.get(dto._id);
+        const lottery:LotteryDocument = await this.get(dto._id);
         const consortium = (await this.consortiumModel.find({ownerUserId: loggedUser._id})).pop();
         if(!consortium){
             throw new BadRequestException();
@@ -73,7 +73,7 @@ export class ConsortiumLotteryService {
             item.modificationUserId = loggedUser._id;
         });
 
-        const consortiumLottery = new this.consortiumLotteryModel({
+        const consortiumLottery: ConsortiumLotteryDocument = new this.consortiumLotteryModel({
             lotteryId: lottery._id,
             bankingIds: dto.bankings,
             creationUserId: loggedUser._id,
@@ -90,7 +90,7 @@ export class ConsortiumLotteryService {
         return lottery;
     }
 
-    async get(id: any): Promise<Lottery> {
-        return await this.lotteryModel.findById(id).exec();
+    async get(id: any) {
+        return this.lotteryModel.findById(id).exec();
     }
 }

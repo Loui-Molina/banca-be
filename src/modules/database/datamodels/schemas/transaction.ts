@@ -7,7 +7,7 @@ import * as mongoose from "mongoose";
 import {TransactionObjects} from "@database/datamodels/enums/transaction.objects";
 
 export type TransactionDocument = Transaction & Document;
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class Transaction implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() createdAt?: Date;
@@ -30,4 +30,4 @@ export class Transaction implements DataObject {
     @ApiProperty() @Prop({ required: true }) modificationUserId: string;
 }
 
-export const TransactionSchema = SchemaFactory.createForClass(Transaction).set('timestamps', true);
+export const TransactionSchema = SchemaFactory.createForClass(Transaction);

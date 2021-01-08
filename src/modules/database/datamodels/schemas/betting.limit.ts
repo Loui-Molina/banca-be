@@ -12,7 +12,7 @@ import {ApiProperty} from "@nestjs/swagger";
 
 export type BettingLimitDocument = BettingLimit & Document;
 
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
 export class BettingLimit implements DataObject {
     @ApiProperty({
         required: true,
@@ -33,4 +33,4 @@ export class BettingLimit implements DataObject {
     @ApiProperty({required: false}) @Prop({required: true}) modificationUserId: string;
 }
 
-export const BettingLimitSchema = SchemaFactory.createForClass(BettingLimit).set('timestamps', true);
+export const BettingLimitSchema = SchemaFactory.createForClass(BettingLimit);
