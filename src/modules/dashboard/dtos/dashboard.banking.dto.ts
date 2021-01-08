@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {ObjectId} from "mongoose";
+import { ObjectId } from 'mongoose';
 
 export class DashboardBankingDto {
     @ApiProperty() _id: ObjectId;

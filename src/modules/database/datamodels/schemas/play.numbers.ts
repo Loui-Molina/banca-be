@@ -5,7 +5,7 @@ import { Document } from 'mongoose';
 
 export type PlayNumbersDocument = PlayNumbers & Document;
 
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class PlayNumbers implements DataObject {
     @Prop({ min: 0, max: 99 }) first?: number;
     @Prop({ min: 0, max: 99 }) second?: number;

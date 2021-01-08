@@ -1,37 +1,37 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model, ObjectId} from 'mongoose';
-import {ConsortiumDto} from '@src/modules/consortiums/dtos/consortium.dto';
-import {Consortium, ConsortiumDocument} from "@src/modules/database/datamodels/schemas/consortium";
-import {User, UserDocument} from "@database/datamodels/schemas/user";
-import {AuthUserService} from "@src/modules/auth.user/auth.user..service";
-import {Role} from "@database/datamodels/enums/role";
-import {CreateConsortiumDto} from "@src/modules/consortiums/dtos/create.consortium.dto";
-import {UserService} from "@users/user.service";
-import {Banking, BankingDocument} from "@database/datamodels/schemas/banking";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, ObjectId } from 'mongoose';
+import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
+import { Consortium, ConsortiumDocument } from '@src/modules/database/datamodels/schemas/consortium';
+import { User, UserDocument } from '@database/datamodels/schemas/user';
+import { AuthUserService } from '@src/modules/auth.user/auth.user..service';
+import { Role } from '@database/datamodels/enums/role';
+import { CreateConsortiumDto } from '@src/modules/consortiums/dtos/create.consortium.dto';
+import { UserService } from '@users/user.service';
+import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
 
 @Injectable()
 export class ConsortiumService {
-    constructor(@InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-                @InjectModel(User.name) private userModel: Model<UserDocument>,
-                @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
-                private userAuthService: AuthUserService,
-                private userService: UserService,
-    ) {
-    }
+    constructor(
+        @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
+        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
+        private userAuthService: AuthUserService,
+        private userService: UserService,
+    ) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {
         let consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find({}).exec();
-        return Promise.all(consortiums.map(consortium => this.mapToUser(consortium)));
+        return Promise.all(consortiums.map((consortium) => this.mapToUser(consortium)));
     }
 
     async getFiltered(q: string, value: any): Promise<Array<Consortium>> {
-        return this.consortiumModel.find({[q]: value}).exec();
+        return this.consortiumModel.find({ [q]: value }).exec();
     }
 
     async create(dto: CreateConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
         //CREATE user
-        dto.user.role = Role.consortium
+        dto.user.role = Role.consortium;
         const createdUser = (await this.userAuthService.singUp(dto.user, loggedUser)).user;
         const newObject = new this.consortiumModel({
             name: dto.name,
@@ -60,12 +60,12 @@ export class ConsortiumService {
         //DELETE user
         const consortium = await this.get(id);
         await this.userAuthService.deleteUser(consortium.ownerUserId);
-        const bankings = await this.bankingModel.find({consortiumId: consortium._id}).exec();
-        bankings.map(banking => {
+        const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+        bankings.map((banking) => {
             this.userAuthService.deleteUser(banking.ownerUserId);
-            this.bankingModel.findByIdAndRemove({id: banking._id}).exec();
+            this.bankingModel.findByIdAndRemove({ id: banking._id }).exec();
         });
-        bankings.map(banking => {
+        bankings.map((banking) => {
             this.bankingModel.findByIdAndRemove(banking._id).exec();
         });
         return this.consortiumModel.findByIdAndRemove(id).exec();
@@ -77,7 +77,7 @@ export class ConsortiumService {
 
     async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
         let foundUser = (await this.userService.getFiltered('_id', consortium.ownerUserId)).pop();
-        const bankings = await this.bankingModel.find({consortiumId: consortium._id}).exec();
+        const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         return {
             _id: consortium._id,
             name: consortium.name,
@@ -91,7 +91,6 @@ export class ConsortiumService {
         } as ConsortiumDto;
     }
 
-
     // Returns the consortium if the user can modify it
     async getConsortiumForUser(consortiumId: ObjectId, loggedUser: UserDocument): Promise<Consortium> {
         let consortium: Consortium;
@@ -102,9 +101,7 @@ export class ConsortiumService {
                 throw new BadRequestException();
             }
             consortium = consortiums.pop();
-            if (consortium &&
-                consortiumId &&
-                consortium._id.toString() !== consortiumId.toString()) {
+            if (consortium && consortiumId && consortium._id.toString() !== consortiumId.toString()) {
                 //Doesnt have permission to modify another consortium
                 throw new BadRequestException();
             }
@@ -115,7 +112,6 @@ export class ConsortiumService {
                 throw new BadRequestException();
             }
         }
-        return consortium
+        return consortium;
     }
-
 }

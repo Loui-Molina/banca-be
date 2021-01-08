@@ -1,15 +1,15 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {ConstApp} from "@utils/const.app";
-import {Lottery} from "@database/datamodels/schemas/lottery";
+import { ConstApp } from '@utils/const.app';
+import { Lottery } from '@database/datamodels/schemas/lottery';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { UserDocument } from '@database/datamodels/schemas/user';
-import {ConsortiumLotteryService} from "@src/modules/lotteries/consortium/consortium.lottery.service";
-import {ConsortiumLotteryDto} from "@src/modules/lotteries/consortium/dtos/consortium.lottery.dto";
-import {Roles} from "@src/common/decorators/roles.decorator";
-import {Role} from "@database/datamodels/enums/role";
-import {ConsortiumUpdateLotteryDto} from "@src/modules/lotteries/consortium/dtos/consortium.update.lottery.dto";
+import { ConsortiumLotteryService } from '@src/modules/lotteries/consortium/consortium.lottery.service';
+import { ConsortiumLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.lottery.dto';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '@database/datamodels/enums/role';
+import { ConsortiumUpdateLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.update.lottery.dto';
 
 @ApiTags('consortium/lotteries')
 @Controller('consortium/lotteries')
@@ -23,7 +23,7 @@ export class ConsortiumLotteryController {
         type: ConsortiumLotteryDto,
     })
     @Roles(Role.consortium)
-    getAll(@AuthUser() loggedUser : UserDocument): Promise<Array<ConsortiumLotteryDto>> {
+    getAll(@AuthUser() loggedUser: UserDocument): Promise<Array<ConsortiumLotteryDto>> {
         return this.lotteryService.getAll(loggedUser);
     }
 
@@ -33,7 +33,7 @@ export class ConsortiumLotteryController {
         type: ConsortiumUpdateLotteryDto,
     })
     @Roles(Role.consortium)
-    update(@Body() dto: ConsortiumUpdateLotteryDto, @AuthUser() loggedUser : UserDocument): Promise<Lottery> {
+    update(@Body() dto: ConsortiumUpdateLotteryDto, @AuthUser() loggedUser: UserDocument): Promise<Lottery> {
         return this.lotteryService.update(dto, loggedUser);
     }
 

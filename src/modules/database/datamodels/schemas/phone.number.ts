@@ -3,7 +3,7 @@ import { DataObject } from '@src/modules/database/datamodels/schemas/data.object
 import { Document } from 'mongoose';
 
 export type PhoneNumberDocument = PhoneNumber & Document;
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class PhoneNumber implements DataObject {
     @Prop() prefix?: number;
     @Prop() regionCode?: number;

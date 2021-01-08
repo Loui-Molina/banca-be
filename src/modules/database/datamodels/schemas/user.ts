@@ -8,7 +8,7 @@ import { Role } from '@database/datamodels/enums/role';
 
 export type UserDocument = User & Document;
 
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class User implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop() lastLogin?: Date;

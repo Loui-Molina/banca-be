@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 
 export type BankingPreferenceDocument = BankingPreference & Document;
 
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class BankingPreference implements DataObject {
     @Prop() logo?: string;
     @Prop() primaryColor?: string;

@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DashboardDiagramDto } from '@src/modules/dashboard/dtos/dashboard.dto';
@@ -7,11 +7,11 @@ import { DashboardDiagramLinkDto } from '@src/modules/dashboard/dtos/dashboard.l
 import { DashboardDiagramClusterDto } from '@src/modules/dashboard/dtos/dashboard.cluster.dto';
 import { Consortium, ConsortiumDocument } from '@src/modules/database/datamodels/schemas/consortium';
 import { Banking, BankingDocument } from '@src/modules/database/datamodels/schemas/banking';
-import {DashboardConsortiumDto} from "@src/modules/dashboard/dtos/dashboard.consortium.dto";
-import {DashboardBankingDto} from "@src/modules/dashboard/dtos/dashboard.banking.dto";
-import {UserDocument} from "@database/datamodels/schemas/user";
-import {Role} from "@database/datamodels/enums/role";
-import {DashboardGraphConsortiumDto} from "@src/modules/dashboard/dtos/dashboard.graph.consortium.dto";
+import { DashboardConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.consortium.dto';
+import { DashboardBankingDto } from '@src/modules/dashboard/dtos/dashboard.banking.dto';
+import { UserDocument } from '@database/datamodels/schemas/user';
+import { Role } from '@database/datamodels/enums/role';
+import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
 
 @Injectable()
 export class DashboardService {
@@ -30,10 +30,16 @@ export class DashboardService {
             res.nodes.push(new DashboardDiagramNodeDto(consortium._id.toString(), consortium.name));
             consortiumIds.push(consortium._id.toString());
             bankings.forEach((banking: BankingDocument, index2) => {
-                if(banking.consortiumId.toString() === consortium._id.toString()){
+                if (banking.consortiumId.toString() === consortium._id.toString()) {
                     bankingIds.push(banking._id.toString());
                     res.nodes.push(new DashboardDiagramNodeDto(banking._id.toString(), banking.name));
-                    res.links.push(new DashboardDiagramLinkDto('link' + (index+1).toString() + (index2+1).toString(), consortium._id.toString(), banking._id.toString()));
+                    res.links.push(
+                        new DashboardDiagramLinkDto(
+                            'link' + (index + 1).toString() + (index2 + 1).toString(),
+                            consortium._id.toString(),
+                            banking._id.toString(),
+                        ),
+                    );
                 }
             });
         });
@@ -49,12 +55,12 @@ export class DashboardService {
     async getConsortiumsStatistics(): Promise<DashboardConsortiumDto[]> {
         const consortiumsDto: DashboardConsortiumDto[] = [];
         const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find().exec();
-        for await (const consortium of consortiums){
+        for await (const consortium of consortiums) {
             const balance = await consortium.calculateBalance();
             consortiumsDto.push({
                 _id: consortium._id,
                 name: consortium.name,
-                balance
+                balance,
             });
         }
         return consortiumsDto;
@@ -62,40 +68,39 @@ export class DashboardService {
 
     async getBankingsStatistics(loggedUser: UserDocument): Promise<DashboardBankingDto[]> {
         let bankings: Array<BankingDocument> = [];
-        if(loggedUser.role === Role.consortium) {
+        if (loggedUser.role === Role.consortium) {
             //If is consortium
-            const consortiums = await this.consortiumModel.find({ownerUserId: loggedUser._id}).exec();
-            if(consortiums.length === 0){
+            const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id }).exec();
+            if (consortiums.length === 0) {
                 throw new BadRequestException();
             }
             const consortium = consortiums.pop();
-            bankings = await this.bankingModel.find({consortiumId:consortium._id}).exec();
+            bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         } else {
             //If is admin
             bankings = await this.bankingModel.find().exec();
         }
         const bankingsDto: DashboardBankingDto[] = [];
-        for await (const banking of bankings){
+        for await (const banking of bankings) {
             const balance = await banking.calculateBalance();
             bankingsDto.push({
                 _id: banking._id,
                 name: banking.name,
-                balance
-            })
+                balance,
+            });
         }
         return bankingsDto;
     }
 
-
     async getGraphConsortiumStatistics(): Promise<DashboardGraphConsortiumDto[]> {
         const consortiumsDto: DashboardGraphConsortiumDto[] = [];
         const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find().exec();
-        for await (const consortium of consortiums){
+        for await (const consortium of consortiums) {
             const balance = await consortium.calculateBalance();
             consortiumsDto.push({
                 _id: consortium._id,
                 name: consortium.name,
-                value: balance
+                value: balance,
             });
         }
         return consortiumsDto;

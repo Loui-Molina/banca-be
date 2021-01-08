@@ -9,9 +9,7 @@ import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
-import {AuthCredentialsDto} from "@auth/dtos/auth.credentials.dto";
-
-
+import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 
 @Injectable()
 export class AuthService {

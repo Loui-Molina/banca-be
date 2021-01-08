@@ -6,7 +6,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type ConsortiumPreferenceDocument = ConsortiumPreference & Document;
 
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class ConsortiumPreference implements DataObject {
     @Prop({ type: [PlayLimitSchema] }) limits?: PlayLimit[];
     @Prop({ type: [BlockedNumberSchema] }) blockedNumbers?: BlockedNumber[];

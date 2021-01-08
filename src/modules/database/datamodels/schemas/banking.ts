@@ -1,17 +1,20 @@
-import {DataObject} from '@src/modules/database/datamodels/schemas/data.object';
-import {BankingPreference, BankingPreferenceSchema} from '@src/modules/database/datamodels/schemas/banking.preference';
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
+import {
+    BankingPreference,
+    BankingPreferenceSchema,
+} from '@src/modules/database/datamodels/schemas/banking.preference';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import {Document, ObjectId} from 'mongoose';
-import {Transaction, TransactionSchema} from "@src/modules/database/datamodels/schemas/transaction";
-import {Bet, BetSchema} from "@src/modules/database/datamodels/schemas/bet";
-import {Lottery, LotterySchema} from "@src/modules/database/datamodels/schemas/lottery";
-import {ApiProperty} from "@nestjs/swagger";
-import {BankingFeeLimit, BankingFeeLimitSchema} from "@database/datamodels/schemas/banking.fee.limit";
+import { Document, ObjectId } from 'mongoose';
+import { Transaction, TransactionSchema } from '@src/modules/database/datamodels/schemas/transaction';
+import { Bet, BetSchema } from '@src/modules/database/datamodels/schemas/bet';
+import { Lottery, LotterySchema } from '@src/modules/database/datamodels/schemas/lottery';
+import { ApiProperty } from '@nestjs/swagger';
+import { BankingFeeLimit, BankingFeeLimitSchema } from '@database/datamodels/schemas/banking.fee.limit';
 
 export type BankingDocument = Banking & Document;
 
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Banking implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) consortiumId: ObjectId;
@@ -25,7 +28,6 @@ export class Banking implements DataObject {
     @Prop({ required: true, default: 0 }) balance?: number;
     @ApiProperty() @Prop() startOfOperation?: Date;
     @ApiProperty() @Prop({ required: true, default: false }) status?: boolean;
-
 
     // Que porcentaje se le paga a la banca por cada jugada
     @ApiProperty() @Prop({ type: [BankingFeeLimitSchema] }) bankingFeeLimits?: BankingFeeLimit[];
@@ -47,7 +49,7 @@ export const BankingSchema = SchemaFactory.createForClass(Banking);
 BankingSchema.methods.calculateBalance = async function calculateBalance(): Promise<number> {
     let balance = 0;
     const transactions: Transaction[] = this.transactions;
-    transactions.forEach(item => {
+    transactions.forEach((item) => {
         balance += item.amount;
     });
     return balance;

@@ -1,15 +1,15 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {AdminLotteryService} from "@src/modules/lotteries/admin/admin.lottery.service";
-import {AdminLotteryReqDto} from "@src/modules/lotteries/admin/dtos/admin.lottery.req.dto";
-import {ConstApp} from "@utils/const.app";
-import {Lottery} from "@database/datamodels/schemas/lottery";
+import { AdminLotteryService } from '@src/modules/lotteries/admin/admin.lottery.service';
+import { AdminLotteryReqDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.req.dto';
+import { ConstApp } from '@utils/const.app';
+import { Lottery } from '@database/datamodels/schemas/lottery';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { UserDocument } from '@database/datamodels/schemas/user';
-import {Roles} from "@src/common/decorators/roles.decorator";
-import {Role} from "@database/datamodels/enums/role";
-import {AdminLotteryResDto} from "@src/modules/lotteries/admin/dtos/admin.lottery.res.dto";
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '@database/datamodels/enums/role';
+import { AdminLotteryResDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.res.dto';
 
 @ApiTags('admin/lotteries')
 @Controller('admin/lotteries')
@@ -43,7 +43,7 @@ export class AdminLotteryController {
         type: AdminLotteryResDto,
     })
     @Roles(Role.admin)
-    create(@Body() dto: AdminLotteryReqDto, @AuthUser() loggedUser : UserDocument): Promise<AdminLotteryResDto> {
+    create(@Body() dto: AdminLotteryReqDto, @AuthUser() loggedUser: UserDocument): Promise<AdminLotteryResDto> {
         return this.lotteryService.create(dto, loggedUser);
     }
 
@@ -53,7 +53,7 @@ export class AdminLotteryController {
         type: AdminLotteryResDto,
     })
     @Roles(Role.admin)
-    update(@Body() dto: AdminLotteryReqDto, @AuthUser() loggedUser : UserDocument): Promise<AdminLotteryResDto> {
+    update(@Body() dto: AdminLotteryReqDto, @AuthUser() loggedUser: UserDocument): Promise<AdminLotteryResDto> {
         return this.lotteryService.update(dto, loggedUser);
     }
 

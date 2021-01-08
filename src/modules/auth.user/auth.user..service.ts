@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {  Model, ObjectId} from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
@@ -21,8 +21,8 @@ export class AuthUserService {
         user.salt = await bcrypt.genSalt();
         user.password = await this.hashPassword(password, user.salt);
         user.role = role;
-        user.creationUserId = loggedUser?loggedUser.id: '1';
-        user.modificationUserId = loggedUser?loggedUser.id:'1';
+        user.creationUserId = loggedUser ? loggedUser.id : '1';
+        user.modificationUserId = loggedUser ? loggedUser.id : '1';
         try {
             userCreated.user = await user.save();
         } catch (error) {
@@ -37,7 +37,7 @@ export class AuthUserService {
         return userCreated;
     }
 
-    async updateUsername(id: ObjectId, username: string, loggedUser: UserDocument){
+    async updateUsername(id: ObjectId, username: string, loggedUser: UserDocument) {
         const user = await this.userModel.findById(id).exec();
         user.username = username;
         user.modificationUserId = loggedUser._id;
@@ -45,7 +45,7 @@ export class AuthUserService {
         return user;
     }
 
-    async deleteUser(id: ObjectId){
+    async deleteUser(id: ObjectId) {
         const user = await this.userModel.findById(id).exec();
         await user.delete();
         return user;

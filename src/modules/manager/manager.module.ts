@@ -6,11 +6,11 @@ import { DatabaseModule } from '@database/database.module';
 import { ResultsModule } from '@src/modules/results/results.module';
 import { TransactionModule } from '@src/modules/transactions/transaction.module';
 import { UsersModule } from '@users/users.module';
-import {AdminLotteryModule} from "@src/modules/lotteries/admin/admin.lottery.module";
-import {ConsortiumLotteryModule} from "@src/modules/lotteries/consortium/consortium.lottery.module";
+import { AdminLotteryModule } from '@src/modules/lotteries/admin/admin.lottery.module';
+import { ConsortiumLotteryModule } from '@src/modules/lotteries/consortium/consortium.lottery.module';
 
 @Module({
-    imports:[   
+    imports: [
         UsersModule,
         DatabaseModule,
         ResultsModule,
@@ -19,11 +19,11 @@ import {ConsortiumLotteryModule} from "@src/modules/lotteries/consortium/consort
         DashboardModule,
         BankingModule,
         AdminLotteryModule,
-        ConsortiumLotteryModule
+        ConsortiumLotteryModule,
     ],
-    controllers:[],
-    providers:[],
-    exports:[
+    controllers: [],
+    providers: [],
+    exports: [
         UsersModule,
         DatabaseModule,
         ResultsModule,
@@ -32,8 +32,7 @@ import {ConsortiumLotteryModule} from "@src/modules/lotteries/consortium/consort
         DashboardModule,
         BankingModule,
         AdminLotteryModule,
-        ConsortiumLotteryModule
-    ]
+        ConsortiumLotteryModule,
+    ],
 })
-export class ManagerModule{  
-}
+export class ManagerModule {}

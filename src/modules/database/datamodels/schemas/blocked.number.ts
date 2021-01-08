@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type BlockedNumberDocument = BlockedNumber & Document;
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class BlockedNumber implements DataObject {
     @Prop({ required: true }) number?: number;
     @Prop() position?: number;

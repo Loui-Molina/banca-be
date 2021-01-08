@@ -4,7 +4,7 @@ import { Play, PlaySchema } from '@src/modules/database/datamodels/schemas/play'
 import { Document } from 'mongoose';
 
 export type BetDocument = Bet & Document;
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Bet implements DataObject {
     @Prop({ immutable: true, type: [PlaySchema] }) plays: Play[];
     @Prop({ immutable: true }) date: Date;

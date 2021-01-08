@@ -3,14 +3,13 @@ import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@n
 import { AuthGuard } from '@nestjs/passport';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
-import {AuthUser} from "@src/common/decorators/auth.user.decorator";
-import {UserDocument} from "@database/datamodels/schemas/user";
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { UserDocument } from '@database/datamodels/schemas/user';
 import { ConstApp } from '@utils/const.app';
 import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
-import { CreateConsortiumDto } from "@src/modules/consortiums/dtos/create.consortium.dto";
-import {Roles} from "@src/common/decorators/roles.decorator";
-import {Role} from "@database/datamodels/enums/role";
-
+import { CreateConsortiumDto } from '@src/modules/consortiums/dtos/create.consortium.dto';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '@database/datamodels/enums/role';
 
 @ApiTags('consortiums')
 @Controller('consortiums')
@@ -44,7 +43,7 @@ export class ConsortiumController {
         type: Consortium,
     })
     @Roles(Role.admin)
-    create(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
+    create(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser: UserDocument): Promise<Consortium> {
         return this.consortiumService.create(dto, loggedUser);
     }
 
@@ -54,7 +53,7 @@ export class ConsortiumController {
         type: Consortium,
     })
     @Roles(Role.admin)
-    update(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser : UserDocument): Promise<Consortium> {
+    update(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser: UserDocument): Promise<Consortium> {
         return this.consortiumService.update(dto, loggedUser);
     }
 

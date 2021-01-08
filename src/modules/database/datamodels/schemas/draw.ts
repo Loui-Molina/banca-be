@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { Document } from 'mongoose';
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export type DrawDocument = Draw & Document;
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Draw implements DataObject {
     // Los numeros que salieron en la loteria
     @ApiProperty() @Prop() first?: number;

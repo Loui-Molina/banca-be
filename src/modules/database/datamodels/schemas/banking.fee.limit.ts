@@ -4,12 +4,12 @@ import { UsLotteryPrizes } from '@src/modules/database/datamodels/enums/us.lotte
 import { BrasilPrizes } from '@src/modules/database/datamodels/enums/brasil.prizes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import {PlayTypes} from "@database/datamodels/enums/play.types";
+import { PlayTypes } from '@database/datamodels/enums/play.types';
 
 // Porcentaje que se le paga a cada banca por cada jugada que vende
 export type BankingFeeLimitDocument = BankingFeeLimit & Document;
 
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class BankingFeeLimit implements DataObject {
     @Prop({
         type: String,

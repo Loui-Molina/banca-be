@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import {Prop} from "@nestjs/mongoose";
-import {Banking, BankingSchema} from "@database/datamodels/schemas/banking";
+import { Prop } from '@nestjs/mongoose';
+import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 
 export class ConsortiumDto {
     @ApiProperty() ownerName: string;

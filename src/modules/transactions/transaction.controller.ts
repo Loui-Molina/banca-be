@@ -3,13 +3,13 @@ import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@n
 import { AuthGuard } from '@nestjs/passport';
 import { TransactionService } from '@src/modules/transactions/transaction.service';
 import { CreateTransactionDto } from '@src/modules/transactions/dtos/create.transaction.dto';
-import {ConstApp} from "@utils/const.app";
-import {Transaction} from "@src/modules/database/datamodels/schemas/transaction";
-import {AuthUser} from "@src/common/decorators/auth.user.decorator";
-import {UserDocument} from "@database/datamodels/schemas/user";
-import {TransactionDto} from "@src/modules/transactions/dtos/transaction.dto";
-import {Roles} from "@src/common/decorators/roles.decorator";
-import {Role} from "@database/datamodels/enums/role";
+import { ConstApp } from '@utils/const.app';
+import { Transaction } from '@src/modules/database/datamodels/schemas/transaction';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { UserDocument } from '@database/datamodels/schemas/user';
+import { TransactionDto } from '@src/modules/transactions/dtos/transaction.dto';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '@database/datamodels/enums/role';
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -43,7 +43,7 @@ export class TransactionController {
         type: Transaction,
     })
     @Roles(Role.admin)
-    create(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser : UserDocument): Promise<Transaction> {
+    create(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser: UserDocument): Promise<Transaction> {
         return this.transactionService.create(dto, loggedUser);
     }
 

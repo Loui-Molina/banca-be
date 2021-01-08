@@ -1,23 +1,22 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model} from 'mongoose';
-import {CreateTransactionDto} from '@src/modules/transactions/dtos/create.transaction.dto';
-import {Transaction, TransactionDocument} from "@src/modules/database/datamodels/schemas/transaction";
-import {UserDocument} from "@database/datamodels/schemas/user";
-import {Consortium, ConsortiumDocument} from "@database/datamodels/schemas/consortium";
-import {Banking, BankingDocument} from "@database/datamodels/schemas/banking";
-import {TransactionDto} from "@src/modules/transactions/dtos/transaction.dto";
-import {TransactionObjects} from "@database/datamodels/enums/transaction.objects";
-import {TransactionType} from "@database/datamodels/enums/transaction.type";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CreateTransactionDto } from '@src/modules/transactions/dtos/create.transaction.dto';
+import { Transaction, TransactionDocument } from '@src/modules/database/datamodels/schemas/transaction';
+import { UserDocument } from '@database/datamodels/schemas/user';
+import { TransactionType } from '@database/datamodels/enums/transaction.type';
+import { Consortium, ConsortiumDocument } from '@database/datamodels/schemas/consortium';
+import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
+import { TransactionDto } from '@src/modules/transactions/dtos/transaction.dto';
+import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 
 @Injectable()
 export class TransactionService {
     constructor(
         @InjectModel(Transaction.name) private transactionModel: Model<TransactionDocument>,
         @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-        @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>
-    ) {
-    }
+        @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
+    ) {}
 
     async getAll(): Promise<Array<TransactionDto>> {
         const consortiums: Consortium[] = await this.consortiumModel.find().exec();
@@ -31,12 +30,16 @@ export class TransactionService {
                     case transaction.originId.toString():
                         //Consorcio es origen
                         originName = consortium.name;
-                        destinationName = bankings.filter(banking => banking._id.toString() === transaction.destinationId.toString()).pop().name;
+                        destinationName = bankings
+                            .filter((banking) => banking._id.toString() === transaction.destinationId.toString())
+                            .pop().name;
                         break;
                     case transaction.destinationId.toString():
                         //Consorcio es destino
                         destinationName = consortium.name;
-                        originName = bankings.filter(banking => banking._id.toString() === transaction.originId.toString()).pop().name;
+                        originName = bankings
+                            .filter((banking) => banking._id.toString() === transaction.originId.toString())
+                            .pop().name;
                         break;
                 }
                 transactionsDto.push({
@@ -53,7 +56,7 @@ export class TransactionService {
                     destinationName: destinationName,
                     createdAt: transaction.createdAt,
                 });
-            })
+            });
         });
         bankings.map((banking: Banking) => {
             banking.transactions.map((transaction) => {
@@ -63,12 +66,16 @@ export class TransactionService {
                     case transaction.originId.toString():
                         //Consorcio es origen
                         originName = banking.name;
-                        destinationName = consortiums.filter(consortium => consortium._id.toString() === transaction.destinationId.toString()).pop().name;
+                        destinationName = consortiums
+                            .filter((consortium) => consortium._id.toString() === transaction.destinationId.toString())
+                            .pop().name;
                         break;
                     case transaction.destinationId.toString():
                         //Consorcio es destino
                         destinationName = banking.name;
-                        originName = consortiums.filter(consortium => consortium._id.toString() === transaction.originId.toString()).pop().name;
+                        originName = consortiums
+                            .filter((consortium) => consortium._id.toString() === transaction.originId.toString())
+                            .pop().name;
                         break;
                 }
                 transactionsDto.push({
@@ -85,9 +92,9 @@ export class TransactionService {
                     destinationName: destinationName,
                     createdAt: transaction.createdAt,
                 });
-            })
+            });
         });
-        transactionsDto.sort(function(a,b){
+        transactionsDto.sort(function (a, b) {
             // @ts-ignore
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
@@ -95,7 +102,7 @@ export class TransactionService {
     }
 
     async getFiltered(q: string, value: any): Promise<Array<Transaction>> {
-        return this.transactionModel.find({[q]: value}).exec();
+        return this.transactionModel.find({ [q]: value }).exec();
     }
 
     async create(dto: CreateTransactionDto, loggedUser: UserDocument): Promise<Transaction> {
@@ -128,7 +135,7 @@ export class TransactionService {
             creationUserId: loggedUser._id,
             modificationUserId: loggedUser._id,
             lastBalance: originBalance,
-            actualBalance: originBalance + (dto.amount * -1)
+            actualBalance: originBalance + dto.amount * -1,
         });
         const transactionDestination = new this.transactionModel({
             type: TransactionType.deposit,
@@ -140,7 +147,7 @@ export class TransactionService {
             creationUserId: loggedUser._id,
             modificationUserId: loggedUser._id,
             lastBalance: destinationBalance,
-            actualBalance: destinationBalance + dto.amount
+            actualBalance: destinationBalance + dto.amount,
         });
         originObject.transactions.push(transactionOrigin);
         destinationObject.transactions.push(transactionDestination);

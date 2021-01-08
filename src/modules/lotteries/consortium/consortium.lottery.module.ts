@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import {LotteryTime, LotteryTimeSchema} from "@database/datamodels/schemas/lottery.time";
-import {Lottery, LotterySchema} from "@database/datamodels/schemas/lottery";
-import {Result, ResultSchema } from '@database/datamodels/schemas/result';
+import { LotteryTime, LotteryTimeSchema } from '@database/datamodels/schemas/lottery.time';
+import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
+import { Result, ResultSchema } from '@database/datamodels/schemas/result';
 import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
-import {ConsortiumLotteryService} from "@src/modules/lotteries/consortium/consortium.lottery.service";
-import {ConsortiumLotteryController} from "@src/modules/lotteries/consortium/consortium.lottery.controller";
-import {ConsortiumLottery, ConsortiumLotterySchema} from "@database/datamodels/schemas/consortium.lottery";
-import {Consortium, ConsortiumSchema} from "@database/datamodels/schemas/consortium";
+import { ConsortiumLotteryService } from '@src/modules/lotteries/consortium/consortium.lottery.service';
+import { ConsortiumLotteryController } from '@src/modules/lotteries/consortium/consortium.lottery.controller';
+import { ConsortiumLottery, ConsortiumLotterySchema } from '@database/datamodels/schemas/consortium.lottery';
+import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 
 @Module({
     imports: [

@@ -6,7 +6,7 @@ import { Languages } from '@database/datamodels/enums/languages';
 
 export type UserPreferenceDocument = UserPreference & Document;
 
-@Schema({ timestamps: true, optimisticConcurrency: true,useNestedStrict: true, strict: true })
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class UserPreference implements DataObject {
     @ApiProperty()
     @Prop({

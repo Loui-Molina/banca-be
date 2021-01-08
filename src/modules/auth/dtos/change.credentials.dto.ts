@@ -21,6 +21,6 @@ export class ChangeCredentialsDto {
     @IsString()
     @MinLength(8)
     @MaxLength(35)
-        // @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: ConstApp.PASSWORD_MESSAGE })
+    // @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: ConstApp.PASSWORD_MESSAGE })
     newPassword: string;
 }
