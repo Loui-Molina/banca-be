@@ -13,7 +13,7 @@ import { User, UserDocument } from '@database/datamodels/schemas/user';
 import { Role } from '@database/datamodels/enums/role';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
 import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
-import {DashboardWidgetsDto} from "@src/modules/dashboard/dtos/dashboard.widgets.dto";
+import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
 
 @Injectable()
 export class DashboardService {
@@ -192,5 +192,4 @@ export class DashboardService {
         }
         return bankingsDto;
     }
-
 }

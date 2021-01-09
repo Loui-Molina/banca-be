@@ -10,10 +10,11 @@ import { UserDocument } from '@database/datamodels/schemas/user';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { AdminLotteryResDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.res.dto';
+import { RolesGuard } from '@auth/guards/roles.guard';
 
 @ApiTags('admin/lotteries')
 @Controller('admin/lotteries')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RolesGuard)
 export class AdminLotteryController {
     constructor(private readonly lotteryService: AdminLotteryService) {}
 

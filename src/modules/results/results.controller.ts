@@ -10,10 +10,11 @@ import { ResultDto } from '@src/modules/results/dtos/result.dto';
 import { AddResultDto } from '@src/modules/results/dtos/add.result.dto';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
+import { RolesGuard } from '@auth/guards/roles.guard';
 
 @ApiTags('results')
 @Controller('results')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RolesGuard)
 export class ResultsController {
     constructor(private readonly resultService: ResultsService) {}
 
@@ -22,6 +23,7 @@ export class ResultsController {
         description: ConstApp.DEFAULT_GET_OK,
         type: ResultDto,
     })
+    @Roles(Role.admin, Role.consortium, Role.banker)
     getAll(): Promise<Array<ResultDto>> {
         return this.resultService.getAll();
     }
@@ -41,6 +43,7 @@ export class ResultsController {
         description: ConstApp.DEFAULT_GET_OK,
         type: Result,
     })
+    @Roles(Role.admin, Role.consortium, Role.banker)
     async get(@Param('id') id: string): Promise<Result> {
         return await this.resultService.get(id);
     }

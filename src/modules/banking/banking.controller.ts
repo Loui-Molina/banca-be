@@ -11,10 +11,11 @@ import { UpdateBankingDto } from '@src/modules/banking/dto/update.banking.dto';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
+import { RolesGuard } from '@auth/guards/roles.guard';
 
 @Controller('banking')
 @ApiTags('banking')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RolesGuard)
 export class BankingController {
     constructor(private readonly bankingService: BankingService) {}
 

@@ -27,13 +27,20 @@ export class BankingService {
                 filter = {};
                 break;
             case Role.consortium:
-                filter = { ownerUserId: loggedUser._id };
+                // eslint-disable-next-line no-case-declarations
+                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
+                filter = { consortiumId: consortium._id };
                 break;
             default:
                 throw new BadRequestException();
         }
+
         const bankings: Array<BankingDocument> = await this.bankingModel.find(filter).exec();
-        return Promise.all(bankings.map((banking) => this.mapBanking(banking)));
+        const bankingsDto: BankingDto[] = [];
+        for await (const banking of bankings) {
+            bankingsDto.push(await this.mapBanking(banking));
+        }
+        return bankingsDto;
     }
 
     async getFiltered(field: string, value: any, loggedUser: UserDocument): Promise<BankingDto[]> {
@@ -43,7 +50,9 @@ export class BankingService {
                 filter = { [field]: value };
                 break;
             case Role.consortium:
-                filter = { [field]: value, ownerUserId: loggedUser._id };
+                // eslint-disable-next-line no-case-declarations
+                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
+                filter = { [field]: value, consortiumId: consortium._id };
                 break;
             default:
                 throw new BadRequestException();
@@ -77,7 +86,10 @@ export class BankingService {
             });
             await newObject.save();
         } catch (e) {
-            await this.userService.delete(createdUser._id);
+            if (createdUser) {
+                await this.userService.delete(createdUser._id);
+            }
+            throw new BadRequestException();
         }
         return newObject;
     }
@@ -104,11 +116,7 @@ export class BankingService {
     async delete(id: string, loggedUser: UserDocument) {
         const banking = await this.bankingModel.findById(id).exec();
         if (loggedUser.role === Role.consortium) {
-            const consortiums = await this.consortiumService.getFiltered('ownerUserId', loggedUser._id);
-            if (consortiums.length === 0) {
-                throw new BadRequestException();
-            }
-            const consortium = consortiums.pop();
+            const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
             if (consortium._id.toString() !== banking.consortiumId.toString()) {
                 //Cant modify a bank that is not yours
                 throw new BadRequestException();
@@ -120,21 +128,17 @@ export class BankingService {
 
     private async mapBanking(banking: BankingDto): Promise<BankingDto> {
         // we get the username of the assigned user
-        let bankingUser = (await this.userService.getFiltered('_id', banking.ownerUserId)).pop();
-        let mappedBanking: BankingDto;
-        if (bankingUser) {
-            mappedBanking = {
-                _id: banking._id,
-                consortiumId: banking.consortiumId,
-                createdAt: banking.createdAt,
-                name: banking.name,
-                ownerUserId: banking.ownerUserId,
-                showPercentage: banking.showPercentage,
-                startOfOperation: banking.startOfOperation,
-                status: banking.status,
-                ownerUsername: bankingUser.username,
-            };
-        }
-        return mappedBanking;
+        const bankingUser = (await this.userService.getFiltered('_id', banking.ownerUserId)).pop();
+        return {
+            _id: banking._id,
+            consortiumId: banking.consortiumId,
+            createdAt: banking.createdAt,
+            name: banking.name,
+            ownerUserId: banking.ownerUserId,
+            showPercentage: banking.showPercentage,
+            startOfOperation: banking.startOfOperation,
+            status: banking.status,
+            ownerUsername: bankingUser ? bankingUser.username : null,
+        };
     }
 }

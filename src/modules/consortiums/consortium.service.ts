@@ -97,11 +97,7 @@ export class ConsortiumService {
         let consortium: Consortium;
         if (loggedUser.role === Role.consortium) {
             //If is consortiums selects his consortium
-            const consortiums = await this.getFiltered('ownerUserId', loggedUser._id);
-            if (consortiums.length === 0) {
-                throw new BadRequestException();
-            }
-            consortium = consortiums.pop();
+            consortium = await this.getConsortiumOfUser(loggedUser);
             if (consortium && consortiumId && consortium._id.toString() !== consortiumId.toString()) {
                 //Doesnt have permission to modify another consortium
                 throw new BadRequestException();
@@ -114,5 +110,13 @@ export class ConsortiumService {
             }
         }
         return consortium;
+    }
+
+    async getConsortiumOfUser(loggedUser: UserDocument): Promise<Consortium> {
+        const consortiums = await this.getFiltered('ownerUserId', loggedUser._id);
+        if (consortiums.length === 0) {
+            throw new BadRequestException();
+        }
+        return consortiums.pop();
     }
 }

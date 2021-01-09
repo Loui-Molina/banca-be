@@ -10,10 +10,11 @@ import { Consortium } from '@src/modules/database/datamodels/schemas/consortium'
 import { CreateConsortiumDto } from '@src/modules/consortiums/dtos/create.consortium.dto';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
+import { RolesGuard } from '@auth/guards/roles.guard';
 
 @ApiTags('consortiums')
 @Controller('consortiums')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RolesGuard)
 export class ConsortiumController {
     constructor(private readonly consortiumService: ConsortiumService) {}
 
@@ -75,5 +76,15 @@ export class ConsortiumController {
     @Roles(Role.admin)
     async get(@Param('id') id: string): Promise<Consortium> {
         return await this.consortiumService.get(id);
+    }
+
+    @Get('getConsortiumOfUser')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: Consortium,
+    })
+    @Roles(Role.consortium)
+    async getConsortiumOfUser(@AuthUser() loggedUser: UserDocument): Promise<Consortium> {
+        return await this.consortiumService.getConsortiumOfUser(loggedUser);
     }
 }

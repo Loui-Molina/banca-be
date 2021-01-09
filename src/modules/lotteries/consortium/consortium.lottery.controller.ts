@@ -10,10 +10,11 @@ import { ConsortiumLotteryDto } from '@src/modules/lotteries/consortium/dtos/con
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { ConsortiumUpdateLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.update.lottery.dto';
+import { RolesGuard } from '@auth/guards/roles.guard';
 
 @ApiTags('consortium/lotteries')
 @Controller('consortium/lotteries')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RolesGuard)
 export class ConsortiumLotteryController {
     constructor(private readonly lotteryService: ConsortiumLotteryService) {}
 

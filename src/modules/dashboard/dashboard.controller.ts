@@ -12,11 +12,12 @@ import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { UserDocument } from '@database/datamodels/schemas/user';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
 import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
-import {DashboardWidgetsDto} from "@src/modules/dashboard/dtos/dashboard.widgets.dto";
+import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
+import { RolesGuard } from '@auth/guards/roles.guard';
 
 @ApiTags('dashboard')
 @Controller('dashboard')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RolesGuard)
 export class DashboardController {
     constructor(private readonly dashboardService: DashboardService) {}
 
