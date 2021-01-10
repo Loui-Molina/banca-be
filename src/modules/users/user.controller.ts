@@ -65,7 +65,7 @@ export class UserController {
         return this.userService.delete(id);
     }
 
-    @Get(':id')
+    @Get('get/:id')
     @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,

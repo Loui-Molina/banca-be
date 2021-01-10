@@ -49,7 +49,7 @@ export class TransactionController {
         return this.transactionService.create(dto, loggedUser);
     }
 
-    @Get(':id')
+    @Get('get/:id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: Transaction,

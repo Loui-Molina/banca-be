@@ -113,10 +113,15 @@ export class ConsortiumService {
     }
 
     async getConsortiumOfUser(loggedUser: UserDocument): Promise<Consortium> {
-        const consortiums = await this.getFiltered('ownerUserId', loggedUser._id);
+        const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id });
         if (consortiums.length === 0) {
             throw new BadRequestException();
         }
         return consortiums.pop();
+    }
+
+    async testAdmin(loggedUser: UserDocument): Promise<boolean> {
+        console.log(loggedUser.role);
+        return true;
     }
 }
