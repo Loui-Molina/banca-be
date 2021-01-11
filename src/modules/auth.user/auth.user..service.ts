@@ -15,7 +15,7 @@ export class AuthUserService {
 
     async singUp(authCredentialsDto: AuthCredentialsDto, loggedUser: UserDocument = null): Promise<UserCreatedEntity> {
         const { username, password, role } = authCredentialsDto;
-        let userCreated: UserCreatedEntity = new UserCreatedEntity();
+        const userCreated: UserCreatedEntity = new UserCreatedEntity();
         const user = new this.userModel();
         user.username = username;
         user.salt = await bcrypt.genSalt();
@@ -37,7 +37,7 @@ export class AuthUserService {
         return userCreated;
     }
 
-    async updateUsername(id: ObjectId, username: string, loggedUser: UserDocument) {
+    async updateUsername(id: ObjectId, username: string, loggedUser: UserDocument): Promise<UserDocument> {
         const user = await this.userModel.findById(id).exec();
         user.username = username;
         user.modificationUserId = loggedUser._id;
@@ -45,7 +45,7 @@ export class AuthUserService {
         return user;
     }
 
-    async deleteUser(id: ObjectId) {
+    async deleteUser(id: ObjectId): Promise<UserDocument> {
         const user = await this.userModel.findById(id).exec();
         await user.delete();
         return user;
@@ -54,7 +54,7 @@ export class AuthUserService {
     async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = authCredentialsDto;
         const user = await this.userModel.findOne({ username });
-        let responsePayload: ResponsePayload = new ResponsePayload();
+        const responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
             responsePayload.username = user.username;
             responsePayload.role = user.role;

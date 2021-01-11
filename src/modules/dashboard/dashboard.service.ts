@@ -14,6 +14,8 @@ import { Role } from '@database/datamodels/enums/role';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
 import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
 import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
+import {DashboardGraphBalanceBankingDto} from "@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto";
+import {Transaction} from "@database/datamodels/schemas/transaction";
 
 @Injectable()
 export class DashboardService {
@@ -126,7 +128,6 @@ export class DashboardService {
             ticketsSold: 0,
         };
     }
-
     async getBankingsStatistics(loggedUser: UserDocument): Promise<DashboardBankingDto[]> {
         let bankings: Array<BankingDocument> = [];
         if (loggedUser.role === Role.consortium) {
@@ -191,5 +192,41 @@ export class DashboardService {
             });
         }
         return bankingsDto;
+    }
+
+    async getGraphBankingBalanceStatistics(loggedUser: UserDocument): Promise<DashboardGraphBalanceBankingDto[]> {
+        const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
+        if (bankings.length === 0) {
+            throw new BadRequestException();
+        }
+        const data: DashboardGraphBalanceBankingDto[] = [];
+        const banking = bankings.pop();
+        const dates: Date[] = [];
+        for (let i = 0; i < 30; i++) {
+            dates.unshift(await this.sumDate(-i));
+        }
+        for await (const date of dates) {
+            const balance = await this.getBalanceByDate(banking.transactions, date);
+            data.push({
+                name: date.toISOString(),
+                value: balance,
+            });
+        }
+        return data;
+    }
+
+    private async getBalanceByDate(transactions: Transaction[], date: Date){
+        let balance = 0;
+        transactions.forEach((item) => {
+            if (item.createdAt < date) {
+                balance += item.amount;
+            }
+        });
+        return balance;
+    }
+
+    private async sumDate(days: number): Promise<Date> {
+        const now = new Date();
+        return new Date(now.getTime() + 24*60*60*1000 * days)
     }
 }

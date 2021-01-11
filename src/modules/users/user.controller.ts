@@ -1,13 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UserService } from '@users/user.service';
-import { User } from '@src/modules/database/datamodels/schemas/user';
+import {User, UserDocument} from '@src/modules/database/datamodels/schemas/user';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
 import { ConstApp } from '@utils/const.app';
+import {AuthUser} from "@src/common/decorators/auth.user.decorator";
 
 @ApiTags('users')
 @Controller('users')
@@ -41,8 +42,8 @@ export class UserController {
         description: ConstApp.DEFAULT_POST_OK,
         type: User,
     })
-    create(@Body() dto: UserDto): Promise<User> {
-        return this.userService.create(dto);
+    create(@Body() dto: UserDto, @AuthUser() loggedUser: UserDocument): Promise<User> {
+        return this.userService.create(dto, loggedUser);
     }
 
     @Put()
@@ -51,8 +52,8 @@ export class UserController {
         description: ConstApp.DEFAULT_PUT_OK,
         type: User,
     })
-    update(@Body() dto: UserDto): Promise<User> {
-        return this.userService.update(dto);
+    update(@Body() dto: UserDto, @AuthUser() loggedUser: UserDocument): Promise<User> {
+        return this.userService.update(dto, loggedUser);
     }
 
     @Delete(':id')
