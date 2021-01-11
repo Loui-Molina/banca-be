@@ -119,9 +119,4 @@ export class ConsortiumService {
         }
         return consortiums.pop();
     }
-
-    async testAdmin(loggedUser: UserDocument): Promise<boolean> {
-        console.log(loggedUser.role);
-        return true;
-    }
 }
