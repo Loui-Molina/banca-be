@@ -7,7 +7,7 @@ export type RefreshTokenDocument = RefreshToken & Document;
 @Schema({timestamps:true})
 export class RefreshToken{
 
-    @Prop()
+    @Prop({unique:true})
     userId: string;
 
     @ApiProperty()
@@ -15,7 +15,7 @@ export class RefreshToken{
     ipAddress:string;
     
     @ApiProperty()
-    @Prop()
+    @Prop({unique:true})
     refreshTokenId:string;
 
 }

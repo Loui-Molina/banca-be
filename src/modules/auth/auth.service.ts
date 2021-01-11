@@ -35,26 +35,34 @@ export class AuthService {
         return this.userAuthService.singUp(authCredentialsDto).then((createdUser) => createdUser.response);
     }
 
-    async singIn(authCredentialsDto: AuthCredentialsDto): Promise<ResponseSignInDto> {
+    async singIn(userIp:string, authCredentialsDto: AuthCredentialsDto): Promise<ResponseSignInDto> {
         let responsePayload: ResponsePayload = new ResponsePayload();
-        let responseSignInDto: ResponseSignInDto = new ResponseSignInDto();
         responsePayload = await this.userAuthService.validateUserPassword(authCredentialsDto);
         if (!responsePayload.userId) {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
         }
-        const userId: string = responsePayload.userId;
-        const role: Role = responsePayload.role;
-        const payload: JwtPayload = { userId, role };
-        const refreshToken = await this.tokenService.createRefreshToken(userId);
-        const accessToken = await this.jwtService.signAsync(payload);
-        responseSignInDto.accessToken = accessToken;
-        responseSignInDto.expiresIn = this.configService.get<string>('TOKEN_EXPIRES');
-        responseSignInDto.refreshToken = refreshToken.refreshTokenId;
-        return responseSignInDto;
+        return await this.getToken(responsePayload,userIp);
     }
 
     async getLoggedUser(user: UserDocument) {
         return await this.userModel.findById(user.id).exec();
+    }
+
+    async getToken(responsePayload:ResponsePayload, userIp:string):Promise<ResponseSignInDto>{
+        let responseSignInDto: ResponseSignInDto = new ResponseSignInDto();
+        const userId: string = responsePayload.userId;
+        const role: Role = responsePayload.role;
+        const payload: JwtPayload = { userId, role };
+        const refreshToken = await this.tokenService.createRefreshToken(userIp,userId);
+        const tokenPrueba = await this.jwtService.signAsync(refreshToken,{ expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRES'),
+        secret:this.configService.get<string>('REFRESH_TOKEN_SECRET_KEY')})
+        this.logger.debug("tokenPrueba " + tokenPrueba);
+        const accessToken = await this.jwtService.signAsync(payload,{ expiresIn: this.configService.get<string>('TOKEN_EXPIRES'),
+        secret:this.configService.get<string>('TOKEN_SECRET_KEY')});
+        responseSignInDto.accessToken = accessToken;
+        responseSignInDto.expiresIn =  this.configService.get<string>('TOKEN_EXPIRES');
+        responseSignInDto.refreshToken = tokenPrueba;
+        return responseSignInDto;
     }
     
 }

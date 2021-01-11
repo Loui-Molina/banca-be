@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Logger, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
@@ -10,10 +10,14 @@ import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from './dtos/response.sign.in.dto';
 import { RefreshTokenRequestDto } from './dtos/refresh.token.request.dto';
 import { TokenService } from './token.service';
-import { ExtractJwt } from 'passport-jwt';
+import { RefreshToken, RefreshTokenDocument } from '../database/datamodels/schemas/refresh.token';
+;
 
 @Controller('auth')
 export class AuthController {
+
+    private readonly logger : Logger = new Logger(AuthController.name); 
+
     constructor(private readonly authService: AuthService,
         private readonly tokenService: TokenService) {}
 
@@ -29,8 +33,9 @@ export class AuthController {
     }
 
     @Post('/signin')
-    async singIn(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<ResponseSignInDto> {
-        return this.authService.singIn(authCredentialsDto);
+    async singIn(@Ip() userIp:string, @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<ResponseSignInDto> {
+        this.logger.debug("UserIp " + userIp)
+        return this.authService.singIn(userIp, authCredentialsDto);
     }
 
     @Get('/loggedUser')
@@ -49,14 +54,22 @@ export class AuthController {
         console.log(user);
     }
 
+    @Post('/test1')
+    @UseGuards(AuthGuard("refresh"))
+    test1(@AuthUser() refreshToken:RefreshTokenDocument,) {
+        console.log("SUCESSFULL PASS JWT REFRESH");
+        this.logger.debug("Refresh token "+refreshToken);
+        return refreshToken;
+
+    }
+
     @Get('/refreshToken')
-    @UseGuards(AuthGuard())
+    @UseGuards(AuthGuard("refresh"))
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: String,
     })
-    getToken(@Req() req:any, @Body() refreshTokenRequestDto: RefreshTokenRequestDto): Promise<ResponseSignInDto> {
-        const oldAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);    
-        return this.tokenService.getRefreshToken(oldAccessToken, refreshTokenRequestDto);
+    getToken(@Ip() ipAdress:string, @AuthUser() refreshToken:RefreshToken): Promise<ResponseSignInDto> {
+        return this.tokenService.getRefreshToken(ipAdress,refreshToken);
     }
 }

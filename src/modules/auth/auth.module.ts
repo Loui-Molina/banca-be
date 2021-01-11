@@ -1,12 +1,13 @@
 import { Global, Module } from '@nestjs/common';
 import { AuthController } from '@auth/auth.controller';
 import { AuthService } from '@auth/auth.service';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from '@auth/jwt.strategy';
 import { AuthUserModule } from '@auth.user/auth.user.module';
 import { TokenService } from './token.service';
+import { RefreshStrategy } from './refresh.strategy';
 
 @Global()
 @Module({
@@ -27,7 +28,7 @@ import { TokenService } from './token.service';
         }),
         AuthUserModule,
     ],
-    providers: [AuthService, JwtStrategy,TokenService],
+    providers: [AuthService, JwtStrategy,TokenService, RefreshStrategy],
     controllers: [AuthController],
     exports: [
         JwtModule,
@@ -35,6 +36,7 @@ import { TokenService } from './token.service';
             defaultStrategy: 'jwt',
         }),
         JwtStrategy,
+        RefreshStrategy,
     ],
 })
 export class AuthModule {}

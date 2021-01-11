@@ -79,4 +79,11 @@ export class AuthUserService {
     private async hashPassword(password: string, salt: string): Promise<string> {
         return bcrypt.hash(password, salt);
     }
+
+    async getUserRefresh(userId:string):Promise<UserDocument>{
+        let _id = userId
+        let user= await this.userModel.findOne({ _id});
+        this.logger.debug("User find"+ user);
+        return user;
+    }
 }
