@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "api": "curl.exe --output open-api.json --url http://localhost:3000/api-json && openapi-generator-cli generate && del open-api.json",
+    "api": "curl.exe --output open-api.json --url http://localhost:3000/api-json && rimraf ../banca-fe/local-packages && openapi-generator-cli generate && del open-api.json",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -20,7 +20,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "apiBat": "openApiPackage.bat"
+    "apiBat": "rimraf ../banca-fe/local-packages && openApiPackage.bat"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.4",

@@ -9,7 +9,7 @@ import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
-import { ResponseSignInDto } from './dtos/response.sign.in.dto';
+import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { TokenService } from '@auth/token.service';

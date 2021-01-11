@@ -45,11 +45,6 @@ import { DatabaseModule } from '@database/database.module';
     ],
     controllers: [],
     providers: [],
-    exports: [
-        UsersModule,
-        UtilsModule,
-        AuthModule,
-        AuthUserModule,
-    ],
+    exports: [UsersModule, UtilsModule, AuthModule, AuthUserModule],
 })
 export class AppModule {}

@@ -6,7 +6,7 @@ import { PlayNumbers, PlayNumbersSchema } from '@src/modules/database/datamodels
 
 export type PlayDocument = Play & Document;
 
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Play implements DataObject {
     @Prop({ required: true, type: String }) playType?: PlayTypes;
     @Prop({ required: true }) amount?: number;
@@ -18,4 +18,4 @@ export class Play implements DataObject {
     @Prop({ required: true }) modificationUserId: string;
 }
 
-export const PlaySchema = SchemaFactory.createForClass(Play).set('timestamps', true);
+export const PlaySchema = SchemaFactory.createForClass(Play);

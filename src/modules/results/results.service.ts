@@ -1,12 +1,12 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Result, ResultDocument} from "@database/datamodels/schemas/result";
-import {Draw, DrawDocument} from "@database/datamodels/schemas/draw";
-import {UserDocument} from "@database/datamodels/schemas/user";
-import {ResultDto} from "@src/modules/results/dtos/result.dto";
-import {Lottery, LotteryDocument} from "@database/datamodels/schemas/lottery";
-import {AddResultDto} from "@src/modules/results/dtos/add.result.dto";
-import {Model, Types, ObjectId} from 'mongoose';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Result, ResultDocument } from '@database/datamodels/schemas/result';
+import { Draw, DrawDocument } from '@database/datamodels/schemas/draw';
+import { UserDocument } from '@database/datamodels/schemas/user';
+import { ResultDto } from '@src/modules/results/dtos/result.dto';
+import { Lottery, LotteryDocument } from '@database/datamodels/schemas/lottery';
+import { AddResultDto } from '@src/modules/results/dtos/add.result.dto';
+import { Model, Types, ObjectId } from 'mongoose';
 
 @Injectable()
 export class ResultsService {
@@ -14,8 +14,7 @@ export class ResultsService {
         @InjectModel(Lottery.name) private lotteryModel: Model<LotteryDocument>,
         @InjectModel(Result.name) private resultModel: Model<ResultDocument>,
         @InjectModel(Draw.name) private drawModel: Model<DrawDocument>,
-    ) {
-    }
+    ) {}
 
     async getAll(): Promise<Array<ResultDto>> {
         return this.lotteryModel.aggregate([
@@ -29,46 +28,55 @@ export class ResultsService {
                     draw: '$results.draw',
                     lotteryId: '$_id',
                     lotteryName: '$name',
-                }
+                },
             },
-            { $sort: { date: -1 } }]);
+            { $sort: { date: -1 } },
+        ]);
     }
 
     async create(dto: AddResultDto, loggedUser: UserDocument): Promise<Result> {
         //TODO chekear si la fecha de sorteo ya paso
         const lottery = await this.lotteryModel.findById(dto.lotteryId).exec();
-        if(!lottery){
+        if (!lottery) {
             throw new BadRequestException();
         }
 
         //First time of date and last
         const date = new Date(dto.date);
-        const month = `${date.getMonth()+1}`.padStart(2, '0');
+        const month = `${date.getMonth() + 1}`.padStart(2, '0');
         const day = `${date.getDate()}`.padStart(2, '0');
         const filterDateA = new Date(`${date.getFullYear()}-${month}-${day}T00:00:00.000Z`);
         const filterDateB = new Date(`${date.getFullYear()}-${month}-${day}T23:59:59.000Z`);
 
         //Checking playTime
-        const lotteryPlayTime =  lottery.playTime.split(':')
-        const checkDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(lotteryPlayTime[0]), parseInt(lotteryPlayTime[1]), 0)
+        const lotteryPlayTime = lottery.playTime.split(':');
+        const checkDate = new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            parseInt(lotteryPlayTime[0]),
+            parseInt(lotteryPlayTime[1]),
+            0,
+        );
         const now = new Date();
 
-        if (now < checkDate){
+        if (now < checkDate) {
             //You cant add the results if the lottery has not been played yet
             throw new BadRequestException();
         }
 
         let results = await this.lotteryModel.aggregate([
-            { $match: {'results.date': {$gte: filterDateA, $lt: filterDateB}}},
+            { $match: { 'results.date': { $gte: filterDateA, $lt: filterDateB } } },
             { $unwind: '$results' },
             {
                 $project: {
                     _id: '$results._id',
                     lotteryId: '$_id',
-                }
-            }]);
-        results = results.filter((result:ResultDto) => (result.lotteryId).toString() === dto.lotteryId)
-        if(results && results.length > 0){
+                },
+            },
+        ]);
+        results = results.filter((result: ResultDto) => result.lotteryId.toString() === dto.lotteryId);
+        if (results && results.length > 0) {
             throw new BadRequestException();
         }
 
@@ -84,11 +92,13 @@ export class ResultsService {
             createdAt: new Date(),
             draw: draw,
             creationUserId: loggedUser.id,
-            modificationUserId: loggedUser.id
+            modificationUserId: loggedUser.id,
         });
-        if(filterDateA.getDate() == now.getDate() &&
+        if (
+            filterDateA.getDate() == now.getDate() &&
             filterDateA.getMonth() == now.getMonth() &&
-            filterDateA.getFullYear() == now.getFullYear()){
+            filterDateA.getFullYear() == now.getFullYear()
+        ) {
             lottery.lastDraw = draw;
         }
         lottery.results.push(result);
@@ -100,5 +110,4 @@ export class ResultsService {
     async get(id: string): Promise<Result> {
         return await this.resultModel.findById(id).exec();
     }
-
 }

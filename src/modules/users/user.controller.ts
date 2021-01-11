@@ -1,13 +1,13 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
-import {UserDto} from '@users/dtos/user.dto';
-import {UserService} from '@users/user.service';
-import {User } from '@src/modules/database/datamodels/schemas/user';
-import {ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags} from '@nestjs/swagger';
-import {AuthGuard} from '@nestjs/passport';
-import {Roles} from '@src/common/decorators/roles.decorator';
-import {Role} from '@database/datamodels/enums/role';
-import {RolesGuard} from '@auth/guards/roles.guard';
-import {ConstApp} from '@utils/const.app';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { UserDto } from '@users/dtos/user.dto';
+import { UserService } from '@users/user.service';
+import { User } from '@src/modules/database/datamodels/schemas/user';
+import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '@database/datamodels/enums/role';
+import { RolesGuard } from '@auth/guards/roles.guard';
+import { ConstApp } from '@utils/const.app';
 
 @ApiTags('users')
 @Controller('users')
@@ -65,7 +65,7 @@ export class UserController {
         return this.userService.delete(id);
     }
 
-    @Get(':id')
+    @Get('get/:id')
     @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,

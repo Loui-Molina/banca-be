@@ -4,11 +4,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Days } from '@src/modules/database/datamodels/enums/days';
 
 export type LotteryTimeDocument = LotteryTime & Document;
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class LotteryTime {
     @ApiProperty() @Prop({ type: [String], enum: [Days] }) day: Days[];
     @ApiProperty() @Prop({ required: true }) openTime?: string;
     @ApiProperty() @Prop({ required: true }) closeTime?: string;
 }
 
-export const LotteryTimeSchema = SchemaFactory.createForClass(LotteryTime).set('timestamps', true);
+export const LotteryTimeSchema = SchemaFactory.createForClass(LotteryTime);

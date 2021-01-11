@@ -1,11 +1,11 @@
-import {ObjectId} from 'mongoose';
-import {ApiProperty} from '@nestjs/swagger';
+import { ObjectId } from 'mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateBankingDto {
-    @ApiProperty() _id:ObjectId;
-    @ApiProperty() name:string;
-    @ApiProperty() status:boolean;
-    @ApiProperty() ownerUserId:ObjectId;
-    @ApiProperty() showPercentage:boolean;
-    @ApiProperty() selectedConsortium:ObjectId;
+    @ApiProperty({ required: true }) _id: ObjectId;
+    @ApiProperty() name: string;
+    @ApiProperty() status: boolean;
+    @ApiProperty({ required: false }) ownerUserId: ObjectId;
+    @ApiProperty() showPercentage: boolean;
+    @ApiProperty() selectedConsortium: ObjectId;
 }

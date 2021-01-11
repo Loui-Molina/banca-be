@@ -8,7 +8,7 @@ import { Document } from 'mongoose';
 // cantidad de veces que se puede hacer una jugada
 
 export type PlayLimitDocument = PlayLimit & Document;
-@Schema()
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class PlayLimit implements DataObject {
     @Prop({ required: true }) limit?: number;
     @Prop({
@@ -24,4 +24,4 @@ export class PlayLimit implements DataObject {
     @Prop({ required: true }) modificationUserId: string;
 }
 
-export const PlayLimitSchema = SchemaFactory.createForClass(PlayLimit).set('timestamps', true);
+export const PlayLimitSchema = SchemaFactory.createForClass(PlayLimit);

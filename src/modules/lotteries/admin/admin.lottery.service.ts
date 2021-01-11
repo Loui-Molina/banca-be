@@ -1,12 +1,13 @@
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model} from 'mongoose';
-import {AdminLotteryDto} from "@src/modules/lotteries/admin/dtos/admin.lottery.dto";
-import {LotteryTime, LotteryTimeDocument} from "@database/datamodels/schemas/lottery.time";
-import {Lottery, LotteryDocument} from "@database/datamodels/schemas/lottery";
-import {Result, ResultDocument } from '@database/datamodels/schemas/result';
-import {Draw, DrawDocument} from '@database/datamodels/schemas/draw';
-import {UserDocument} from "@database/datamodels/schemas/user";
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { AdminLotteryReqDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.req.dto';
+import { LotteryTime, LotteryTimeDocument } from '@database/datamodels/schemas/lottery.time';
+import { Lottery, LotteryDocument } from '@database/datamodels/schemas/lottery';
+import { Result, ResultDocument } from '@database/datamodels/schemas/result';
+import { Draw, DrawDocument } from '@database/datamodels/schemas/draw';
+import { UserDocument } from '@database/datamodels/schemas/user';
+import { AdminLotteryResDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.res.dto';
 
 @Injectable()
 export class AdminLotteryService {
@@ -15,10 +16,11 @@ export class AdminLotteryService {
         @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTimeDocument>,
         @InjectModel(Result.name) private resultModel: Model<ResultDocument>,
         @InjectModel(Draw.name) private drawModel: Model<DrawDocument>,
-    ) {    }
+    ) {}
 
-    async getAll(): Promise<Array<AdminLotteryDto>> {
-        return this.lotteryModel.aggregate([{$match: {}},
+    async getAll(): Promise<Array<AdminLotteryResDto>> {
+        return this.lotteryModel.aggregate([
+            { $match: {} },
             {
                 $project: {
                     _id: '$_id',
@@ -32,12 +34,13 @@ export class AdminLotteryService {
                     status: '$status',
                     openTime: '$time.openTime',
                     closeTime: '$time.closeTime',
-                    day: '$time.day'
-                }
-            }]);
+                    day: '$time.day',
+                },
+            },
+        ]);
     }
 
-    async getFiltered(q: string, value: string): Promise<Array<AdminLotteryDto>> {
+    async getFiltered(q: string, value: string): Promise<Array<AdminLotteryResDto>> {
         return this.lotteryModel.aggregate([
             { $match: { [q]: value } },
             {
@@ -53,38 +56,49 @@ export class AdminLotteryService {
                     status: '$status',
                     openTime: '$time.openTime',
                     closeTime: '$time.closeTime',
-                    day: '$time.day'
-                }
-            }])
+                    day: '$time.day',
+                },
+            },
+        ]);
     }
 
-    async create(dto: AdminLotteryDto, loggedUser: UserDocument): Promise<Lottery> {
-        const time: LotteryTime = new this.lotteryTimeModel({
-            day: dto.day,
-            openTime: dto.openTime,
-            closeTime: dto.closeTime
-        });
-        const newObject = new this.lotteryModel({
-            name:dto.name,
-            nickname:dto.nickname,
-            color:dto.color,
-            status:dto.status,
-            playTime:dto.playTime,
-            time: time,
+    async create(dto: AdminLotteryReqDto, loggedUser: UserDocument): Promise<AdminLotteryResDto> {
+        const newLottery = new this.lotteryModel({
+            name: dto.name,
+            nickname: dto.nickname,
+            color: dto.color,
+            status: dto.status,
+            playTime: dto.playTime,
+            time: new this.lotteryTimeModel({
+                day: dto.day,
+                openTime: dto.openTime,
+                closeTime: dto.closeTime,
+            }),
             creationUserId: loggedUser.id,
             modificationUserId: loggedUser.id,
         });
-        await newObject.save();
-        return newObject;
+        await newLottery.save();
+        return {
+            _id: newLottery._id,
+            name: newLottery.name,
+            nickname: newLottery.nickname,
+            color: newLottery.color,
+            playTime: newLottery.playTime,
+            status: newLottery.status,
+            results: newLottery.results,
+            openTime: newLottery.time.openTime,
+            closeTime: newLottery.time.closeTime,
+            day: newLottery.time.day,
+        } as AdminLotteryResDto;
     }
 
-    async update(dto: AdminLotteryDto, loggedUser: UserDocument): Promise<Lottery> {
+    async update(dto: AdminLotteryReqDto, loggedUser: UserDocument): Promise<AdminLotteryResDto> {
         const time: LotteryTime = new this.lotteryTimeModel({
             day: dto.day,
             openTime: dto.openTime,
-            closeTime: dto.closeTime
+            closeTime: dto.closeTime,
         });
-        return this.lotteryModel.findByIdAndUpdate(
+        let foundLottery: LotteryDocument = await this.lotteryModel.findByIdAndUpdate(
             dto._id,
             {
                 name: dto.name,
@@ -93,19 +107,46 @@ export class AdminLotteryService {
                 status: dto.status,
                 playTime: dto.playTime,
                 time: time,
-                modificationUserId: loggedUser.id
+                modificationUserId: loggedUser.id,
             },
             {
                 new: false,
             },
         );
+        return {
+            _id: foundLottery._id,
+            name: foundLottery.name,
+            nickname: foundLottery.nickname,
+            color: foundLottery.color,
+            playTime: foundLottery.playTime,
+            status: foundLottery.status,
+            results: foundLottery.results,
+            openTime: foundLottery.time.openTime,
+            closeTime: foundLottery.time.closeTime,
+            day: foundLottery.time.day,
+        } as AdminLotteryResDto;
     }
 
-    async delete(id: string): Promise<Lottery> {
-        return this.lotteryModel.findByIdAndRemove(id).exec();
+    async delete(id: string) {
+        //TODO eliminar consortiumLotteries dentro de consortiums
+        let promise = await this.lotteryModel.findByIdAndRemove(id).exec();
+        console.log(`delete response ${promise}`);
+        return promise;
     }
 
-    async get(id: string): Promise<Lottery> {
-        return await this.lotteryModel.findById(id).exec();
+    async get(id: string): Promise<AdminLotteryResDto> {
+        let foundLottery = await this.lotteryModel.findById(id).exec();
+        return {
+            _id: foundLottery._id,
+            name: foundLottery.name,
+            nickname: foundLottery.nickname,
+            color: foundLottery.color,
+            playTime: foundLottery.playTime,
+            status: foundLottery.status,
+            results: foundLottery.results,
+            openTime: foundLottery.time.openTime,
+            closeTime: foundLottery.time.closeTime,
+            day: foundLottery.time.day,
+        } as AdminLotteryResDto;
     }
 }

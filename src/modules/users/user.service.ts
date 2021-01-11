@@ -1,14 +1,12 @@
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model, Schema} from 'mongoose';
-import {User, UserDocument} from '@src/modules/database/datamodels/schemas/user';
-import {UserDto} from '@users/dtos/user.dto';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Schema } from 'mongoose';
+import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { UserDto } from '@users/dtos/user.dto';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
-    ) {}
+    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
     async getAll(): Promise<Array<User>> {
         return this.userModel.find().exec();

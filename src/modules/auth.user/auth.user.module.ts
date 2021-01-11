@@ -11,4 +11,4 @@ import { AuthUserService } from "@auth.user/auth.user.service";
     exports:[AuthUserService, MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'),
     MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], 'user'),],
 })
-export class AuthUserModule{}
+export class AuthUserModule {}
