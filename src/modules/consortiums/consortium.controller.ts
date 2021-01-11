@@ -68,16 +68,6 @@ export class ConsortiumController {
         return this.consortiumService.delete(id);
     }
 
-    @Get(':id')
-    @ApiFoundResponse({
-        description: ConstApp.DEFAULT_GET_OK,
-        type: Consortium,
-    })
-    @Roles(Role.admin)
-    async get(@Param('id') id: string): Promise<Consortium> {
-        return await this.consortiumService.get(id);
-    }
-
     @Get('getConsortiumOfUser')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
@@ -86,5 +76,15 @@ export class ConsortiumController {
     @Roles(Role.consortium)
     async getConsortiumOfUser(@AuthUser() loggedUser: UserDocument): Promise<Consortium> {
         return await this.consortiumService.getConsortiumOfUser(loggedUser);
+    }
+
+    @Get('get/:id')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: Consortium,
+    })
+    @Roles(Role.admin)
+    async get(@Param('id') id: string): Promise<Consortium> {
+        return await this.consortiumService.get(id);
     }
 }

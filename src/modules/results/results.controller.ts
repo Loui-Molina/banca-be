@@ -38,7 +38,7 @@ export class ResultsController {
         return this.resultService.create(dto, loggedUser);
     }
 
-    @Get(':id')
+    @Get('get/:id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: Result,

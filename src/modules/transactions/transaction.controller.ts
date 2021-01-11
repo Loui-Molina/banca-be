@@ -39,17 +39,27 @@ export class TransactionController {
         return this.transactionService.getFiltered(q, value);
     }
 
-    @Post()
+    @Post('create/transaction/admin')
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_POST_OK,
         type: Transaction,
     })
     @Roles(Role.admin)
-    create(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser: UserDocument): Promise<Transaction> {
-        return this.transactionService.create(dto, loggedUser);
+    createTransactionAdmin(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser: UserDocument): Promise<Transaction> {
+        return this.transactionService.createTransactionAdmin(dto, loggedUser);
     }
 
-    @Get(':id')
+    @Post('create/transaction/consortium')
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_POST_OK,
+        type: Transaction,
+    })
+    @Roles(Role.consortium)
+    createTransactionConsortium(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser: UserDocument): Promise<Transaction> {
+        return this.transactionService.createTransactionConsortium(dto, loggedUser);
+    }
+
+    @Get('get/:id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: Transaction,
