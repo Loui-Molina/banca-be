@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Logger, Post, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Logger, Post, UseFilters, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
@@ -74,7 +74,7 @@ export class AuthController {
 
     @Get('/logOut')
     @UseGuards(AuthGuard())
-    logOut(@Ip() ipAdress:string, @AuthUser() user:UserDocument): Promise<ResponseDto> {
+    logOut(@Ip() ipAdress:string, @AuthUser() user:UserDocument) :Promise<ResponseDto>{
         return this.authService.logOut(ipAdress,user);
     }
 }

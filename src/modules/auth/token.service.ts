@@ -1,5 +1,4 @@
-import { forwardRef, Inject, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { ForbiddenException, forwardRef, HttpStatus, Inject, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { randomBytes } from "crypto";
 import { Model } from "mongoose";
@@ -11,6 +10,7 @@ import { UserDocument } from "@database/datamodels/schemas/user";
 import { AuthUserService } from "@auth.user/auth.user.service";
 import { ResponsePayload } from "@users/dtos/response.payload.dto";
 import { AuthService } from "@auth/auth.service";
+import { ResponseDto } from "@utils/dtos/response.dto";
 
 @Injectable()
 export class TokenService{
@@ -18,7 +18,6 @@ export class TokenService{
   private logger: Logger = new Logger(TokenService.name);
 
     constructor(
-        private readonly configService:ConfigService,
         private readonly userAuthService: AuthUserService,
         @Inject(forwardRef(() => AuthService))
         private readonly authService : AuthService,
@@ -60,11 +59,25 @@ export class TokenService{
         }
     }
 
-    async deleteRefreshToken(ipAddress:string,user:UserDocument){
+    async deleteRefreshToken(ipAddress:string,user:UserDocument):Promise<ResponseDto>{ 
+        let refreshTokenModel = new this.refreshTokenModel();
         const userId:string = user._id;
-        let refreshTokenUpdated = await this.refreshTokenModel.findOneAndUpdate({userId}, { refreshTokenId:'', ipAddress:''})
-        this.logger.debug("User "+ user);
-        this.logger.debug("Refresh token updated "+ refreshTokenUpdated);
+        refreshTokenModel = await this.refreshTokenModel.findOne({userId,ipAddress});
+        if(refreshTokenModel == null){
+            throw new ForbiddenException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
+        }
+        refreshTokenModel.ipAddress = '';
+        refreshTokenModel.refreshTokenId = '';
+        refreshTokenModel = await refreshTokenModel.save();  
+        if(!refreshTokenModel)
+        {
+            throw new InternalServerErrorException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
+        }
+        let responseDto:ResponseDto = new ResponseDto();
+        responseDto.message=ConstApp.LOG_OUT_OK;
+        responseDto.statusCode=HttpStatus.OK;
+        return responseDto;
+       
     }
 
 }

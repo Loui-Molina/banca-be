@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {  Model, ObjectId, Types} from 'mongoose';
+import {  Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';

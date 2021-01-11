@@ -11,7 +11,6 @@ import { Role } from '@database/datamodels/enums/role';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { ResponseSignInDto } from './dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
-import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { TokenService } from '@auth/token.service';
 
@@ -64,8 +63,7 @@ export class AuthService {
     }
 
     async logOut(ipAdress:string,user:UserDocument):Promise<ResponseDto>{
-        this.tokenService.deleteRefreshToken(ipAdress,user);
-        return new ResponseDto();
+        return this.tokenService.deleteRefreshToken(ipAdress,user);
     }
     
 }
