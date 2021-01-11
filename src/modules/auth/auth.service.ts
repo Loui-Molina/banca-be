@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -10,11 +10,10 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { ResponseSignInDto } from './dtos/response.sign.in.dto';
-import { randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
-import { RefreshToken, RefreshTokenDocument } from '../database/datamodels/schemas/refresh.token';
-import { AuthCredentialsDto } from './dtos/auth.credentials.dto';
-import { TokenService } from './token.service';
+import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
+import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { TokenService } from '@auth/token.service';
 
 
 @Injectable()
@@ -56,13 +55,17 @@ export class AuthService {
         const refreshToken = await this.tokenService.createRefreshToken(userIp,userId);
         const tokenPrueba = await this.jwtService.signAsync(refreshToken,{ expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRES'),
         secret:this.configService.get<string>('REFRESH_TOKEN_SECRET_KEY')})
-        this.logger.debug("tokenPrueba " + tokenPrueba);
         const accessToken = await this.jwtService.signAsync(payload,{ expiresIn: this.configService.get<string>('TOKEN_EXPIRES'),
         secret:this.configService.get<string>('TOKEN_SECRET_KEY')});
         responseSignInDto.accessToken = accessToken;
         responseSignInDto.expiresIn =  this.configService.get<string>('TOKEN_EXPIRES');
         responseSignInDto.refreshToken = tokenPrueba;
         return responseSignInDto;
+    }
+
+    async logOut(ipAdress:string,user:UserDocument):Promise<ResponseDto>{
+        this.tokenService.deleteRefreshToken(ipAdress,user);
+        return new ResponseDto();
     }
     
 }

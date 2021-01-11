@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Logger, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Logger, Post, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
@@ -7,10 +7,9 @@ import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse } from '@nestjs/swa
 import { ConstApp } from '@utils/const.app';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { ResponseSignInDto } from './dtos/response.sign.in.dto';
-import { RefreshTokenRequestDto } from './dtos/refresh.token.request.dto';
-import { TokenService } from './token.service';
-import { RefreshToken, RefreshTokenDocument } from '../database/datamodels/schemas/refresh.token';
+import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
+import { TokenService } from '@auth/token.service';
+import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
 ;
 
 @Controller('auth')
@@ -71,5 +70,11 @@ export class AuthController {
     })
     getToken(@Ip() ipAdress:string, @AuthUser() refreshToken:RefreshToken): Promise<ResponseSignInDto> {
         return this.tokenService.getRefreshToken(ipAdress,refreshToken);
+    }
+
+    @Get('/logOut')
+    @UseGuards(AuthGuard())
+    logOut(@Ip() ipAdress:string, @AuthUser() user:UserDocument): Promise<ResponseDto> {
+        return this.authService.logOut(ipAdress,user);
     }
 }

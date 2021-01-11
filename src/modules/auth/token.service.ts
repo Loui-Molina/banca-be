@@ -9,8 +9,8 @@ import { ConstApp } from "@utils/const.app";
 import { JwtPayloadRefresh } from "@src/modules/auth/jwt.payload.refresh.interface";
 import { UserDocument } from "@database/datamodels/schemas/user";
 import { AuthUserService } from "@auth.user/auth.user.service";
-import { ResponsePayload } from "../users/dtos/response.payload.dto";
-import { AuthService } from "./auth.service";
+import { ResponsePayload } from "@users/dtos/response.payload.dto";
+import { AuthService } from "@auth/auth.service";
 
 @Injectable()
 export class TokenService{
@@ -58,6 +58,13 @@ export class TokenService{
             this.logger.error(ConstApp.REFRESH_TOKEN_ERROR + error);
             throw new InternalServerErrorException(ConstApp.REFRESH_TOKEN_ERROR);
         }
+    }
+
+    async deleteRefreshToken(ipAddress:string,user:UserDocument){
+        const userId:string = user._id;
+        let refreshTokenUpdated = await this.refreshTokenModel.findOneAndUpdate({userId}, { refreshTokenId:'', ipAddress:''})
+        this.logger.debug("User "+ user);
+        this.logger.debug("Refresh token updated "+ refreshTokenUpdated);
     }
 
 }

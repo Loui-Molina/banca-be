@@ -3,10 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { PassportStrategy } from '@nestjs/passport';
 import { Model } from 'mongoose';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { RefreshToken, RefreshTokenDocument } from '../database/datamodels/schemas/refresh.token';
-import { JwtPayloadRefresh } from './jwt.payload.refresh.interface';
+import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
+import { JwtPayloadRefresh } from '@auth/jwt.payload.refresh.interface';
 import { ConfigService } from '@nestjs/config';
-import { ConstApp } from '../utils/const.app';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy,"refresh") {
