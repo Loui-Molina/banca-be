@@ -23,6 +23,9 @@ import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
 import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
 import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '../database/datamodels/enums/role';
 @Controller('auth')
 export class AuthController {
     private readonly logger: Logger = new Logger(AuthController.name);
@@ -51,7 +54,8 @@ export class AuthController {
 
     
     @Post('/changePassword')
-    @UseGuards(AuthGuard())
+    @UseGuards(AuthGuard(),RolesGuard)
+    @Roles(Role.admin)
     async changePassword(
         @Ip() userIp: string,
         @Body(ValidationPipe) changeCredentialsDto: ChangeCredentialsDto,
