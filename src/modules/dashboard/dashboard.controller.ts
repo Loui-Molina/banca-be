@@ -14,7 +14,7 @@ import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboa
 import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
 import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
 import { RolesGuard } from '@auth/guards/roles.guard';
-import {DashboardGraphBalanceBankingDto} from "@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto";
+import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto';
 
 @ApiTags('dashboard')
 @Controller('dashboard')

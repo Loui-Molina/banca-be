@@ -14,8 +14,8 @@ import { Role } from '@database/datamodels/enums/role';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
 import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
 import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
-import {DashboardGraphBalanceBankingDto} from "@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto";
-import {Transaction} from "@database/datamodels/schemas/transaction";
+import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto';
+import { Transaction } from '@database/datamodels/schemas/transaction';
 
 @Injectable()
 export class DashboardService {
@@ -215,7 +215,7 @@ export class DashboardService {
         return data;
     }
 
-    private async getBalanceByDate(transactions: Transaction[], date: Date){
+    private async getBalanceByDate(transactions: Transaction[], date: Date) {
         let balance = 0;
         transactions.forEach((item) => {
             if (item.createdAt < date) {
@@ -227,6 +227,6 @@ export class DashboardService {
 
     private async sumDate(days: number): Promise<Date> {
         const now = new Date();
-        return new Date(now.getTime() + 24*60*60*1000 * days)
+        return new Date(now.getTime() + 24 * 60 * 60 * 1000 * days);
     }
 }

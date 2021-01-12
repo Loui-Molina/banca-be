@@ -8,7 +8,7 @@ import { ConsortiumLottery, ConsortiumLotterySchema } from '@database/datamodels
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { BankingLotteryService } from '@src/modules/lotteries/banking/banking.lottery.service';
 import { BankingLotteryController } from '@src/modules/lotteries/banking/banking.lottery.controller';
-import {Banking, BankingSchema} from "@database/datamodels/schemas/banking";
+import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 
 @Module({
     imports: [
