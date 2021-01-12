@@ -13,6 +13,7 @@ import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
 import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { TokenService } from '@auth/token.service';
+import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
 
 @Injectable()
 export class AuthService {
@@ -68,5 +69,9 @@ export class AuthService {
 
     async logOut(ipAdress: string, user: UserDocument): Promise<ResponseDto> {
         return this.tokenService.deleteRefreshToken(ipAdress, user);
+    }
+
+    async changePassword(ipAddress:string, changeCredentialsDto: ChangeCredentialsDto, userLogged:UserDocument):Promise<ResponseDto>{    
+        return await this.userAuthService.changePassword(changeCredentialsDto, userLogged, ipAddress);
     }
 }

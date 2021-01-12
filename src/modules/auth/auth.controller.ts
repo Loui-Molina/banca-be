@@ -22,6 +22,7 @@ import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
 import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
+import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
 @Controller('auth')
 export class AuthController {
     private readonly logger: Logger = new Logger(AuthController.name);
@@ -46,6 +47,17 @@ export class AuthController {
     ): Promise<ResponseSignInDto> {
         this.logger.debug('UserIp ' + userIp);
         return this.authService.singIn(userIp, authCredentialsDto);
+    }
+
+    
+    @Post('/changePassword')
+    @UseGuards(AuthGuard())
+    async changePassword(
+        @Ip() userIp: string,
+        @Body(ValidationPipe) changeCredentialsDto: ChangeCredentialsDto,
+        @AuthUser() user:UserDocument
+    ):Promise<ResponseDto>{
+        return this.authService.changePassword(userIp, changeCredentialsDto, user);
     }
 
     @Get('/loggedUser')
