@@ -8,25 +8,27 @@ import { JwtPayloadRefresh } from '@auth/jwt.payload.refresh.interface';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class RefreshStrategy extends PassportStrategy(Strategy,"refresh") {
-    private readonly logger : Logger = new Logger(RefreshStrategy.name);
+export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
+    private readonly logger: Logger = new Logger(RefreshStrategy.name);
 
-    constructor(@InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,private readonly configService:ConfigService) {
+    constructor(
+        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,
+        private readonly configService: ConfigService,
+    ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: process.env.REFRESH_TOKEN_SECRET_KEY,
-        },
-        );
+        });
     }
 
-    async validate(jwtPayloadRefresh:JwtPayloadRefresh){
-        const { userId , value } = jwtPayloadRefresh;
+    async validate(jwtPayloadRefresh: JwtPayloadRefresh) {
+        const { userId, value } = jwtPayloadRefresh;
         const refreshTokenId = value;
-        const refreshToken = await this.refreshTokenModel.findOne({ userId , refreshTokenId});
-        if(!refreshToken){
+        const refreshToken = await this.refreshTokenModel.findOne({ userId, refreshTokenId });
+        if (!refreshToken) {
             throw new UnauthorizedException();
         }
-        this.logger.debug("Refresh Token: "+refreshToken);
+        this.logger.debug('Refresh Token: ' + refreshToken);
         return refreshToken;
     }
 }

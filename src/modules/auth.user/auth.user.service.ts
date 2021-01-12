@@ -1,4 +1,10 @@
-import { ConflictException, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+    ConflictException,
+    Injectable,
+    InternalServerErrorException,
+    Logger,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -12,11 +18,12 @@ import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas
 
 @Injectable()
 export class AuthUserService {
+    private readonly logger: Logger = new Logger(AuthUserService.name);
 
-    private readonly logger : Logger = new Logger(AuthUserService.name);
-
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,
-    @InjectModel(RefreshToken.name) private refreshTokenModel : Model<RefreshTokenDocument>,) {}
+    constructor(
+        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,
+    ) {}
 
     async singUp(authCredentialsDto: AuthCredentialsDto, loggedUser: UserDocument = null): Promise<UserCreatedEntity> {
         const { username, password, role } = authCredentialsDto;
@@ -30,11 +37,10 @@ export class AuthUserService {
         user.creationUserId = loggedUser ? loggedUser.id : '1';
         user.modificationUserId = loggedUser ? loggedUser.id : '1';
         try {
-
             userCreated.user = await user.save();
             refreshToken.userId = userCreated.user._id;
-            refreshToken.refreshTokenId = "";
-            refreshToken.ipAddress = "";
+            refreshToken.refreshTokenId = '';
+            refreshToken.ipAddress = '';
             await refreshToken.save();
         } catch (error) {
             this.logger.error(error);
@@ -80,10 +86,10 @@ export class AuthUserService {
         return bcrypt.hash(password, salt);
     }
 
-    async getUserRefresh(userId:string):Promise<UserDocument>{
-        let _id = userId
-        let user= await this.userModel.findOne({ _id});
-        this.logger.debug("User find"+ user);
+    async getUserRefresh(userId: string): Promise<UserDocument> {
+        let _id = userId;
+        let user = await this.userModel.findOne({ _id });
+        this.logger.debug('User find' + user);
         return user;
     }
 }

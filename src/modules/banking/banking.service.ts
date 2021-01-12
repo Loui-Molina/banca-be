@@ -11,7 +11,6 @@ import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConsortiumService } from '../consortiums/consortium.service';
 
-
 @Injectable()
 export class BankingService {
     constructor(

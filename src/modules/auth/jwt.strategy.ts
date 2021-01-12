@@ -8,7 +8,7 @@ import { User, UserDocument } from '@src/modules/database/datamodels/schemas/use
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    private readonly logger : Logger = new Logger(JwtStrategy.name);
+    private readonly logger: Logger = new Logger(JwtStrategy.name);
 
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
         super({
@@ -21,11 +21,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         const { role } = payload;
         const _id = payload.userId;
         const user = await this.userModel.findOne({ _id, role });
-        this.logger.log("User"+ user);
+        this.logger.log('User' + user);
         if (!user) {
             throw new UnauthorizedException();
         }
         return user;
     }
-
 }

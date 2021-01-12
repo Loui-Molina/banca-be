@@ -45,7 +45,10 @@ export class TransactionController {
         type: Transaction,
     })
     @Roles(Role.admin)
-    createTransactionAdmin(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser: UserDocument): Promise<Transaction> {
+    createTransactionAdmin(
+        @Body() dto: CreateTransactionDto,
+        @AuthUser() loggedUser: UserDocument,
+    ): Promise<Transaction> {
         return this.transactionService.createTransactionAdmin(dto, loggedUser);
     }
 
@@ -55,7 +58,10 @@ export class TransactionController {
         type: Transaction,
     })
     @Roles(Role.consortium)
-    createTransactionConsortium(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser: UserDocument): Promise<Transaction> {
+    createTransactionConsortium(
+        @Body() dto: CreateTransactionDto,
+        @AuthUser() loggedUser: UserDocument,
+    ): Promise<Transaction> {
         return this.transactionService.createTransactionConsortium(dto, loggedUser);
     }
 

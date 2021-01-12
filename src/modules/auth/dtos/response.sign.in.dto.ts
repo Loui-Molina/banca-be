@@ -1,14 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
-export class ResponseSignInDto{
+export class ResponseSignInDto {
+    @ApiProperty()
+    accessToken: string;
 
     @ApiProperty()
-    accessToken:string;
+    expiresIn: string;
 
     @ApiProperty()
-    expiresIn:string;
-
-    @ApiProperty()
-    refreshToken:string;
+    refreshToken: string;
 }
-

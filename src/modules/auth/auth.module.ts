@@ -28,7 +28,7 @@ import { RefreshStrategy } from '@auth/refresh.strategy';
         }),
         AuthUserModule,
     ],
-    providers: [AuthService, JwtStrategy,TokenService, RefreshStrategy],
+    providers: [AuthService, JwtStrategy, TokenService, RefreshStrategy],
     controllers: [AuthController],
     exports: [
         JwtModule,
