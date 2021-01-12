@@ -69,7 +69,7 @@ export class AuthController {
         type: String,
     })
     getToken(@Ip() ipAdress:string, @AuthUser() refreshToken:RefreshToken): Promise<ResponseSignInDto> {
-        return this.tokenService.getRefreshToken(ipAdress,refreshToken);
+        return this.tokenService.getRefreshToken(ipAdress,refreshToken,true);
     }
 
     @Get('/logOut')

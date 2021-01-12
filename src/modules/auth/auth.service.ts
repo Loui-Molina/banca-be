@@ -39,26 +39,28 @@ export class AuthService {
         if (!responsePayload.userId) {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
         }
-        return await this.getToken(responsePayload,userIp);
+        return await this.getToken(responsePayload,userIp, false);
     }
 
     async getLoggedUser(user: UserDocument) {
         return await this.userModel.findById(user.id).exec();
     }
 
-    async getToken(responsePayload:ResponsePayload, userIp:string):Promise<ResponseSignInDto>{
+    async getToken(responsePayload:ResponsePayload, userIp:string,logged:boolean):Promise<ResponseSignInDto>{
         let responseSignInDto: ResponseSignInDto = new ResponseSignInDto();
         const userId: string = responsePayload.userId;
         const role: Role = responsePayload.role;
         const payload: JwtPayload = { userId, role };
+        if(!logged){
         const refreshToken = await this.tokenService.createRefreshToken(userIp,userId);
+        this.logger.debug("Logged"+logged);
         const tokenPrueba = await this.jwtService.signAsync(refreshToken,{ expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRES'),
         secret:this.configService.get<string>('REFRESH_TOKEN_SECRET_KEY')})
+        responseSignInDto.refreshToken = tokenPrueba;};
         const accessToken = await this.jwtService.signAsync(payload,{ expiresIn: this.configService.get<string>('TOKEN_EXPIRES'),
         secret:this.configService.get<string>('TOKEN_SECRET_KEY')});
         responseSignInDto.accessToken = accessToken;
-        responseSignInDto.expiresIn =  this.configService.get<string>('TOKEN_EXPIRES');
-        responseSignInDto.refreshToken = tokenPrueba;
+        responseSignInDto.expiresIn =  this.configService.get<string>('TOKEN_EXPIRES'); 
         return responseSignInDto;
     }
 

@@ -25,7 +25,7 @@ export class TokenService{
 
     ){}
 
-    async getRefreshToken(ipAdress:string ,refreshToken:RefreshToken): Promise<ResponseSignInDto>{
+    async getRefreshToken(ipAdress:string ,refreshToken:RefreshToken, logged:boolean): Promise<ResponseSignInDto>{
         if(ipAdress === refreshToken.ipAddress){
             let user:UserDocument = await this.userAuthService.getUserRefresh(refreshToken.userId);
             if(!user){
@@ -34,7 +34,7 @@ export class TokenService{
             let responsePayload:ResponsePayload= new ResponsePayload();
             responsePayload.role= user.role;
             responsePayload.userId = user._id;
-            let responseSignInDto:ResponseSignInDto= await this.authService.getToken(responsePayload, ipAdress)
+            let responseSignInDto:ResponseSignInDto= await this.authService.getToken(responsePayload, ipAdress,logged)
             this.logger.debug("User "+ user);
             return responseSignInDto;
         }
