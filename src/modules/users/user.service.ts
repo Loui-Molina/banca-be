@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Schema } from 'mongoose';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
-import {AuthUserService} from "@src/modules/auth.user/auth.user..service";
+import {AuthUserService} from "@src/modules/auth.user/auth.user.service";
 import {AuthCredentialsDto} from "@auth/dtos/auth.credentials.dto";
 import {AuthUser} from "@src/common/decorators/auth.user.decorator";
 

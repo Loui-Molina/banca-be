@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
-import { AuthUserService } from '@src/modules/auth.user/auth.user..service';
+import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
 import { ConstApp } from '@utils/const.app';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';

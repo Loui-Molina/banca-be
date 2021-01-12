@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '@database/datamodels/schemas/user';
-import { AuthUserService } from '@src/modules/auth.user/auth.user..service';
+import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
 import { UserService } from '@users/user.service';
 import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
 import { Bet, BetDocument } from '@database/datamodels/schemas/bet';

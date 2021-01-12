@@ -8,7 +8,7 @@ import { Model } from 'mongoose';
 import { BankingDto } from '@src/modules/banking/dto/banking.dto';
 import { UpdateBankingDto } from '@src/modules/banking/dto/update.banking.dto';
 import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
-import { AuthUserService } from '../auth.user/auth.user..service';
+import { AuthUserService } from '../auth.user/auth.user.service';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 
 @Injectable()
