@@ -8,6 +8,8 @@ import { TransactionModule } from '@src/modules/transactions/transaction.module'
 import { UsersModule } from '@users/users.module';
 import { AdminLotteryModule } from '@src/modules/lotteries/admin/admin.lottery.module';
 import { ConsortiumLotteryModule } from '@src/modules/lotteries/consortium/consortium.lottery.module';
+import { BettingPanelModule } from '@src/modules/bettingPanel/bettingPanel.module';
+import { BankingLotteryModule } from '@src/modules/lotteries/banking/banking.lottery.module';
 
 @Module({
     imports: [
@@ -15,11 +17,13 @@ import { ConsortiumLotteryModule } from '@src/modules/lotteries/consortium/conso
         DatabaseModule,
         ResultsModule,
         ConsortiumModule,
+        BettingPanelModule,
         TransactionModule,
         DashboardModule,
         BankingModule,
         AdminLotteryModule,
         ConsortiumLotteryModule,
+        BankingLotteryModule,
     ],
     controllers: [],
     providers: [],
@@ -28,11 +32,13 @@ import { ConsortiumLotteryModule } from '@src/modules/lotteries/consortium/conso
         DatabaseModule,
         ResultsModule,
         ConsortiumModule,
+        BettingPanelModule,
         TransactionModule,
         DashboardModule,
         BankingModule,
         AdminLotteryModule,
         ConsortiumLotteryModule,
+        BankingLotteryModule,
     ],
 })
 export class ManagerModule {}

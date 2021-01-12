@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '@database/datamodels/enums/role';
 
 export class UserDto {
     @ApiProperty({ type: String })
@@ -9,4 +10,6 @@ export class UserDto {
     username?: string;
     @ApiProperty({ type: String })
     password?: string;
+    @ApiProperty({ type: String, enum: Role })
+    role?: Role;
 }
