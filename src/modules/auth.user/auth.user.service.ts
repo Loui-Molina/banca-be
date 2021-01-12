@@ -98,6 +98,12 @@ export class AuthUserService {
     async changePassword(changeCredentialsDto:ChangeCredentialsDto, userLogged:UserDocument,ipAddress:string):Promise<ResponseDto>{
         const { username, password } = changeCredentialsDto;
         const user = await this.userModel.findOne({ username });
+        const userId = userLogged._id;
+        const refreshToken= await this.refreshTokenModel.findOne({ userId })
+        if(!refreshToken){
+            throw new InternalServerErrorException();
+        }
+        else if(refreshToken.ipAddress === ipAddress){
         if (user && (await user.validatePassword(password))) {
             try{user.salt = await bcrypt.genSalt();
             user.password = await this.hashPassword(changeCredentialsDto.newPassword, user.salt);
@@ -112,6 +118,9 @@ export class AuthUserService {
             return responseDto;
         } else {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
+        }}
+        else{
+            throw new UnauthorizedException();
         }
     }
 }
