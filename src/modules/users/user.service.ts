@@ -3,10 +3,16 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Schema } from 'mongoose';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
+import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
+import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+    constructor(
+        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        private userAuthService: AuthUserService,
+    ) {}
 
     async getAll(): Promise<Array<User>> {
         return this.userModel.find().exec();
@@ -16,20 +22,16 @@ export class UserService {
         return this.userModel.find({ [q]: value }).exec();
     }
 
-    async create(dto: UserDto): Promise<User> {
-        //TODO crear usuario con signUp
-        const newObject = new this.userModel({
-            ...dto,
-            creationDate: new Date(),
-            creationUserId: '1',
-            modificationDate: new Date(),
-            modificationUserId: '1',
-        });
-        await newObject.save();
-        return newObject;
+    async create(dto: UserDto, loggedUser: UserDocument): Promise<User> {
+        const authCredentials: AuthCredentialsDto = {
+            username: dto.username,
+            password: dto.password,
+            role: dto.role,
+        };
+        return (await this.userAuthService.singUp(authCredentials, loggedUser)).user;
     }
 
-    async update(dto: UserDto): Promise<User> {
+    async update(dto: UserDto, loggedUser: UserDocument): Promise<User> {
         return this.userModel.findByIdAndUpdate(
             dto._id,
             {
@@ -37,7 +39,7 @@ export class UserService {
                 password: dto.password,
                 name: dto.name,
                 modificationDate: new Date(),
-                modificationUserId: '1',
+                modificationUserId: loggedUser._id,
             },
             {
                 new: true,

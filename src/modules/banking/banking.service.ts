@@ -100,8 +100,11 @@ export class BankingService {
             loggedUser,
         );
 
-        //TODO UPDATE user
-        //await this.userAuthService.updateUsername(updateBankingDto.ownerUserId, updateBankingDto.user.username, loggedUser);
+        await this.userAuthService.updateUsername(
+            updateBankingDto.ownerUserId,
+            updateBankingDto.user.username,
+            loggedUser,
+        );
         const banking = await this.bankingModel.findById(updateBankingDto._id);
         banking.name = updateBankingDto.name;
         banking.status = updateBankingDto.status;
