@@ -36,6 +36,8 @@
       "@health-check/*": ["src/modules/health-check/*"],
       "@database/*": ["src/modules/database/*"],
       "@utils/*": ["src/modules/utils/*"],
+      "@auth.user/*": ["src/modules/auth.user/*"],
+      "@manager/*": ["src/modules/manager/*"],
     },
   }
 }

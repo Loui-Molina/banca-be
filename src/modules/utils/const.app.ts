@@ -1,6 +1,7 @@
 export class ConstApp {
     //RESPONSES
     public static readonly USER_CREATED_OK = 'User created correctly';
+    public static readonly LOG_OUT_OK = 'Successful log out';
 
     //MESSAGES
     public static readonly PASSWORD_MESSAGE = 'Password too weak';
@@ -14,4 +15,7 @@ export class ConstApp {
     //ERROR MESSAGES
     public static readonly USERNAME_EXISTS_ERROR = 'Username already exists';
     public static readonly INVALID_CREDENTIALS_ERROR = 'Invalid credentials';
+    public static readonly REFRESH_TOKEN_ERROR = 'Error to create refresh token';
+    public static readonly COULD_NOT_LOG_OUT_ERROR = "Couldn't log out";
+    public static readonly COULD_NOT_EMPTY_THE_TOKEN = "Couldn't empty token";
 }

@@ -1,8 +1,5 @@
-import { Languages } from '@database/datamodels/enums/languages';
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Prop } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
 
 export class BankingDto {
     @ApiProperty() _id?: ObjectId;

@@ -37,6 +37,7 @@
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
     "fastify-swagger": "^3.5.0",
+    "jwt-decode": "^3.1.2",
     "mongoose": "^5.11.8",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
