@@ -41,6 +41,7 @@ export class Banking implements DataObject {
     @ApiProperty() createdAt?: Date;
     @Prop({ required: true }) modificationUserId: string;
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     calculateBalance?: Function;
 }
 
