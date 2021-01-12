@@ -72,7 +72,7 @@ export class AuthUserService {
 
     async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = authCredentialsDto;
-        const user = await this.userModel.findOne({ username });
+        const user = await this.userModel.findOne({ username }).select("+password").select("+salt");
         this.logger.log(user);
         let responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
@@ -97,7 +97,7 @@ export class AuthUserService {
 
     async changePassword(changeCredentialsDto:ChangeCredentialsDto, userLogged:UserDocument,ipAddress:string):Promise<ResponseDto>{
         const { username, password } = changeCredentialsDto;
-        const user = await this.userModel.findOne({ username });
+        const user = await this.userModel.findOne({ username }).select("+password").select("+salt");
         const userId = userLogged._id;
         const refreshToken= await this.refreshTokenModel.findOne({ userId })
         if(!refreshToken){
