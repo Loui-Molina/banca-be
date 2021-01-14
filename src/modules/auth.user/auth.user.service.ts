@@ -8,13 +8,14 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { ConstApp } from '@utils/const.app';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
+import { SignInCredentialsDto } from '@auth/dtos/signIn.credentials.dto';
 
 @Injectable()
 export class AuthUserService {
@@ -25,11 +26,15 @@ export class AuthUserService {
         @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,
     ) {}
 
-    async singUp(authCredentialsDto: AuthCredentialsDto, loggedUser: UserDocument = null): Promise<UserCreatedEntity> {
-        const { username, password, role } = authCredentialsDto;
-        let userCreated: UserCreatedEntity = new UserCreatedEntity();
+    async singUp(
+        signUpCredentialsDto: SignUpCredentialsDto,
+        loggedUser: UserDocument = null,
+    ): Promise<UserCreatedEntity> {
+        const { username, password, role, name } = signUpCredentialsDto;
+        const userCreated: UserCreatedEntity = new UserCreatedEntity();
         const user = new this.userModel();
         const refreshToken = new this.refreshTokenModel();
+        user.name = name;
         user.username = username;
         user.salt = await bcrypt.genSalt();
         user.password = await this.hashPassword(password, user.salt);
@@ -39,7 +44,7 @@ export class AuthUserService {
         try {
             userCreated.user = await user.save();
             refreshToken.userId = userCreated.user._id;
-            refreshToken.refreshTokenId = '';
+            refreshToken.refreshTokenId = null;
             refreshToken.ipAddress = '';
             await refreshToken.save();
         } catch (error) {
@@ -68,11 +73,11 @@ export class AuthUserService {
         return user;
     }
 
-    async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<ResponsePayload> {
-        const { username, password } = authCredentialsDto;
+    async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<ResponsePayload> {
+        const { username, password } = signInCredentialsDto;
         const user = await this.userModel.findOne({ username });
         this.logger.log(user);
-        let responsePayload: ResponsePayload = new ResponsePayload();
+        const responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
             responsePayload.userId = user.id;
             responsePayload.role = user.role;
@@ -87,8 +92,8 @@ export class AuthUserService {
     }
 
     async getUserRefresh(userId: string): Promise<UserDocument> {
-        let _id = userId;
-        let user = await this.userModel.findOne({ _id });
+        const _id = userId;
+        const user = await this.userModel.findOne({ _id });
         this.logger.debug('User find' + user);
         return user;
     }
