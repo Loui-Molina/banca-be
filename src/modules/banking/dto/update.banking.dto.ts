@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import {AuthCredentialsDto} from "@auth/dtos/auth.credentials.dto";
+import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 
 export class UpdateBankingDto {
     @ApiProperty({ required: true }) _id: ObjectId;
