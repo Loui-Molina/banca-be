@@ -11,8 +11,9 @@ import { Role } from '@database/datamodels/enums/role';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
-import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
 import { TokenService } from '@auth/token.service';
+import {SignInCredentialsDto} from "@auth/dtos/signIn.credentials.dto";
 
 @Injectable()
 export class AuthService {
@@ -26,13 +27,13 @@ export class AuthService {
         @InjectModel(User.name) private userModel: Model<UserDocument>,
     ) {}
 
-    async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
-        return this.userAuthService.singUp(authCredentialsDto).then((createdUser) => createdUser.response);
+    async singUp(signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
+        return this.userAuthService.singUp(signUpCredentialsDto).then((createdUser) => createdUser.response);
     }
 
-    async singIn(userIp: string, authCredentialsDto: AuthCredentialsDto): Promise<ResponseSignInDto> {
+    async singIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
         let responsePayload: ResponsePayload = new ResponsePayload();
-        responsePayload = await this.userAuthService.validateUserPassword(authCredentialsDto);
+        responsePayload = await this.userAuthService.validateUserPassword(signInCredentialsDto);
         if (!responsePayload.userId) {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
         }
@@ -44,7 +45,7 @@ export class AuthService {
     }
 
     async getToken(responsePayload: ResponsePayload, userIp: string, logged: boolean): Promise<ResponseSignInDto> {
-        let responseSignInDto: ResponseSignInDto = new ResponseSignInDto();
+        const responseSignInDto: ResponseSignInDto = new ResponseSignInDto();
         const userId: string = responsePayload.userId;
         const role: Role = responsePayload.role;
         const payload: JwtPayload = { userId, role };

@@ -12,7 +12,7 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
-import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse } from '@nestjs/swagger';
@@ -22,6 +22,7 @@ import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
 import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
+import {SignInCredentialsDto} from "@auth/dtos/signIn.credentials.dto";
 @Controller('auth')
 export class AuthController {
     private readonly logger: Logger = new Logger(AuthController.name);
@@ -35,17 +36,17 @@ export class AuthController {
         description: 'The record has been successfully saved.',
         type: ResponseDto,
     })
-    async singUp(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
-        return this.authService.singUp(authCredentialsDto);
+    async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
+        return this.authService.singUp(signUpCredentialsDto);
     }
 
     @Post('/signin')
     async singIn(
         @Ip() userIp: string,
-        @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
+        @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
     ): Promise<ResponseSignInDto> {
         this.logger.debug('UserIp ' + userIp);
-        return this.authService.singIn(userIp, authCredentialsDto);
+        return this.authService.singIn(userIp, signInCredentialsDto);
     }
 
     @Get('/loggedUser')
