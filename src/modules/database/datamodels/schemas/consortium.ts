@@ -5,7 +5,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transaction, TransactionSchema } from '@src/modules/database/datamodels/schemas/transaction';
 import { Supervisor, SupervisorSchema } from '@src/modules/database/datamodels/schemas/supervisor';
-import { Banking, BankingSchema } from '@src/modules/database/datamodels/schemas/banking';
 import { ConsortiumLottery, ConsortiumLotterySchema } from '@database/datamodels/schemas/consortium.lottery';
 
 export type ConsortiumDocument = Consortium & Document;
@@ -47,7 +46,7 @@ export const ConsortiumSchema = SchemaFactory.createForClass(Consortium);
 
 ConsortiumSchema.methods.calculateBalance = async function calculateBalance(): Promise<number> {
     let balance = 0;
-    const transactions: Transaction[] = this.transactions;
+    const transactions: Transaction[] = (this as ConsortiumDocument).transactions;
     transactions.forEach((item) => {
         balance += item.amount;
     });

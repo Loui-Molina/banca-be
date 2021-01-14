@@ -33,12 +33,13 @@ export class User implements DataObject {
     @Prop({ required: true })
     modificationUserId: string;
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     validatePassword: Function;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.methods.validatePassword = async function validatePassword(password: string): Promise<boolean> {
-    const hash = await bcrypt.hash(password, this.salt);
-    return hash === this.password;
+    const hash = await bcrypt.hash(password, (this as UserDocument).salt);
+    return hash === (this as UserDocument).password;
 };
