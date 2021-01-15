@@ -7,7 +7,6 @@ import {
     Ip,
     Logger,
     Post,
-    UseFilters,
     UseGuards,
     ValidationPipe,
 } from '@nestjs/common';
@@ -22,7 +21,12 @@ import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
 import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
-import {SignInCredentialsDto} from "@auth/dtos/signIn.credentials.dto";
+import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '@database/datamodels/enums/role';
+import { SignInCredentialsDto } from './dtos/signIn.credentials.dto';
+
 @Controller('auth')
 export class AuthController {
     private readonly logger: Logger = new Logger(AuthController.name);
@@ -47,6 +51,17 @@ export class AuthController {
     ): Promise<ResponseSignInDto> {
         this.logger.debug('UserIp ' + userIp);
         return this.authService.singIn(userIp, signInCredentialsDto);
+    }
+
+    @Post('/changePassword')
+    @UseGuards(AuthGuard(), RolesGuard)
+    @Roles(Role.admin)
+    async changePassword(
+        @Ip() userIp: string,
+        @Body(ValidationPipe) changeCredentialsDto: ChangeCredentialsDto,
+        @AuthUser() user: UserDocument,
+    ): Promise<ResponseDto> {
+        return this.authService.changePassword(userIp, changeCredentialsDto, user);
     }
 
     @Get('/loggedUser')

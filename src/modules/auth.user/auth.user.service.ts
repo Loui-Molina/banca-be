@@ -1,5 +1,6 @@
 import {
     ConflictException,
+    HttpStatus,
     Injectable,
     InternalServerErrorException,
     Logger,
@@ -8,7 +9,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { ConstApp } from '@utils/const.app';
 import { ResponseDto } from '@utils/dtos/response.dto';
@@ -16,6 +16,8 @@ import { User, UserDocument } from '@src/modules/database/datamodels/schemas/use
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
 import { SignInCredentialsDto } from '@auth/dtos/signIn.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
+import { ChangeCredentialsDto } from '@auth/dtos/change.credentials.dto';
 
 @Injectable()
 export class AuthUserService {
@@ -75,7 +77,7 @@ export class AuthUserService {
 
     async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = signInCredentialsDto;
-        const user = await this.userModel.findOne({ username });
+        const user = await this.userModel.findOne({ username }).select('+password').select('+salt');
         this.logger.log(user);
         const responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
@@ -96,5 +98,38 @@ export class AuthUserService {
         const user = await this.userModel.findOne({ _id });
         this.logger.debug('User find' + user);
         return user;
+    }
+
+    async changePassword(
+        changeCredentialsDto: ChangeCredentialsDto,
+        userLogged: UserDocument,
+        ipAddress: string,
+    ): Promise<ResponseDto> {
+        const { username, password } = changeCredentialsDto;
+        const user = await this.userModel.findOne({ username }).select('+password').select('+salt');
+        const userId = userLogged._id;
+        const refreshToken = await this.refreshTokenModel.findOne({ userId });
+        if (!refreshToken) {
+            throw new InternalServerErrorException();
+        } else if (refreshToken.ipAddress === ipAddress) {
+            if (user && (await user.validatePassword(password))) {
+                try {
+                    user.salt = await bcrypt.genSalt();
+                    user.password = await this.hashPassword(changeCredentialsDto.newPassword, user.salt);
+                    user.modificationUserId = userLogged._id;
+                    await user.save();
+                } catch (error) {
+                    throw new InternalServerErrorException(ConstApp.COULD_NOT_CHANGE_PASSWORD);
+                }
+                const responseDto: ResponseDto = new ResponseDto();
+                responseDto.message = ConstApp.PASSWORD_CHANGED;
+                responseDto.statusCode = HttpStatus.OK;
+                return responseDto;
+            } else {
+                throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
+            }
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 }
