@@ -49,7 +49,7 @@ export const BankingSchema = SchemaFactory.createForClass(Banking);
 
 BankingSchema.methods.calculateBalance = async function calculateBalance(): Promise<number> {
     let balance = 0;
-    const transactions: Transaction[] = this.transactions;
+    const transactions: Transaction[] = (this as BankingDocument).transactions;
     transactions.forEach((item) => {
         balance += item.amount;
     });

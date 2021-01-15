@@ -4,7 +4,7 @@ import { Document, ObjectId } from 'mongoose';
 
 export type RefreshTokenDocument = RefreshToken & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, collection: 'tokens' })
 export class RefreshToken {
     @Prop({ unique: true })
     userId: string;
@@ -14,8 +14,8 @@ export class RefreshToken {
     ipAddress: string;
 
     @ApiProperty()
-    @Prop({ unique: true })
+    @Prop()
     refreshTokenId: string;
 }
 
-export const RefreshTokenSchema = SchemaFactory.createForClass(RefreshToken).set('collection', 'tokens');
+export const RefreshTokenSchema = SchemaFactory.createForClass(RefreshToken);

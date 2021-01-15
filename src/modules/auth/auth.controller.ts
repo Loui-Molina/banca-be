@@ -7,12 +7,11 @@ import {
     Ip,
     Logger,
     Post,
-    UseFilters,
     UseGuards,
     ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
-import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse } from '@nestjs/swagger';
@@ -25,7 +24,9 @@ import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas
 import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from '@src/common/decorators/roles.decorator';
-import { Role } from '../database/datamodels/enums/role';
+import { Role } from '@database/datamodels/enums/role';
+import { SignInCredentialsDto } from './dtos/signIn.credentials.dto';
+
 @Controller('auth')
 export class AuthController {
     private readonly logger: Logger = new Logger(AuthController.name);
@@ -39,28 +40,27 @@ export class AuthController {
         description: 'The record has been successfully saved.',
         type: ResponseDto,
     })
-    async singUp(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
-        return this.authService.singUp(authCredentialsDto);
+    async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
+        return this.authService.singUp(signUpCredentialsDto);
     }
 
     @Post('/signin')
     async singIn(
         @Ip() userIp: string,
-        @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
+        @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
     ): Promise<ResponseSignInDto> {
         this.logger.debug('UserIp ' + userIp);
-        return this.authService.singIn(userIp, authCredentialsDto);
+        return this.authService.singIn(userIp, signInCredentialsDto);
     }
 
-    
     @Post('/changePassword')
-    @UseGuards(AuthGuard(),RolesGuard)
+    @UseGuards(AuthGuard(), RolesGuard)
     @Roles(Role.admin)
     async changePassword(
         @Ip() userIp: string,
         @Body(ValidationPipe) changeCredentialsDto: ChangeCredentialsDto,
-        @AuthUser() user:UserDocument
-    ):Promise<ResponseDto>{
+        @AuthUser() user: UserDocument,
+    ): Promise<ResponseDto> {
         return this.authService.changePassword(userIp, changeCredentialsDto, user);
     }
 
