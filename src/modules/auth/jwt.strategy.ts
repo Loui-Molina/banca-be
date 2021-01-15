@@ -21,7 +21,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         const { role } = payload;
         const _id = payload.userId;
         const user = await this.userModel.findOne({ _id, role });
-        this.logger.log('User' + user);
         if (!user) {
             throw new UnauthorizedException();
         }

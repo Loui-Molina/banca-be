@@ -11,9 +11,10 @@ import { Role } from '@database/datamodels/enums/role';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
-import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
 import { TokenService } from '@auth/token.service';
-import {SignInCredentialsDto} from "@auth/dtos/signIn.credentials.dto";
+import { SignInCredentialsDto } from './dtos/signIn.credentials.dto';
+import { SignUpCredentialsDto } from './dtos/signUp.credentials.dto';
+import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
 
 @Injectable()
 export class AuthService {
@@ -51,23 +52,28 @@ export class AuthService {
         const payload: JwtPayload = { userId, role };
         if (!logged) {
             const refreshToken = await this.tokenService.createRefreshToken(userIp, userId);
-            this.logger.debug('Logged' + logged);
-            const tokenPrueba = await this.jwtService.signAsync(refreshToken, {
+            responseSignInDto.refreshToken = await this.jwtService.signAsync(refreshToken, {
                 expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRES'),
                 secret: this.configService.get<string>('REFRESH_TOKEN_SECRET_KEY'),
             });
-            responseSignInDto.refreshToken = tokenPrueba;
         }
-        const accessToken = await this.jwtService.signAsync(payload, {
+        responseSignInDto.accessToken = await this.jwtService.signAsync(payload, {
             expiresIn: this.configService.get<string>('TOKEN_EXPIRES'),
             secret: this.configService.get<string>('TOKEN_SECRET_KEY'),
         });
-        responseSignInDto.accessToken = accessToken;
         responseSignInDto.expiresIn = this.configService.get<string>('TOKEN_EXPIRES');
         return responseSignInDto;
     }
 
     async logOut(ipAdress: string, user: UserDocument): Promise<ResponseDto> {
         return this.tokenService.deleteRefreshToken(ipAdress, user);
+    }
+
+    async changePassword(
+        ipAddress: string,
+        changeCredentialsDto: ChangeCredentialsDto,
+        userLogged: UserDocument,
+    ): Promise<ResponseDto> {
+        return await this.userAuthService.changePassword(changeCredentialsDto, userLogged, ipAddress);
     }
 }
