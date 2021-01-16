@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Ip, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Ip, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UserService } from '@users/user.service';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
