@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
+import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
 
 export class CreateConsortiumDto {
     @ApiProperty() user: SignUpCredentialsDto;

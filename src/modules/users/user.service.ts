@@ -4,7 +4,7 @@ import { Model, Schema } from 'mongoose';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
 import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
-import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
+import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 
 @Injectable()
