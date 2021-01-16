@@ -12,9 +12,8 @@ import { User, UserDocument } from '@src/modules/database/datamodels/schemas/use
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
 import { TokenService } from '@auth/token.service';
-import { SignInCredentialsDto } from './dtos/signIn.credentials.dto';
-import { SignUpCredentialsDto } from './dtos/signUp.credentials.dto';
-import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
+import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from './dtos/sign.up.credentials.dto';
 import { ChangePasswordDto } from './dtos/change.password.dto';
 
 @Injectable()
@@ -71,15 +70,8 @@ export class AuthService {
         return this.tokenService.deleteRefreshToken(ipAdress, user);
     }
 
-    async changePasswordRemember(
-        ipAddress: string,
-        changeCredentialsDto: ChangeCredentialsDto,
-        userLogged: UserDocument,
-    ): Promise<ResponseDto> {
-        return await this.userAuthService.changePasswordRemember(changeCredentialsDto, userLogged, ipAddress);
-    }
-
     async changePassword(ipAddress: string, changePasswordDto: ChangePasswordDto, user: UserDocument): Promise<ResponseDto> {
         return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress);
     }
+
 }

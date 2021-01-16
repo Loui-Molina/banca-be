@@ -11,7 +11,7 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
-import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
+import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse } from '@nestjs/swagger';
@@ -21,11 +21,10 @@ import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
 import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
-import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
-import { SignInCredentialsDto } from './dtos/signIn.credentials.dto';
+import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
 import { ChangePasswordDto } from './dtos/change.password.dto';
 
 @Controller('auth')
@@ -52,17 +51,6 @@ export class AuthController {
     ): Promise<ResponseSignInDto> {
         this.logger.debug('UserIp ' + userIp);
         return this.authService.singIn(userIp, signInCredentialsDto);
-    }
-
-    @Post('/change-password-remember')
-    @UseGuards(AuthGuard(), RolesGuard)
-    @Roles(Role.admin)
-    async changePassword(
-        @Ip() userIp: string,
-        @Body(ValidationPipe) changeCredentialsDto: ChangeCredentialsDto,
-        @AuthUser() user: UserDocument,
-    ): Promise<ResponseDto> {
-        return this.authService.changePasswordRemember(userIp, changeCredentialsDto, user);
     }
 
     @Post('/change-password')
