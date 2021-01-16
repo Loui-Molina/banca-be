@@ -7,10 +7,16 @@ import { ConstApp } from '@utils/const.app';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
+<<<<<<< HEAD:src/modules/bettingPanel/bettingPanel.controller.ts
 import { BettingPanelService } from '@src/modules/bettingPanel/bettingPanel.service';
 import { BetDto } from '@src/modules/bettingPanel/dtos/bet.dto';
 import { CreateBetDto } from '@src/modules/bettingPanel/dtos/create.bet.dto';
 import {Bet, BetDocument} from "@database/datamodels/schemas/bet";
+=======
+import { BettingPanelService } from '@src/modules/betting.panel/betting.panel.service';
+import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
+import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
+>>>>>>> 031fa74... Renaming betting panel:src/modules/betting.panel/betting.panel.controller.ts
 
 @ApiTags('bettingPanel')
 @Controller('bettingPanel')

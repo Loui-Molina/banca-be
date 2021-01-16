@@ -4,8 +4,8 @@ import { UsersModule } from '@users/users.module';
 import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { Bet, BetSchema } from '@database/datamodels/schemas/bet';
-import { BettingPanelService } from '@src/modules/bettingPanel/bettingPanel.service';
-import { BettingPanelController } from '@src/modules/bettingPanel/bettingPanel.controller';
+import { BettingPanelService } from '@src/modules/betting.panel/betting.panel.service';
+import { BettingPanelController } from '@src/modules/betting.panel/betting.panel.controller';
 
 @Module({
     imports: [
