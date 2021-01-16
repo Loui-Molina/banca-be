@@ -8,6 +8,8 @@ import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
 import { Bet, BetDocument } from '@database/datamodels/schemas/bet';
 import { BetDto } from '@src/modules/bettingPanel/dtos/bet.dto';
 import { CreateBetDto } from '@src/modules/bettingPanel/dtos/create.bet.dto';
+import { Play } from '@database/datamodels/schemas/play';
+import { PlayNumbers } from '@database/datamodels/schemas/play.numbers';
 
 @Injectable()
 export class BettingPanelService {
@@ -19,13 +21,8 @@ export class BettingPanelService {
         private userService: UserService,
     ) {}
 
-    async getAll(): Promise<Array<BetDto>> {
-        const bets: Array<BetDocument> = await this.betModel.find({}).exec();
-        const betsDto: BetDto[] = [];
-        for await (const bet of bets) {
-            betsDto.push(await this.mapToDto(bet));
-        }
-        return betsDto;
+    async getAll(): Promise<Array<Bet>> {
+        return await this.betModel.find({}).exec();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
@@ -39,16 +36,29 @@ export class BettingPanelService {
     }
 
     async create(dto: CreateBetDto, loggedUser: UserDocument): Promise<BetDto> {
-        //CREATE user
-        console.log(dto, loggedUser);
-        const newObject = new this.betModel({
-            // name: dto.name,
-            // status: dto.status,
-            // ownerUserId: createdUser.id,
-            // creationUserId: loggedUser._id,
-            // modificationUserId: loggedUser._id,
+        const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+        const plays: Play[] = [];
+        dto.plays.map((play) => {
+            play.playNumbers.creationUserId = loggedUser._id;
+            play.playNumbers.modificationUserId = loggedUser._id;
+            plays.push({
+                playNumbers: play.playNumbers,
+                amount: play.amount,
+                creationUserId: loggedUser._id,
+                lotteryId: play.lotteryId,
+                modificationUserId: loggedUser._id,
+                playType: play.playType,
+            });
         });
-        await newObject.save();
+        const newObject = new this.betModel({
+            plays: plays,
+            date: new Date(),
+            creationUserId: loggedUser._id,
+            modificationUserId: loggedUser._id,
+            sn: await this.createSN(),
+        });
+        await banking.bets.push(newObject);
+        await banking.save();
         return this.mapToDto(newObject);
     }
 
@@ -59,6 +69,13 @@ export class BettingPanelService {
     async mapToDto(bet: BetDocument): Promise<BetDto> {
         return {
             _id: bet._id,
+            plays: bet.plays,
+            date: bet.date,
+            sn: bet.sn,
         };
+    }
+
+    private async createSN(): Promise<string> {
+        return new Date().getTime().toString() + parseInt(String(Math.random() * (999 - 100) + 100), 0).toString();
     }
 }

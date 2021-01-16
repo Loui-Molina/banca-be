@@ -10,6 +10,7 @@ import { RolesGuard } from '@auth/guards/roles.guard';
 import { BettingPanelService } from '@src/modules/bettingPanel/bettingPanel.service';
 import { BetDto } from '@src/modules/bettingPanel/dtos/bet.dto';
 import { CreateBetDto } from '@src/modules/bettingPanel/dtos/create.bet.dto';
+import {Bet, BetDocument} from "@database/datamodels/schemas/bet";
 
 @ApiTags('bettingPanel')
 @Controller('bettingPanel')
@@ -20,10 +21,10 @@ export class BettingPanelController {
     @Get()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: BetDto,
+        type: Bet,
     })
     @Roles(Role.banker)
-    getAll(): Promise<Array<BetDto>> {
+    getAll(): Promise<Array<Bet>> {
         return this.bettingPanelService.getAll();
     }
 

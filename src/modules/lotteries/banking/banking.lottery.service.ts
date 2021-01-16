@@ -127,15 +127,13 @@ export class BankingLotteryService {
                             }
                             break;
                     }
-                    if (!opened) {
-                        lottery.status = false;
-                        leftTime = 0;
+                    if (opened) {
+                        lottery.bankings = consortiumLottery.bankingIds;
+                        lottery.prizeLimits = consortiumLottery.prizeLimits;
+                        lottery.bettingLimits = consortiumLottery.bettingLimits;
+                        lottery.leftTime = leftTime;
+                        lotteriesDtos.push(lottery);
                     }
-                    lottery.bankings = consortiumLottery.bankingIds;
-                    lottery.prizeLimits = consortiumLottery.prizeLimits;
-                    lottery.bettingLimits = consortiumLottery.bettingLimits;
-                    lottery.leftTime = leftTime;
-                    lotteriesDtos.push(lottery);
                 }
             }
         });
