@@ -11,7 +11,7 @@ import { ConstApp } from '@utils/const.app';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 
 @ApiTags('users')
-@Controller('users')
+@Controller(' ')
 @UseGuards(AuthGuard(), RolesGuard)
 export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -36,6 +36,7 @@ export class UserController {
         return this.userService.getFiltered(q, value);
     }
 
+    /*
     @Post()
     @Roles(Role.admin)
     @ApiCreatedResponse({
@@ -45,6 +46,7 @@ export class UserController {
     create(@Body() dto: UserDto, @AuthUser() loggedUser: UserDocument): Promise<User> {
         return this.userService.create(dto, loggedUser);
     }
+    */
 
     @Put()
     @Roles(Role.admin)

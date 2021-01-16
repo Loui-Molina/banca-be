@@ -9,19 +9,21 @@ import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
-        private userAuthService: AuthUserService,
-    ) {}
+    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
     async getAll(): Promise<Array<User>> {
         return this.userModel.find().exec();
     }
 
-    async getFiltered(q: string, value: any): Promise<Array<User>> {
-        return this.userModel.find({ [q]: value }).exec();
+    async getFiltered(q: string, value: any): Promise<UserDocument[]> {
+        return await this.userModel.find({ [q]: value }).exec();
     }
 
+    async getSingleFiltered(q: string, value: any): Promise<UserDocument> {
+        return (await this.userModel.find({ [q]: value }).exec()).pop();
+    }
+
+    /*
     async create(dto: UserDto, loggedUser: UserDocument): Promise<User> {
         const signUpCredentialsDto: SignUpCredentialsDto = {
             name: dto.name,
@@ -31,6 +33,7 @@ export class UserService {
         };
         return (await this.userAuthService.singUp(signUpCredentialsDto, loggedUser)).user;
     }
+    */
 
     async update(dto: UserDto, loggedUser: UserDocument, userIp: string): Promise<User> {
         //TODO cambio de password no funciona
@@ -60,7 +63,12 @@ export class UserService {
         return this.userModel.findByIdAndRemove(id).exec();
     }
 
-    async get(id: any): Promise<User> {
+    //TODO CHECK USAGE
+    async get(id: any): Promise<UserDocument> {
         return await this.userModel.findById(id).exec();
+    }
+
+    newUserModel(): UserDocument {
+        return new this.userModel();
     }
 }
