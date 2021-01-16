@@ -47,7 +47,7 @@ export class ConsortiumService {
 
     async update(dto: CreateConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
         //UPDATE user
-        await this.userAuthService.updateUsername(dto.ownerUserId, dto.user.username, loggedUser);
+        await this.userAuthService.updateUser(dto.ownerUserId, dto.user, loggedUser);
 
         const consortium = await this.consortiumModel.findById(dto._id);
         consortium.name = dto.name;

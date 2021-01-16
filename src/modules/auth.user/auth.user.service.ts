@@ -64,10 +64,13 @@ export class AuthUserService {
         return userCreated;
     }
 
-    async updateUsername(id: ObjectId, username: string, loggedUser: UserDocument) {
+    async updateUser(id: ObjectId, userChanged: SignUpCredentialsDto, loggedUser: UserDocument) {
+        const { username, name } = userChanged;
         const user = await this.userModel.findById(id).exec();
+        user.name = name;
         user.username = username;
         user.modificationUserId = loggedUser._id;
+        //TODO cambio de password aca sin revision solo hay q revisar q exista una password nueva
         await user.save();
         return user;
     }

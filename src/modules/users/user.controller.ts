@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import {Body, Controller, Delete, Get, Ip, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UserService } from '@users/user.service';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
@@ -52,8 +52,8 @@ export class UserController {
         description: ConstApp.DEFAULT_PUT_OK,
         type: User,
     })
-    update(@Body() dto: UserDto, @AuthUser() loggedUser: UserDocument): Promise<User> {
-        return this.userService.update(dto, loggedUser);
+    update(@Ip() userIp: string, @Body() dto: UserDto, @AuthUser() loggedUser: UserDocument): Promise<User> {
+        return this.userService.update(dto, loggedUser, userIp);
     }
 
     @Delete(':id')

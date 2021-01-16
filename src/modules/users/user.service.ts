@@ -32,8 +32,15 @@ export class UserService {
         return (await this.userAuthService.singUp(signUpCredentialsDto, loggedUser)).user;
     }
 
-    async update(dto: UserDto, loggedUser: UserDocument): Promise<User> {
+    async update(dto: UserDto, loggedUser: UserDocument, userIp: string): Promise<User> {
         //TODO cambio de password no funciona
+        /*if (dto.password != null && dto.password.length > 0){
+            const userChange: User = await this.userModel.findById(dto._id).exec();
+            await this.userAuthService.changePassword({
+                userChange.username,
+                password
+            }, loggedUser, userIp)
+        }*/
         return this.userModel.findByIdAndUpdate(
             dto._id,
             {
