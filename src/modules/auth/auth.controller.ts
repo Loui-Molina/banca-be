@@ -26,6 +26,7 @@ import { RolesGuard } from './guards/roles.guard';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { SignInCredentialsDto } from './dtos/signIn.credentials.dto';
+import { ChangePasswordDto } from './dtos/change.password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,7 +34,7 @@ export class AuthController {
 
     constructor(private readonly authService: AuthService, private readonly tokenService: TokenService) {}
 
-    @Post('/signup')
+    @Post('/sign-up')
     @HttpCode(HttpStatus.CREATED)
     @ApiOkResponse({ type: ResponseDto, description: 'Successfully Registered' })
     @ApiCreatedResponse({
@@ -44,7 +45,7 @@ export class AuthController {
         return this.authService.singUp(signUpCredentialsDto);
     }
 
-    @Post('/signin')
+    @Post('/sign-in')
     async singIn(
         @Ip() userIp: string,
         @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
@@ -53,7 +54,7 @@ export class AuthController {
         return this.authService.singIn(userIp, signInCredentialsDto);
     }
 
-    @Post('/changePassword')
+    @Post('/change-password-remember')
     @UseGuards(AuthGuard(), RolesGuard)
     @Roles(Role.admin)
     async changePassword(
@@ -61,10 +62,21 @@ export class AuthController {
         @Body(ValidationPipe) changeCredentialsDto: ChangeCredentialsDto,
         @AuthUser() user: UserDocument,
     ): Promise<ResponseDto> {
-        return this.authService.changePassword(userIp, changeCredentialsDto, user);
+        return this.authService.changePasswordRemember(userIp, changeCredentialsDto, user);
     }
 
-    @Get('/loggedUser')
+    @Post('/change-password')
+    @UseGuards(AuthGuard(), RolesGuard)
+    @Roles(Role.admin)
+    async changePasswordRemember(
+        @Ip() userIp: string,
+        @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
+        @AuthUser() user: UserDocument,
+    ): Promise<ResponseDto> {
+        return this.authService.changePassword(userIp, changePasswordDto, user);
+    }
+
+    @Get('/logged-user')
     @UseGuards(AuthGuard())
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
@@ -88,7 +100,7 @@ export class AuthController {
         return refreshToken;
     }
 
-    @Get('/refreshToken')
+    @Get('/refresh-token')
     @UseGuards(AuthGuard('refresh'))
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
@@ -98,7 +110,7 @@ export class AuthController {
         return this.tokenService.getRefreshToken(ipAdress, refreshToken, true);
     }
 
-    @Get('/logOut')
+    @Get('/log-out')
     @UseGuards(AuthGuard())
     logOut(@Ip() ipAdress: string, @AuthUser() user: UserDocument): Promise<ResponseDto> {
         return this.authService.logOut(ipAdress, user);

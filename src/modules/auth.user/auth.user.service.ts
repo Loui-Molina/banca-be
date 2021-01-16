@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     ConflictException,
     HttpStatus,
     Injectable,
@@ -18,6 +19,7 @@ import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas
 import { SignInCredentialsDto } from '@auth/dtos/signIn.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
 import { ChangeCredentialsDto } from '@auth/dtos/change.credentials.dto';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 
 @Injectable()
 export class AuthUserService {
@@ -26,6 +28,7 @@ export class AuthUserService {
     constructor(
         @InjectModel(User.name) private userModel: Model<UserDocument>,
         @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,
+        
     ) {}
 
     async singUp(
@@ -100,7 +103,7 @@ export class AuthUserService {
         return user;
     }
 
-    async changePassword(
+    async changePasswordRemember(
         changeCredentialsDto: ChangeCredentialsDto,
         userLogged: UserDocument,
         ipAddress: string,
@@ -116,6 +119,42 @@ export class AuthUserService {
                 try {
                     user.salt = await bcrypt.genSalt();
                     user.password = await this.hashPassword(changeCredentialsDto.newPassword, user.salt);
+                    user.modificationUserId = userLogged._id;
+                    await user.save();
+                } catch (error) {
+                    throw new InternalServerErrorException(ConstApp.COULD_NOT_CHANGE_PASSWORD);
+                }
+                const responseDto: ResponseDto = new ResponseDto();
+                responseDto.message = ConstApp.PASSWORD_CHANGED;
+                responseDto.statusCode = HttpStatus.OK;
+                return responseDto;
+            } else {
+                throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
+            }
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    async changePassword(
+        changePasswordDto: ChangePasswordDto,
+        userLogged: UserDocument,
+        ipAddress: string,
+    ): Promise<ResponseDto> {
+        const { username, password, verifyPassword } = changePasswordDto;
+        if(password !== verifyPassword){
+            throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH); 
+        }
+        const user = await this.userModel.findOne({ username });
+        const userId = userLogged._id;
+        const refreshToken = await this.refreshTokenModel.findOne({ userId });
+        if (!refreshToken) {
+            throw new InternalServerErrorException();
+        } else if (refreshToken.ipAddress === ipAddress) {
+            if (user && (await user.validatePassword(password))) {
+                try {
+                    user.salt = await bcrypt.genSalt();
+                    user.password = await this.hashPassword(changePasswordDto.password, user.salt);
                     user.modificationUserId = userLogged._id;
                     await user.save();
                 } catch (error) {
