@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
@@ -11,6 +11,7 @@ import { Bet } from '@database/datamodels/schemas/bet';
 import { BettingPanelService } from '@src/modules/betting.panel/betting.panel.service';
 import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
+import {UpdateBetDto} from "@src/modules/betting.panel/dtos/update.bet.dto";
 
 @ApiTags('bettingPanel')
 @Controller('bettingPanel')
@@ -24,8 +25,8 @@ export class BettingPanelController {
         type: Bet,
     })
     @Roles(Role.banker)
-    getAll(): Promise<Array<Bet>> {
-        return this.bettingPanelService.getAll();
+    getAll(@AuthUser() loggedUser: UserDocument): Promise<Array<Bet>> {
+        return this.bettingPanelService.getAll(loggedUser);
     }
 
     @Get('search')
@@ -46,6 +47,16 @@ export class BettingPanelController {
     @Roles(Role.banker)
     create(@Body() dto: CreateBetDto, @AuthUser() loggedUser: UserDocument): Promise<BetDto> {
         return this.bettingPanelService.create(dto, loggedUser);
+    }
+
+    @Put('/cancel')
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_PUT_OK,
+        type: BetDto,
+    })
+    @Roles(Role.banker)
+    cancelBet(@Body() dto: UpdateBetDto, @AuthUser() loggedUser: UserDocument): Promise<BetDto> {
+        return this.bettingPanelService.cancelBet(dto, loggedUser);
     }
 
     @Get('get/:id')
