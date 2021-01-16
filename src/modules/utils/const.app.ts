@@ -2,6 +2,7 @@ export class ConstApp {
     //RESPONSES
     public static readonly USER_CREATED_OK = 'User created correctly';
     public static readonly LOG_OUT_OK = 'Successful log out';
+    public static readonly PASSWORD_CHANGED = 'PASSWORD_CHANGED';
 
     //MESSAGES
     public static readonly PASSWORD_MESSAGE = 'Password too weak';
@@ -18,4 +19,6 @@ export class ConstApp {
     public static readonly REFRESH_TOKEN_ERROR = 'Error to create refresh token';
     public static readonly COULD_NOT_LOG_OUT_ERROR = "Couldn't log out";
     public static readonly COULD_NOT_EMPTY_THE_TOKEN = "Couldn't empty token";
+    public static readonly COULD_NOT_CHANGE_PASSWORD = 'PASSWORD NOT CHANGED';
+    public static readonly NOT_LOGGE = 'PASSWORD NOT CHANGED';
 }

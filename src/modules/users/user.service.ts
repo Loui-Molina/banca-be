@@ -4,7 +4,7 @@ import { Model, Schema } from 'mongoose';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
 import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
-import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 
 @Injectable()
@@ -23,20 +23,29 @@ export class UserService {
     }
 
     async create(dto: UserDto, loggedUser: UserDocument): Promise<User> {
-        const authCredentials: AuthCredentialsDto = {
+        const signUpCredentialsDto: SignUpCredentialsDto = {
+            name: dto.name,
             username: dto.username,
             password: dto.password,
             role: dto.role,
         };
-        return (await this.userAuthService.singUp(authCredentials, loggedUser)).user;
+        return (await this.userAuthService.singUp(signUpCredentialsDto, loggedUser)).user;
     }
 
-    async update(dto: UserDto, loggedUser: UserDocument): Promise<User> {
+    async update(dto: UserDto, loggedUser: UserDocument, userIp: string): Promise<User> {
+        //TODO cambio de password no funciona
+        /*if (dto.password != null && dto.password.length > 0){
+            const userChange: User = await this.userModel.findById(dto._id).exec();
+            await this.userAuthService.changePassword({
+                userChange.username,
+                password
+            }, loggedUser, userIp)
+        }*/
         return this.userModel.findByIdAndUpdate(
             dto._id,
             {
                 username: dto.username,
-                password: dto.password,
+                // password: dto.password,
                 name: dto.name,
                 modificationDate: new Date(),
                 modificationUserId: loggedUser._id,
