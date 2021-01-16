@@ -18,7 +18,6 @@ import { ChangePasswordDto } from './dtos/change.password.dto';
 
 @Injectable()
 export class AuthService {
-
     private logger: Logger = new Logger(AuthService.name);
 
     constructor(
@@ -70,8 +69,12 @@ export class AuthService {
         return this.tokenService.deleteRefreshToken(ipAdress, user);
     }
 
-    async changePassword(ipAddress: string, changePasswordDto: ChangePasswordDto, user: UserDocument, remember:boolean): Promise<ResponseDto> {
+    async changePassword(
+        ipAddress: string,
+        changePasswordDto: ChangePasswordDto,
+        user: UserDocument,
+        remember: boolean,
+    ): Promise<ResponseDto> {
         return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress, remember);
     }
-
 }

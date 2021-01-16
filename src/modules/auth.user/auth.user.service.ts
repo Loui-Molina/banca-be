@@ -108,13 +108,13 @@ export class AuthUserService {
         changePasswordDto: ChangePasswordDto,
         userLogged: UserDocument,
         ipAddress: string,
-        remember:boolean
+        remember: boolean,
     ): Promise<ResponseDto> {
         const { username, password, newPassword, verifyPassword } = changePasswordDto;
         const user = await this.userModel.findOne({ username }).select('+password').select('+salt');
         const userId = userLogged._id;
-        const refreshToken = await this.refreshTokenModel.findOne({ userId }); 
-        if(newPassword !== verifyPassword){
+        const refreshToken = await this.refreshTokenModel.findOne({ userId });
+        if (newPassword !== verifyPassword) {
             throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);
         }
         if (!refreshToken) {

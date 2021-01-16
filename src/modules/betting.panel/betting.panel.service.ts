@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '@database/datamodels/schemas/user';
@@ -9,6 +9,8 @@ import { Bet, BetDocument } from '@database/datamodels/schemas/bet';
 import { Play } from '@database/datamodels/schemas/play';
 import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
+import { BetStatus } from '@database/datamodels/enums/bet.status';
+import { UpdateBetDto } from '@src/modules/betting.panel/dtos/update.bet.dto';
 
 @Injectable()
 export class BettingPanelService {
@@ -20,8 +22,9 @@ export class BettingPanelService {
         private userService: UserService,
     ) {}
 
-    async getAll(): Promise<Array<Bet>> {
-        return await this.betModel.find({}).exec();
+    async getAll(loggedUser: UserDocument): Promise<Array<Bet>> {
+        const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+        return banking.bets.reverse();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
@@ -55,10 +58,36 @@ export class BettingPanelService {
             creationUserId: loggedUser._id,
             modificationUserId: loggedUser._id,
             sn: await this.createSN(),
+            betStatus: BetStatus.pending,
         });
         await banking.bets.push(newObject);
         await banking.save();
         return this.mapToDto(newObject);
+    }
+
+    async cancelBet(dto: UpdateBetDto, loggedUser: UserDocument): Promise<BetDto> {
+        const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+        const bet = banking.bets.filter((bet) => bet._id.toString() === dto._id.toString()).pop();
+        if (bet.betStatus !== BetStatus.pending || !(await this.canCancelTicket(bet))) {
+            throw new BadRequestException();
+        }
+        let betFounded: BetDocument = null;
+        banking.bets.map((bet: BetDocument) => {
+            if (bet._id.toString() === dto._id.toString()) {
+                bet.betStatus = BetStatus.cancelled;
+                betFounded = bet;
+            }
+        });
+        await banking.save();
+        return this.mapToDto(betFounded);
+    }
+
+    private async canCancelTicket(bet: Bet): Promise<boolean> {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const diffMs = new Date(bet.date) - new Date();
+        const diffMins = diffMs / 60000; // minutes
+        return diffMins > -5;
     }
 
     async get(id: string): Promise<BetDto> {
@@ -66,11 +95,13 @@ export class BettingPanelService {
     }
 
     async mapToDto(bet: BetDocument): Promise<BetDto> {
+        const { _id, plays, date, sn, betStatus } = bet;
         return {
-            _id: bet._id,
-            plays: bet.plays,
-            date: bet.date,
-            sn: bet.sn,
+            _id,
+            plays,
+            date,
+            sn,
+            betStatus,
         };
     }
 
