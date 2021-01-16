@@ -8,6 +8,7 @@ export class BankingDto {
     @ApiProperty() ownerUserId?: ObjectId;
     @ApiProperty() consortiumId?: ObjectId;
     @ApiProperty() ownerUsername?: string;
+    @ApiProperty() ownerName?: string;
     @ApiProperty() createdAt?: Date;
     @ApiProperty() startOfOperation?: Date;
     @ApiProperty() showPercentage?: boolean;
