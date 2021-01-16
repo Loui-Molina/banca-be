@@ -1,7 +1,7 @@
 import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Play, PlaySchema } from '@src/modules/database/datamodels/schemas/play';
-import {Document, ObjectId} from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { TransactionSchema } from '@database/datamodels/schemas/transaction';
 import { PlayTypes } from '@database/datamodels/enums/play.types';

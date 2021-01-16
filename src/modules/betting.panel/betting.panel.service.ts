@@ -1,16 +1,16 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model} from 'mongoose';
-import {User, UserDocument} from '@database/datamodels/schemas/user';
-import {AuthUserService} from '@src/modules/auth.user/auth.user.service';
-import {UserService} from '@users/user.service';
-import {Banking, BankingDocument} from '@database/datamodels/schemas/banking';
-import {Bet, BetDocument} from '@database/datamodels/schemas/bet';
-import {Play} from '@database/datamodels/schemas/play';
-import {BetDto} from '@src/modules/betting.panel/dtos/bet.dto';
-import {CreateBetDto} from '@src/modules/betting.panel/dtos/create.bet.dto';
-import {BetStatus} from '@database/datamodels/enums/bet.status';
-import {UpdateBetDto} from "@src/modules/betting.panel/dtos/update.bet.dto";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User, UserDocument } from '@database/datamodels/schemas/user';
+import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
+import { UserService } from '@users/user.service';
+import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
+import { Bet, BetDocument } from '@database/datamodels/schemas/bet';
+import { Play } from '@database/datamodels/schemas/play';
+import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
+import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
+import { BetStatus } from '@database/datamodels/enums/bet.status';
+import { UpdateBetDto } from '@src/modules/betting.panel/dtos/update.bet.dto';
 
 @Injectable()
 export class BettingPanelService {

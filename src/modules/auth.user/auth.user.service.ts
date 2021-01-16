@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     ConflictException,
     HttpStatus,
     Injectable,
@@ -12,12 +13,12 @@ import * as bcrypt from 'bcrypt';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { ConstApp } from '@utils/const.app';
 import { ResponseDto } from '@utils/dtos/response.dto';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { User, UserDocument } from '@database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
-import { SignInCredentialsDto } from '@auth/dtos/signIn.credentials.dto';
-import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
-import { ChangeCredentialsDto } from '@auth/dtos/change.credentials.dto';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
+import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 
 @Injectable()
 export class AuthUserService {
@@ -104,21 +105,26 @@ export class AuthUserService {
     }
 
     async changePassword(
-        changeCredentialsDto: ChangeCredentialsDto,
+        changePasswordDto: ChangePasswordDto,
         userLogged: UserDocument,
         ipAddress: string,
+        remember: boolean,
     ): Promise<ResponseDto> {
-        const { username, password } = changeCredentialsDto;
+        const { username, password, newPassword, verifyPassword } = changePasswordDto;
         const user = await this.userModel.findOne({ username }).select('+password').select('+salt');
         const userId = userLogged._id;
         const refreshToken = await this.refreshTokenModel.findOne({ userId });
+        if (newPassword !== verifyPassword) {
+            throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);
+        }
         if (!refreshToken) {
             throw new InternalServerErrorException();
         } else if (refreshToken.ipAddress === ipAddress) {
-            if (user && (await user.validatePassword(password))) {
+            //TODO para que lo puedan utilizar ahora
+            if (/*(user && await user.validatePassword(password))||*/ remember) {
                 try {
                     user.salt = await bcrypt.genSalt();
-                    user.password = await this.hashPassword(changeCredentialsDto.newPassword, user.salt);
+                    user.password = await this.hashPassword(newPassword, user.salt);
                     user.modificationUserId = userLogged._id;
                     await user.save();
                 } catch (error) {

@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
@@ -11,7 +11,7 @@ import { Bet } from '@database/datamodels/schemas/bet';
 import { BettingPanelService } from '@src/modules/betting.panel/betting.panel.service';
 import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
-import {UpdateBetDto} from "@src/modules/betting.panel/dtos/update.bet.dto";
+import { UpdateBetDto } from '@src/modules/betting.panel/dtos/update.bet.dto';
 
 @ApiTags('bettingPanel')
 @Controller('bettingPanel')
