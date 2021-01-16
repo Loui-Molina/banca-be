@@ -100,11 +100,7 @@ export class BankingService {
             loggedUser,
         );
 
-        await this.userAuthService.updateUsername(
-            updateBankingDto.ownerUserId,
-            updateBankingDto.user.username,
-            loggedUser,
-        );
+        await this.userAuthService.updateUser(updateBankingDto.ownerUserId, updateBankingDto.user, loggedUser);
         const banking = await this.bankingModel.findById(updateBankingDto._id);
         banking.name = updateBankingDto.name;
         banking.status = updateBankingDto.status;
@@ -142,6 +138,7 @@ export class BankingService {
             startOfOperation: banking.startOfOperation,
             status: banking.status,
             ownerUsername: bankingUser ? bankingUser.username : null,
+            ownerName: bankingUser ? bankingUser.name : null,
         };
     }
 }

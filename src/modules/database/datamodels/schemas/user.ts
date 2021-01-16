@@ -13,14 +13,14 @@ export class User implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop() lastLogin?: Date;
     @ApiProperty() @Prop() name?: string;
-    @ApiProperty() @Prop({ unique: true, required:true }) username: string;
-    @ApiProperty() @Prop({ required: true, select:false }) password: string;
+    @ApiProperty() @Prop({ unique: true, required: true }) username: string;
+    @ApiProperty() @Prop({ required: true, select: false }) password: string;
     @ApiProperty({ type: String, enum: Role }) @Prop({ type: String, enum: Role }) role: Role;
     @ApiProperty()
     @Prop({ type: UserPreferenceSchema })
     preferences?: UserPreference;
     @ApiProperty()
-    @Prop({select:false , required:true})
+    @Prop({ select: false, required: true })
     salt: string;
     // Data object members
     @ApiProperty()
