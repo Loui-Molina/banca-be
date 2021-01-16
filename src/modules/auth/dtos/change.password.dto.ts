@@ -1,9 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@src/modules/database/datamodels/enums/role';
-import { ConstApp } from '@utils/const.app';
-import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
-export class ChangeCredentialsDto {
+export class ChangePasswordDto {
     @ApiProperty({ type: String })
     @IsString()
     @MinLength(4)
@@ -14,6 +12,7 @@ export class ChangeCredentialsDto {
     @IsString()
     @MinLength(8)
     @MaxLength(35)
+    @IsOptional()
     // @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: ConstApp.PASSWORD_MESSAGE })
     password: string;
 
@@ -23,4 +22,11 @@ export class ChangeCredentialsDto {
     @MaxLength(35)
     // @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: ConstApp.PASSWORD_MESSAGE })
     newPassword: string;
+    
+    @ApiProperty({ type: String })
+    @IsString()
+    @MinLength(8)
+    @MaxLength(35)
+    // @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: ConstApp.PASSWORD_MESSAGE })
+    verifyPassword: string;
 }
