@@ -70,8 +70,8 @@ export class AuthService {
         return this.tokenService.deleteRefreshToken(ipAdress, user);
     }
 
-    async changePassword(ipAddress: string, changePasswordDto: ChangePasswordDto, user: UserDocument): Promise<ResponseDto> {
-        return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress);
+    async changePassword(ipAddress: string, changePasswordDto: ChangePasswordDto, user: UserDocument, remember:boolean): Promise<ResponseDto> {
+        return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress, remember);
     }
 
 }

@@ -61,7 +61,7 @@ export class AuthController {
         @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
         @AuthUser() user: UserDocument,
     ): Promise<ResponseDto> {
-        return this.authService.changePassword(userIp, changePasswordDto, user);
+        return this.authService.changePassword(userIp, changePasswordDto, user, true);
     }
 
     @Get('/logged-user')

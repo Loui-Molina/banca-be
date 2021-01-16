@@ -108,18 +108,22 @@ export class AuthUserService {
         changePasswordDto: ChangePasswordDto,
         userLogged: UserDocument,
         ipAddress: string,
+        remember:boolean
     ): Promise<ResponseDto> {
         const { username, password, newPassword, verifyPassword } = changePasswordDto;
         const user = await this.userModel.findOne({ username }).select('+password').select('+salt');
         const userId = userLogged._id;
-        const refreshToken = await this.refreshTokenModel.findOne({ userId });
+        const refreshToken = await this.refreshTokenModel.findOne({ userId }); 
+        if(newPassword !== verifyPassword){
+            throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);
+        }
         if (!refreshToken) {
             throw new InternalServerErrorException();
         } else if (refreshToken.ipAddress === ipAddress) {
-            if (user && (await user.validatePassword(password))) {
+            if (/*(user && await user.validatePassword(password))||*/ remember) {
                 try {
                     user.salt = await bcrypt.genSalt();
-                    user.password = await this.hashPassword(changePasswordDto.newPassword, user.salt);
+                    user.password = await this.hashPassword(newPassword, user.salt);
                     user.modificationUserId = userLogged._id;
                     await user.save();
                 } catch (error) {
