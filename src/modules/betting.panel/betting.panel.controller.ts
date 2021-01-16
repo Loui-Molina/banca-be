@@ -7,9 +7,10 @@ import { ConstApp } from '@utils/const.app';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
-import { BettingPanelService } from '@src/modules/bettingPanel/bettingPanel.service';
-import { BetDto } from '@src/modules/bettingPanel/dtos/bet.dto';
-import { CreateBetDto } from '@src/modules/bettingPanel/dtos/create.bet.dto';
+import { Bet } from '@database/datamodels/schemas/bet';
+import { BettingPanelService } from '@src/modules/betting.panel/betting.panel.service';
+import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
+import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
 
 @ApiTags('bettingPanel')
 @Controller('bettingPanel')
@@ -20,10 +21,10 @@ export class BettingPanelController {
     @Get()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: BetDto,
+        type: Bet,
     })
     @Roles(Role.banker)
-    getAll(): Promise<Array<BetDto>> {
+    getAll(): Promise<Array<Bet>> {
         return this.bettingPanelService.getAll();
     }
 

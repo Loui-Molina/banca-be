@@ -8,7 +8,7 @@ import { TransactionModule } from '@src/modules/transactions/transaction.module'
 import { UsersModule } from '@users/users.module';
 import { AdminLotteryModule } from '@src/modules/lotteries/admin/admin.lottery.module';
 import { ConsortiumLotteryModule } from '@src/modules/lotteries/consortium/consortium.lottery.module';
-import { BettingPanelModule } from '@src/modules/bettingPanel/bettingPanel.module';
+import { BettingPanelModule } from '@src/modules/betting.panel/betting.panel.module';
 import { BankingLotteryModule } from '@src/modules/lotteries/banking/banking.lottery.module';
 
 @Module({
