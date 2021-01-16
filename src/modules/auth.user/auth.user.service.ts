@@ -120,6 +120,7 @@ export class AuthUserService {
         if (!refreshToken) {
             throw new InternalServerErrorException();
         } else if (refreshToken.ipAddress === ipAddress) {
+            //TODO para que lo puedan utilizar ahora
             if (/*(user && await user.validatePassword(password))||*/ remember) {
                 try {
                     user.salt = await bcrypt.genSalt();
