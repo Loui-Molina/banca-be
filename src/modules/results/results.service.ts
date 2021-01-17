@@ -1,19 +1,19 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Result, ResultDocument } from '@database/datamodels/schemas/result';
-import { Draw, DrawDocument } from '@database/datamodels/schemas/draw';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { Result } from '@database/datamodels/schemas/result';
+import { Draw } from '@database/datamodels/schemas/draw';
+import { User } from '@database/datamodels/schemas/user';
 import { ResultDto } from '@src/modules/results/dtos/result.dto';
-import { Lottery, LotteryDocument } from '@database/datamodels/schemas/lottery';
+import { Lottery } from '@database/datamodels/schemas/lottery';
 import { AddResultDto } from '@src/modules/results/dtos/add.result.dto';
-import { Model, Types, ObjectId } from 'mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ResultsService {
     constructor(
-        @InjectModel(Lottery.name) private lotteryModel: Model<LotteryDocument>,
-        @InjectModel(Result.name) private resultModel: Model<ResultDocument>,
-        @InjectModel(Draw.name) private drawModel: Model<DrawDocument>,
+        @InjectModel(Lottery.name) private lotteryModel: Model<Lottery>,
+        @InjectModel(Result.name) private resultModel: Model<Result>,
+        @InjectModel(Draw.name) private drawModel: Model<Draw>,
     ) {}
 
     async getAll(): Promise<Array<ResultDto>> {
@@ -34,7 +34,7 @@ export class ResultsService {
         ]);
     }
 
-    async create(dto: AddResultDto, loggedUser: UserDocument): Promise<Result> {
+    async create(dto: AddResultDto, loggedUser: User): Promise<Result> {
         //TODO chekear si la fecha de sorteo ya paso
         const lottery = await this.lotteryModel.findById(dto.lotteryId).exec();
         if (!lottery) {

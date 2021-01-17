@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ConstApp } from '@utils/const.app';
 import { Lottery } from '@database/datamodels/schemas/lottery';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { ConsortiumLotteryService } from '@src/modules/lotteries/consortium/consortium.lottery.service';
 import { ConsortiumLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.lottery.dto';
 import { Roles } from '@src/common/decorators/roles.decorator';
@@ -24,7 +24,7 @@ export class ConsortiumLotteryController {
         type: ConsortiumLotteryDto,
     })
     @Roles(Role.consortium)
-    getAll(@AuthUser() loggedUser: UserDocument): Promise<Array<ConsortiumLotteryDto>> {
+    getAll(@AuthUser() loggedUser: User): Promise<Array<ConsortiumLotteryDto>> {
         return this.lotteryService.getAll(loggedUser);
     }
 
@@ -34,7 +34,7 @@ export class ConsortiumLotteryController {
         type: ConsortiumUpdateLotteryDto,
     })
     @Roles(Role.consortium)
-    update(@Body() dto: ConsortiumUpdateLotteryDto, @AuthUser() loggedUser: UserDocument): Promise<Lottery> {
+    update(@Body() dto: ConsortiumUpdateLotteryDto, @AuthUser() loggedUser: User): Promise<Lottery> {
         return this.lotteryService.update(dto, loggedUser);
     }
 

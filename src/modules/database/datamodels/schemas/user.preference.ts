@@ -1,13 +1,11 @@
 import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Languages } from '@database/datamodels/enums/languages';
 
-export type UserPreferenceDocument = UserPreference & Document;
-
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class UserPreference implements DataObject {
+export class UserPreference extends Document implements DataObject {
     @ApiProperty()
     @Prop({
         type: String,
@@ -19,13 +17,13 @@ export class UserPreference implements DataObject {
     // Data object members
     @ApiProperty()
     @Prop({ required: true, immutable: true })
-    creationUserId: string;
+    creationUserId: string | ObjectId;
     @ApiProperty()
     @Prop()
     deletionDate?: Date;
     @ApiProperty()
     @Prop({ required: true })
-    modificationUserId: string;
+    modificationUserId: string | ObjectId;
 }
 
 export const UserPreferenceSchema = SchemaFactory.createForClass(UserPreference);

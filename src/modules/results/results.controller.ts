@@ -3,7 +3,7 @@ import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@n
 import { AuthGuard } from '@nestjs/passport';
 import { ConstApp } from '@utils/const.app';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { Result } from '@database/datamodels/schemas/result';
 import { ResultsService } from '@src/modules/results/results.service';
 import { ResultDto } from '@src/modules/results/dtos/result.dto';
@@ -34,7 +34,7 @@ export class ResultsController {
         type: Result,
     })
     @Roles(Role.admin)
-    create(@Body() dto: AddResultDto, @AuthUser() loggedUser: UserDocument): Promise<Result> {
+    create(@Body() dto: AddResultDto, @AuthUser() loggedUser: User): Promise<Result> {
         return this.resultService.create(dto, loggedUser);
     }
 

@@ -5,11 +5,11 @@ import { DashboardDiagramDto } from '@src/modules/dashboard/dtos/dashboard.dto';
 import { DashboardDiagramNodeDto } from '@src/modules/dashboard/dtos/dashboard.node.dto';
 import { DashboardDiagramLinkDto } from '@src/modules/dashboard/dtos/dashboard.link.dto';
 import { DashboardDiagramClusterDto } from '@src/modules/dashboard/dtos/dashboard.cluster.dto';
-import { Consortium, ConsortiumDocument } from '@src/modules/database/datamodels/schemas/consortium';
-import { Banking, BankingDocument } from '@src/modules/database/datamodels/schemas/banking';
+import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
+import { Banking } from '@src/modules/database/datamodels/schemas/banking';
 import { DashboardConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.consortium.dto';
 import { DashboardBankingDto } from '@src/modules/dashboard/dtos/dashboard.banking.dto';
-import { User, UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { Role } from '@database/datamodels/enums/role';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
 import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
@@ -20,20 +20,20 @@ import { Transaction } from '@database/datamodels/schemas/transaction';
 @Injectable()
 export class DashboardService {
     constructor(
-        @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-        @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
+        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
+        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
     ) {}
 
     async getDashboardDiagram(): Promise<DashboardDiagramDto> {
         const res = new DashboardDiagramDto();
         const consortiumIds: string[] = [];
         const bankingIds: string[] = [];
-        const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find().exec();
-        const bankings: Array<BankingDocument> = await this.bankingModel.find().exec();
+        const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
+        const bankings: Array<Banking> = await this.bankingModel.find().exec();
         consortiums.forEach((consortium, index) => {
             res.nodes.push(new DashboardDiagramNodeDto(consortium._id.toString(), consortium.name));
             consortiumIds.push(consortium._id.toString());
-            bankings.forEach((banking: BankingDocument, index2) => {
+            bankings.forEach((banking: Banking, index2) => {
                 if (banking.consortiumId.toString() === consortium._id.toString()) {
                     bankingIds.push(banking._id.toString());
                     res.nodes.push(new DashboardDiagramNodeDto(banking._id.toString(), banking.name));
@@ -58,7 +58,7 @@ export class DashboardService {
 
     async getConsortiumsStatistics(): Promise<DashboardConsortiumDto[]> {
         const consortiumsDto: DashboardConsortiumDto[] = [];
-        const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find().exec();
+        const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
         for await (const consortium of consortiums) {
             const balance = await consortium.calculateBalance();
             consortiumsDto.push({
@@ -71,7 +71,7 @@ export class DashboardService {
     }
 
     async getAdminWidgetsStatistics(): Promise<DashboardWidgetsDto> {
-        const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find().exec();
+        const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
         let balance = 0;
         let losses = 0;
         let profits = 0;
@@ -90,7 +90,7 @@ export class DashboardService {
         };
     }
 
-    async getConsortiumWidgetsStatistics(loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+    async getConsortiumWidgetsStatistics(loggedUser: User): Promise<DashboardWidgetsDto> {
         const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id }).exec();
         if (consortiums.length === 0) {
             throw new BadRequestException();
@@ -115,7 +115,7 @@ export class DashboardService {
         };
     }
 
-    async getBankingWidgetsStatistics(loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+    async getBankingWidgetsStatistics(loggedUser: User): Promise<DashboardWidgetsDto> {
         const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
         if (bankings.length === 0) {
             throw new BadRequestException();
@@ -128,8 +128,8 @@ export class DashboardService {
             ticketsSold: 0,
         };
     }
-    async getBankingsStatistics(loggedUser: UserDocument): Promise<DashboardBankingDto[]> {
-        let bankings: Array<BankingDocument> = [];
+    async getBankingsStatistics(loggedUser: User): Promise<DashboardBankingDto[]> {
+        let bankings: Array<Banking> = [];
         if (loggedUser.role === Role.consortium) {
             //If is consortium
             const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id }).exec();
@@ -156,7 +156,7 @@ export class DashboardService {
 
     async getGraphConsortiumStatistics(): Promise<DashboardGraphConsortiumDto[]> {
         const consortiumsDto: DashboardGraphConsortiumDto[] = [];
-        const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find().exec();
+        const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
         for await (const consortium of consortiums) {
             const balance = await consortium.calculateBalance();
             consortiumsDto.push({
@@ -168,9 +168,9 @@ export class DashboardService {
         return consortiumsDto;
     }
 
-    async getGraphBankingStatistics(loggedUser: UserDocument): Promise<DashboardGraphBankingDto[]> {
+    async getGraphBankingStatistics(loggedUser: User): Promise<DashboardGraphBankingDto[]> {
         const bankingsDto: DashboardGraphBankingDto[] = [];
-        let bankings: Array<BankingDocument> = [];
+        let bankings: Array<Banking> = [];
         if (loggedUser.role === Role.consortium) {
             //If is consortium
             const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id }).exec();
@@ -194,7 +194,7 @@ export class DashboardService {
         return bankingsDto;
     }
 
-    async getGraphBankingBalanceStatistics(loggedUser: UserDocument): Promise<DashboardGraphBalanceBankingDto[]> {
+    async getGraphBankingBalanceStatistics(loggedUser: User): Promise<DashboardGraphBalanceBankingDto[]> {
         const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
         if (bankings.length === 0) {
             throw new BadRequestException();

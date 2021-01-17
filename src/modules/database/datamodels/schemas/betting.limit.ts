@@ -4,16 +4,14 @@ import { UsLotteryPrizes } from '@src/modules/database/datamodels/enums/us.lotte
 import { BrasilPrizes } from '@src/modules/database/datamodels/enums/brasil.prizes';
 import { OCStatus } from '@src/modules/database/datamodels/enums/oc.status';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { ApiProperty } from '@nestjs/swagger';
 
 // Estado y limite de apuesta en cada jugada
 
-export type BettingLimitDocument = BettingLimit & Document;
-
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class BettingLimit implements DataObject {
+export class BettingLimit extends Document implements DataObject {
     @ApiProperty({
         required: true,
         type: String,
@@ -28,9 +26,9 @@ export class BettingLimit implements DataObject {
     @ApiProperty({ required: false }) @Prop({ required: true }) betAmount?: number;
 
     // Data object members
-    @ApiProperty({ required: false }) @Prop({ required: true, immutable: true }) creationUserId: string;
-    @ApiProperty({ required: false }) @Prop() deletionDate?: Date;
-    @ApiProperty({ required: false }) @Prop({ required: true }) modificationUserId: string;
+    @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
+    @Prop() deletionDate?: Date;
+    @Prop({ required: true }) modificationUserId: string | ObjectId;
 }
 
 export const BettingLimitSchema = SchemaFactory.createForClass(BettingLimit);

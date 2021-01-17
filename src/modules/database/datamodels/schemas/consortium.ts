@@ -7,8 +7,6 @@ import { Transaction, TransactionSchema } from '@src/modules/database/datamodels
 import { Supervisor, SupervisorSchema } from '@src/modules/database/datamodels/schemas/supervisor';
 import { ConsortiumLottery, ConsortiumLotterySchema } from '@database/datamodels/schemas/consortium.lottery';
 
-export type ConsortiumDocument = Consortium & Document;
-
 @Schema({
     timestamps: true,
     optimisticConcurrency: true,
@@ -16,7 +14,7 @@ export type ConsortiumDocument = Consortium & Document;
     strict: true,
     collection: 'consortiums',
 })
-export class Consortium {
+export class Consortium extends Document {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop({ type: [SupervisorSchema] }) supervisors?: Supervisor[];
     @ApiProperty()
@@ -33,12 +31,13 @@ export class Consortium {
     // Data object members
     @ApiProperty()
     @Prop({ required: true, immutable: true, type: mongoose.SchemaTypes.ObjectId })
-    creationUserId: ObjectId;
-    @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) modificationUserId: ObjectId;
+    creationUserId: string | ObjectId;
+    @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) modificationUserId: string | ObjectId;
     @ApiProperty() createdAt?: Date;
     @ApiProperty() updatedAt?: Date;
     @ApiProperty() @Prop() deletionDate?: Date;
 
+    // CUSTOM FUNCTIONS
     calculateBalance?: Function;
 }
 
@@ -46,7 +45,7 @@ export const ConsortiumSchema = SchemaFactory.createForClass(Consortium);
 
 ConsortiumSchema.methods.calculateBalance = async function calculateBalance(): Promise<number> {
     let balance = 0;
-    const transactions: Transaction[] = (this as ConsortiumDocument).transactions;
+    const transactions: Transaction[] = this.transactions;
     transactions.forEach((item) => {
         balance += item.amount;
     });

@@ -6,10 +6,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Result, ResultSchema } from '@database/datamodels/schemas/result';
 import { Draw } from '@database/datamodels/schemas/draw';
 
-export type LotteryDocument = Lottery & Document;
-
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class Lottery implements DataObject {
+export class Lottery extends Document implements DataObject {
     @Prop({ required: true }) name: string;
     @Prop({ required: true }) nickname: string;
     @Prop({ required: true }) color: string;
@@ -21,9 +19,9 @@ export class Lottery implements DataObject {
     @Prop({ type: [ResultSchema] }) results?: Result[];
 
     // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string;
+    @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
     @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string;
+    @Prop({ required: true }) modificationUserId: string | ObjectId;
 }
 
 export const LotterySchema = SchemaFactory.createForClass(Lottery);

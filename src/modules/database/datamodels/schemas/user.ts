@@ -6,10 +6,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import { Role } from '@database/datamodels/enums/role';
 
-export type UserDocument = User & Document;
-
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class User implements DataObject {
+export class User extends Document implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop() lastLogin?: Date;
     @ApiProperty() @Prop() name?: string;
@@ -25,13 +23,13 @@ export class User implements DataObject {
     // Data object members
     @ApiProperty()
     @Prop({ required: true })
-    creationUserId: string;
+    creationUserId: string | ObjectId;
     @ApiProperty()
     @Prop()
     deletionDate?: Date;
     @ApiProperty()
     @Prop({ required: true })
-    modificationUserId: string;
+    modificationUserId: string | ObjectId;
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     validatePassword: Function;
@@ -40,6 +38,6 @@ export class User implements DataObject {
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.methods.validatePassword = async function validatePassword(password: string): Promise<boolean> {
-    const hash = await bcrypt.hash(password, (this as UserDocument).salt);
-    return hash === (this as UserDocument).password;
+    const hash = await bcrypt.hash(password, this.salt);
+    return hash === this.password;
 };

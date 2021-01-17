@@ -2,20 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AdminLotteryReqDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.req.dto';
-import { LotteryTime, LotteryTimeDocument } from '@database/datamodels/schemas/lottery.time';
-import { Lottery, LotteryDocument } from '@database/datamodels/schemas/lottery';
-import { Result, ResultDocument } from '@database/datamodels/schemas/result';
-import { Draw, DrawDocument } from '@database/datamodels/schemas/draw';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { LotteryTime } from '@database/datamodels/schemas/lottery.time';
+import { Lottery } from '@database/datamodels/schemas/lottery';
+import { Result } from '@database/datamodels/schemas/result';
+import { Draw } from '@database/datamodels/schemas/draw';
+import { User } from '@database/datamodels/schemas/user';
 import { AdminLotteryResDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.res.dto';
 
 @Injectable()
 export class AdminLotteryService {
     constructor(
-        @InjectModel(Lottery.name) private lotteryModel: Model<LotteryDocument>,
-        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTimeDocument>,
-        @InjectModel(Result.name) private resultModel: Model<ResultDocument>,
-        @InjectModel(Draw.name) private drawModel: Model<DrawDocument>,
+        @InjectModel(Lottery.name) private lotteryModel: Model<Lottery>,
+        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTime>,
+        @InjectModel(Result.name) private resultModel: Model<Result>,
+        @InjectModel(Draw.name) private drawModel: Model<Draw>,
     ) {}
 
     async getAll(): Promise<Array<AdminLotteryResDto>> {
@@ -62,7 +62,7 @@ export class AdminLotteryService {
         ]);
     }
 
-    async create(dto: AdminLotteryReqDto, loggedUser: UserDocument): Promise<AdminLotteryResDto> {
+    async create(dto: AdminLotteryReqDto, loggedUser: User): Promise<AdminLotteryResDto> {
         const newLottery = new this.lotteryModel({
             name: dto.name,
             nickname: dto.nickname,
@@ -92,13 +92,13 @@ export class AdminLotteryService {
         } as AdminLotteryResDto;
     }
 
-    async update(dto: AdminLotteryReqDto, loggedUser: UserDocument): Promise<AdminLotteryResDto> {
+    async update(dto: AdminLotteryReqDto, loggedUser: User): Promise<AdminLotteryResDto> {
         const time: LotteryTime = new this.lotteryTimeModel({
             day: dto.day,
             openTime: dto.openTime,
             closeTime: dto.closeTime,
         });
-        let foundLottery: LotteryDocument = await this.lotteryModel.findByIdAndUpdate(
+        let foundLottery: Lottery = await this.lotteryModel.findByIdAndUpdate(
             dto._id,
             {
                 name: dto.name,

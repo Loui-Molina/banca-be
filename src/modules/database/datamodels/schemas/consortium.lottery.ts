@@ -7,10 +7,8 @@ import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
 
-export type ConsortiumLotteryDocument = ConsortiumLottery & Document;
-
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class ConsortiumLottery implements DataObject {
+export class ConsortiumLottery extends Document implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) lotteryId?: ObjectId;
     @ApiProperty({ isArray: true })
@@ -25,9 +23,9 @@ export class ConsortiumLottery implements DataObject {
     // TODO falta limite para c/numero pj  Se puede jugar solo 100 dolares como maximo a un numero
 
     // Data object members
-    @ApiProperty() @Prop({ required: true, immutable: true }) creationUserId: string;
+    @ApiProperty() @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
     @ApiProperty() @Prop() deletionDate?: Date;
-    @ApiProperty() @Prop({ required: true }) modificationUserId: string;
+    @ApiProperty() @Prop({ required: true }) modificationUserId: string | ObjectId;
 }
 
 export const ConsortiumLotterySchema = SchemaFactory.createForClass(ConsortiumLottery);

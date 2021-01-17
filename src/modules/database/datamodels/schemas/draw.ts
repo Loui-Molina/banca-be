@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
-export type DrawDocument = Draw & Document;
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class Draw implements DataObject {
+export class Draw extends Document implements DataObject {
     // Los numeros que salieron en la loteria
     @ApiProperty() @Prop() first?: number;
     @ApiProperty() @Prop() second?: number;
@@ -16,9 +15,9 @@ export class Draw implements DataObject {
     @ApiProperty() @Prop() seventh?: number;
 
     // Data object members
-    @ApiProperty() @Prop({ required: true, immutable: true }) creationUserId: string;
+    @ApiProperty() @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
     @ApiProperty() @Prop() deletionDate?: Date;
-    @ApiProperty() @Prop({ required: true }) modificationUserId: string;
+    @ApiProperty() @Prop({ required: true }) modificationUserId: string | ObjectId;
 }
 
 export const DrawSchema = SchemaFactory.createForClass(Draw);

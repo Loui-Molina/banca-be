@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/co
 import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { ConstApp } from '@utils/const.app';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
@@ -44,7 +44,7 @@ export class BettingPanelController {
         type: BetDto,
     })
     @Roles(Role.banker)
-    create(@Body() dto: CreateBetDto, @AuthUser() loggedUser: UserDocument): Promise<BetDto> {
+    create(@Body() dto: CreateBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
         return this.bettingPanelService.create(dto, loggedUser);
     }
 

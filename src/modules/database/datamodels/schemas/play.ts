@@ -6,10 +6,8 @@ import { PlayNumbers, PlayNumbersSchema } from '@src/modules/database/datamodels
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
 
-export type PlayDocument = Play & Document;
-
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class Play implements DataObject {
+export class Play extends Document implements DataObject {
     @ApiProperty({ type: String, enum: PlayTypes }) @Prop({ required: true, type: String }) playType?: PlayTypes;
     @ApiProperty({ type: Number }) @Prop({ required: true }) amount?: number;
     @ApiProperty({ type: PlayNumbers })
@@ -18,9 +16,9 @@ export class Play implements DataObject {
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) lotteryId?: ObjectId;
 
     // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string;
+    @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
     @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string;
+    @Prop({ required: true }) modificationUserId: string | ObjectId;
 }
 
 export const PlaySchema = SchemaFactory.createForClass(Play);

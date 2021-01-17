@@ -1,29 +1,28 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { LotteryTime, LotteryTimeDocument } from '@database/datamodels/schemas/lottery.time';
-import { Lottery, LotteryDocument } from '@database/datamodels/schemas/lottery';
-import { Result, ResultDocument } from '@database/datamodels/schemas/result';
-import { Draw, DrawDocument } from '@database/datamodels/schemas/draw';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { LotteryTime } from '@database/datamodels/schemas/lottery.time';
+import { Lottery } from '@database/datamodels/schemas/lottery';
+import { Result } from '@database/datamodels/schemas/result';
+import { Draw } from '@database/datamodels/schemas/draw';
+import { User } from '@database/datamodels/schemas/user';
 import { ConsortiumLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.lottery.dto';
 import { ConsortiumUpdateLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.update.lottery.dto';
-import { ConsortiumLottery, ConsortiumLotteryDocument } from '@database/datamodels/schemas/consortium.lottery';
-import { Consortium, ConsortiumDocument } from '@database/datamodels/schemas/consortium';
-import { PrizeLimit } from '@database/datamodels/schemas/prize.limit';
+import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
+import { Consortium } from '@database/datamodels/schemas/consortium';
 
 @Injectable()
 export class ConsortiumLotteryService {
     constructor(
-        @InjectModel(Lottery.name) private lotteryModel: Model<LotteryDocument>,
-        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTimeDocument>,
-        @InjectModel(ConsortiumLottery.name) private consortiumLotteryModel: Model<ConsortiumLotteryDocument>,
-        @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-        @InjectModel(Result.name) private resultModel: Model<ResultDocument>,
-        @InjectModel(Draw.name) private drawModel: Model<DrawDocument>,
+        @InjectModel(Lottery.name) private lotteryModel: Model<Lottery>,
+        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTime>,
+        @InjectModel(ConsortiumLottery.name) private consortiumLotteryModel: Model<ConsortiumLottery>,
+        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
+        @InjectModel(Result.name) private resultModel: Model<Result>,
+        @InjectModel(Draw.name) private drawModel: Model<Draw>,
     ) {}
 
-    async getAll(loggedUser: UserDocument): Promise<Array<ConsortiumLotteryDto>> {
+    async getAll(loggedUser: User): Promise<Array<ConsortiumLotteryDto>> {
         const consortium = (await this.consortiumModel.find({ ownerUserId: loggedUser._id })).pop();
         const lotteries = await this.lotteryModel.aggregate([
             { $match: {} },
@@ -58,8 +57,8 @@ export class ConsortiumLotteryService {
         return lotteries;
     }
 
-    async update(dto: ConsortiumUpdateLotteryDto, loggedUser: UserDocument): Promise<Lottery> {
-        const lottery: LotteryDocument = await this.get(dto._id);
+    async update(dto: ConsortiumUpdateLotteryDto, loggedUser: User): Promise<Lottery> {
+        const lottery: Lottery = await this.get(dto._id);
         const consortium = (await this.consortiumModel.find({ ownerUserId: loggedUser._id })).pop();
         if (!consortium) {
             throw new BadRequestException();
@@ -76,7 +75,7 @@ export class ConsortiumLotteryService {
             item.modificationUserId = loggedUser._id;
         });
 
-        const consortiumLottery: ConsortiumLotteryDocument = new this.consortiumLotteryModel({
+        const consortiumLottery: ConsortiumLottery = new this.consortiumLotteryModel({
             lotteryId: lottery._id,
             bankingIds: dto.bankings,
             creationUserId: loggedUser._id,

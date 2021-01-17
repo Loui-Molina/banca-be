@@ -3,13 +3,12 @@ import { DominicanLotteryPrizes } from '@src/modules/database/datamodels/enums/d
 import { UsLotteryPrizes } from '@src/modules/database/datamodels/enums/us.lottery.prizes';
 import { BrasilPrizes } from '@src/modules/database/datamodels/enums/brasil.prizes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 // cantidad de veces que se puede hacer una jugada
 
-export type PlayLimitDocument = PlayLimit & Document;
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class PlayLimit implements DataObject {
+export class PlayLimit extends Document implements DataObject {
     @Prop({ required: true }) limit?: number;
     @Prop({
         type: String,
@@ -19,9 +18,9 @@ export class PlayLimit implements DataObject {
     @Prop() appliedBankingsIds?: string[];
 
     // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string;
+    @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
     @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string;
+    @Prop({ required: true }) modificationUserId: string | ObjectId;
 }
 
 export const PlayLimitSchema = SchemaFactory.createForClass(PlayLimit);

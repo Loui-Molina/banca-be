@@ -9,7 +9,7 @@ import { Role } from '@database/datamodels/enums/role';
 import { DashboardConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.consortium.dto';
 import { DashboardBankingDto } from '@src/modules/dashboard/dtos/dashboard.banking.dto';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
 import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
 import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
@@ -48,7 +48,7 @@ export class DashboardController {
         type: DashboardBankingDto,
     })
     @Roles(Role.admin, Role.consortium)
-    getBankingsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardBankingDto[]> {
+    getBankingsStatistics(@AuthUser() loggedUser: User): Promise<DashboardBankingDto[]> {
         return this.dashboardService.getBankingsStatistics(loggedUser);
     }
 
@@ -68,7 +68,7 @@ export class DashboardController {
         type: DashboardGraphBankingDto,
     })
     @Roles(Role.admin, Role.consortium)
-    getGraphBankingStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardGraphBankingDto[]> {
+    getGraphBankingStatistics(@AuthUser() loggedUser: User): Promise<DashboardGraphBankingDto[]> {
         return this.dashboardService.getGraphBankingStatistics(loggedUser);
     }
 
@@ -88,7 +88,7 @@ export class DashboardController {
         type: DashboardWidgetsDto,
     })
     @Roles(Role.consortium)
-    getConsortiumWidgetsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+    getConsortiumWidgetsStatistics(@AuthUser() loggedUser: User): Promise<DashboardWidgetsDto> {
         return this.dashboardService.getConsortiumWidgetsStatistics(loggedUser);
     }
 
@@ -98,7 +98,7 @@ export class DashboardController {
         type: DashboardWidgetsDto,
     })
     @Roles(Role.banker)
-    getBankingWidgetsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+    getBankingWidgetsStatistics(@AuthUser() loggedUser: User): Promise<DashboardWidgetsDto> {
         return this.dashboardService.getBankingWidgetsStatistics(loggedUser);
     }
 
@@ -108,7 +108,7 @@ export class DashboardController {
         type: DashboardGraphBalanceBankingDto,
     })
     @Roles(Role.banker)
-    getGraphBankingBalanceStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardGraphBalanceBankingDto[]> {
+    getGraphBankingBalanceStatistics(@AuthUser() loggedUser: User): Promise<DashboardGraphBalanceBankingDto[]> {
         return this.dashboardService.getGraphBankingBalanceStatistics(loggedUser);
     }
 }

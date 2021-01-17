@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
 import { UserService } from '@users/user.service';
-import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
-import { Bet, BetDocument } from '@database/datamodels/schemas/bet';
+import { Banking } from '@database/datamodels/schemas/banking';
+import { Bet } from '@database/datamodels/schemas/bet';
 import { Play } from '@database/datamodels/schemas/play';
 import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
@@ -13,9 +13,9 @@ import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
 @Injectable()
 export class BettingPanelService {
     constructor(
-        @InjectModel(Bet.name) private betModel: Model<BetDocument>,
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
-        @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
+        @InjectModel(Bet.name) private betModel: Model<Bet>,
+        @InjectModel(User.name) private userModel: Model<User>,
+        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
         private userAuthService: AuthUserService,
         private userService: UserService,
     ) {}
@@ -34,20 +34,13 @@ export class BettingPanelService {
         return betsDto;
     }
 
-    async create(dto: CreateBetDto, loggedUser: UserDocument): Promise<BetDto> {
+    async create(dto: CreateBetDto, loggedUser: User): Promise<BetDto> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
         const plays: Play[] = [];
-        dto.plays.map((play) => {
+        dto.plays.map((play: Play) => {
             play.playNumbers.creationUserId = loggedUser._id;
             play.playNumbers.modificationUserId = loggedUser._id;
-            plays.push({
-                playNumbers: play.playNumbers,
-                amount: play.amount,
-                creationUserId: loggedUser._id,
-                lotteryId: play.lotteryId,
-                modificationUserId: loggedUser._id,
-                playType: play.playType,
-            });
+            plays.push(play);
         });
         const newObject = new this.betModel({
             plays: plays,
@@ -65,7 +58,7 @@ export class BettingPanelService {
         return this.mapToDto(await this.betModel.findById(id).exec());
     }
 
-    async mapToDto(bet: BetDocument): Promise<BetDto> {
+    async mapToDto(bet: Bet): Promise<BetDto> {
         return {
             _id: bet._id,
             plays: bet.plays,

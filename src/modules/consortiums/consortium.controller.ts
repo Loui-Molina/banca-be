@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { ConstApp } from '@utils/const.app';
 import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
 import { CreateConsortiumDto } from '@src/modules/consortiums/dtos/create.consortium.dto';
@@ -44,7 +44,7 @@ export class ConsortiumController {
         type: Consortium,
     })
     @Roles(Role.admin)
-    create(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser: UserDocument): Promise<Consortium> {
+    create(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser: User): Promise<Consortium> {
         return this.consortiumService.create(dto, loggedUser);
     }
 
@@ -54,7 +54,7 @@ export class ConsortiumController {
         type: Consortium,
     })
     @Roles(Role.admin)
-    update(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser: UserDocument): Promise<Consortium> {
+    update(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser: User): Promise<Consortium> {
         return this.consortiumService.update(dto, loggedUser);
     }
 
@@ -74,7 +74,7 @@ export class ConsortiumController {
         type: Consortium,
     })
     @Roles(Role.consortium)
-    async getConsortiumOfUser(@AuthUser() loggedUser: UserDocument): Promise<Consortium> {
+    async getConsortiumOfUser(@AuthUser() loggedUser: User): Promise<Consortium> {
         return await this.consortiumService.getConsortiumOfUser(loggedUser);
     }
 
