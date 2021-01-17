@@ -14,7 +14,7 @@ import { AuthService } from '@auth/auth.service';
 import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ConstApp } from '@utils/const.app';
 import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
@@ -27,6 +27,7 @@ import { Role } from '@database/datamodels/enums/role';
 import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
 import { ChangePasswordDto } from './dtos/change.password.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
     private readonly logger: Logger = new Logger(AuthController.name);

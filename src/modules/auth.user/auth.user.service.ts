@@ -19,14 +19,16 @@ import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { UserService } from '@users/user.service';
 
 @Injectable()
 export class AuthUserService {
     private readonly logger: Logger = new Logger(AuthUserService.name);
 
     constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        private userService: UserService,
         @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,
+        @InjectModel(User.name) private userModel:Model<UserDocument>,
     ) {}
 
     async singUp(
@@ -35,7 +37,7 @@ export class AuthUserService {
     ): Promise<UserCreatedEntity> {
         const { username, password, role, name } = signUpCredentialsDto;
         const userCreated: UserCreatedEntity = new UserCreatedEntity();
-        const user = new this.userModel();
+        const user = this.userService.newUserModel();
         const refreshToken = new this.refreshTokenModel();
         user.name = name;
         user.username = username;
@@ -64,7 +66,7 @@ export class AuthUserService {
 
     async updateUser(id: ObjectId, userChanged: SignUpCredentialsDto, loggedUser: UserDocument) {
         const { username, name } = userChanged;
-        const user = await this.userModel.findById(id).exec();
+        const user: UserDocument = await this.userService.get(id);
         user.name = name;
         user.username = username;
         user.modificationUserId = loggedUser._id;
@@ -74,19 +76,21 @@ export class AuthUserService {
     }
 
     async deleteUser(id: ObjectId) {
-        const user = await this.userModel.findById(id).exec();
+        const user = await this.userService.get(id);
         await user.delete();
         return user;
     }
 
     async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = signInCredentialsDto;
-        const user = await this.userModel.findOne({ username }).select('+password').select('+salt');
-        this.logger.log(user);
+        const userDocument: UserDocument = await this.userService.getSingleFiltered('username', username);
+        console.log(`found User ${userDocument}`);
+
+        this.logger.log(userDocument);
         const responsePayload: ResponsePayload = new ResponsePayload();
-        if (user && (await user.validatePassword(password))) {
-            responsePayload.userId = user.id;
-            responsePayload.role = user.role;
+        if (userDocument && (await userDocument.validatePassword(password))) {
+            responsePayload.userId = userDocument.id;
+            responsePayload.role = userDocument.role;
             return responsePayload;
         } else {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
@@ -98,9 +102,8 @@ export class AuthUserService {
     }
 
     async getUserRefresh(userId: string): Promise<UserDocument> {
-        const _id = userId;
-        const user = await this.userModel.findOne({ _id });
-        this.logger.debug('User find' + user);
+        const user = await this.userService.get(userId);
+        this.logger.debug(`User find ${user}`);
         return user;
     }
 

@@ -77,7 +77,7 @@ export class ConsortiumService {
     }
 
     async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
-        const foundUser = (await this.userService.getFiltered('_id', consortium.ownerUserId)).pop();
+        const foundUser = await this.userService.getSingleFiltered('_id', consortium.ownerUserId);
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         return {
             _id: consortium._id,
