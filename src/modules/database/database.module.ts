@@ -14,7 +14,7 @@ const providersExports = [DatabaseService, Supervisor, ConsortiumPreference, Ban
 
 @Global()
 @Module({
-    imports: [
+    /*    imports: [
         MongooseModule.forFeature(
             [
                 { name: Supervisor.name, schema: SupervisorSchema },
@@ -27,6 +27,6 @@ const providersExports = [DatabaseService, Supervisor, ConsortiumPreference, Ban
         ),
     ],
     providers: providersExports,
-    exports: providersExports,
+    exports: providersExports,*/
 })
 export class DatabaseModule {}
