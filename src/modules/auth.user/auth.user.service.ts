@@ -7,8 +7,8 @@ import {
     Logger,
     UnauthorizedException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { ConstApp } from '@utils/const.app';
@@ -19,6 +19,7 @@ import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { Event } from '../database/datamodels/schemas/event';
 
 @Injectable()
 export class AuthUserService {
@@ -27,6 +28,8 @@ export class AuthUserService {
     constructor(
         @InjectModel(User.name) private userModel: Model<UserDocument>,
         @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,
+        @InjectConnection(ConstApp.USER) private readonly connection: Connection,
+        @InjectModel(Event.name) private readonly event:Event,
     ) {}
 
     async singUp(
