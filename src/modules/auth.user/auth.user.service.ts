@@ -78,14 +78,14 @@ export class AuthUserService {
 
     async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = signInCredentialsDto;
-        const User: User = await this.userService.getSingleFilteredComplete('username', username);
-        console.log(`found User ${User}`);
+        const user: User = await this.userService.getSingleFilteredComplete('username', username);
+        console.log(`found User ${user}`);
 
-        this.logger.log(User);
+        this.logger.log(user);
         const responsePayload: ResponsePayload = new ResponsePayload();
-        if (User && (await User.validatePassword(password))) {
-            responsePayload.userId = User.id;
-            responsePayload.role = User.role;
+        if (user && (await user.validatePassword(password))) {
+            responsePayload.userId = user.id;
+            responsePayload.role = user.role;
             return responsePayload;
         } else {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);

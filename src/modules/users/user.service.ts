@@ -31,18 +31,6 @@ export class UserService implements AbmMethods<User, UserDto> {
         ).pop();
     }
 
-    /*
-    async create(dto: UserDto, loggedUser: User): Promise<User> {
-        const signUpCredentialsDto: SignUpCredentialsDto = {
-            name: dto.name,
-            username: dto.username,
-            password: dto.password,
-            role: dto.role,
-        };
-        return (await this.userAuthService.singUp(signUpCredentialsDto, loggedUser)).user;
-    }
-    */
-
     async update(dto: UserDto, loggedUser: User, userIp: string): Promise<User> {
         //TODO cambio de password no funciona
         /*if (dto.password != null && dto.password.length > 0){

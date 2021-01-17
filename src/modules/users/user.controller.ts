@@ -37,18 +37,6 @@ export class UserController {
         return this.userService.getFiltered(q, value);
     }
 
-    /*
-    @Post()
-    @Roles(Role.admin)
-    @ApiCreatedResponse({
-        description: ConstApp.DEFAULT_POST_OK,
-        type: User,
-    })
-    create(@Body() dto: UserDto, @AuthUser() loggedUser: User): Promise<User> {
-        return this.userService.create(dto, loggedUser);
-    }
-    */
-
     @Put()
     @Roles(Role.admin)
     @ApiCreatedResponse({
