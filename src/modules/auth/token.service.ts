@@ -53,7 +53,7 @@ export class TokenService {
         }
     }
 
-    async createRefreshToken(userIp: string, userId: string | ObjectId): Promise<JwtPayloadRefresh> {
+    async createRefreshToken(userIp: string, userId: ObjectId): Promise<JwtPayloadRefresh> {
         try {
             const refreshTokenModel = await this.refreshTokenModel.findOne({ userId }).exec();
             const value = randomBytes(64).toString('hex');
@@ -69,7 +69,7 @@ export class TokenService {
 
     async deleteRefreshToken(ipAddress: string, user: User): Promise<ResponseDto> {
         let refreshTokenModel = new this.refreshTokenModel();
-        const userId: string | ObjectId = user._id;
+        const userId: ObjectId = user._id;
         refreshTokenModel = await this.refreshTokenModel.findOne({ userId, ipAddress });
         if (refreshTokenModel == null) {
             throw new ForbiddenException(ConstApp.COULD_NOT_LOG_OUT_ERROR);

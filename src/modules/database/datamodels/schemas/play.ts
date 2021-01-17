@@ -1,10 +1,10 @@
 import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { PlayTypes } from '@src/modules/database/datamodels/enums/play.types';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { PlayNumbers, PlayNumbersSchema } from '@src/modules/database/datamodels/schemas/play.numbers';
 import { ApiProperty } from '@nestjs/swagger';
-import * as mongoose from 'mongoose';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Play extends Document implements DataObject {
@@ -15,10 +15,10 @@ export class Play extends Document implements DataObject {
     playNumbers: PlayNumbers;
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) lotteryId?: ObjectId;
 
-    // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
+    /** Data object members*/
+    @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId }) creationUserId: ObjectId;
     @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string | ObjectId;
+    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId }) modificationUserId: ObjectId;
 }
 
 export const PlaySchema = SchemaFactory.createForClass(Play);

@@ -5,6 +5,7 @@ import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import { Role } from '@database/datamodels/enums/role';
+import * as mongoose from 'mongoose';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class User extends Document implements DataObject {
@@ -20,16 +21,16 @@ export class User extends Document implements DataObject {
     @ApiProperty()
     @Prop({ select: false, required: true })
     salt: string;
-    // Data object members
+    /** Data object members*/
     @ApiProperty()
-    @Prop({ required: true })
-    creationUserId: string | ObjectId;
+    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId })
+    creationUserId: ObjectId;
     @ApiProperty()
     @Prop()
     deletionDate?: Date;
     @ApiProperty()
-    @Prop({ required: true })
-    modificationUserId: string | ObjectId;
+    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId })
+    modificationUserId: ObjectId;
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     validatePassword: Function;

@@ -5,6 +5,7 @@ import { BrasilPrizes } from '@src/modules/database/datamodels/enums/brasil.priz
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import * as mongoose from 'mongoose';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 // Monto a pagar por cada unidad monetaria al momento de haber un ganador
@@ -53,10 +54,10 @@ export class PrizeLimit extends Document implements DataObject {
     @ApiProperty() @Prop({ required: true }) paymentAmount?: number;
     @ApiProperty({ required: true }) @Prop() status: boolean;
 
-    // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
+    /** Data object members*/
+    @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId }) creationUserId: ObjectId;
     @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string | ObjectId;
+    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId }) modificationUserId: ObjectId;
 }
 
 export const PrizeLimitSchema = SchemaFactory.createForClass(PrizeLimit);

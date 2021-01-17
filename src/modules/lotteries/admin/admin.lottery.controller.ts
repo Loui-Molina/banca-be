@@ -4,7 +4,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { AdminLotteryService } from '@src/modules/lotteries/admin/admin.lottery.service';
 import { AdminLotteryReqDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.req.dto';
 import { ConstApp } from '@utils/const.app';
-import { Lottery } from '@database/datamodels/schemas/lottery';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
 import { Roles } from '@src/common/decorators/roles.decorator';

@@ -33,10 +33,10 @@ export class Banking extends Document implements DataObject {
     @Prop({ min: 0, max: 100 }) fallbackPercentage?: number;
     @Prop() showPercentage?: boolean;
 
-    // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
+    /** Data object members*/
+    @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId }) creationUserId: ObjectId;
     @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string | ObjectId;
+    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId }) modificationUserId: ObjectId;
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     calculateBalance?: Function;

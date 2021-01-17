@@ -28,11 +28,11 @@ export class Consortium extends Document {
     @ApiProperty() @Prop() firstTransactionDate?: Date;
     @ApiProperty() @Prop({ type: [TransactionSchema] }) transactions?: Transaction[];
 
-    // Data object members
+    /** Data object members*/
     @ApiProperty()
-    @Prop({ required: true, immutable: true, type: mongoose.SchemaTypes.ObjectId })
-    creationUserId: string | ObjectId;
-    @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) modificationUserId: string | ObjectId;
+    @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId })
+    creationUserId: ObjectId;
+    @ApiProperty() @Prop({ required: true, type: mongoose.Schema.Types.ObjectId }) modificationUserId: ObjectId;
     @ApiProperty() createdAt?: Date;
     @ApiProperty() updatedAt?: Date;
     @ApiProperty() @Prop() deletionDate?: Date;

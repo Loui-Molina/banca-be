@@ -21,7 +21,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "apiBat": "rimraf ../banca-fe/local-packages && openApiPackage.bat",
-    "fixme": "npm run prebuild && npm cache clean --force && npm install"
+    "fixMeAndStart": "npm run prebuild && npm cache clean --force && npm install && npm run start:dev"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.5",

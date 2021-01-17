@@ -2,9 +2,9 @@ import { DataObject } from '@database/datamodels/schemas/data.object';
 import { LotteryTime, LotteryTimeSchema } from '@database/datamodels/schemas/lottery.time';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { ApiProperty } from '@nestjs/swagger';
 import { Result, ResultSchema } from '@database/datamodels/schemas/result';
 import { Draw } from '@database/datamodels/schemas/draw';
+import * as mongoose from 'mongoose';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Lottery extends Document implements DataObject {
@@ -18,10 +18,10 @@ export class Lottery extends Document implements DataObject {
     @Prop() lastDraw?: Draw;
     @Prop({ type: [ResultSchema] }) results?: Result[];
 
-    // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
+    /** Data object members*/
+    @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId }) creationUserId: ObjectId;
     @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string | ObjectId;
+    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId }) modificationUserId: ObjectId;
 }
 
 export const LotterySchema = SchemaFactory.createForClass(Lottery);

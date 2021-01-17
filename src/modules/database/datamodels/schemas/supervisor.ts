@@ -1,16 +1,15 @@
-import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import * as mongoose from 'mongoose';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class Supervisor extends Document implements DataObject {
+export class Supervisor extends mongoose.Document /*implements DataObject*/ {
     @Prop({ required: true }) userId: string;
     @Prop() bankingIds: string[];
 
     // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string | ObjectId;
+    @Prop({ required: true, immutable: true }) creationUserId: string;
     @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string | ObjectId;
+    @Prop({ required: true }) modificationUserId: string;
 }
 
 export const SupervisorSchema = SchemaFactory.createForClass(Supervisor);

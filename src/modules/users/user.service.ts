@@ -67,12 +67,11 @@ export class UserService implements AbmMethods<User, UserDto> {
         );
     }
 
-    async delete(id: string | ObjectId): Promise<User> {
+    async delete(id: ObjectId): Promise<User> {
         return this.userModel.findByIdAndRemove(id).exec();
     }
 
-    //TODO CHECK USAGE
-    async get(id: any): Promise<User> {
+    async get(id: ObjectId): Promise<User> {
         return await this.userModel.findById(id).exec();
     }
 
@@ -81,7 +80,6 @@ export class UserService implements AbmMethods<User, UserDto> {
     }
 
     getEstablishmentName(loggedUser: User) {
-        // this.
         return Promise.resolve({ name: 'test' });
     }
 }

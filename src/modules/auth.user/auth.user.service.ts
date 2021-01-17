@@ -96,7 +96,7 @@ export class AuthUserService {
         return bcrypt.hash(password, salt);
     }
 
-    async getUserRefresh(userId: string | ObjectId): Promise<User> {
+    async getUserRefresh(userId: ObjectId): Promise<User> {
         const user = await this.userService.get(userId);
         this.logger.debug(`User find ${user}`);
         return user;

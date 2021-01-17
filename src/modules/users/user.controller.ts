@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Ip, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Ip, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UserService } from '@users/user.service';
 import { User } from '@src/modules/database/datamodels/schemas/user';
@@ -9,6 +9,7 @@ import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
 import { ConstApp } from '@utils/const.app';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { ObjectId } from 'mongoose';
 
 @ApiTags('users')
 @Controller('users')
@@ -64,7 +65,7 @@ export class UserController {
         description: ConstApp.DEFAULT_DELETE_OK,
         type: User,
     })
-    delete(@Param('id') id: string): Promise<User> {
+    delete(@Param('id') id: ObjectId): Promise<User> {
         return this.userService.delete(id);
     }
 
@@ -74,7 +75,7 @@ export class UserController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    async get(@Param('id') id: string): Promise<User> {
+    async get(@Param('id') id: ObjectId): Promise<User> {
         return await this.userService.get(id);
     }
 

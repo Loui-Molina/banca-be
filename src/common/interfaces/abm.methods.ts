@@ -10,7 +10,7 @@ export interface AbmMethods<T, E> {
 
     update(dto: E, loggedUser: User, ...args: any[]): Promise<T>;
 
-    delete(id: string | ObjectId): Promise<T>;
+    delete(id: ObjectId): Promise<T>;
 
-    get(id: string | ObjectId): Promise<T>;
+    get(id: ObjectId): Promise<T>;
 }
