@@ -9,7 +9,7 @@ import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
 import { ConstApp } from '@utils/const.app';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { ObjectId } from 'mongoose';
+import * as mongoose from 'mongoose';
 
 @ApiTags('users')
 @Controller('users')
@@ -53,8 +53,8 @@ export class UserController {
         description: ConstApp.DEFAULT_DELETE_OK,
         type: User,
     })
-    delete(@Param('id') id: ObjectId): Promise<User> {
-        return this.userService.delete(id);
+    delete(@Param('id') id: string): Promise<User> {
+        return this.userService.delete(new mongoose.Schema.Types.ObjectId(id));
     }
 
     @Get('get/:id')
@@ -63,8 +63,8 @@ export class UserController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    async get(@Param('id') id: ObjectId): Promise<User> {
-        return await this.userService.get(id);
+    async get(@Param('id') id: string): Promise<User> {
+        return await this.userService.get(new mongoose.Schema.Types.ObjectId(id));
     }
 
     @Get('/establishment')
