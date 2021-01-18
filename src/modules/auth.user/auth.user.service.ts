@@ -16,10 +16,10 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 import { User } from '@src/modules/database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
-import { SignInCredentialsDto } from '@auth/dtos/signIn.credentials.dto';
-import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
-import { ChangeCredentialsDto } from '@auth/dtos/change.credentials.dto';
 import { UserService } from '@users/user.service';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from "@auth/dtos/sign.up.credentials.dto";
 
 @Injectable()
 export class AuthUserService {

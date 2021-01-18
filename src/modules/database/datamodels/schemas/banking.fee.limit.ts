@@ -1,8 +1,8 @@
 import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { PlayTypes } from '@database/datamodels/enums/play.types';
-import * as mongoose from 'mongoose';
 
 // Porcentaje que se le paga a cada banca por cada jugada que vende
 

@@ -1,10 +1,10 @@
 import { DataObject } from '@database/datamodels/schemas/data.object';
 import { LotteryTime, LotteryTimeSchema } from '@database/datamodels/schemas/lottery.time';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { Result, ResultSchema } from '@database/datamodels/schemas/result';
 import { Draw } from '@database/datamodels/schemas/draw';
-import * as mongoose from 'mongoose';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Lottery extends Document implements DataObject {

@@ -25,7 +25,7 @@ export class BettingPanelController {
         type: Bet,
     })
     @Roles(Role.banker)
-    getAll(@AuthUser() loggedUser: UserDocument): Promise<Array<Bet>> {
+    getAll(@AuthUser() loggedUser: User): Promise<Array<Bet>> {
         return this.bettingPanelService.getAll(loggedUser);
     }
 
@@ -55,7 +55,7 @@ export class BettingPanelController {
         type: BetDto,
     })
     @Roles(Role.banker)
-    cancelBet(@Body() dto: UpdateBetDto, @AuthUser() loggedUser: UserDocument): Promise<BetDto> {
+    cancelBet(@Body() dto: UpdateBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
         return this.bettingPanelService.cancelBet(dto, loggedUser);
     }
 

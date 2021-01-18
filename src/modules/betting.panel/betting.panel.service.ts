@@ -22,7 +22,7 @@ export class BettingPanelService {
         private userService: UserService,
     ) {}
 
-    async getAll(loggedUser: UserDocument): Promise<Array<Bet>> {
+    async getAll(loggedUser: User): Promise<Array<Bet>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
         return banking.bets.reverse();
     }
@@ -58,14 +58,14 @@ export class BettingPanelService {
         return this.mapToDto(newObject);
     }
 
-    async cancelBet(dto: UpdateBetDto, loggedUser: UserDocument): Promise<BetDto> {
+    async cancelBet(dto: UpdateBetDto, loggedUser: User): Promise<BetDto> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
         const bet = banking.bets.filter((bet) => bet._id.toString() === dto._id.toString()).pop();
         if (bet.betStatus !== BetStatus.pending || !(await this.canCancelTicket(bet))) {
             throw new BadRequestException();
         }
-        let betFounded: BetDocument = null;
-        banking.bets.map((bet: BetDocument) => {
+        let betFounded: Bet = null;
+        banking.bets.map((bet: Bet) => {
             if (bet._id.toString() === dto._id.toString()) {
                 bet.betStatus = BetStatus.cancelled;
                 betFounded = bet;

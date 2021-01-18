@@ -3,8 +3,8 @@ import { DominicanLotteryPrizes } from '@src/modules/database/datamodels/enums/d
 import { UsLotteryPrizes } from '@src/modules/database/datamodels/enums/us.lottery.prizes';
 import { BrasilPrizes } from '@src/modules/database/datamodels/enums/brasil.prizes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
 import * as mongoose from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 // cantidad de veces que se puede hacer una jugada
 

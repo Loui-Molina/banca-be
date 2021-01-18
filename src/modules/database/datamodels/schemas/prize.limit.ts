@@ -3,9 +3,9 @@ import { DominicanLotteryPrizes } from '@src/modules/database/datamodels/enums/d
 import { UsLotteryPrizes } from '@src/modules/database/datamodels/enums/us.lottery.prizes';
 import { BrasilPrizes } from '@src/modules/database/datamodels/enums/brasil.prizes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import * as mongoose from 'mongoose';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 // Monto a pagar por cada unidad monetaria al momento de haber un ganador
