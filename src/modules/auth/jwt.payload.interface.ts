@@ -1,6 +1,7 @@
 import { Role } from '@database/datamodels/enums/role';
+import { ObjectId } from 'mongoose';
 
 export interface JwtPayload {
-    userId: string;
+    userId: ObjectId;
     role: Role;
 }

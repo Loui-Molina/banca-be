@@ -1,20 +1,20 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
 import { ConstApp } from '@utils/const.app';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { User } from '@src/modules/database/datamodels/schemas/user';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
 import { TokenService } from '@auth/token.service';
-import { SignInCredentialsDto } from './dtos/signIn.credentials.dto';
-import { SignUpCredentialsDto } from './dtos/signUp.credentials.dto';
-import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
+import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from './dtos/sign.up.credentials.dto';
+import { ChangePasswordDto } from './dtos/change.password.dto';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +25,7 @@ export class AuthService {
         private userAuthService: AuthUserService,
         private jwtService: JwtService,
         private readonly tokenService: TokenService,
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        @InjectModel(User.name) private userModel: Model<User>,
     ) {}
 
     async singUp(signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
@@ -41,13 +41,13 @@ export class AuthService {
         return await this.getToken(responsePayload, userIp, false);
     }
 
-    async getLoggedUser(user: UserDocument) {
+    async getLoggedUser(user: User) {
         return await this.userModel.findById(user.id).exec();
     }
 
     async getToken(responsePayload: ResponsePayload, userIp: string, logged: boolean): Promise<ResponseSignInDto> {
         const responseSignInDto: ResponseSignInDto = new ResponseSignInDto();
-        const userId: string = responsePayload.userId;
+        const userId: ObjectId = responsePayload.userId;
         const role: Role = responsePayload.role;
         const payload: JwtPayload = { userId, role };
         if (!logged) {
@@ -65,15 +65,16 @@ export class AuthService {
         return responseSignInDto;
     }
 
-    async logOut(ipAdress: string, user: UserDocument): Promise<ResponseDto> {
+    async logOut(ipAdress: string, user: User): Promise<ResponseDto> {
         return this.tokenService.deleteRefreshToken(ipAdress, user);
     }
 
     async changePassword(
         ipAddress: string,
-        changeCredentialsDto: ChangeCredentialsDto,
-        userLogged: UserDocument,
+        changePasswordDto: ChangePasswordDto,
+        user: User,
+        remember: boolean,
     ): Promise<ResponseDto> {
-        return await this.userAuthService.changePassword(changeCredentialsDto, userLogged, ipAddress);
+        return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress, remember);
     }
 }

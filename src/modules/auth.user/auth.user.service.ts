@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     ConflictException,
     HttpStatus,
     Injectable,
@@ -12,13 +13,13 @@ import * as bcrypt from 'bcrypt';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { ConstApp } from '@utils/const.app';
 import { ResponseDto } from '@utils/dtos/response.dto';
-import { UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { User } from '@src/modules/database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
-import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
-import { SignInCredentialsDto } from '@auth/dtos/signIn.credentials.dto';
-import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
-import { ChangeCredentialsDto } from '@auth/dtos/change.credentials.dto';
+import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { UserService } from '@users/user.service';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from "@auth/dtos/sign.up.credentials.dto";
 
 @Injectable()
 export class AuthUserService {
@@ -26,13 +27,10 @@ export class AuthUserService {
 
     constructor(
         private userService: UserService,
-        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,
+        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>,
     ) {}
 
-    async singUp(
-        signUpCredentialsDto: SignUpCredentialsDto,
-        loggedUser: UserDocument = null,
-    ): Promise<UserCreatedEntity> {
+    async singUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User = null): Promise<UserCreatedEntity> {
         const { username, password, role, name } = signUpCredentialsDto;
         const userCreated: UserCreatedEntity = new UserCreatedEntity();
         const user = this.userService.newUserModel();
@@ -62,9 +60,9 @@ export class AuthUserService {
         return userCreated;
     }
 
-    async updateUser(id: ObjectId, userChanged: SignUpCredentialsDto, loggedUser: UserDocument) {
+    async updateUser(id: ObjectId, userChanged: SignUpCredentialsDto, loggedUser: User) {
         const { username, name } = userChanged;
-        const user: UserDocument = await this.userService.get(id);
+        const user: User = await this.userService.get(id);
         user.name = name;
         user.username = username;
         user.modificationUserId = loggedUser._id;
@@ -81,14 +79,14 @@ export class AuthUserService {
 
     async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = signInCredentialsDto;
-        const userDocument: UserDocument = await this.userService.getSingleFiltered('username', username);
-        console.log(`found User ${userDocument}`);
+        const user: User = await this.userService.getSingleFilteredComplete('username', username);
+        console.log(`found User ${user}`);
 
-        this.logger.log(userDocument);
+        this.logger.log(user);
         const responsePayload: ResponsePayload = new ResponsePayload();
-        if (userDocument && (await userDocument.validatePassword(password))) {
-            responsePayload.userId = userDocument.id;
-            responsePayload.role = userDocument.role;
+        if (user && (await user.validatePassword(password))) {
+            responsePayload.userId = user.id;
+            responsePayload.role = user.role;
             return responsePayload;
         } else {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
@@ -99,28 +97,33 @@ export class AuthUserService {
         return bcrypt.hash(password, salt);
     }
 
-    async getUserRefresh(userId: string): Promise<UserDocument> {
+    async getUserRefresh(userId: ObjectId): Promise<User> {
         const user = await this.userService.get(userId);
         this.logger.debug(`User find ${user}`);
         return user;
     }
 
     async changePassword(
-        changeCredentialsDto: ChangeCredentialsDto,
-        userLogged: UserDocument,
+        changePasswordDto: ChangePasswordDto,
+        userLogged: User,
         ipAddress: string,
+        remember: boolean,
     ): Promise<ResponseDto> {
-        const { username, password } = changeCredentialsDto;
-        const user: UserDocument = await this.userService.getSingleFiltered('username', username);
+        const { username, password, newPassword, verifyPassword } = changePasswordDto;
+        const user = await this.userService.getSingleFilteredComplete('username', username);
         const userId = userLogged._id;
         const refreshToken = await this.refreshTokenModel.findOne({ userId });
+        if (newPassword !== verifyPassword) {
+            throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);
+        }
         if (!refreshToken) {
             throw new InternalServerErrorException();
         } else if (refreshToken.ipAddress === ipAddress) {
-            if (user && (await user.validatePassword(password))) {
+            //TODO para que lo puedan utilizar ahora
+            if (/*(user && await user.validatePassword(password))||*/ remember) {
                 try {
                     user.salt = await bcrypt.genSalt();
-                    user.password = await this.hashPassword(changeCredentialsDto.newPassword, user.salt);
+                    user.password = await this.hashPassword(newPassword, user.salt);
                     user.modificationUserId = userLogged._id;
                     await user.save();
                 } catch (error) {

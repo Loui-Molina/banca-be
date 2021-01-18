@@ -11,21 +11,21 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
-import { SignUpCredentialsDto } from '@auth/dtos/signUp.credentials.dto';
+import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ConstApp } from '@utils/const.app';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { User } from '@src/modules/database/datamodels/schemas/user';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
-import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
-import { ChangeCredentialsDto } from './dtos/change.credentials.dto';
+import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
-import { SignInCredentialsDto } from './dtos/signIn.credentials.dto';
+import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
+import { ChangePasswordDto } from './dtos/change.password.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -34,7 +34,7 @@ export class AuthController {
 
     constructor(private readonly authService: AuthService, private readonly tokenService: TokenService) {}
 
-    @Post('/signup')
+    @Post('/sign-up')
     @HttpCode(HttpStatus.CREATED)
     @ApiOkResponse({ type: ResponseDto, description: 'Successfully Registered' })
     @ApiCreatedResponse({
@@ -45,7 +45,7 @@ export class AuthController {
         return this.authService.singUp(signUpCredentialsDto);
     }
 
-    @Post('/signin')
+    @Post('/sign-in')
     async singIn(
         @Ip() userIp: string,
         @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
@@ -54,42 +54,42 @@ export class AuthController {
         return this.authService.singIn(userIp, signInCredentialsDto);
     }
 
-    @Post('/changePassword')
+    @Post('/change-password')
     @UseGuards(AuthGuard(), RolesGuard)
     @Roles(Role.admin)
-    async changePassword(
+    async changePasswordRemember(
         @Ip() userIp: string,
-        @Body(ValidationPipe) changeCredentialsDto: ChangeCredentialsDto,
-        @AuthUser() user: UserDocument,
+        @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
+        @AuthUser() user: User,
     ): Promise<ResponseDto> {
-        return this.authService.changePassword(userIp, changeCredentialsDto, user);
+        return this.authService.changePassword(userIp, changePasswordDto, user, true);
     }
 
-    @Get('/loggedUser')
+    @Get('/logged-user')
     @UseGuards(AuthGuard())
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getLoggedUser(@AuthUser() user: UserDocument): Promise<User> {
+    getLoggedUser(@AuthUser() user: User): Promise<User> {
         return this.authService.getLoggedUser(user);
     }
 
     @Post('/test')
     @UseGuards(AuthGuard())
-    test(@AuthUser() user: UserDocument) {
+    test(@AuthUser() user: User) {
         console.log(user);
     }
 
     @Post('/test1')
     @UseGuards(AuthGuard('refresh'))
-    test1(@AuthUser() refreshToken: RefreshTokenDocument) {
+    test1(@AuthUser() refreshToken: RefreshToken) {
         console.log('SUCESSFULL PASS JWT REFRESH');
         this.logger.debug('Refresh token ' + refreshToken);
         return refreshToken;
     }
 
-    @Get('/refreshToken')
+    @Get('/refresh-token')
     @UseGuards(AuthGuard('refresh'))
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
@@ -99,9 +99,9 @@ export class AuthController {
         return this.tokenService.getRefreshToken(ipAdress, refreshToken, true);
     }
 
-    @Get('/logOut')
+    @Get('/log-out')
     @UseGuards(AuthGuard())
-    logOut(@Ip() ipAdress: string, @AuthUser() user: UserDocument): Promise<ResponseDto> {
+    logOut(@Ip() ipAdress: string, @AuthUser() user: User): Promise<ResponseDto> {
         return this.authService.logOut(ipAdress, user);
     }
 }

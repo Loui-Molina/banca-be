@@ -2,26 +2,26 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
-import { Consortium, ConsortiumDocument } from '@src/modules/database/datamodels/schemas/consortium';
-import { User, UserDocument } from '@database/datamodels/schemas/user';
+import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
+import { User } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { Role } from '@database/datamodels/enums/role';
 import { CreateConsortiumDto } from '@src/modules/consortiums/dtos/create.consortium.dto';
 import { UserService } from '@users/user.service';
-import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
+import { Banking } from '@database/datamodels/schemas/banking';
 
 @Injectable()
 export class ConsortiumService {
     constructor(
-        @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
-        @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
+        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
+        @InjectModel(User.name) private userModel: Model<User>,
+        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
         private userAuthService: AuthUserService,
         private userService: UserService,
     ) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {
-        const consortiums: Array<ConsortiumDocument> = await this.consortiumModel.find({}).exec();
+        const consortiums: Array<Consortium> = await this.consortiumModel.find({}).exec();
         return Promise.all(consortiums.map((consortium) => this.mapToUser(consortium)));
     }
 
@@ -30,7 +30,7 @@ export class ConsortiumService {
         return this.consortiumModel.find({ [q]: value }).exec();
     }
 
-    async create(dto: CreateConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
+    async create(dto: CreateConsortiumDto, loggedUser: User): Promise<Consortium> {
         //CREATE user
         dto.user.role = Role.consortium;
         const createdUser = (await this.userAuthService.singUp(dto.user, loggedUser)).user;
@@ -45,7 +45,7 @@ export class ConsortiumService {
         return newObject;
     }
 
-    async update(dto: CreateConsortiumDto, loggedUser: UserDocument): Promise<Consortium> {
+    async update(dto: CreateConsortiumDto, loggedUser: User): Promise<Consortium> {
         //UPDATE user
         await this.userAuthService.updateUser(dto.ownerUserId, dto.user, loggedUser);
 
@@ -76,7 +76,7 @@ export class ConsortiumService {
         return await this.consortiumModel.findById(id).exec();
     }
 
-    async mapToUser(consortium: ConsortiumDocument): Promise<ConsortiumDto> {
+    async mapToUser(consortium: Consortium): Promise<ConsortiumDto> {
         const foundUser = await this.userService.getSingleFiltered('_id', consortium.ownerUserId);
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         return {
@@ -93,7 +93,7 @@ export class ConsortiumService {
     }
 
     // Returns the consortium if the user can modify it
-    async getConsortiumForUser(consortiumId: ObjectId, loggedUser: UserDocument): Promise<Consortium> {
+    async getConsortiumForUser(consortiumId: ObjectId, loggedUser: User): Promise<Consortium> {
         let consortium: Consortium;
         if (loggedUser.role === Role.consortium) {
             //If is consortiums selects his consortium
@@ -112,7 +112,7 @@ export class ConsortiumService {
         return consortium;
     }
 
-    async getConsortiumOfUser(loggedUser: UserDocument): Promise<Consortium> {
+    async getConsortiumOfUser(loggedUser: User): Promise<Consortium> {
         const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id });
         if (consortiums.length === 0) {
             throw new BadRequestException();

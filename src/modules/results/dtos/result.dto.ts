@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
+import { Draw } from '@database/datamodels/schemas/draw';
 import { ObjectId } from 'mongoose';
 
 export class ResultDto {

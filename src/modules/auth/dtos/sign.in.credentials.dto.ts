@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@src/modules/database/datamodels/enums/role';
-import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsString, MaxLength, MinLength } from 'class-validator';
 
 export class SignInCredentialsDto {
     @ApiProperty({ type: String })

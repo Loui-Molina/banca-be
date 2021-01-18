@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { UserService } from '@users/user.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateBankingDto } from '@src/modules/banking/dto/create.banking.dto';
@@ -7,20 +7,20 @@ import { Role } from '@database/datamodels/enums/role';
 import { Model } from 'mongoose';
 import { BankingDto } from '@src/modules/banking/dto/banking.dto';
 import { UpdateBankingDto } from '@src/modules/banking/dto/update.banking.dto';
-import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
+import { Banking } from '@database/datamodels/schemas/banking';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConsortiumService } from '../consortiums/consortium.service';
 
 @Injectable()
 export class BankingService {
     constructor(
-        @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
+        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
         private userAuthService: AuthUserService,
         private userService: UserService,
         private consortiumService: ConsortiumService,
     ) {}
 
-    async findAll(loggedUser: UserDocument): Promise<BankingDto[]> {
+    async findAll(loggedUser: User): Promise<BankingDto[]> {
         let filter;
         switch (loggedUser.role) {
             case Role.admin:
@@ -35,7 +35,7 @@ export class BankingService {
                 throw new BadRequestException();
         }
 
-        const bankings: Array<BankingDocument> = await this.bankingModel.find(filter).exec();
+        const bankings: Array<Banking> = await this.bankingModel.find(filter).exec();
         const bankingsDto: BankingDto[] = [];
         for await (const banking of bankings) {
             bankingsDto.push(await this.mapBanking(banking));
@@ -43,7 +43,7 @@ export class BankingService {
         return bankingsDto;
     }
 
-    async getFiltered(field: string, value: any, loggedUser: UserDocument): Promise<BankingDto[]> {
+    async getFiltered(field: string, value: any, loggedUser: User): Promise<BankingDto[]> {
         let filter;
         switch (loggedUser.role) {
             case Role.admin:
@@ -57,22 +57,22 @@ export class BankingService {
             default:
                 throw new BadRequestException();
         }
-        const bankings: Array<BankingDocument> = await this.bankingModel.find({ [field]: value }).exec();
+        const bankings: Array<Banking> = await this.bankingModel.find({ [field]: value }).exec();
         return Promise.all(
             bankings
-                .filter((banking: BankingDocument) => banking[field as keyof BankingDocument] === value)
+                .filter((banking: Banking) => banking[field as keyof Banking] === value)
                 .map((banking) => this.mapBanking(banking)),
         );
     }
 
-    async create(createBankingDto: CreateBankingDto, loggedUser: UserDocument): Promise<Banking> {
+    async create(createBankingDto: CreateBankingDto, loggedUser: User): Promise<Banking> {
         const consortium = await this.consortiumService.getConsortiumForUser(createBankingDto.consortiumId, loggedUser);
 
         //The rol is hardcoded to prevent issues
         createBankingDto.user.role = Role.banker;
 
-        let createdUser: UserDocument;
-        let newObject: BankingDocument;
+        let createdUser: User;
+        let newObject: Banking;
         try {
             createdUser = (await this.userAuthService.singUp(createBankingDto.user, loggedUser)).user;
             newObject = new this.bankingModel({
@@ -94,14 +94,14 @@ export class BankingService {
         return newObject;
     }
 
-    async update(updateBankingDto: UpdateBankingDto, loggedUser: UserDocument): Promise<Banking> {
+    async update(updateBankingDto: UpdateBankingDto, loggedUser: User): Promise<Banking> {
         const consortium = await this.consortiumService.getConsortiumForUser(
             updateBankingDto.selectedConsortium,
             loggedUser,
         );
 
         await this.userAuthService.updateUser(updateBankingDto.ownerUserId, updateBankingDto.user, loggedUser);
-        const banking = await this.bankingModel.findById(updateBankingDto._id);
+        const banking: Banking = await this.bankingModel.findById(updateBankingDto._id);
         banking.name = updateBankingDto.name;
         banking.status = updateBankingDto.status;
         banking.showPercentage = updateBankingDto.showPercentage;
@@ -112,7 +112,7 @@ export class BankingService {
         return banking;
     }
 
-    async delete(id: string, loggedUser: UserDocument) {
+    async delete(id: string, loggedUser: User) {
         const banking = await this.bankingModel.findById(id).exec();
         if (loggedUser.role === Role.consortium) {
             const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);

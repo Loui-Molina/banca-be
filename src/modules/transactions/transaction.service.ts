@@ -2,11 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateTransactionDto } from '@src/modules/transactions/dtos/create.transaction.dto';
-import { Transaction, TransactionDocument } from '@src/modules/database/datamodels/schemas/transaction';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { Transaction } from '@src/modules/database/datamodels/schemas/transaction';
+import { User } from '@database/datamodels/schemas/user';
 import { TransactionType } from '@database/datamodels/enums/transaction.type';
-import { Consortium, ConsortiumDocument } from '@database/datamodels/schemas/consortium';
-import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
+import { Consortium } from '@database/datamodels/schemas/consortium';
+import { Banking } from '@database/datamodels/schemas/banking';
 import { TransactionDto } from '@src/modules/transactions/dtos/transaction.dto';
 import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 import { Role } from '@database/datamodels/enums/role';
@@ -15,13 +15,13 @@ import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 @Injectable()
 export class TransactionService {
     constructor(
-        @InjectModel(Transaction.name) private transactionModel: Model<TransactionDocument>,
-        @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-        @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
+        @InjectModel(Transaction.name) private transactionModel: Model<Transaction>,
+        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
+        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
         private consortiumService: ConsortiumService,
     ) {}
 
-    async getAll(loggedUser: UserDocument): Promise<Array<TransactionDto>> {
+    async getAll(loggedUser: User): Promise<Array<TransactionDto>> {
         switch (loggedUser.role) {
             case Role.admin:
                 return await this.getTransactionByAdmin();
@@ -38,7 +38,7 @@ export class TransactionService {
         return this.transactionModel.find({ [q]: value }).exec();
     }
 
-    async createTransactionAdmin(dto: CreateTransactionDto, loggedUser: UserDocument): Promise<Transaction> {
+    async createTransactionAdmin(dto: CreateTransactionDto, loggedUser: User): Promise<Transaction> {
         let originObject;
         if (dto.originObject === TransactionObjects.consortium) {
             originObject = await this.consortiumModel.findById(dto.originId);
@@ -89,8 +89,8 @@ export class TransactionService {
         return transactionDestination;
     }
 
-    async createTransactionConsortium(dto: CreateTransactionDto, loggedUser: UserDocument): Promise<Transaction> {
-        let originObject: ConsortiumDocument | BankingDocument;
+    async createTransactionConsortium(dto: CreateTransactionDto, loggedUser: User): Promise<Transaction> {
+        let originObject: Consortium | Banking;
         const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         if (dto.originObject === TransactionObjects.consortium) {
@@ -105,7 +105,7 @@ export class TransactionService {
                 throw new BadRequestException();
             }
         }
-        let destinationObject: ConsortiumDocument | BankingDocument;
+        let destinationObject: Consortium | Banking;
         if (dto.destinationObject === TransactionObjects.consortium) {
             destinationObject = await this.consortiumModel.findById(dto.destinationId);
             if (destinationObject._id.toString() !== consortium._id.toString()) {
@@ -244,7 +244,7 @@ export class TransactionService {
         return transactionsDto;
     }
 
-    private async getTransactionByConsortium(loggedUser: UserDocument): Promise<Array<TransactionDto>> {
+    private async getTransactionByConsortium(loggedUser: User): Promise<Array<TransactionDto>> {
         const consortiums = await this.consortiumService.getFiltered('ownerUserId', loggedUser._id);
         if (consortiums.length === 0) {
             throw new BadRequestException();
@@ -319,13 +319,14 @@ export class TransactionService {
             });
         });
         transactionsDto.sort(function (a, b) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
         return transactionsDto;
     }
 
-    private async getTransactionByBanking(loggedUser: UserDocument): Promise<Array<TransactionDto>> {
+    private async getTransactionByBanking(loggedUser: User): Promise<Array<TransactionDto>> {
         const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id });
         if (bankings.length === 0) {
             throw new BadRequestException();
@@ -364,6 +365,7 @@ export class TransactionService {
             });
         });
         transactionsDto.sort(function (a, b) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             return new Date(b.createdAt) - new Date(a.createdAt);
         });

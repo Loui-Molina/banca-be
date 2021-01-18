@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { ConstApp } from '@utils/const.app';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
@@ -11,9 +11,10 @@ import { Bet } from '@database/datamodels/schemas/bet';
 import { BettingPanelService } from '@src/modules/betting.panel/betting.panel.service';
 import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
+import { UpdateBetDto } from '@src/modules/betting.panel/dtos/update.bet.dto';
 
-@ApiTags('bettingPanel')
-@Controller('bettingPanel')
+@ApiTags('betting-panel')
+@Controller('betting-panel')
 @UseGuards(AuthGuard(), RolesGuard)
 export class BettingPanelController {
     constructor(private readonly bettingPanelService: BettingPanelService) {}
@@ -24,8 +25,8 @@ export class BettingPanelController {
         type: Bet,
     })
     @Roles(Role.banker)
-    getAll(): Promise<Array<Bet>> {
-        return this.bettingPanelService.getAll();
+    getAll(@AuthUser() loggedUser: User): Promise<Array<Bet>> {
+        return this.bettingPanelService.getAll(loggedUser);
     }
 
     @Get('search')
@@ -44,11 +45,21 @@ export class BettingPanelController {
         type: BetDto,
     })
     @Roles(Role.banker)
-    create(@Body() dto: CreateBetDto, @AuthUser() loggedUser: UserDocument): Promise<BetDto> {
+    create(@Body() dto: CreateBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
         return this.bettingPanelService.create(dto, loggedUser);
     }
 
-    @Get('get/:id')
+    @Put('/cancel')
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_PUT_OK,
+        type: BetDto,
+    })
+    @Roles(Role.banker)
+    cancelBet(@Body() dto: UpdateBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
+        return this.bettingPanelService.cancelBet(dto, loggedUser);
+    }
+
+    @Get(':id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: BetDto,

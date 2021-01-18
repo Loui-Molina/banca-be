@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ConstApp } from '@utils/const.app';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
@@ -22,7 +22,7 @@ export class BankingLotteryController {
         type: BankingLotteryDto,
     })
     @Roles(Role.banker)
-    getAll(@AuthUser() loggedUser: UserDocument): Promise<Array<BankingLotteryDto>> {
+    getAll(@AuthUser() loggedUser: User): Promise<Array<BankingLotteryDto>> {
         return this.lotteryService.getAll(loggedUser);
     }
 }
