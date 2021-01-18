@@ -22,7 +22,7 @@ export class ChangePasswordDto {
     @MaxLength(35)
     // @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: ConstApp.PASSWORD_MESSAGE })
     newPassword: string;
-    
+
     @ApiProperty({ type: String })
     @IsString()
     @MinLength(8)

@@ -1,17 +1,14 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Days } from '@database/datamodels/enums/days';
 import { Result } from '@database/datamodels/schemas/result';
-import { Lottery } from '@database/datamodels/schemas/lottery';
-import { Prop } from '@nestjs/mongoose';
-import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
+import { Draw } from '@database/datamodels/schemas/draw';
 
 export class AdminLotteryResDto extends PartialType(Result) {
     @ApiProperty() _id: ObjectId;
     @ApiProperty() date: Date;
     @ApiProperty() draw?: Draw;
-    @ApiProperty() creationUserId: string;
+    @ApiProperty() creationUserId: ObjectId;
     @ApiProperty() deletionDate?: Date;
-    @ApiProperty() modificationUserId: string;
+    @ApiProperty() modificationUserId: ObjectId;
     @ApiProperty() createdAt: Date;
 }

@@ -14,19 +14,20 @@ import { AuthService } from '@auth/auth.service';
 import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ConstApp } from '@utils/const.app';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { User } from '@src/modules/database/datamodels/schemas/user';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
-import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
+import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
 import { ChangePasswordDto } from './dtos/change.password.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
     private readonly logger: Logger = new Logger(AuthController.name);
@@ -59,7 +60,7 @@ export class AuthController {
     async changePasswordRemember(
         @Ip() userIp: string,
         @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
-        @AuthUser() user: UserDocument,
+        @AuthUser() user: User,
     ): Promise<ResponseDto> {
         return this.authService.changePassword(userIp, changePasswordDto, user, true);
     }
@@ -70,19 +71,19 @@ export class AuthController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getLoggedUser(@AuthUser() user: UserDocument): Promise<User> {
+    getLoggedUser(@AuthUser() user: User): Promise<User> {
         return this.authService.getLoggedUser(user);
     }
 
     @Post('/test')
     @UseGuards(AuthGuard())
-    test(@AuthUser() user: UserDocument) {
+    test(@AuthUser() user: User) {
         console.log(user);
     }
 
     @Post('/test1')
     @UseGuards(AuthGuard('refresh'))
-    test1(@AuthUser() refreshToken: RefreshTokenDocument) {
+    test1(@AuthUser() refreshToken: RefreshToken) {
         console.log('SUCESSFULL PASS JWT REFRESH');
         this.logger.debug('Refresh token ' + refreshToken);
         return refreshToken;
@@ -100,7 +101,7 @@ export class AuthController {
 
     @Get('/log-out')
     @UseGuards(AuthGuard())
-    logOut(@Ip() ipAdress: string, @AuthUser() user: UserDocument): Promise<ResponseDto> {
+    logOut(@Ip() ipAdress: string, @AuthUser() user: User): Promise<ResponseDto> {
         return this.authService.logOut(ipAdress, user);
     }
 }

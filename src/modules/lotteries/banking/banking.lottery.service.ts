@@ -1,30 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { LotteryTime, LotteryTimeDocument } from '@database/datamodels/schemas/lottery.time';
-import { Lottery, LotteryDocument } from '@database/datamodels/schemas/lottery';
-import { Result, ResultDocument } from '@database/datamodels/schemas/result';
-import { Draw, DrawDocument } from '@database/datamodels/schemas/draw';
-import { UserDocument } from '@database/datamodels/schemas/user';
-import { ConsortiumLottery, ConsortiumLotteryDocument } from '@database/datamodels/schemas/consortium.lottery';
-import { Consortium, ConsortiumDocument } from '@database/datamodels/schemas/consortium';
-import { Banking, BankingDocument } from '@database/datamodels/schemas/banking';
+import { LotteryTime } from '@database/datamodels/schemas/lottery.time';
+import { Lottery } from '@database/datamodels/schemas/lottery';
+import { Result } from '@database/datamodels/schemas/result';
+import { Draw } from '@database/datamodels/schemas/draw';
+import { User } from '@database/datamodels/schemas/user';
+import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
+import { Consortium } from '@database/datamodels/schemas/consortium';
+import { Banking } from '@database/datamodels/schemas/banking';
 import { BankingLotteryDto } from '@src/modules/lotteries/banking/dtos/banking.lottery.dto';
 import { Days } from '@database/datamodels/enums/days';
 
 @Injectable()
 export class BankingLotteryService {
     constructor(
-        @InjectModel(Lottery.name) private lotteryModel: Model<LotteryDocument>,
-        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTimeDocument>,
-        @InjectModel(ConsortiumLottery.name) private consortiumLotteryModel: Model<ConsortiumLotteryDocument>,
-        @InjectModel(Banking.name) private bankingModel: Model<BankingDocument>,
-        @InjectModel(Consortium.name) private consortiumModel: Model<ConsortiumDocument>,
-        @InjectModel(Result.name) private resultModel: Model<ResultDocument>,
-        @InjectModel(Draw.name) private drawModel: Model<DrawDocument>,
+        @InjectModel(Lottery.name) private lotteryModel: Model<Lottery>,
+        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTime>,
+        @InjectModel(ConsortiumLottery.name) private consortiumLotteryModel: Model<ConsortiumLottery>,
+        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
+        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
+        @InjectModel(Result.name) private resultModel: Model<Result>,
+        @InjectModel(Draw.name) private drawModel: Model<Draw>,
     ) {}
 
-    async getAll(loggedUser: UserDocument): Promise<Array<BankingLotteryDto>> {
+    async getAll(loggedUser: User): Promise<Array<BankingLotteryDto>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
         const consortium = await this.consortiumModel.findById(banking.consortiumId);
         const lotteries = await this.lotteryModel.aggregate([

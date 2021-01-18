@@ -13,40 +13,35 @@ import * as bcrypt from 'bcrypt';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { ConstApp } from '@utils/const.app';
 import { ResponseDto } from '@utils/dtos/response.dto';
-import { User, UserDocument } from '@database/datamodels/schemas/user';
+import { User } from '@src/modules/database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
-import { RefreshToken, RefreshTokenDocument } from '@database/datamodels/schemas/refresh.token';
+import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
+import { UserService } from '@users/user.service';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
-import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
-import { Event } from '../database/datamodels/schemas/event';
+import { SignUpCredentialsDto } from "@auth/dtos/sign.up.credentials.dto";
 
 @Injectable()
 export class AuthUserService {
     private readonly logger: Logger = new Logger(AuthUserService.name);
 
     constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
-        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshTokenDocument>,
-        @InjectConnection(ConstApp.USER) private readonly connection: Connection,
-        @InjectModel(Event.name) private readonly event:Event,
+        private userService: UserService,
+        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>,
     ) {}
 
-    async singUp(
-        signUpCredentialsDto: SignUpCredentialsDto,
-        loggedUser: UserDocument = null,
-    ): Promise<UserCreatedEntity> {
+    async singUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User = null): Promise<UserCreatedEntity> {
         const { username, password, role, name } = signUpCredentialsDto;
         const userCreated: UserCreatedEntity = new UserCreatedEntity();
-        const user = new this.userModel();
+        const user = this.userService.newUserModel();
         const refreshToken = new this.refreshTokenModel();
         user.name = name;
         user.username = username;
         user.salt = await bcrypt.genSalt();
         user.password = await this.hashPassword(password, user.salt);
         user.role = role;
-        user.creationUserId = loggedUser ? loggedUser.id : '1';
-        user.modificationUserId = loggedUser ? loggedUser.id : '1';
+        user.creationUserId = user._id;
+        user.modificationUserId = user._id;
         try {
             userCreated.user = await user.save();
             refreshToken.userId = userCreated.user._id;
@@ -65,9 +60,9 @@ export class AuthUserService {
         return userCreated;
     }
 
-    async updateUser(id: ObjectId, userChanged: SignUpCredentialsDto, loggedUser: UserDocument) {
+    async updateUser(id: ObjectId, userChanged: SignUpCredentialsDto, loggedUser: User) {
         const { username, name } = userChanged;
-        const user = await this.userModel.findById(id).exec();
+        const user: User = await this.userService.get(id);
         user.name = name;
         user.username = username;
         user.modificationUserId = loggedUser._id;
@@ -77,14 +72,16 @@ export class AuthUserService {
     }
 
     async deleteUser(id: ObjectId) {
-        const user = await this.userModel.findById(id).exec();
+        const user = await this.userService.get(id);
         await user.delete();
         return user;
     }
 
     async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = signInCredentialsDto;
-        const user = await this.userModel.findOne({ username }).select('+password').select('+salt');
+        const user: User = await this.userService.getSingleFilteredComplete('username', username);
+        console.log(`found User ${user}`);
+
         this.logger.log(user);
         const responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
@@ -100,24 +97,23 @@ export class AuthUserService {
         return bcrypt.hash(password, salt);
     }
 
-    async getUserRefresh(userId: string): Promise<UserDocument> {
-        const _id = userId;
-        const user = await this.userModel.findOne({ _id });
-        this.logger.debug('User find' + user);
+    async getUserRefresh(userId: ObjectId): Promise<User> {
+        const user = await this.userService.get(userId);
+        this.logger.debug(`User find ${user}`);
         return user;
     }
 
     async changePassword(
         changePasswordDto: ChangePasswordDto,
-        userLogged: UserDocument,
+        userLogged: User,
         ipAddress: string,
-        remember:boolean
+        remember: boolean,
     ): Promise<ResponseDto> {
         const { username, password, newPassword, verifyPassword } = changePasswordDto;
-        const user = await this.userModel.findOne({ username }).select('+password').select('+salt');
+        const user = await this.userService.getSingleFilteredComplete('username', username);
         const userId = userLogged._id;
-        const refreshToken = await this.refreshTokenModel.findOne({ userId }); 
-        if(newPassword !== verifyPassword){
+        const refreshToken = await this.refreshTokenModel.findOne({ userId });
+        if (newPassword !== verifyPassword) {
             throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);
         }
         if (!refreshToken) {
