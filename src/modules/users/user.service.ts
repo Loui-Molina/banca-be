@@ -4,6 +4,9 @@ import { Model, ObjectId } from 'mongoose';
 import { User } from '@src/modules/database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
 import { AbmMethods } from '@src/common/interfaces/abm.methods';
+import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
+import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 
 @Injectable()
 export class UserService implements AbmMethods<User, UserDto> {

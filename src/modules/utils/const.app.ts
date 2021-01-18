@@ -21,4 +21,5 @@ export class ConstApp {
     public static readonly COULD_NOT_EMPTY_THE_TOKEN = "Couldn't empty token";
     public static readonly COULD_NOT_CHANGE_PASSWORD = 'PASSWORD NOT CHANGED';
     public static readonly NOT_LOGGE = 'PASSWORD NOT CHANGED';
+    public static readonly PASSWORD_NOT_MATCH = 'PASSWORD NOT MATCH';
 }
