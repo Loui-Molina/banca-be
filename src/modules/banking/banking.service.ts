@@ -10,6 +10,7 @@ import { UpdateBankingDto } from '@src/modules/banking/dto/update.banking.dto';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConsortiumService } from '../consortiums/consortium.service';
+import { PaginationQueryDto } from '@src/common/dto/pagination-query.dto';
 
 @Injectable()
 export class BankingService {
@@ -20,22 +21,23 @@ export class BankingService {
         private consortiumService: ConsortiumService,
     ) {}
 
-    async findAll(loggedUser: User): Promise<BankingDto[]> {
+    async findAll(loggedUser: User,paginationQuery: PaginationQueryDto): Promise<BankingDto[]> {
         let filter;
+        const { limit, offset } = paginationQuery;
         switch (loggedUser.role) {
             case Role.admin:
                 filter = {};
                 break;
             case Role.consortium:
                 // eslint-disable-next-line no-case-declarations
-                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
+                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser, limit, offset);
                 filter = { consortiumId: consortium._id };
                 break;
             default:
                 throw new BadRequestException();
         }
 
-        const bankings: Array<Banking> = await this.bankingModel.find(filter).exec();
+        const bankings: Array<Banking> = await this.bankingModel.find(filter).skip(offset).limit(limit).exec();
         const bankingsDto: BankingDto[] = [];
         for await (const banking of bankings) {
             bankingsDto.push(await this.mapBanking(banking));

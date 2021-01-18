@@ -12,6 +12,7 @@ import { Banking } from '@database/datamodels/schemas/banking';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
+import { PaginationQueryDto } from '@src/common/dto/pagination-query.dto';
 
 @Controller('banking')
 @ApiTags('banking')
@@ -19,14 +20,14 @@ import { RolesGuard } from '@auth/guards/roles.guard';
 export class BankingController {
     constructor(private readonly bankingService: BankingService) {}
 
-    @Get('/findAll')
+    @Get()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: BankingDto,
     })
     @Roles(Role.admin, Role.consortium)
-    findAll(@AuthUser() user: User) {
-        return this.bankingService.findAll(user);
+    findAll(@AuthUser() user: User, @Query() paginationQueryDto: PaginationQueryDto) {
+        return this.bankingService.findAll(user,paginationQueryDto);
     }
 
     @Get('search')
