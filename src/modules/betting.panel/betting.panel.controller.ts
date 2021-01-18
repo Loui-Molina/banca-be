@@ -13,8 +13,8 @@ import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
 import { UpdateBetDto } from '@src/modules/betting.panel/dtos/update.bet.dto';
 
-@ApiTags('bettingPanel')
-@Controller('bettingPanel')
+@ApiTags('betting-panel')
+@Controller('betting-panel')
 @UseGuards(AuthGuard(), RolesGuard)
 export class BettingPanelController {
     constructor(private readonly bettingPanelService: BettingPanelService) {}
@@ -59,7 +59,7 @@ export class BettingPanelController {
         return this.bettingPanelService.cancelBet(dto, loggedUser);
     }
 
-    @Get('get/:id')
+    @Get(':id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: BetDto,

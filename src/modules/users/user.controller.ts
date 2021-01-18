@@ -57,7 +57,7 @@ export class UserController {
         return this.userService.delete(new mongoose.Schema.Types.ObjectId(id));
     }
 
-    @Get('get/:id')
+    @Get(':id')
     @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,

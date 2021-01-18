@@ -67,7 +67,7 @@ export class AdminLotteryController {
         return this.lotteryService.delete(id);
     }
 
-    @Get('get/:id')
+    @Get(':id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: AdminLotteryResDto,

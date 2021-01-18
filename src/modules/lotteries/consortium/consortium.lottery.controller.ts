@@ -38,7 +38,7 @@ export class ConsortiumLotteryController {
         return this.lotteryService.update(dto, loggedUser);
     }
 
-    @Get('get/:id')
+    @Get(':id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: Lottery,

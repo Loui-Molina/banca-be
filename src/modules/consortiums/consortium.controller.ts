@@ -68,7 +68,7 @@ export class ConsortiumController {
         return this.consortiumService.delete(id);
     }
 
-    @Get('getConsortiumOfUser')
+    @Get('user')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: Consortium,
@@ -78,7 +78,7 @@ export class ConsortiumController {
         return await this.consortiumService.getConsortiumOfUser(loggedUser);
     }
 
-    @Get('get/:id')
+    @Get(':id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: Consortium,
