@@ -112,8 +112,8 @@ export class ConsortiumService {
         return consortium;
     }
 
-    async getConsortiumOfUser(loggedUser: User,  limit:number, offset:number): Promise<Consortium> {
-        const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id }).skip(offset).limit(limit).exec();
+    async getConsortiumOfUser(loggedUser: User): Promise<Consortium> {
+        const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id });
         if (consortiums.length === 0) {
             throw new BadRequestException();
         }
