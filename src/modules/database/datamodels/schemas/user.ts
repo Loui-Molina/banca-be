@@ -29,7 +29,7 @@ export class User extends Document implements DataObject {
     @Prop()
     deletionDate?: Date;
     @ApiProperty()
-    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId })
+    @Prop({ type: mongoose.Schema.Types.ObjectId })
     modificationUserId: ObjectId;
 
     // eslint-disable-next-line @typescript-eslint/ban-types

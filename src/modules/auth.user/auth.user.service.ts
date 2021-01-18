@@ -40,8 +40,8 @@ export class AuthUserService {
         user.salt = await bcrypt.genSalt();
         user.password = await this.hashPassword(password, user.salt);
         user.role = role;
-        user.creationUserId = loggedUser ? loggedUser.id : '1';
-        user.modificationUserId = loggedUser ? loggedUser.id : '1';
+        user.creationUserId = user._id;
+        user.modificationUserId = user._id;
         try {
             userCreated.user = await user.save();
             refreshToken.userId = userCreated.user._id;
