@@ -20,6 +20,7 @@ import { UserService } from '@users/user.service';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from "@auth/dtos/sign.up.credentials.dto";
+import { Event } from '@database/datamodels/schemas/event';
 
 @Injectable()
 export class AuthUserService {
@@ -27,12 +28,17 @@ export class AuthUserService {
 
     constructor(
         private userService: UserService,
-        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>,
+        @InjectModel(RefreshToken.name) private readonly refreshTokenModel: Model<RefreshToken>,
+        @InjectConnection(ConstApp.USER) private readonly connection :Connection,
+        @InjectModel(Event.name) private readonly eventModel:Model<Event>
     ) {}
 
-    async singUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User = null): Promise<UserCreatedEntity> {
-        const { username, password, role, name } = signUpCredentialsDto;
+    async singUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User): Promise<UserCreatedEntity> {
+        const session =await  this.connection.startSession();
+        session.startTransaction();
         const userCreated: UserCreatedEntity = new UserCreatedEntity();
+        try{
+        const { username, password, role, name } = signUpCredentialsDto;
         const user = this.userService.newUserModel();
         const refreshToken = new this.refreshTokenModel();
         user.name = name;
@@ -40,15 +46,28 @@ export class AuthUserService {
         user.salt = await bcrypt.genSalt();
         user.password = await this.hashPassword(password, user.salt);
         user.role = role;
-        user.creationUserId = user._id;
-        user.modificationUserId = user._id;
-        try {
-            userCreated.user = await user.save();
-            refreshToken.userId = userCreated.user._id;
-            refreshToken.refreshTokenId = null;
-            refreshToken.ipAddress = '';
-            await refreshToken.save();
+        if(!loggedUser){
+            user.creationUserId = user._id;
+            user.modificationUserId = user._id;
+        }else{
+            user.creationUserId = loggedUser._id;
+            user.modificationUserId = loggedUser._id;
+        }
+        userCreated.user = await user.save();
+        const event = new this.eventModel({
+            name:"Sign-up",
+            type:"User",
+            payload:{ userId:userCreated.user._id}
+        });
+        await event.save();
+        refreshToken.userId = userCreated.user._id;
+        refreshToken.refreshTokenId = null;
+        refreshToken.ipAddress = '';
+        await refreshToken.save();
+        userCreated.response = { message: ConstApp.USER_CREATED_OK, statusCode: 201 } as ResponseDto;
+        await session.commitTransaction();
         } catch (error) {
+            await session.abortTransaction();
             this.logger.error(error);
             if (error.code === 11000) {
                 throw new ConflictException(ConstApp.USERNAME_EXISTS_ERROR);
@@ -56,7 +75,9 @@ export class AuthUserService {
                 throw new InternalServerErrorException();
             }
         }
-        userCreated.response = { message: ConstApp.USER_CREATED_OK, statusCode: 201 } as ResponseDto;
+        finally{
+            session.endSession();
+        }
         return userCreated;
     }
 

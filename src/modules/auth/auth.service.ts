@@ -28,8 +28,8 @@ export class AuthService {
         @InjectModel(User.name) private userModel: Model<User>,
     ) {}
 
-    async singUp(signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
-        return this.userAuthService.singUp(signUpCredentialsDto).then((createdUser) => createdUser.response);
+    async singUp(signUpCredentialsDto: SignUpCredentialsDto, user:User): Promise<ResponseDto> {
+        return this.userAuthService.singUp(signUpCredentialsDto, user).then((createdUser) => createdUser.response);
     }
 
     async singIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
