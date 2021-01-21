@@ -106,7 +106,7 @@ export class AuthUserService {
         this.logger.log(user);
         const responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
-            responsePayload.userId = user.id;
+            responsePayload.userId = user._id;
             responsePayload.role = user.role;
             return responsePayload;
         } else {
