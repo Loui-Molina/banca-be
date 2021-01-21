@@ -15,13 +15,13 @@ import { Days } from '@database/datamodels/enums/days';
 @Injectable()
 export class BankingLotteryService {
     constructor(
-        @InjectModel(Lottery.name) private lotteryModel: Model<Lottery>,
-        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTime>,
-        @InjectModel(ConsortiumLottery.name) private consortiumLotteryModel: Model<ConsortiumLottery>,
-        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
-        @InjectModel(Result.name) private resultModel: Model<Result>,
-        @InjectModel(Draw.name) private drawModel: Model<Draw>,
+        @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
+        @InjectModel(LotteryTime.name) private readonly lotteryTimeModel: Model<LotteryTime>,
+        @InjectModel(ConsortiumLottery.name) private readonly consortiumLotteryModel: Model<ConsortiumLottery>,
+        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
+        @InjectModel(Result.name) private readonly resultModel: Model<Result>,
+        @InjectModel(Draw.name) private readonly drawModel: Model<Draw>,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<BankingLotteryDto>> {

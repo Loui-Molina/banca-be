@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@database/datamodels/schemas/user';
-import { UserService } from '@users/user.service';
+import { UsersService } from '@users/users.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateBankingDto } from '@src/modules/banking/dto/create.banking.dto';
 import { Role } from '@database/datamodels/enums/role';
@@ -14,10 +14,10 @@ import { ConsortiumService } from '../consortiums/consortium.service';
 @Injectable()
 export class BankingService {
     constructor(
-        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        private userAuthService: AuthUserService,
-        private userService: UserService,
-        private consortiumService: ConsortiumService,
+        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        private readonly userAuthService: AuthUserService,
+        private readonly userService: UsersService,
+        private readonly consortiumService: ConsortiumService,
     ) {}
 
     async findAll(loggedUser: User): Promise<BankingDto[]> {
@@ -63,6 +63,24 @@ export class BankingService {
                 .filter((banking: Banking) => banking[field as keyof Banking] === value)
                 .map((banking) => this.mapBanking(banking)),
         );
+    }
+
+    async getSingleFiltered(field: string, value: any, loggedUser: User): Promise<BankingDto> {
+        let filter;
+        switch (loggedUser.role) {
+            case Role.admin:
+                filter = { [field]: value };
+                break;
+            case Role.consortium:
+                // eslint-disable-next-line no-case-declarations
+                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
+                filter = { [field]: value, consortiumId: consortium._id };
+                break;
+            default:
+                throw new BadRequestException();
+        }
+        const banking: Banking = (await this.bankingModel.find({ [field]: value }).exec()).pop();
+        return this.mapBanking(banking);
     }
 
     async create(createBankingDto: CreateBankingDto, loggedUser: User): Promise<Banking> {
@@ -140,5 +158,9 @@ export class BankingService {
             ownerUsername: bankingUser ? bankingUser.username : null,
             ownerName: bankingUser ? bankingUser.name : null,
         };
+    }
+
+    async getBankingName(loggedUser: User): Promise<string> {
+        return (await this.getSingleFiltered('ownerUserId', loggedUser._id, loggedUser)).name;
     }
 }

@@ -22,10 +22,10 @@ export class AuthService {
 
     constructor(
         private readonly configService: ConfigService,
-        private userAuthService: AuthUserService,
-        private jwtService: JwtService,
+        private readonly userAuthService: AuthUserService,
+        private readonly jwtService: JwtService,
         private readonly tokenService: TokenService,
-        @InjectModel(User.name) private userModel: Model<User>,
+        @InjectModel(User.name) private readonly userModel: Model<User>,
     ) {}
 
     async singUp(signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {

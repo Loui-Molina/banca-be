@@ -12,7 +12,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     private readonly logger: Logger = new Logger(RefreshStrategy.name);
 
     constructor(
-        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>,
+        @InjectModel(RefreshToken.name) private readonly refreshTokenModel: Model<RefreshToken>,
         private readonly configService: ConfigService,
     ) {
         super({

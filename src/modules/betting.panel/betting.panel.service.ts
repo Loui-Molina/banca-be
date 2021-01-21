@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
-import { UserService } from '@users/user.service';
+import { UsersService } from '@users/users.service';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { Play } from '@database/datamodels/schemas/play';
@@ -15,11 +15,11 @@ import { UpdateBetDto } from '@src/modules/betting.panel/dtos/update.bet.dto';
 @Injectable()
 export class BettingPanelService {
     constructor(
-        @InjectModel(Bet.name) private betModel: Model<Bet>,
-        @InjectModel(User.name) private userModel: Model<User>,
-        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        private userAuthService: AuthUserService,
-        private userService: UserService,
+        @InjectModel(Bet.name) private readonly betModel: Model<Bet>,
+        @InjectModel(User.name) private readonly userModel: Model<User>,
+        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        private readonly userAuthService: AuthUserService,
+        private readonly userService: UsersService,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<Bet>> {

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Ip, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
-import { UserService } from '@users/user.service';
+import { UsersService } from '@users/users.service';
 import { User } from '@src/modules/database/datamodels/schemas/user';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -14,8 +14,8 @@ import * as mongoose from 'mongoose';
 @ApiTags('users')
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
-export class UserController {
-    constructor(private readonly userService: UserService) {}
+export class UsersController {
+    constructor(private readonly userService: UsersService) {}
 
     @Get()
     @Roles(Role.admin)
@@ -67,7 +67,7 @@ export class UserController {
         return await this.userService.get(new mongoose.Schema.Types.ObjectId(id));
     }
 
-    @Get('/establishment')
+    @Get('/establishmentName')
     @UseGuards(AuthGuard())
     getEstablishmentName(@AuthUser() user: User): Promise<{ name: string }> {
         return this.userService.getEstablishmentName(user);

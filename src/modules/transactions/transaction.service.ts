@@ -15,10 +15,10 @@ import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 @Injectable()
 export class TransactionService {
     constructor(
-        @InjectModel(Transaction.name) private transactionModel: Model<Transaction>,
-        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
-        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        private consortiumService: ConsortiumService,
+        @InjectModel(Transaction.name) private readonly transactionModel: Model<Transaction>,
+        @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
+        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        private readonly consortiumService: ConsortiumService,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<TransactionDto>> {

@@ -7,17 +7,17 @@ import { User } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { Role } from '@database/datamodels/enums/role';
 import { CreateConsortiumDto } from '@src/modules/consortiums/dtos/create.consortium.dto';
-import { UserService } from '@users/user.service';
+import { UsersService } from '@users/users.service';
 import { Banking } from '@database/datamodels/schemas/banking';
 
 @Injectable()
 export class ConsortiumService {
     constructor(
-        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
-        @InjectModel(User.name) private userModel: Model<User>,
-        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        private userAuthService: AuthUserService,
-        private userService: UserService,
+        @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
+        @InjectModel(User.name) private readonly userModel: Model<User>,
+        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        private readonly userAuthService: AuthUserService,
+        private readonly userService: UsersService,
     ) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {
@@ -28,6 +28,11 @@ export class ConsortiumService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
     async getFiltered(q: string, value: any): Promise<Array<Consortium>> {
         return this.consortiumModel.find({ [q]: value }).exec();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
+    async getSingleFiltered(q: string, value: any): Promise<Consortium> {
+        return (await this.consortiumModel.find({ [q]: value }).exec()).pop();
     }
 
     async create(dto: CreateConsortiumDto, loggedUser: User): Promise<Consortium> {
@@ -118,5 +123,9 @@ export class ConsortiumService {
             throw new BadRequestException();
         }
         return consortiums.pop();
+    }
+
+    async getConsortiumName(loggedUser: User) {
+        return (await this.getSingleFiltered('ownerUserId', loggedUser._id)).name;
     }
 }

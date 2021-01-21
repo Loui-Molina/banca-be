@@ -11,9 +11,9 @@ import { Model } from 'mongoose';
 @Injectable()
 export class ResultsService {
     constructor(
-        @InjectModel(Lottery.name) private lotteryModel: Model<Lottery>,
-        @InjectModel(Result.name) private resultModel: Model<Result>,
-        @InjectModel(Draw.name) private drawModel: Model<Draw>,
+        @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
+        @InjectModel(Result.name) private readonly resultModel: Model<Result>,
+        @InjectModel(Draw.name) private readonly drawModel: Model<Draw>,
     ) {}
 
     async getAll(): Promise<Array<ResultDto>> {

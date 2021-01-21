@@ -23,13 +23,13 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 
 @Injectable()
 export class TokenService {
-    private logger: Logger = new Logger(TokenService.name);
+    private readonly logger: Logger = new Logger(TokenService.name);
 
     constructor(
         private readonly userAuthService: AuthUserService,
         @Inject(forwardRef(() => AuthService))
         private readonly authService: AuthService,
-        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>,
+        @InjectModel(RefreshToken.name) private readonly refreshTokenModel: Model<RefreshToken>,
     ) {}
 
     async getRefreshToken(ipAdress: string, refreshToken: RefreshToken, logged: boolean): Promise<ResponseSignInDto> {

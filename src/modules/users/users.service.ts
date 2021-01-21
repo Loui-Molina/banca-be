@@ -4,10 +4,19 @@ import { Model, ObjectId } from 'mongoose';
 import { User } from '@src/modules/database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
 import { AbmMethods } from '@src/common/interfaces/abm.methods';
+import { Role } from '@database/datamodels/enums/role';
+import { BankingService } from '@src/modules/banking/banking.service';
+import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class UserService implements AbmMethods<User, UserDto> {
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+export class UsersService implements AbmMethods<User, UserDto> {
+    constructor(
+        @InjectModel(User.name) private readonly userModel: Model<User>,
+        private readonly bankingService: BankingService,
+        private readonly consortiumService: ConsortiumService,
+        private readonly configService: ConfigService,
+    ) {}
 
     async getAll(): Promise<Array<User>> {
         return this.userModel.find().exec();
@@ -34,12 +43,12 @@ export class UserService implements AbmMethods<User, UserDto> {
     async update(dto: UserDto, loggedUser: User, userIp: string): Promise<User> {
         //TODO cambio de password no funciona
         /*if (dto.password != null && dto.password.length > 0){
-            const userChange: User = await this.userModel.findById(dto._id).exec();
-            await this.userAuthService.changePassword({
-                userChange.username,
-                password
-            }, loggedUserIp)
-        }*/
+        const userChange: User = await this.userModel.findById(dto._id).exec();
+        await this.userAuthService.changePassword({
+            userChange.username,
+            password
+        }, loggedUserIp)
+    }*/
         return this.userModel.findByIdAndUpdate(
             dto._id,
             {
@@ -67,7 +76,21 @@ export class UserService implements AbmMethods<User, UserDto> {
         return new this.userModel();
     }
 
-    getEstablishmentName(loggedUser: User) {
-        return Promise.resolve({ name: 'test' });
+    getEstablishmentName(loggedUser: User): Promise<{ name: string }> {
+        const userRole: Role = loggedUser.role;
+        let establishmentName: string;
+        switch (userRole) {
+            case Role.banker:
+                establishmentName = this.bankingService.getBankingName(loggedUser);
+                break;
+            case Role.consortium:
+                establishmentName = this.consortiumService.getConsortiumName(loggedUser);
+                break;
+            case Role.admin:
+                establishmentName = this.configService.get('appTitle');
+                break;
+        }
+
+        return Promise.resolve({ name: establishmentName });
     }
 }

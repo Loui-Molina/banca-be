@@ -16,7 +16,7 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 import { User } from '@src/modules/database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
-import { UserService } from '@users/user.service';
+import { UsersService } from '@users/users.service';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
@@ -26,8 +26,8 @@ export class AuthUserService {
     private readonly logger: Logger = new Logger(AuthUserService.name);
 
     constructor(
-        private userService: UserService,
-        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>,
+        private readonly userService: UsersService,
+        @InjectModel(RefreshToken.name) private readonly refreshTokenModel: Model<RefreshToken>,
     ) {}
 
     async singUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User = null): Promise<UserCreatedEntity> {

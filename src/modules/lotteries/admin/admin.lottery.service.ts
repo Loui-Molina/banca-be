@@ -12,10 +12,10 @@ import { AdminLotteryResDto } from '@src/modules/lotteries/admin/dtos/admin.lott
 @Injectable()
 export class AdminLotteryService {
     constructor(
-        @InjectModel(Lottery.name) private lotteryModel: Model<Lottery>,
-        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTime>,
-        @InjectModel(Result.name) private resultModel: Model<Result>,
-        @InjectModel(Draw.name) private drawModel: Model<Draw>,
+        @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
+        @InjectModel(LotteryTime.name) private readonly lotteryTimeModel: Model<LotteryTime>,
+        @InjectModel(Result.name) private readonly resultModel: Model<Result>,
+        @InjectModel(Draw.name) private readonly drawModel: Model<Draw>,
     ) {}
 
     async getAll(): Promise<Array<AdminLotteryResDto>> {
