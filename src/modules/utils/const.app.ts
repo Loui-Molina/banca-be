@@ -1,4 +1,10 @@
 export class ConstApp {
+    
+    //DB
+
+    public static readonly USER='user';
+    public static readonly BANCA='banca';
+    
     //RESPONSES
     public static readonly USER_CREATED_OK = 'User created correctly';
     public static readonly LOG_OUT_OK = 'Successful log out';

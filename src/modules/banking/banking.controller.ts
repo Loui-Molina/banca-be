@@ -19,7 +19,7 @@ import { RolesGuard } from '@auth/guards/roles.guard';
 export class BankingController {
     constructor(private readonly bankingService: BankingService) {}
 
-    @Get('/findAll')
+    @Get()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: BankingDto,

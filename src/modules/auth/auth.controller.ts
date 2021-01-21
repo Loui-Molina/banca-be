@@ -14,7 +14,7 @@ import { AuthService } from '@auth/auth.service';
 import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ConstApp } from '@utils/const.app';
 import { User } from '@src/modules/database/datamodels/schemas/user';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
@@ -42,7 +42,19 @@ export class AuthController {
         type: ResponseDto,
     })
     async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
-        return this.authService.singUp(signUpCredentialsDto);
+        return this.authService.singUp(signUpCredentialsDto, null);
+    }
+
+    @Post('/sign-up-logged')
+    @UseGuards(AuthGuard())
+    @HttpCode(HttpStatus.CREATED)
+    @ApiOkResponse({ type: ResponseDto, description: 'Successfully Registered' })
+    @ApiCreatedResponse({
+        description: 'The record has been successfully saved.',
+        type: ResponseDto,
+    })
+    async singUpLogged(@AuthUser() user:User ,@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
+        return this.authService.singUp(signUpCredentialsDto, user);
     }
 
     @Post('/sign-in')

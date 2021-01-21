@@ -10,6 +10,7 @@ import { RolesGuard } from '@auth/guards/roles.guard';
 import { ConstApp } from '@utils/const.app';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import * as mongoose from 'mongoose';
+import { PaginationQueryDto } from '@src/common/dto/pagination-query.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -23,8 +24,9 @@ export class UserController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getAll(): Promise<Array<User>> {
-        return this.userService.getAll();
+    getAll(@Query() paginationQueryDto: PaginationQueryDto): Promise<Array<User>> {
+        const { limit, offset }= paginationQueryDto
+        return this.userService.getAll(limit,offset);
     }
 
     @Get('search')

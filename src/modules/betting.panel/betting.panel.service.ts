@@ -43,6 +43,8 @@ export class BettingPanelService {
         dto.plays.map((play: Play) => {
             play.playNumbers.creationUserId = loggedUser._id;
             play.playNumbers.modificationUserId = loggedUser._id;
+            play.creationUserId = loggedUser._id;
+            play.modificationUserId = loggedUser._id;
             plays.push(play);
         });
         const newObject = new this.betModel({

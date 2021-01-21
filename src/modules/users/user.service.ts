@@ -3,14 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { User } from '@src/modules/database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
-import { AbmMethods } from '@src/common/interfaces/abm.methods';
+import { Repository } from '@src/common/interfaces/repository';
 
 @Injectable()
-export class UserService implements AbmMethods<User, UserDto> {
+export class UserService implements Repository<User, UserDto> {
     constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-    async getAll(): Promise<Array<User>> {
-        return this.userModel.find().exec();
+    async getAll(limit:number,offset:number): Promise<Array<User>> {
+        return this.userModel.find().skip(offset).limit(limit).exec();
     }
 
     async getFiltered(q: string, value: any): Promise<User[]> {

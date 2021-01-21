@@ -107,7 +107,7 @@ export class AdminLotteryService {
                 status: dto.status,
                 playTime: dto.playTime,
                 time: time,
-                modificationUserId: loggedUser.id,
+                modificationUserId: loggedUser._id,
             },
             {
                 new: false,
