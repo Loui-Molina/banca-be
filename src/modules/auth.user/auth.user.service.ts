@@ -19,7 +19,7 @@ import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { UserService } from '@users/user.service';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
-import { SignUpCredentialsDto } from "@auth/dtos/sign.up.credentials.dto";
+import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 
 @Injectable()
 export class AuthUserService {
@@ -85,7 +85,7 @@ export class AuthUserService {
         this.logger.log(user);
         const responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
-            responsePayload.userId = user.id;
+            responsePayload.userId = user._id;
             responsePayload.role = user.role;
             return responsePayload;
         } else {
