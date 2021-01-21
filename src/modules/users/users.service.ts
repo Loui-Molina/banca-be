@@ -76,15 +76,15 @@ export class UsersService implements AbmMethods<User, UserDto> {
         return new this.userModel();
     }
 
-    getEstablishmentName(loggedUser: User): Promise<{ name: string }> {
+    async getEstablishmentName(loggedUser: User): Promise<{ name: string }> {
         const userRole: Role = loggedUser.role;
         let establishmentName: string;
         switch (userRole) {
             case Role.banker:
-                establishmentName = this.bankingService.getBankingName(loggedUser);
+                establishmentName = await this.bankingService.getBankingName(loggedUser);
                 break;
             case Role.consortium:
-                establishmentName = this.consortiumService.getConsortiumName(loggedUser);
+                establishmentName = await this.consortiumService.getConsortiumName(loggedUser);
                 break;
             case Role.admin:
                 establishmentName = this.configService.get('appTitle');
