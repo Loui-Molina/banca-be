@@ -74,7 +74,7 @@ export class BankingService {
         let createdUser: User;
         let newObject: Banking;
         try {
-            createdUser = (await this.userAuthService.singUp(createBankingDto.user, loggedUser)).user;
+            createdUser = (await this.userAuthService.signUp(createBankingDto.user, loggedUser)).user;
             newObject = new this.bankingModel({
                 name: createBankingDto.banking.name,
                 status: createBankingDto.banking.status,

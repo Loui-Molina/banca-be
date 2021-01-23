@@ -42,7 +42,7 @@ export class AuthController {
         type: ResponseDto,
     })
     async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
-        return this.authService.singUp(signUpCredentialsDto, null);
+        return this.authService.signUp(signUpCredentialsDto, null);
     }
 
     @Post('/sign-up-logged')
@@ -54,7 +54,7 @@ export class AuthController {
         type: ResponseDto,
     })
     async singUpLogged(@AuthUser() user:User ,@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
-        return this.authService.singUp(signUpCredentialsDto, user);
+        return this.authService.signUp(signUpCredentialsDto, user);
     }
 
     @Post('/sign-in')
@@ -63,7 +63,7 @@ export class AuthController {
         @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
     ): Promise<ResponseSignInDto> {
         this.logger.debug('UserIp ' + userIp);
-        return this.authService.singIn(userIp, signInCredentialsDto);
+        return this.authService.signIn(userIp, signInCredentialsDto);
     }
 
     @Post('/change-password')

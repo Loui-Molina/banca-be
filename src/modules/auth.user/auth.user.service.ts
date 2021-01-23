@@ -37,7 +37,7 @@ export class AuthUserService {
         @InjectModel(Event.name) private readonly eventModel:Model<Event>
     ) {}
 
-    async singUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User): Promise<UserCreatedEntity> {
+    async signUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User): Promise<UserCreatedEntity> {
         const session =await  this.connection.startSession();
         session.startTransaction();
         const userCreated: UserCreatedEntity = new UserCreatedEntity();
@@ -101,9 +101,6 @@ export class AuthUserService {
     async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = signInCredentialsDto;
         const user: User = await this.userService.getSingleFilteredComplete('username', username);
-        console.log(`found User ${user}`);
-
-        this.logger.log(user);
         const responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
             responsePayload.userId = user._id;

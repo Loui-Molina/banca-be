@@ -27,11 +27,11 @@ export class AuthService {
         private readonly tokenService: TokenService,
     ) {}
 
-    async singUp(signUpCredentialsDto: SignUpCredentialsDto, user:User): Promise<ResponseDto> {
-        return this.userAuthService.singUp(signUpCredentialsDto, user).then((createdUser) => createdUser.response);
+    async signUp(signUpCredentialsDto: SignUpCredentialsDto, user:User): Promise<ResponseDto> {
+        return this.userAuthService.signUp(signUpCredentialsDto, user).then((createdUser) => createdUser.response);
     }
 
-    async singIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
+    async signIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
         let responsePayload: ResponsePayload = new ResponsePayload();
         responsePayload = await this.userAuthService.validateUserPassword(signInCredentialsDto);
         if (!responsePayload.userId) {

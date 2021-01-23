@@ -33,7 +33,7 @@ export class ConsortiumService {
     async create(dto: CreateConsortiumDto, loggedUser: User): Promise<Consortium> {
         //CREATE user
         dto.user.role = Role.consortium;
-        const createdUser = (await this.userAuthService.singUp(dto.user, loggedUser)).user;
+        const createdUser = (await this.userAuthService.signUp(dto.user, loggedUser)).user;
         const newObject = new this.consortiumModel({
             name: dto.name,
             status: dto.status,
