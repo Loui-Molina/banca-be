@@ -5,17 +5,16 @@ import { User, UserSchema } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { UserService } from '@users/user.service';
 import { EventSchema, Event } from '../database/datamodels/schemas/event';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'),
+    imports: [UsersModule,
         MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], 'user'),
         MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], 'user'),
     ],
-    providers: [AuthUserService, UserService],
+    providers: [AuthUserService],
     exports: [
         AuthUserService,
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'),
         MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], 'user'),
         MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], 'user'),
     ],

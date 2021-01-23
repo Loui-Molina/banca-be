@@ -22,8 +22,8 @@ export class AuthService {
 
     constructor(
         private readonly configService: ConfigService,
-        private userAuthService: AuthUserService,
-        private jwtService: JwtService,
+        private readonly userAuthService: AuthUserService,
+        private readonly jwtService: JwtService,
         private readonly tokenService: TokenService,
     ) {}
 
@@ -41,7 +41,7 @@ export class AuthService {
     }
 
     async getLoggedUser(user: User) {
-        return await this.userAuthService.getLoggedUser(user);
+        return await this.userAuthService.getUser(user._id);
     }
 
     async getToken(responsePayload: ResponsePayload, userIp: string, logged: boolean): Promise<ResponseSignInDto> {

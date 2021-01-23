@@ -11,21 +11,21 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
-import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ConstApp } from '@utils/const.app';
-import { User } from '@src/modules/database/datamodels/schemas/user';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { User } from '@database/datamodels/schemas/user';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { RolesGuard } from './guards/roles.guard';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
-import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
-import { ChangePasswordDto } from './dtos/change.password.dto';
+import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 
 @ApiTags('auth')
 @Controller('auth')

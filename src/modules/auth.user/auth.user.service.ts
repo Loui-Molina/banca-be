@@ -21,6 +21,7 @@ import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from "@auth/dtos/sign.up.credentials.dto";
 import { Event } from '@database/datamodels/schemas/event';
+import { Role } from '../database/datamodels/enums/role';
 
 @Injectable()
 export class AuthUserService {
@@ -118,12 +119,6 @@ export class AuthUserService {
         return bcrypt.hash(password, salt);
     }
 
-    async getUserRefresh(userId: ObjectId): Promise<User> {
-        const user = await this.userService.get(userId);
-        this.logger.debug(`User find ${user}`);
-        return user;
-    }
-
     async changePassword(
         changePasswordDto: ChangePasswordDto,
         userLogged: User,
@@ -162,7 +157,11 @@ export class AuthUserService {
         }
     }
 
-    async getLoggedUser (user:User){
-        return await this.userService.get(user.id);
+    async getUser (_id:ObjectId){
+        return await this.userService.get(_id);
+    }
+
+    async getForValidation(id: ObjectId, role:Role){
+        return await this.userService.getForValidation(id,role);
     }
 }

@@ -34,7 +34,7 @@ export class TokenService {
 
     async getRefreshToken(ipAdress: string, refreshToken: RefreshToken, logged: boolean): Promise<ResponseSignInDto> {
         if (ipAdress === refreshToken.ipAddress) {
-            const user: User = await this.userAuthService.getUserRefresh(refreshToken.userId);
+            const user: User = await this.userAuthService.getUser(refreshToken.userId);
             if (!user) {
                 throw new InternalServerErrorException();
             }
