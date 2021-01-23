@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RefreshToken, RefreshTokenSchema } from '@database/datamodels/schemas/refresh.token';
-import { User, UserSchema } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
-import { UserService } from '@users/user.service';
 import { EventSchema, Event } from '../database/datamodels/schemas/event';
 import { UsersModule } from '../users/users.module';
 

@@ -14,7 +14,7 @@ import { Model, ObjectId } from 'mongoose';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { ConstApp } from '@utils/const.app';
-import { JwtPayloadRefresh } from '@src/modules/auth/jwt.payload.refresh.interface';
+import { JwtPayloadRefresh } from '@auth/jwt.payload.refresh.interface';
 import { User } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';

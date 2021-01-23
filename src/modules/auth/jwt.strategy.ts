@@ -3,8 +3,8 @@ import { JwtPayload } from '@auth/jwt.payload.interface';
 import { PassportStrategy } from '@nestjs/passport';
 import { ObjectId } from 'mongoose';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { User } from '@src/modules/database/datamodels/schemas/user';
-import { AuthUserService } from '../auth.user/auth.user.service';
+import { User } from '@database/datamodels/schemas/user';
+import { AuthUserService } from '@auth.user/auth.user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

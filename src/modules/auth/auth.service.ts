@@ -1,20 +1,19 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
-import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
+import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConstApp } from '@utils/const.app';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
-import { User } from '@src/modules/database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
 import { TokenService } from '@auth/token.service';
-import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
-import { SignUpCredentialsDto } from './dtos/sign.up.credentials.dto';
-import { ChangePasswordDto } from './dtos/change.password.dto';
+import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 
 @Injectable()
 export class AuthService {
