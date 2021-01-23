@@ -98,4 +98,8 @@ export class TokenService {
         refreshToken.ipAddress = '';
         await refreshToken.save();
     }
+
+    async getRefreshTokenValidated(userId: ObjectId, refreshTokenId: string) {
+        return await this.refreshTokenModel.findOne({ userId, refreshTokenId }).exec();
+    }
 }
