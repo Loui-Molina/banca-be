@@ -161,4 +161,8 @@ export class AuthUserService {
             throw new UnauthorizedException();
         }
     }
+
+    async getLoggedUser (user:User){
+        return await this.userService.get(user.id);
+    }
 }

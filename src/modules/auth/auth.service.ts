@@ -25,7 +25,6 @@ export class AuthService {
         private userAuthService: AuthUserService,
         private jwtService: JwtService,
         private readonly tokenService: TokenService,
-        @InjectModel(User.name) private userModel: Model<User>,
     ) {}
 
     async singUp(signUpCredentialsDto: SignUpCredentialsDto, user:User): Promise<ResponseDto> {
@@ -42,7 +41,7 @@ export class AuthService {
     }
 
     async getLoggedUser(user: User) {
-        return await this.userModel.findById(user.id).exec();
+        return await this.userAuthService.getLoggedUser(user);
     }
 
     async getToken(responsePayload: ResponsePayload, userIp: string, logged: boolean): Promise<ResponseSignInDto> {
