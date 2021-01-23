@@ -26,7 +26,7 @@ export class AuthService {
         private readonly tokenService: TokenService,
     ) {}
 
-    async signUp(signUpCredentialsDto: SignUpCredentialsDto, user:User): Promise<ResponseDto> {
+    async signUp(signUpCredentialsDto: SignUpCredentialsDto, user: User): Promise<ResponseDto> {
         return this.userAuthService.signUp(signUpCredentialsDto, user).then((createdUser) => createdUser.response);
     }
 

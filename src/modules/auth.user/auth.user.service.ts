@@ -20,7 +20,7 @@ import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { UserService } from '@users/user.service';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
-import { SignUpCredentialsDto } from "@auth/dtos/sign.up.credentials.dto";
+import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { Event } from '@database/datamodels/schemas/event';
 import { Role } from '@database/datamodels/enums/role';
 import { TokenService } from '@auth/token.service';
@@ -32,39 +32,39 @@ export class AuthUserService {
     constructor(
         private readonly userService: UserService,
         private readonly tokenService: TokenService,
-        @InjectConnection(ConstApp.USER) private readonly connection :Connection,
-        @InjectModel(Event.name) private readonly eventModel:Model<Event>
+        @InjectConnection(ConstApp.USER) private readonly connection: Connection,
+        @InjectModel(Event.name) private readonly eventModel: Model<Event>,
     ) {}
 
     async signUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User): Promise<UserCreatedEntity> {
-        const session =await  this.connection.startSession();
+        const session = await this.connection.startSession();
         session.startTransaction();
         const userCreated: UserCreatedEntity = new UserCreatedEntity();
-        try{
-        const { username, password, role, name } = signUpCredentialsDto;
-        const user = this.userService.newUserModel();
-        user.name = name;
-        user.username = username;
-        user.salt = await bcrypt.genSalt();
-        user.password = await this.hashPassword(password, user.salt);
-        user.role = role;
-        if(!loggedUser){
-            user.creationUserId = user._id;
-            user.modificationUserId = user._id;
-        }else{
-            user.creationUserId = loggedUser._id;
-            user.modificationUserId = loggedUser._id;
-        }
-        userCreated.user = await user.save();
-        const event = new this.eventModel({
-            name:"Sign-up",
-            type:"User",
-            payload:{ userId:userCreated.user._id}
-        });
-        await event.save();
-        this.tokenService.createRefreshToken(userCreated.user._id);
-        userCreated.response = { message: ConstApp.USER_CREATED_OK, statusCode: 201 } as ResponseDto;
-        await session.commitTransaction();
+        try {
+            const { username, password, role, name } = signUpCredentialsDto;
+            const user = this.userService.newUserModel();
+            user.name = name;
+            user.username = username;
+            user.salt = await bcrypt.genSalt();
+            user.password = await this.hashPassword(password, user.salt);
+            user.role = role;
+            if (!loggedUser) {
+                user.creationUserId = user._id;
+                user.modificationUserId = user._id;
+            } else {
+                user.creationUserId = loggedUser._id;
+                user.modificationUserId = loggedUser._id;
+            }
+            userCreated.user = await user.save();
+            const event = new this.eventModel({
+                name: 'Sign-up',
+                type: 'User',
+                payload: { userId: userCreated.user._id },
+            });
+            await event.save();
+            this.tokenService.createRefreshToken(userCreated.user._id);
+            userCreated.response = { message: ConstApp.USER_CREATED_OK, statusCode: 201 } as ResponseDto;
+            await session.commitTransaction();
         } catch (error) {
             await session.abortTransaction();
             this.logger.error(error);
@@ -73,8 +73,7 @@ export class AuthUserService {
             } else {
                 throw new InternalServerErrorException();
             }
-        }
-        finally{
+        } finally {
             session.endSession();
         }
         return userCreated;
@@ -143,8 +142,7 @@ export class AuthUserService {
                 } catch (error) {
                     session.abortTransaction();
                     throw new InternalServerErrorException(ConstApp.COULD_NOT_CHANGE_PASSWORD);
-                }
-                finally{
+                } finally {
                     session.endSession();
                 }
                 const responseDto: ResponseDto = new ResponseDto();
@@ -159,11 +157,11 @@ export class AuthUserService {
         }
     }
 
-    async getUser (_id:ObjectId){
+    async getUser(_id: ObjectId) {
         return await this.userService.get(_id);
     }
 
-    async getForValidation(id: ObjectId, role:Role){
-        return await this.userService.getForValidation(id,role);
+    async getForValidation(id: ObjectId, role: Role) {
+        return await this.userService.getForValidation(id, role);
     }
 }

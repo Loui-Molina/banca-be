@@ -25,8 +25,8 @@ export class UserController {
         type: User,
     })
     getAll(@Query() paginationQueryDto: PaginationQueryDto): Promise<Array<User>> {
-        const { limit, offset }= paginationQueryDto
-        return this.userService.getAll(limit,offset);
+        const { limit, offset } = paginationQueryDto;
+        return this.userService.getAll(limit, offset);
     }
 
     @Get('search')

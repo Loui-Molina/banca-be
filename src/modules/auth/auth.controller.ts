@@ -53,7 +53,10 @@ export class AuthController {
         description: 'The record has been successfully saved.',
         type: ResponseDto,
     })
-    async singUpLogged(@AuthUser() user:User ,@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
+    async singUpLogged(
+        @AuthUser() user: User,
+        @Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto,
+    ): Promise<ResponseDto> {
         return this.authService.signUp(signUpCredentialsDto, user);
     }
 

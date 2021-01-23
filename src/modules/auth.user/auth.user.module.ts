@@ -6,7 +6,8 @@ import { EventSchema, Event } from '../database/datamodels/schemas/event';
 import { UsersModule } from '../users/users.module';
 
 @Module({
-    imports: [UsersModule,
+    imports: [
+        UsersModule,
         MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], 'user'),
         MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], 'user'),
     ],

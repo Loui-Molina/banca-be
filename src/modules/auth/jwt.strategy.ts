@@ -10,7 +10,7 @@ import { AuthUserService } from '@auth.user/auth.user.service';
 export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly logger: Logger = new Logger(JwtStrategy.name);
 
-    constructor(private readonly authUserService:AuthUserService) {
+    constructor(private readonly authUserService: AuthUserService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: process.env.TOKEN_SECRET_KEY,
@@ -20,11 +20,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     async validate(payload: JwtPayload) {
         const { role } = payload;
         const _id: ObjectId = payload.userId;
-        const user: User = await this.authUserService.getForValidation(_id,role);
+        const user: User = await this.authUserService.getForValidation(_id, role);
         if (!user) {
             throw new UnauthorizedException();
         }
-        this.logger.debug("User: " + user._id + " request validated")
+        this.logger.debug('User: ' + user._id + ' request validated');
         return user;
     }
 }

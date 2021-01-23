@@ -10,9 +10,7 @@ import { JwtPayloadRefresh } from '@auth/jwt.payload.refresh.interface';
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     private readonly logger: Logger = new Logger(RefreshStrategy.name);
 
-    constructor(
-        @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>,
-    ) {
+    constructor(@InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: process.env.REFRESH_TOKEN_SECRET_KEY,

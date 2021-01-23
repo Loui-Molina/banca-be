@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConstApp } from '../utils/const.app';
 
-
 @Global()
 @Module({
     imports: [

@@ -37,7 +37,7 @@ import { RefreshStrategy } from '@auth/refresh.strategy';
         }),
         JwtStrategy,
         RefreshStrategy,
-        TokenService
+        TokenService,
     ],
 })
 export class AuthModule {}

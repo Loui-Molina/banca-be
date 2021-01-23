@@ -87,11 +87,11 @@ export class TokenService {
         return responseDto;
     }
 
-    async getRefreshTokenByUserId(userId: ObjectId){
-        return await this.refreshTokenModel.findOne({userId}).exec();
+    async getRefreshTokenByUserId(userId: ObjectId) {
+        return await this.refreshTokenModel.findOne({ userId }).exec();
     }
 
-    async createRefreshToken(_id:ObjectId){
+    async createRefreshToken(_id: ObjectId) {
         let refreshToken = new this.refreshTokenModel();
         refreshToken.userId = _id;
         refreshToken.refreshTokenId = null;

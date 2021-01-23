@@ -10,7 +10,7 @@ import { Role } from '../database/datamodels/enums/role';
 export class UserService implements Repository<User, UserDto> {
     constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-    async getAll(limit:number,offset:number): Promise<Array<User>> {
+    async getAll(limit: number, offset: number): Promise<Array<User>> {
         return this.userModel.find().skip(offset).limit(limit).exec();
     }
 
@@ -72,7 +72,7 @@ export class UserService implements Repository<User, UserDto> {
         return Promise.resolve({ name: 'test' });
     }
 
-    async getForValidation(_id: ObjectId, role:Role): Promise<User> {
-        return await this.userModel.findById({_id,role}).exec();
+    async getForValidation(_id: ObjectId, role: Role): Promise<User> {
+        return await this.userModel.findById({ _id, role }).exec();
     }
 }
