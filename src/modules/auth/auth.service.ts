@@ -50,7 +50,7 @@ export class AuthService {
         const role: Role = responsePayload.role;
         const payload: JwtPayload = { userId, role };
         if (!logged) {
-            const refreshToken = await this.tokenService.createRefreshToken(userIp, userId);
+            const refreshToken = await this.tokenService.saveRefreshTokenGenerated(userIp, userId);
             responseSignInDto.refreshToken = await this.jwtService.signAsync(refreshToken, {
                 expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRES'),
                 secret: this.configService.get<string>('REFRESH_TOKEN_SECRET_KEY'),

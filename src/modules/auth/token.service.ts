@@ -26,6 +26,7 @@ export class TokenService {
     private logger: Logger = new Logger(TokenService.name);
 
     constructor(
+        @Inject(forwardRef(() => AuthUserService))
         private readonly userAuthService: AuthUserService,
         @Inject(forwardRef(() => AuthService))
         private readonly authService: AuthService,
@@ -53,7 +54,7 @@ export class TokenService {
         }
     }
 
-    async createRefreshToken(userIp: string, userId: ObjectId): Promise<JwtPayloadRefresh> {
+    async saveRefreshTokenGenerated(userIp: string, userId: ObjectId): Promise<JwtPayloadRefresh> {
         try {
             const refreshTokenModel = await this.refreshTokenModel.findOne({ userId }).exec();
             const value = randomBytes(64).toString('hex');
@@ -84,5 +85,17 @@ export class TokenService {
         responseDto.message = ConstApp.LOG_OUT_OK;
         responseDto.statusCode = HttpStatus.OK;
         return responseDto;
+    }
+
+    async getRefreshTokenByUserId(userId: ObjectId){
+        return await this.refreshTokenModel.findOne({userId}).exec();
+    }
+
+    async createRefreshToken(_id:ObjectId){
+        let refreshToken = new this.refreshTokenModel();
+        refreshToken.userId = _id;
+        refreshToken.refreshTokenId = null;
+        refreshToken.ipAddress = '';
+        await refreshToken.save();
     }
 }

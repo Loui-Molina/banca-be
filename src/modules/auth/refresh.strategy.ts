@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { JwtPayloadRefresh } from '@auth/jwt.payload.refresh.interface';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
@@ -13,7 +12,6 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
 
     constructor(
         @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>,
-        private readonly configService: ConfigService,
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

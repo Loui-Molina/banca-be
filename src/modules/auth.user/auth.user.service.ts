@@ -1,7 +1,9 @@
 import {
     BadRequestException,
     ConflictException,
+    forwardRef,
     HttpStatus,
+    Inject,
     Injectable,
     InternalServerErrorException,
     Logger,
@@ -22,14 +24,15 @@ import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from "@auth/dtos/sign.up.credentials.dto";
 import { Event } from '@database/datamodels/schemas/event';
 import { Role } from '../database/datamodels/enums/role';
+import { TokenService } from '../auth/token.service';
 
 @Injectable()
 export class AuthUserService {
     private readonly logger: Logger = new Logger(AuthUserService.name);
 
     constructor(
-        private userService: UserService,
-        @InjectModel(RefreshToken.name) private readonly refreshTokenModel: Model<RefreshToken>,
+        private readonly userService: UserService,
+        private readonly tokenService: TokenService,
         @InjectConnection(ConstApp.USER) private readonly connection :Connection,
         @InjectModel(Event.name) private readonly eventModel:Model<Event>
     ) {}
@@ -41,7 +44,6 @@ export class AuthUserService {
         try{
         const { username, password, role, name } = signUpCredentialsDto;
         const user = this.userService.newUserModel();
-        const refreshToken = new this.refreshTokenModel();
         user.name = name;
         user.username = username;
         user.salt = await bcrypt.genSalt();
@@ -61,10 +63,7 @@ export class AuthUserService {
             payload:{ userId:userCreated.user._id}
         });
         await event.save();
-        refreshToken.userId = userCreated.user._id;
-        refreshToken.refreshTokenId = null;
-        refreshToken.ipAddress = '';
-        await refreshToken.save();
+        this.tokenService.createRefreshToken(userCreated.user._id);
         userCreated.response = { message: ConstApp.USER_CREATED_OK, statusCode: 201 } as ResponseDto;
         await session.commitTransaction();
         } catch (error) {
@@ -128,7 +127,7 @@ export class AuthUserService {
         const { username, password, newPassword, verifyPassword } = changePasswordDto;
         const user = await this.userService.getSingleFilteredComplete('username', username);
         const userId = userLogged._id;
-        const refreshToken = await this.refreshTokenModel.findOne({ userId });
+        const refreshToken = await this.tokenService.getRefreshTokenByUserId(userId);
         if (newPassword !== verifyPassword) {
             throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);
         }
