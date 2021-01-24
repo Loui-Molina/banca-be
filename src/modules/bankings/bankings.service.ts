@@ -4,7 +4,7 @@ import { UsersService } from '@users/users.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateBankingDto } from '@bankings/dto/create.banking.dto';
 import { Role } from '@database/datamodels/enums/role';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { BankingDto } from '@bankings/dto/banking.dto';
 import { UpdateBankingDto } from '@bankings/dto/update.banking.dto';
 import { Banking } from '@database/datamodels/schemas/banking';
@@ -15,12 +15,13 @@ import { ConsortiumService } from '@consortiums/consortium.service';
 export class BankingsService {
     constructor(
         private usersService: UsersService,
-        private consortiumService: ConsortiumService,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @Inject(forwardRef(() => AuthUserService))
         private readonly userAuthService: AuthUserService,
         @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,
+        @Inject(forwardRef(() => ConsortiumService))
+        private readonly consortiumService: ConsortiumService,
     ) {}
 
     async findAll(loggedUser: User): Promise<BankingDto[]> {
@@ -60,7 +61,7 @@ export class BankingsService {
             default:
                 throw new BadRequestException();
         }
-        const bankings: Array<Banking> = await this.bankingModel.find({ [field]: value }).exec();
+        const bankings: Array<Banking> = await this.bankingModel.find(filter).exec();
         return Promise.all(
             bankings
                 .filter((banking: Banking) => banking[field as keyof Banking] === value)
@@ -133,7 +134,7 @@ export class BankingsService {
         return banking;
     }
 
-    async delete(id: string, loggedUser: User) {
+    async delete(id: string | ObjectId, loggedUser: User) {
         const banking = await this.bankingModel.findById(id).exec();
         if (loggedUser.role === Role.consortium) {
             const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
@@ -144,6 +145,10 @@ export class BankingsService {
         }
         await this.userAuthService.deleteUser(banking.ownerUserId);
         return this.bankingModel.findByIdAndRemove(id).exec();
+    }
+
+    async getBankingName(loggedUser: User): Promise<string> {
+        return (await this.getSingleFiltered('ownerUserId', loggedUser._id, loggedUser)).name;
     }
 
     private async mapBanking(banking: BankingDto): Promise<BankingDto> {
@@ -163,7 +168,67 @@ export class BankingsService {
         };
     }
 
-    async getBankingName(loggedUser: User): Promise<string> {
-        return (await this.getSingleFiltered('ownerUserId', loggedUser._id, loggedUser)).name;
+    /**
+     * METHODS THAT RETURN THE UNALTERED DOCUMENT
+     * DO NOT RETURN THIS TO THE FRONT END
+     * ONLY FOR INTERNAL USE
+     * */
+
+    async findAllDocuments(loggedUser: User): Promise<Banking[]> {
+        let filter;
+        switch (loggedUser.role) {
+            case Role.admin:
+                filter = {};
+                break;
+            case Role.consortium:
+                // eslint-disable-next-line no-case-declarations
+                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
+                filter = { consortiumId: consortium._id };
+                break;
+            default:
+                throw new BadRequestException();
+        }
+
+        const bankings: Array<Banking> = await this.bankingModel.find(filter).exec();
+        const bankingsDto: BankingDto[] = [];
+        for await (const banking of bankings) {
+            bankingsDto.push(banking);
+        }
+        return bankings;
+    }
+
+    async getFilteredDocuments(field: string, value: any, loggedUser: User): Promise<Banking[]> {
+        let filter;
+        switch (loggedUser.role) {
+            case Role.admin:
+                filter = { [field]: value };
+                break;
+            case Role.consortium:
+                // eslint-disable-next-line no-case-declarations
+                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
+                filter = { [field]: value, consortiumId: consortium._id };
+                break;
+            default:
+                throw new BadRequestException();
+        }
+        const bankings: Array<Banking> = await this.bankingModel.find(filter).exec();
+        return Promise.all(bankings.filter((banking: Banking) => banking[field as keyof Banking] === value));
+    }
+
+    async getSingleFilteredDocument(field: string, value: any, loggedUser: User): Promise<Banking> {
+        let filter;
+        switch (loggedUser.role) {
+            case Role.admin:
+                filter = { [field]: value };
+                break;
+            case Role.consortium:
+                // eslint-disable-next-line no-case-declarations
+                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
+                filter = { [field]: value, consortiumId: consortium._id };
+                break;
+            default:
+                throw new BadRequestException();
+        }
+        return (await this.bankingModel.find(filter).exec()).pop();
     }
 }

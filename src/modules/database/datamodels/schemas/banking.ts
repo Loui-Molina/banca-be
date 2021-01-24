@@ -40,6 +40,7 @@ export class Banking extends Document implements DataObject {
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     calculateBalance?: Function;
+    createdAt: Date;
 }
 
 export const BankingSchema = SchemaFactory.createForClass(Banking);

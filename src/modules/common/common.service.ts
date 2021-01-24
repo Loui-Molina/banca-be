@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Role } from '@database/datamodels/enums/role';
 import { User } from '@database/datamodels/schemas/user';
-import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
+import { ConsortiumService } from '@consortiums/consortium.service';
 import { ConfigService } from '@nestjs/config';
 import { BankingsService } from '@bankings/bankings.service';
 

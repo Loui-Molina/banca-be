@@ -46,6 +46,7 @@
       "@transactions/*": ["src/modules/transactions/*"],
       "@results/*": ["src/modules/results/*"],
       "@bankings/*": ["src/modules/bankings/*"],
+      "@common.module/*": ["src/modules/common/*"]
     },
   }
 }

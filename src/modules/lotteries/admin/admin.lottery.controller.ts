@@ -4,12 +4,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { AdminLotteryService } from '@lotteries/admin/admin.lottery.service';
 import { AdminLotteryReqDto } from '@lotteries/admin/dtos/admin.lottery.req.dto';
 import { ConstApp } from '@utils/const.app';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { AdminLotteryResDto } from '@lotteries/admin/dtos/admin.lottery.res.dto';
 import { RolesGuard } from '@auth/guards/roles.guard';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
 
 @ApiTags('admin/lotteries')
 @Controller('admin/lotteries')

@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { CommonService } from './common.service';
+import { CommonService } from '@common.module/common.service';
 import { User } from '@database/datamodels/schemas/user';
 import { AuthUser } from '@src/common/decorators/auth.user.decorator';
 import { AuthGuard } from '@nestjs/passport';

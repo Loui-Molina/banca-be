@@ -7,7 +7,7 @@ import { UtilsModule } from '@utils/utils.module';
 import { ManagerModule } from '@src/modules/manager/manager.module';
 import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
 import { DatabaseModule } from '@database/database.module';
-import { CommonModule } from '@src/modules/common/common.module';
+import { CommonModule } from '@common.module/common.module';
 
 @Module({
     imports: [
@@ -22,7 +22,7 @@ import { CommonModule } from '@src/modules/common/common.module';
         AuthModule,
         AuthUserModule,
         UtilsModule,
-        CommonModule,
+        CommonModule, // TODO CHECK IF NEEDED TO MOVE TO MANAGER MODULE
     ],
     controllers: [],
     providers: [],
