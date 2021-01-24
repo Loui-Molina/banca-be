@@ -1,10 +1,13 @@
 export enum TransactionType {
-    // Deposito realizado por el Boludo, puede ser el pago de una apuesta o addicion al balance
-    deposit = 'deposit',
-    // El pago de un premio
-    prize = 'prize',
-    // Extraccion realizada por el boludo puede ser una extraccion de una cuenta
-    extraction = 'extraction',
-    // en caso de robo, imprevisto, etc
+    credit = 'credit',
+    debit = 'debit',
     adjust = 'adjust',
+
+    // POSIBLES TRANSACCIONES
+    // Carga de saldo de un cliente web
+    // Extraccion de saldo de un cliente web
+    // Pago de una apuesta
+    // Pago al cliente por un premio
+    // Ajuste: En caso de robo, caja inicial, etc
+    // Movimientos de plata entre consorcio y banca
 }
