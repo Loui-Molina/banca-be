@@ -1,4 +1,4 @@
-import { BadRequestException, forwardRef, Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { User } from '@database/datamodels/schemas/user';
 import { UsersService } from '@users/users.service';
 import { InjectModel } from '@nestjs/mongoose';

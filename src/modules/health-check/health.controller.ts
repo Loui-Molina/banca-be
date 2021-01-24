@@ -3,7 +3,10 @@ import { HealthCheck, HealthCheckResult, HealthCheckService, MongooseHealthIndic
 
 @Controller('health')
 export class HealthController {
-    constructor(private readonly healthCheck: HealthCheckService, private readonly mongooseHealth: MongooseHealthIndicator) {}
+    constructor(
+        private readonly healthCheck: HealthCheckService,
+        private readonly mongooseHealth: MongooseHealthIndicator,
+    ) {}
 
     @Get()
     @HealthCheck()

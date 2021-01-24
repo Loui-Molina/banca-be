@@ -1,4 +1,4 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 import { ConsortiumController } from '@src/modules/consortiums/consortium.controller';
