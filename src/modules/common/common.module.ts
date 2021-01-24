@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CommonService } from './common.service';
-import { CommonController } from './common.controller';
-import { ConsortiumModule } from '@src/modules/consortiums/consortium.module';
+import { CommonService } from '@common.module/common.service';
+import { CommonController } from '@common.module/common.controller';
+import { ConsortiumModule } from '@consortiums/consortium.module';
 import { BankingsModule } from '@bankings/bankings.module';
 
 @Module({
