@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { BankingService } from '@bankings/banking.service';
-import { BankingController } from '@bankings/banking.controller';
+import { BankingsService } from '@bankings/bankings.service';
+import { BankingsController } from '@bankings/bankings.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from '@users/users.module';
 import { ConsortiumModule } from '@consortiums/consortium.module';
@@ -14,7 +14,7 @@ import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
         AuthUserModule,
         ConsortiumModule,
     ],
-    controllers: [BankingController],
-    providers: [BankingService],
+    controllers: [BankingsController],
+    providers: [BankingsService],
 })
-export class BankingModule {}
+export class BankingsModule {}

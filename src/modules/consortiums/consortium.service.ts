@@ -7,7 +7,7 @@ import { User } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { Role } from '@database/datamodels/enums/role';
 import { CreateConsortiumDto } from '@consortiums/dtos/create.consortium.dto';
-import { UserService } from '@users/user.service';
+import { UsersService } from '@users/users.service';
 import { Banking } from '@database/datamodels/schemas/banking';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class ConsortiumService {
         @InjectModel(User.name) private userModel: Model<User>,
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
         private userAuthService: AuthUserService,
-        private userService: UserService,
+        private userService: UsersService,
     ) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BankingModule } from '@bankings/banking.module';
+import { BankingsModule } from '@bankings/bankings.module';
 import { ConsortiumModule } from '@consortiums/consortium.module';
 import { DashboardModule } from '@dashboard/dashboard.module';
 import { DatabaseModule } from '@database/database.module';
@@ -20,7 +20,7 @@ import { BankingLotteryModule } from '@lotteries/banking/banking.lottery.module'
         BettingPanelModule,
         TransactionModule,
         DashboardModule,
-        BankingModule,
+        BankingsModule,
         AdminLotteryModule,
         ConsortiumLotteryModule,
         BankingLotteryModule,
@@ -35,7 +35,7 @@ import { BankingLotteryModule } from '@lotteries/banking/banking.lottery.module'
         BettingPanelModule,
         TransactionModule,
         DashboardModule,
-        BankingModule,
+        BankingsModule,
         AdminLotteryModule,
         ConsortiumLotteryModule,
         BankingLotteryModule,

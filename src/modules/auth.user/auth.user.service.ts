@@ -1,9 +1,7 @@
 import {
     BadRequestException,
     ConflictException,
-    forwardRef,
     HttpStatus,
-    Inject,
     Injectable,
     InternalServerErrorException,
     Logger,
@@ -17,7 +15,7 @@ import { ConstApp } from '@utils/const.app';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { User } from '@database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
-import { UserService } from '@users/user.service';
+import { UsersService } from '@users/users.service';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
@@ -30,7 +28,7 @@ export class AuthUserService {
     private readonly logger: Logger = new Logger(AuthUserService.name);
 
     constructor(
-        private readonly userService: UserService,
+        private readonly userService: UsersService,
         private readonly tokenService: TokenService,
         @InjectConnection(ConstApp.USER) private readonly connection: Connection,
         @InjectModel(Event.name) private readonly eventModel: Model<Event>,

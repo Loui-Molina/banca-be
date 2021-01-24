@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@database/datamodels/schemas/user';
-import { UserService } from '@users/user.service';
+import { UsersService } from '@users/users.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateBankingDto } from '@bankings/dto/create.banking.dto';
 import { Role } from '@database/datamodels/enums/role';
@@ -12,11 +12,11 @@ import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConsortiumService } from '@consortiums/consortium.service';
 
 @Injectable()
-export class BankingService {
+export class BankingsService {
     constructor(
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
         private userAuthService: AuthUserService,
-        private userService: UserService,
+        private userService: UsersService,
         private consortiumService: ConsortiumService,
     ) {}
 

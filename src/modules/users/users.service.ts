@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { User } from '@src/modules/database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
-import { Repository } from '@src/common/interfaces/repository';
-import { Role } from '../database/datamodels/enums/role';
+import { Repository } from '@common/interfaces/repository';
+import { Role } from '@database/datamodels/enums/role';
 
 @Injectable()
-export class UserService implements Repository<User, UserDto> {
+export class UsersService implements Repository<User, UserDto> {
     constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
     async getAll(limit: number, offset: number): Promise<Array<User>> {

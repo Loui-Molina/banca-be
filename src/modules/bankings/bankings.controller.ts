@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { BankingService } from './banking.service';
+import { BankingsService } from './bankings.service';
 import { CreateBankingDto } from './dto/create.banking.dto';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -7,7 +7,7 @@ import { ConstApp } from '@utils/const.app';
 import { BankingDto } from '@bankings/dto/banking.dto';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
-import { UpdateBankingDto } from '@src/modules/bankings/dto/update.banking.dto';
+import { UpdateBankingDto } from '@bankings/dto/update.banking.dto';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
@@ -16,8 +16,8 @@ import { RolesGuard } from '@auth/guards/roles.guard';
 @Controller('banking')
 @ApiTags('banking')
 @UseGuards(AuthGuard(), RolesGuard)
-export class BankingController {
-    constructor(private readonly bankingService: BankingService) {}
+export class BankingsController {
+    constructor(private readonly bankingService: BankingsService) {}
 
     @Get()
     @ApiFoundResponse({
