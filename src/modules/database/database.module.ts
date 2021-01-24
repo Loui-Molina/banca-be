@@ -10,7 +10,7 @@ import { ConstApp } from '@utils/const.app';
             imports: [ConfigModule],
             connectionName: ConstApp.BANKING,
             useFactory: async (config: ConfigService) => ({
-                uri: config.get('bancaDB'),
+                uri: config.get('bankingDB'),
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             }),
