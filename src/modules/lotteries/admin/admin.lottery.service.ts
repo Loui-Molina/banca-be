@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { AdminLotteryReqDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.req.dto';
+import { AdminLotteryReqDto } from '@lotteries/admin/dtos/admin.lottery.req.dto';
 import { LotteryTime } from '@database/datamodels/schemas/lottery.time';
 import { Lottery } from '@database/datamodels/schemas/lottery';
 import { Result } from '@database/datamodels/schemas/result';
 import { Draw } from '@database/datamodels/schemas/draw';
 import { User } from '@database/datamodels/schemas/user';
-import { AdminLotteryResDto } from '@src/modules/lotteries/admin/dtos/admin.lottery.res.dto';
+import { AdminLotteryResDto } from '@lotteries/admin/dtos/admin.lottery.res.dto';
 
 @Injectable()
 export class AdminLotteryService {

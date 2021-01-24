@@ -38,6 +38,14 @@
       "@utils/*": ["src/modules/utils/*"],
       "@auth.user/*": ["src/modules/auth.user/*"],
       "@manager/*": ["src/modules/manager/*"],
+      "@common/*": ["src/common/*"],
+      "@consortiums/*": ["src/modules/consortiums/*"],
+      "@betting.panel/*": ["src/modules/betting.panel/*"],
+      "@dashboard/*": ["src/modules/dashboard/*"],
+      "@lotteries/*": ["src/modules/lotteries/*"],
+      "@transactions/*": ["src/modules/transactions/*"],
+      "@results/*": ["src/modules/results/*"],
+      "@bankings/*": ["src/modules/bankings/*"],
     },
   }
 }

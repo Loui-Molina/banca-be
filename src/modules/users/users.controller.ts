@@ -1,15 +1,18 @@
 import { Body, Controller, Delete, Get, Ip, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UsersService } from '@users/users.service';
+import { User } from '@database/datamodels/schemas/user';
+import { UsersService } from '@users/users.service';
 import { User } from '@src/modules/database/datamodels/schemas/user';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
 import { ConstApp } from '@utils/const.app';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
 import * as mongoose from 'mongoose';
+import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -23,8 +26,9 @@ export class UsersController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getAll(): Promise<Array<User>> {
-        return this.userService.getAll();
+    getAll(@Query() paginationQueryDto: PaginationQueryDto): Promise<Array<User>> {
+        const { limit, offset } = paginationQueryDto;
+        return this.userService.getAll(limit, offset);
     }
 
     @Get('search')

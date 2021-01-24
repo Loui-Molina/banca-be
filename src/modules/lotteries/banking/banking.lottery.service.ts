@@ -9,7 +9,7 @@ import { User } from '@database/datamodels/schemas/user';
 import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
 import { Consortium } from '@database/datamodels/schemas/consortium';
 import { Banking } from '@database/datamodels/schemas/banking';
-import { BankingLotteryDto } from '@src/modules/lotteries/banking/dtos/banking.lottery.dto';
+import { BankingLotteryDto } from '@lotteries/banking/dtos/banking.lottery.dto';
 import { Days } from '@database/datamodels/enums/days';
 
 @Injectable()

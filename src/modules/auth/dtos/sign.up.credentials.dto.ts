@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@src/modules/database/datamodels/enums/role';
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import { Role } from '@database/datamodels/enums/role';
+import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class SignUpCredentialsDto {
     @ApiProperty({ type: String })
@@ -21,5 +21,7 @@ export class SignUpCredentialsDto {
     name: string;
 
     @ApiProperty({ type: String, enum: Role, required: false })
+    @IsEnum(Role)
+    @IsString()
     role: Role;
 }

@@ -3,13 +3,13 @@ import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ConstApp } from '@utils/const.app';
 import { Lottery } from '@database/datamodels/schemas/lottery';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
-import { ConsortiumLotteryService } from '@src/modules/lotteries/consortium/consortium.lottery.service';
-import { ConsortiumLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.lottery.dto';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { ConsortiumLotteryService } from '@lotteries/consortium/consortium.lottery.service';
+import { ConsortiumLotteryDto } from '@lotteries/consortium/dtos/consortium.lottery.dto';
+import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
-import { ConsortiumUpdateLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.update.lottery.dto';
+import { ConsortiumUpdateLotteryDto } from '@lotteries/consortium/dtos/consortium.update.lottery.dto';
 import { RolesGuard } from '@auth/guards/roles.guard';
 
 @ApiTags('consortium/lotteries')

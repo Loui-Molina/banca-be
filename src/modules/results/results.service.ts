@@ -3,9 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Result } from '@database/datamodels/schemas/result';
 import { Draw } from '@database/datamodels/schemas/draw';
 import { User } from '@database/datamodels/schemas/user';
-import { ResultDto } from '@src/modules/results/dtos/result.dto';
+import { ResultDto } from '@results/dtos/result.dto';
 import { Lottery } from '@database/datamodels/schemas/lottery';
-import { AddResultDto } from '@src/modules/results/dtos/add.result.dto';
+import { AddResultDto } from '@results/dtos/add.result.dto';
 import { Model } from 'mongoose';
 
 @Injectable()

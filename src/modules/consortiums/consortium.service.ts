@@ -1,11 +1,13 @@
 import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
-import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
+import { ConsortiumDto } from '@consortiums/dtos/consortium.dto';
+import { Consortium } from '@database/datamodels/schemas/consortium';
 import { User } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { Role } from '@database/datamodels/enums/role';
+import { CreateConsortiumDto } from '@consortiums/dtos/create.consortium.dto';
+import { UsersService } from '@users/users.service';
 import { CreateConsortiumDto } from '@src/modules/consortiums/dtos/create.consortium.dto';
 import { UsersService } from '@users/users.service';
 import { Banking } from '@database/datamodels/schemas/banking';
@@ -15,6 +17,8 @@ export class ConsortiumService {
     constructor(
         @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
+        private userAuthService: AuthUserService,
+        private userService: UsersService,
         @Inject(forwardRef(() => AuthUserService))
         private readonly userAuthService: AuthUserService,
         @Inject(forwardRef(() => UsersService))
@@ -39,7 +43,7 @@ export class ConsortiumService {
     async create(dto: CreateConsortiumDto, loggedUser: User): Promise<Consortium> {
         //CREATE user
         dto.user.role = Role.consortium;
-        const createdUser = (await this.userAuthService.singUp(dto.user, loggedUser)).user;
+        const createdUser = (await this.userAuthService.signUp(dto.user, loggedUser)).user;
         const newObject = new this.consortiumModel({
             name: dto.name,
             status: dto.status,

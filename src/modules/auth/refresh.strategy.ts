@@ -1,20 +1,14 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { PassportStrategy } from '@nestjs/passport';
-import { Model } from 'mongoose';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { JwtPayloadRefresh } from '@auth/jwt.payload.refresh.interface';
-import { ConfigService } from '@nestjs/config';
+import { TokenService } from '@auth/token.service';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     private readonly logger: Logger = new Logger(RefreshStrategy.name);
 
-    constructor(
-        @InjectModel(RefreshToken.name) private readonly refreshTokenModel: Model<RefreshToken>,
-        private readonly configService: ConfigService,
-    ) {
+    constructor(private readonly tokenService: TokenService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: process.env.REFRESH_TOKEN_SECRET_KEY,
@@ -22,13 +16,13 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     }
 
     async validate(jwtPayloadRefresh: JwtPayloadRefresh) {
-        const { userId, value } = jwtPayloadRefresh;
-        const refreshTokenId = value;
-        const refreshToken = await this.refreshTokenModel.findOne({ userId, refreshTokenId });
+        const refreshToken = await this.tokenService.getRefreshTokenValidated(
+            jwtPayloadRefresh.userId,
+            jwtPayloadRefresh.value,
+        );
         if (!refreshToken) {
             throw new UnauthorizedException();
         }
-        this.logger.debug('Refresh Token: ' + refreshToken);
         return refreshToken;
     }
 }

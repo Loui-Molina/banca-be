@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { User } from '@src/modules/database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
-import { AbmMethods } from '@src/common/interfaces/abm.methods';
+import { Repository } from '@common/interfaces/repository';
+import { Role } from '@database/datamodels/enums/role';
 
 @Injectable()
+export class UsersService implements Repository<User, UserDto> {
+    constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 export class UsersService implements AbmMethods<User, UserDto> {
     constructor(
         @InjectModel(User.name)
         private readonly userModel: Model<User>,
     ) {}
 
-    async getAll(): Promise<Array<User>> {
-        return this.userModel.find().exec();
+    async getAll(limit: number, offset: number): Promise<Array<User>> {
+        return this.userModel.find().skip(offset).limit(limit).exec();
     }
 
     async getFiltered(q: string, value: any): Promise<User[]> {
@@ -37,12 +40,12 @@ export class UsersService implements AbmMethods<User, UserDto> {
     async update(dto: UserDto, loggedUser: User, userIp: string): Promise<User> {
         //TODO cambio de password no funciona
         /*if (dto.password != null && dto.password.length > 0){
-const userChange: User = await this.userModel.findById(dto._id).exec();
-await this.userAuthService.changePassword({
-userChange.username,
-password
-}, loggedUserIp)
-}*/
+            const userChange: User = await this.userModel.findById(dto._id).exec();
+            await this.userAuthService.changePassword({
+                userChange.username,
+                password
+            }, loggedUserIp)
+        }*/
         return this.userModel.findByIdAndUpdate(
             dto._id,
             {
@@ -68,5 +71,13 @@ password
 
     newUserModel(): User {
         return new this.userModel();
+    }
+
+    getEstablishmentName(loggedUser: User) {
+        return Promise.resolve({ name: 'test' });
+    }
+
+    async getForValidation(_id: ObjectId, role: Role): Promise<User> {
+        return await this.userModel.findById({ _id, role }).exec();
     }
 }

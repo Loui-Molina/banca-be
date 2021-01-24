@@ -14,7 +14,7 @@ import { Model, ObjectId } from 'mongoose';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { ConstApp } from '@utils/const.app';
-import { JwtPayloadRefresh } from '@src/modules/auth/jwt.payload.refresh.interface';
+import { JwtPayloadRefresh } from '@auth/jwt.payload.refresh.interface';
 import { User } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
@@ -26,6 +26,7 @@ export class TokenService {
     private readonly logger: Logger = new Logger(TokenService.name);
 
     constructor(
+        @Inject(forwardRef(() => AuthUserService))
         private readonly userAuthService: AuthUserService,
         @Inject(forwardRef(() => AuthService))
         private readonly authService: AuthService,
@@ -34,7 +35,7 @@ export class TokenService {
 
     async getRefreshToken(ipAdress: string, refreshToken: RefreshToken, logged: boolean): Promise<ResponseSignInDto> {
         if (ipAdress === refreshToken.ipAddress) {
-            const user: User = await this.userAuthService.getUserRefresh(refreshToken.userId);
+            const user: User = await this.userAuthService.getUser(refreshToken.userId);
             if (!user) {
                 throw new InternalServerErrorException();
             }
@@ -53,7 +54,7 @@ export class TokenService {
         }
     }
 
-    async createRefreshToken(userIp: string, userId: ObjectId): Promise<JwtPayloadRefresh> {
+    async saveRefreshTokenGenerated(userIp: string, userId: ObjectId): Promise<JwtPayloadRefresh> {
         try {
             const refreshTokenModel = await this.refreshTokenModel.findOne({ userId }).exec();
             const value = randomBytes(64).toString('hex');
@@ -84,5 +85,21 @@ export class TokenService {
         responseDto.message = ConstApp.LOG_OUT_OK;
         responseDto.statusCode = HttpStatus.OK;
         return responseDto;
+    }
+
+    async getRefreshTokenByUserId(userId: ObjectId) {
+        return await this.refreshTokenModel.findOne({ userId }).exec();
+    }
+
+    async createRefreshToken(_id: ObjectId) {
+        let refreshToken = new this.refreshTokenModel();
+        refreshToken.userId = _id;
+        refreshToken.refreshTokenId = null;
+        refreshToken.ipAddress = '';
+        await refreshToken.save();
+    }
+
+    async getRefreshTokenValidated(userId: ObjectId, refreshTokenId: string) {
+        return await this.refreshTokenModel.findOne({ userId, refreshTokenId }).exec();
     }
 }
