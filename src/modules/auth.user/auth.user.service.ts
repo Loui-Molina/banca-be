@@ -17,7 +17,6 @@ import { User } from '@database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { UsersService } from '@users/users.service';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
-import { UsersService } from '@users/users.service';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
@@ -111,10 +110,6 @@ export class AuthUserService {
         }
     }
 
-    private async hashPassword(password: string, salt: string): Promise<string> {
-        return bcrypt.hash(password, salt);
-    }
-
     async changePassword(
         changePasswordDto: ChangePasswordDto,
         userLogged: User,
@@ -165,5 +160,9 @@ export class AuthUserService {
 
     async getForValidation(id: ObjectId, role: Role) {
         return await this.usersService.getForValidation(id, role);
+    }
+
+    private async hashPassword(password: string, salt: string): Promise<string> {
+        return bcrypt.hash(password, salt);
     }
 }

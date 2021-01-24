@@ -2,8 +2,6 @@ import { Body, Controller, Delete, Get, Ip, Param, Put, Query, UseGuards } from 
 import { UserDto } from '@users/dtos/user.dto';
 import { UsersService } from '@users/users.service';
 import { User } from '@database/datamodels/schemas/user';
-import { UsersService } from '@users/users.service';
-import { User } from '@src/modules/database/datamodels/schemas/user';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '@common/decorators/roles.decorator';

@@ -8,8 +8,6 @@ import { AuthUserService } from '@auth.user/auth.user.service';
 import { Role } from '@database/datamodels/enums/role';
 import { CreateConsortiumDto } from '@consortiums/dtos/create.consortium.dto';
 import { UsersService } from '@users/users.service';
-import { CreateConsortiumDto } from '@src/modules/consortiums/dtos/create.consortium.dto';
-import { UsersService } from '@users/users.service';
 import { Banking } from '@database/datamodels/schemas/banking';
 
 @Injectable()
@@ -17,8 +15,6 @@ export class ConsortiumService {
     constructor(
         @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        private userAuthService: AuthUserService,
-        private userService: UsersService,
         @Inject(forwardRef(() => AuthUserService))
         private readonly userAuthService: AuthUserService,
         @Inject(forwardRef(() => UsersService))

@@ -14,8 +14,6 @@ import { ConsortiumService } from '@consortiums/consortium.service';
 @Injectable()
 export class BankingsService {
     constructor(
-        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        private userAuthService: AuthUserService,
         private usersService: UsersService,
         private consortiumService: ConsortiumService,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
@@ -23,7 +21,6 @@ export class BankingsService {
         private readonly userAuthService: AuthUserService,
         @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,
-        private readonly consortiumService: ConsortiumService,
     ) {}
 
     async findAll(loggedUser: User): Promise<BankingDto[]> {

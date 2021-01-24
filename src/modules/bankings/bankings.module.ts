@@ -17,5 +17,6 @@ import { ConstApp } from '@utils/const.app';
     ],
     controllers: [BankingsController],
     providers: [BankingsService],
+    exports: [BankingsService],
 })
 export class BankingsModule {}

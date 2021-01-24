@@ -2,8 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '@database/datamodels/schemas/user';
-import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
-import { UsersService } from '@users/users.service';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { Play } from '@database/datamodels/schemas/play';
@@ -17,11 +15,7 @@ export class BettingPanelService {
     constructor(
         @InjectModel(Bet.name) private betModel: Model<Bet>,
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        @InjectModel(Bet.name) private readonly betModel: Model<Bet>,
         @InjectModel(User.name) private readonly userModel: Model<User>,
-        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
-        private readonly userAuthService: AuthUserService,
-        private readonly userService: UsersService,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<Bet>> {
@@ -79,14 +73,6 @@ export class BettingPanelService {
         return this.mapToDto(betFounded);
     }
 
-    private async canCancelTicket(bet: Bet): Promise<boolean> {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const diffMs = new Date(bet.date) - new Date();
-        const diffMins = diffMs / 60000; // minutes
-        return diffMins > -5;
-    }
-
     async get(id: string): Promise<BetDto> {
         return this.mapToDto(await this.betModel.findById(id).exec());
     }
@@ -100,6 +86,14 @@ export class BettingPanelService {
             sn,
             betStatus,
         };
+    }
+
+    private async canCancelTicket(bet: Bet): Promise<boolean> {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const diffMs = new Date(bet.date) - new Date();
+        const diffMins = diffMs / 60000; // minutes
+        return diffMins > -5;
     }
 
     private async createSN(): Promise<string> {
