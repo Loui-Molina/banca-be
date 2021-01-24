@@ -2,8 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '@database/datamodels/schemas/user';
-import { AuthUserService } from '@auth.user/auth.user.service';
-import { UsersService } from '@users/users.service';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { Play } from '@database/datamodels/schemas/play';
@@ -16,10 +14,7 @@ import { UpdateBetDto } from '@betting.panel/dtos/update.bet.dto';
 export class BettingPanelService {
     constructor(
         @InjectModel(Bet.name) private betModel: Model<Bet>,
-        @InjectModel(User.name) private userModel: Model<User>,
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        private userAuthService: AuthUserService,
-        private userService: UsersService,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<Bet>> {

@@ -16,7 +16,7 @@ export class BankingsService {
     constructor(
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
         private userAuthService: AuthUserService,
-        private userService: UsersService,
+        private usersService: UsersService,
         private consortiumService: ConsortiumService,
     ) {}
 
@@ -87,7 +87,7 @@ export class BankingsService {
             await newObject.save();
         } catch (e) {
             if (createdUser) {
-                await this.userService.delete(createdUser._id);
+                await this.usersService.delete(createdUser._id);
             }
             throw new BadRequestException();
         }
@@ -127,7 +127,7 @@ export class BankingsService {
 
     private async mapBanking(banking: BankingDto): Promise<BankingDto> {
         // we get the username of the assigned user
-        const bankingUser = await this.userService.getSingleFiltered('_id', banking.ownerUserId);
+        const bankingUser = await this.usersService.getSingleFiltered('_id', banking.ownerUserId);
         return {
             _id: banking._id,
             consortiumId: banking.consortiumId,

@@ -28,7 +28,7 @@ export class AuthUserService {
     private readonly logger: Logger = new Logger(AuthUserService.name);
 
     constructor(
-        private readonly userService: UsersService,
+        private readonly usersService: UsersService,
         private readonly tokenService: TokenService,
         @InjectConnection(ConstApp.USER) private readonly connection: Connection,
         @InjectModel(Event.name) private readonly eventModel: Model<Event>,
@@ -40,7 +40,7 @@ export class AuthUserService {
         const userCreated: UserCreatedEntity = new UserCreatedEntity();
         try {
             const { username, password, role, name } = signUpCredentialsDto;
-            const user = this.userService.newUserModel();
+            const user = this.usersService.newUserModel();
             user.name = name;
             user.username = username;
             user.salt = await bcrypt.genSalt();
@@ -79,7 +79,7 @@ export class AuthUserService {
 
     async updateUser(id: ObjectId, userChanged: SignUpCredentialsDto, loggedUser: User) {
         const { username, name } = userChanged;
-        const user: User = await this.userService.get(id);
+        const user: User = await this.usersService.get(id);
         user.name = name;
         user.username = username;
         user.modificationUserId = loggedUser._id;
@@ -89,14 +89,14 @@ export class AuthUserService {
     }
 
     async deleteUser(id: ObjectId) {
-        const user = await this.userService.get(id);
+        const user = await this.usersService.get(id);
         await user.delete();
         return user;
     }
 
     async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = signInCredentialsDto;
-        const user: User = await this.userService.getSingleFilteredComplete('username', username);
+        const user: User = await this.usersService.getSingleFilteredComplete('username', username);
         const responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
             responsePayload.userId = user._id;
@@ -120,7 +120,7 @@ export class AuthUserService {
         const { username, password, newPassword, verifyPassword } = changePasswordDto;
         const session = await this.connection.startSession();
         session.startTransaction();
-        const user = await this.userService.getSingleFilteredComplete('username', username);
+        const user = await this.usersService.getSingleFilteredComplete('username', username);
         const userId = userLogged._id;
         const refreshToken = await this.tokenService.getRefreshTokenByUserId(userId);
         if (newPassword !== verifyPassword) {
@@ -156,10 +156,10 @@ export class AuthUserService {
     }
 
     async getUser(_id: ObjectId) {
-        return await this.userService.get(_id);
+        return await this.usersService.get(_id);
     }
 
     async getForValidation(id: ObjectId, role: Role) {
-        return await this.userService.getForValidation(id, role);
+        return await this.usersService.getForValidation(id, role);
     }
 }
