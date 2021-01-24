@@ -8,6 +8,7 @@ import { UtilsModule } from '@utils/utils.module';
 import { ManagerModule } from '@src/modules/manager/manager.module';
 import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
 import { DatabaseModule } from '@database/database.module';
+import { CommonModule } from './modules/common/common.module';
 
 @Module({
     imports: [
@@ -42,6 +43,7 @@ import { DatabaseModule } from '@database/database.module';
         AuthUserModule,
         UsersModule,
         UtilsModule,
+        CommonModule,
     ],
     controllers: [],
     providers: [],

@@ -69,22 +69,4 @@ password
     newUserModel(): User {
         return new this.userModel();
     }
-
-    /*    async getEstablishmentName(loggedUser: User): Promise<{ name: string }> {
-  const userRole: Role = loggedUser.role;
-  let establishmentName: string;
-  switch (userRole) {
-      case Role.banker:
-          establishmentName = await this.bankingService.getBankingName(loggedUser);
-          break;
-      case Role.consortium:
-          establishmentName = await this.consortiumService.getConsortiumName(loggedUser);
-          break;
-      case Role.admin:
-          establishmentName = this.configService.get('appTitle');
-          break;
-  }
-
-  return Promise.resolve({ name: establishmentName });
-}*/
 }

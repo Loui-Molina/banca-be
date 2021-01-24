@@ -16,5 +16,6 @@ import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
     ],
     controllers: [BankingController],
     providers: [BankingService],
+    exports: [BankingService],
 })
 export class BankingModule {}

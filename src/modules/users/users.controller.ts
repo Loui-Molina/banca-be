@@ -66,11 +66,4 @@ export class UsersController {
     async get(@Param('id') id: string): Promise<User> {
         return await this.userService.get(new mongoose.Schema.Types.ObjectId(id));
     }
-
-    /*
-  @Get('/establishmentName')
-  @UseGuards(AuthGuard())
-  getEstablishmentName(@AuthUser() user: User): Promise<{ name: string }> {
-      return this.userService.getEstablishmentName(user);
-  }*/
 }
