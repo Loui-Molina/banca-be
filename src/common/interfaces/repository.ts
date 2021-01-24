@@ -2,7 +2,7 @@ import { User } from '@database/datamodels/schemas/user';
 import { ObjectId } from 'mongoose';
 
 export interface Repository<T, E> {
-    getAll(limit?:number,offset?:number): Promise<Array<T>>;
+    getAll(limit?: number, offset?: number): Promise<Array<T>>;
 
     getFiltered(q: string, value: any): Promise<T[]>;
 

@@ -1,20 +1,19 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
-import { AuthUserService } from '@src/modules/auth.user/auth.user.service';
+import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConstApp } from '@utils/const.app';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
-import { User } from '@src/modules/database/datamodels/schemas/user';
+import { User } from '@database/datamodels/schemas/user';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
 import { TokenService } from '@auth/token.service';
-import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
-import { SignUpCredentialsDto } from './dtos/sign.up.credentials.dto';
-import { ChangePasswordDto } from './dtos/change.password.dto';
+import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,17 +21,16 @@ export class AuthService {
 
     constructor(
         private readonly configService: ConfigService,
-        private userAuthService: AuthUserService,
-        private jwtService: JwtService,
+        private readonly userAuthService: AuthUserService,
+        private readonly jwtService: JwtService,
         private readonly tokenService: TokenService,
-        @InjectModel(User.name) private userModel: Model<User>,
     ) {}
 
-    async singUp(signUpCredentialsDto: SignUpCredentialsDto, user:User): Promise<ResponseDto> {
-        return this.userAuthService.singUp(signUpCredentialsDto, user).then((createdUser) => createdUser.response);
+    async signUp(signUpCredentialsDto: SignUpCredentialsDto, user: User): Promise<ResponseDto> {
+        return this.userAuthService.signUp(signUpCredentialsDto, user).then((createdUser) => createdUser.response);
     }
 
-    async singIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
+    async signIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
         let responsePayload: ResponsePayload = new ResponsePayload();
         responsePayload = await this.userAuthService.validateUserPassword(signInCredentialsDto);
         if (!responsePayload.userId) {
@@ -42,7 +40,7 @@ export class AuthService {
     }
 
     async getLoggedUser(user: User) {
-        return await this.userModel.findById(user.id).exec();
+        return await this.userAuthService.getUser(user._id);
     }
 
     async getToken(responsePayload: ResponsePayload, userIp: string, logged: boolean): Promise<ResponseSignInDto> {
@@ -51,7 +49,7 @@ export class AuthService {
         const role: Role = responsePayload.role;
         const payload: JwtPayload = { userId, role };
         if (!logged) {
-            const refreshToken = await this.tokenService.createRefreshToken(userIp, userId);
+            const refreshToken = await this.tokenService.saveRefreshTokenGenerated(userIp, userId);
             responseSignInDto.refreshToken = await this.jwtService.signAsync(refreshToken, {
                 expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRES'),
                 secret: this.configService.get<string>('REFRESH_TOKEN_SECRET_KEY'),

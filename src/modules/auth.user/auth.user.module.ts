@@ -1,23 +1,22 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RefreshToken, RefreshTokenSchema } from '@database/datamodels/schemas/refresh.token';
-import { User, UserSchema } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
-import { UserService } from '@users/user.service';
-import { EventSchema, Event } from '../database/datamodels/schemas/event';
+import { EventSchema, Event } from '@database/datamodels/schemas/event';
+import { UsersModule } from '@users/users.module';
+import { ConstApp } from '@utils/const.app';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'),
-        MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], 'user'),
-        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], 'user'),
+        UsersModule,
+        MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], ConstApp.USER),
+        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], ConstApp.USER),
     ],
-    providers: [AuthUserService, UserService],
+    providers: [AuthUserService],
     exports: [
         AuthUserService,
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'),
-        MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], 'user'),
-        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], 'user'),
+        MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], ConstApp.USER),
+        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], ConstApp.USER),
     ],
 })
 export class AuthUserModule {}

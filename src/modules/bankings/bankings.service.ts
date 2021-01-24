@@ -1,22 +1,22 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@database/datamodels/schemas/user';
-import { UserService } from '@users/user.service';
+import { UsersService } from '@users/users.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateBankingDto } from '@src/modules/banking/dto/create.banking.dto';
+import { CreateBankingDto } from '@bankings/dto/create.banking.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { Model } from 'mongoose';
-import { BankingDto } from '@src/modules/banking/dto/banking.dto';
-import { UpdateBankingDto } from '@src/modules/banking/dto/update.banking.dto';
+import { BankingDto } from '@bankings/dto/banking.dto';
+import { UpdateBankingDto } from '@bankings/dto/update.banking.dto';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { AuthUserService } from '@auth.user/auth.user.service';
-import { ConsortiumService } from '../consortiums/consortium.service';
+import { ConsortiumService } from '@consortiums/consortium.service';
 
 @Injectable()
-export class BankingService {
+export class BankingsService {
     constructor(
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
         private userAuthService: AuthUserService,
-        private userService: UserService,
+        private usersService: UsersService,
         private consortiumService: ConsortiumService,
     ) {}
 
@@ -74,7 +74,7 @@ export class BankingService {
         let createdUser: User;
         let newObject: Banking;
         try {
-            createdUser = (await this.userAuthService.singUp(createBankingDto.user, loggedUser)).user;
+            createdUser = (await this.userAuthService.signUp(createBankingDto.user, loggedUser)).user;
             newObject = new this.bankingModel({
                 name: createBankingDto.banking.name,
                 status: createBankingDto.banking.status,
@@ -87,7 +87,7 @@ export class BankingService {
             await newObject.save();
         } catch (e) {
             if (createdUser) {
-                await this.userService.delete(createdUser._id);
+                await this.usersService.delete(createdUser._id);
             }
             throw new BadRequestException();
         }
@@ -127,7 +127,7 @@ export class BankingService {
 
     private async mapBanking(banking: BankingDto): Promise<BankingDto> {
         // we get the username of the assigned user
-        const bankingUser = await this.userService.getSingleFiltered('_id', banking.ownerUserId);
+        const bankingUser = await this.usersService.getSingleFiltered('_id', banking.ownerUserId);
         return {
             _id: banking._id,
             consortiumId: banking.consortiumId,
