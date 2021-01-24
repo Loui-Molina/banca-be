@@ -4,11 +4,12 @@ import { DashboardService } from '@src/modules/dashboard/dashboard.service';
 import { DashboardController } from '@src/modules/dashboard/dashboard.controller';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
+import { ConstApp } from '@utils/const.app';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], 'banca'),
-        MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], 'banca'),
+        MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
     ],
     providers: [DashboardService],
     controllers: [DashboardController],

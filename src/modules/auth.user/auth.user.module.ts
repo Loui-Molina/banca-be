@@ -4,18 +4,19 @@ import { RefreshToken, RefreshTokenSchema } from '@database/datamodels/schemas/r
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { EventSchema, Event } from '@database/datamodels/schemas/event';
 import { UsersModule } from '@users/users.module';
+import { ConstApp } from '@utils/const.app';
 
 @Module({
     imports: [
         UsersModule,
-        MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], 'user'),
-        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], 'user'),
+        MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], ConstApp.USER),
+        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], ConstApp.USER),
     ],
     providers: [AuthUserService],
     exports: [
         AuthUserService,
-        MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], 'user'),
-        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], 'user'),
+        MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], ConstApp.USER),
+        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], ConstApp.USER),
     ],
 })
 export class AuthUserModule {}

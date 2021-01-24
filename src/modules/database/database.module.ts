@@ -8,7 +8,7 @@ import { ConstApp } from '@utils/const.app';
     imports: [
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
-            connectionName: ConstApp.BANCA,
+            connectionName: ConstApp.BANKING,
             useFactory: async (config: ConfigService) => ({
                 uri: config.get('bancaDB'),
                 useNewUrlParser: true,

@@ -6,13 +6,14 @@ import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { Bet, BetSchema } from '@database/datamodels/schemas/bet';
 import { BettingPanelService } from '@betting.panel/betting.panel.service';
 import { BettingPanelController } from '@betting.panel/betting.panel.controller';
+import { ConstApp } from '@utils/const.app';
 
 @Module({
     imports: [
         UsersModule,
         AuthUserModule,
-        MongooseModule.forFeature([{ name: Bet.name, schema: BetSchema }], 'banca'),
-        MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], 'banca'),
+        MongooseModule.forFeature([{ name: Bet.name, schema: BetSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
     ],
     providers: [BettingPanelService],
     controllers: [BettingPanelController],

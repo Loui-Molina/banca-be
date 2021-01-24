@@ -6,13 +6,14 @@ import { LotteryTime, LotteryTimeSchema } from '@database/datamodels/schemas/lot
 import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { Result, ResultSchema } from '@database/datamodels/schemas/result';
 import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
+import { ConstApp } from '@utils/const.app';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: Lottery.name, schema: LotterySchema }], 'banca'),
-        MongooseModule.forFeature([{ name: LotteryTime.name, schema: LotteryTimeSchema }], 'banca'),
-        MongooseModule.forFeature([{ name: Result.name, schema: ResultSchema }], 'banca'),
-        MongooseModule.forFeature([{ name: Draw.name, schema: DrawSchema }], 'banca'),
+        MongooseModule.forFeature([{ name: Lottery.name, schema: LotterySchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: LotteryTime.name, schema: LotteryTimeSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Result.name, schema: ResultSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Draw.name, schema: DrawSchema }], ConstApp.BANKING),
     ],
     providers: [AdminLotteryService],
     controllers: [AdminLotteryController],

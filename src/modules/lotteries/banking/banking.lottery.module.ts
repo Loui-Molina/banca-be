@@ -9,16 +9,20 @@ import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/conso
 import { BankingLotteryService } from '@lotteries/banking/banking.lottery.service';
 import { BankingLotteryController } from '@lotteries/banking/banking.lottery.controller';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
+import { ConstApp } from '@utils/const.app';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: Lottery.name, schema: LotterySchema }], 'banca'),
-        MongooseModule.forFeature([{ name: LotteryTime.name, schema: LotteryTimeSchema }], 'banca'),
-        MongooseModule.forFeature([{ name: ConsortiumLottery.name, schema: ConsortiumLotterySchema }], 'banca'),
-        MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], 'banca'),
-        MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], 'banca'),
-        MongooseModule.forFeature([{ name: Result.name, schema: ResultSchema }], 'banca'),
-        MongooseModule.forFeature([{ name: Draw.name, schema: DrawSchema }], 'banca'),
+        MongooseModule.forFeature([{ name: Lottery.name, schema: LotterySchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: LotteryTime.name, schema: LotteryTimeSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature(
+            [{ name: ConsortiumLottery.name, schema: ConsortiumLotterySchema }],
+            ConstApp.BANKING,
+        ),
+        MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Result.name, schema: ResultSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Draw.name, schema: DrawSchema }], ConstApp.BANKING),
     ],
     providers: [BankingLotteryService],
     controllers: [BankingLotteryController],

@@ -2,7 +2,7 @@ export class ConstApp {
     //DB
 
     public static readonly USER = 'user';
-    public static readonly BANCA = 'banca';
+    public static readonly BANKING = 'banking';
 
     //RESPONSES
     public static readonly USER_CREATED_OK = 'User created correctly';
