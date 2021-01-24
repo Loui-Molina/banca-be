@@ -16,7 +16,6 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 import { User } from '@database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { UsersService } from '@users/users.service';
-import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
@@ -33,8 +32,6 @@ export class AuthUserService {
         private readonly tokenService: TokenService,
         @InjectConnection(ConstApp.USER) private readonly connection: Connection,
         @InjectModel(Event.name) private readonly eventModel: Model<Event>,
-        private readonly userService: UsersService,
-        @InjectModel(RefreshToken.name) private readonly refreshTokenModel: Model<RefreshToken>,
     ) {}
 
     async signUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User): Promise<UserCreatedEntity> {

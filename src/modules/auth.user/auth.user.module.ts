@@ -13,7 +13,7 @@ import { ConstApp } from '@utils/const.app';
         MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], ConstApp.USER),
         MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], ConstApp.USER),
     ],
-    providers: [AuthUserService, UsersService],
+    providers: [AuthUserService],
     exports: [
         AuthUserService,
         MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], ConstApp.USER),
