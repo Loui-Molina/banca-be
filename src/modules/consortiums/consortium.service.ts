@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { ConsortiumDto } from '@src/modules/consortiums/dtos/consortium.dto';
-import { Consortium } from '@src/modules/database/datamodels/schemas/consortium';
+import { ConsortiumDto } from '@consortiums/dtos/consortium.dto';
+import { Consortium } from '@database/datamodels/schemas/consortium';
 import { User } from '@database/datamodels/schemas/user';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { Role } from '@database/datamodels/enums/role';
-import { CreateConsortiumDto } from '@src/modules/consortiums/dtos/create.consortium.dto';
+import { CreateConsortiumDto } from '@consortiums/dtos/create.consortium.dto';
 import { UserService } from '@users/user.service';
 import { Banking } from '@database/datamodels/schemas/banking';
 

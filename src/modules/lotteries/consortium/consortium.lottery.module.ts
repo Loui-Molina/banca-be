@@ -4,8 +4,8 @@ import { LotteryTime, LotteryTimeSchema } from '@database/datamodels/schemas/lot
 import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { Result, ResultSchema } from '@database/datamodels/schemas/result';
 import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
-import { ConsortiumLotteryService } from '@src/modules/lotteries/consortium/consortium.lottery.service';
-import { ConsortiumLotteryController } from '@src/modules/lotteries/consortium/consortium.lottery.controller';
+import { ConsortiumLotteryService } from '@lotteries/consortium/consortium.lottery.service';
+import { ConsortiumLotteryController } from '@lotteries/consortium/consortium.lottery.controller';
 import { ConsortiumLottery, ConsortiumLotterySchema } from '@database/datamodels/schemas/consortium.lottery';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 

@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from '@users/users.module';
-import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
+import { AuthUserModule } from '@auth.user/auth.user.module';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { Bet, BetSchema } from '@database/datamodels/schemas/bet';
-import { BettingPanelService } from '@src/modules/betting.panel/betting.panel.service';
-import { BettingPanelController } from '@src/modules/betting.panel/betting.panel.controller';
+import { BettingPanelService } from '@betting.panel/betting.panel.service';
+import { BettingPanelController } from '@betting.panel/betting.panel.controller';
 
 @Module({
     imports: [

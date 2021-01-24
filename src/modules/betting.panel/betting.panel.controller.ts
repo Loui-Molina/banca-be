@@ -1,17 +1,17 @@
 import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
 import { ConstApp } from '@utils/const.app';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
 import { Bet } from '@database/datamodels/schemas/bet';
-import { BettingPanelService } from '@src/modules/betting.panel/betting.panel.service';
-import { BetDto } from '@src/modules/betting.panel/dtos/bet.dto';
-import { CreateBetDto } from '@src/modules/betting.panel/dtos/create.bet.dto';
-import { UpdateBetDto } from '@src/modules/betting.panel/dtos/update.bet.dto';
+import { BettingPanelService } from '@betting.panel/betting.panel.service';
+import { BetDto } from '@betting.panel/dtos/bet.dto';
+import { CreateBetDto } from '@betting.panel/dtos/create.bet.dto';
+import { UpdateBetDto } from '@betting.panel/dtos/update.bet.dto';
 
 @ApiTags('betting-panel')
 @Controller('betting-panel')

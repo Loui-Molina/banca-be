@@ -6,8 +6,8 @@ import { Lottery } from '@database/datamodels/schemas/lottery';
 import { Result } from '@database/datamodels/schemas/result';
 import { Draw } from '@database/datamodels/schemas/draw';
 import { User } from '@database/datamodels/schemas/user';
-import { ConsortiumLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.lottery.dto';
-import { ConsortiumUpdateLotteryDto } from '@src/modules/lotteries/consortium/dtos/consortium.update.lottery.dto';
+import { ConsortiumLotteryDto } from '@lotteries/consortium/dtos/consortium.lottery.dto';
+import { ConsortiumUpdateLotteryDto } from '@lotteries/consortium/dtos/consortium.update.lottery.dto';
 import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
 import { Consortium } from '@database/datamodels/schemas/consortium';
 

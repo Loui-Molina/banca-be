@@ -1,19 +1,20 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '@auth/guards/roles.guard';
 import { DashboardDiagramDto } from '@src/modules/dashboard/dtos/dashboard.dto';
 import { DashboardService } from '@src/modules/dashboard/dashboard.service';
 import { ConstApp } from '@utils/const.app';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { DashboardConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.consortium.dto';
 import { DashboardBankingDto } from '@src/modules/dashboard/dtos/dashboard.banking.dto';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
 import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
 import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
 import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
-import { RolesGuard } from '@auth/guards/roles.guard';
+
 import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto';
 
 @ApiTags('dashboard')

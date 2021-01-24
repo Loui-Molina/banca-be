@@ -2,13 +2,13 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ConstApp } from '@utils/const.app';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
 import { Result } from '@database/datamodels/schemas/result';
-import { ResultsService } from '@src/modules/results/results.service';
-import { ResultDto } from '@src/modules/results/dtos/result.dto';
-import { AddResultDto } from '@src/modules/results/dtos/add.result.dto';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { ResultsService } from '@results/results.service';
+import { ResultDto } from '@results/dtos/result.dto';
+import { AddResultDto } from '@results/dtos/add.result.dto';
+import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
 

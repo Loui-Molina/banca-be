@@ -6,8 +6,8 @@ import { Result, ResultSchema } from '@database/datamodels/schemas/result';
 import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
 import { ConsortiumLottery, ConsortiumLotterySchema } from '@database/datamodels/schemas/consortium.lottery';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
-import { BankingLotteryService } from '@src/modules/lotteries/banking/banking.lottery.service';
-import { BankingLotteryController } from '@src/modules/lotteries/banking/banking.lottery.controller';
+import { BankingLotteryService } from '@lotteries/banking/banking.lottery.service';
+import { BankingLotteryController } from '@lotteries/banking/banking.lottery.controller';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 
 @Module({

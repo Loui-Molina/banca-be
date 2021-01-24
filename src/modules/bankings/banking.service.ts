@@ -2,14 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@database/datamodels/schemas/user';
 import { UserService } from '@users/user.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateBankingDto } from '@src/modules/banking/dto/create.banking.dto';
+import { CreateBankingDto } from '@bankings/dto/create.banking.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { Model } from 'mongoose';
-import { BankingDto } from '@src/modules/banking/dto/banking.dto';
-import { UpdateBankingDto } from '@src/modules/banking/dto/update.banking.dto';
+import { BankingDto } from '@bankings/dto/banking.dto';
+import { UpdateBankingDto } from '@bankings/dto/update.banking.dto';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { AuthUserService } from '@auth.user/auth.user.service';
-import { ConsortiumService } from '../consortiums/consortium.service';
+import { ConsortiumService } from '@consortiums/consortium.service';
 
 @Injectable()
 export class BankingService {

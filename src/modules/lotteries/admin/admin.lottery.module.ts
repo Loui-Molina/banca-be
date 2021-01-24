@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AdminLotteryService } from '@src/modules/lotteries/admin/admin.lottery.service';
-import { AdminLotteryController } from '@src/modules/lotteries/admin/admin.lottery.controller';
+import { AdminLotteryService } from '@lotteries/admin/admin.lottery.service';
+import { AdminLotteryController } from '@lotteries/admin/admin.lottery.controller';
 import { LotteryTime, LotteryTimeSchema } from '@database/datamodels/schemas/lottery.time';
 import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { Result, ResultSchema } from '@database/datamodels/schemas/result';

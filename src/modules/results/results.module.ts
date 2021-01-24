@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Result, ResultSchema } from '@database/datamodels/schemas/result';
 import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
-import { ResultsService } from '@src/modules/results/results.service';
-import { ResultsController } from '@src/modules/results/results.controller';
+import { ResultsService } from '@results/results.service';
+import { ResultsController } from '@results/results.controller';
 import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 
 @Module({
