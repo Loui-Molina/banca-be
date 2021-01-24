@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from "@nestjs/common";
 import { BankingService } from '@src/modules/banking/banking.service';
 import { BankingController } from '@src/modules/banking/banking.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,7 +10,7 @@ import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], 'banca'),
-        UsersModule,
+        forwardRef( () => UsersModule),
         AuthUserModule,
         ConsortiumModule,
     ],

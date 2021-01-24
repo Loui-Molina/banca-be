@@ -12,10 +12,10 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class UsersService implements AbmMethods<User, UserDto> {
     constructor(
-        @InjectModel(User.name) private readonly userModel: Model<User>,
-        private readonly bankingService: BankingService,
+        @InjectModel(User.name)
+        private readonly userModel: Model<User> /*        private readonly bankingService: BankingService,
         private readonly consortiumService: ConsortiumService,
-        private readonly configService: ConfigService,
+        private readonly configService: ConfigService,*/,
     ) {}
 
     async getAll(): Promise<Array<User>> {
@@ -76,7 +76,7 @@ export class UsersService implements AbmMethods<User, UserDto> {
         return new this.userModel();
     }
 
-    async getEstablishmentName(loggedUser: User): Promise<{ name: string }> {
+    /*    async getEstablishmentName(loggedUser: User): Promise<{ name: string }> {
         const userRole: Role = loggedUser.role;
         let establishmentName: string;
         switch (userRole) {
@@ -92,5 +92,5 @@ export class UsersService implements AbmMethods<User, UserDto> {
         }
 
         return Promise.resolve({ name: establishmentName });
-    }
+    }*/
 }

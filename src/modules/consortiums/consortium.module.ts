@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from "@nestjs/common";
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 import { ConsortiumController } from '@src/modules/consortiums/consortium.controller';
@@ -9,7 +9,7 @@ import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 
 @Module({
     imports: [
-        UsersModule,
+        forwardRef(() => UsersModule),
         AuthUserModule,
         MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], 'banca'),
         MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], 'banca'),
