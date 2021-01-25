@@ -15,10 +15,10 @@ import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
 @Injectable()
 export class TransactionService {
     constructor(
-        @InjectModel(Transaction.name) private transactionModel: Model<Transaction>,
-        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
-        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        private consortiumService: ConsortiumService,
+        @InjectModel(Transaction.name) private readonly transactionModel: Model<Transaction>,
+        @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
+        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        private readonly consortiumService: ConsortiumService,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<TransactionDto>> {
@@ -59,7 +59,7 @@ export class TransactionService {
         const originBalance = await originObject.calculateBalance();
         const destinationBalance = await destinationObject.calculateBalance();
         const transactionOrigin = new this.transactionModel({
-            type: TransactionType.extraction,
+            type: TransactionType.debit,
             originObject: dto.originObject,
             destinationObject: dto.destinationObject,
             originId: dto.originId,
@@ -71,7 +71,7 @@ export class TransactionService {
             actualBalance: originBalance + dto.amount * -1,
         });
         const transactionDestination = new this.transactionModel({
-            type: TransactionType.deposit,
+            type: TransactionType.credit,
             originObject: dto.originObject,
             destinationObject: dto.destinationObject,
             originId: dto.originId,
@@ -127,7 +127,7 @@ export class TransactionService {
         const originBalance = await originObject.calculateBalance();
         const destinationBalance = await destinationObject.calculateBalance();
         const transactionOrigin = new this.transactionModel({
-            type: TransactionType.extraction,
+            type: TransactionType.debit,
             originObject: dto.originObject,
             destinationObject: dto.destinationObject,
             originId: dto.originId,
@@ -139,7 +139,7 @@ export class TransactionService {
             actualBalance: originBalance + dto.amount * -1,
         });
         const transactionDestination = new this.transactionModel({
-            type: TransactionType.deposit,
+            type: TransactionType.credit,
             originObject: dto.originObject,
             destinationObject: dto.destinationObject,
             originId: dto.originId,
@@ -238,6 +238,7 @@ export class TransactionService {
             });
         });
         transactionsDto.sort(function (a, b) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             return new Date(b.createdAt) - new Date(a.createdAt);
         });

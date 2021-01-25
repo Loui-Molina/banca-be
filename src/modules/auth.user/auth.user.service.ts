@@ -107,10 +107,6 @@ export class AuthUserService {
         }
     }
 
-    private async hashPassword(password: string, salt: string): Promise<string> {
-        return bcrypt.hash(password, salt);
-    }
-
     async changePassword(
         changePasswordDto: ChangePasswordDto,
         userLogged: User,
@@ -161,5 +157,9 @@ export class AuthUserService {
 
     async getForValidation(id: ObjectId, role: Role) {
         return await this.usersService.getForValidation(id, role);
+    }
+
+    private async hashPassword(password: string, salt: string): Promise<string> {
+        return bcrypt.hash(password, salt);
     }
 }

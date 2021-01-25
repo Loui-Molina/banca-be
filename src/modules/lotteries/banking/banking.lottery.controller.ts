@@ -1,10 +1,10 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from '@common/decorators/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { ConstApp } from '@utils/const.app';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
-import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
 import { BankingLotteryService } from '@lotteries/banking/banking.lottery.service';

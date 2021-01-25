@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
+import { Repository } from '@common/interfaces/repository';
 import { User } from '@database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
-import { Repository } from '@common/interfaces/repository';
 import { Role } from '@database/datamodels/enums/role';
 
 @Injectable()
 export class UsersService implements Repository<User, UserDto> {
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+    constructor(
+        @InjectModel(User.name)
+        private readonly userModel: Model<User>,
+    ) {}
 
     async getAll(limit: number, offset: number): Promise<Array<User>> {
         return this.userModel.find().skip(offset).limit(limit).exec();
@@ -35,12 +38,12 @@ export class UsersService implements Repository<User, UserDto> {
     async update(dto: UserDto, loggedUser: User, userIp: string): Promise<User> {
         //TODO cambio de password no funciona
         /*if (dto.password != null && dto.password.length > 0){
-            const userChange: User = await this.userModel.findById(dto._id).exec();
-            await this.userAuthService.changePassword({
-                userChange.username,
-                password
-            }, loggedUserIp)
-        }*/
+const userChange: User = await this.userModel.findById(dto._id).exec();
+await this.userAuthService.changePassword({
+userChange.username,
+password
+}, loggedUserIp)
+}*/
         return this.userModel.findByIdAndUpdate(
             dto._id,
             {

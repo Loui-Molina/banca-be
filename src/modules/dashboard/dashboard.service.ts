@@ -20,8 +20,8 @@ import { Transaction } from '@database/datamodels/schemas/transaction';
 @Injectable()
 export class DashboardService {
     constructor(
-        @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
-        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
+        @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
+        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
     ) {}
 
     async getDashboardDiagram(): Promise<DashboardDiagramDto> {

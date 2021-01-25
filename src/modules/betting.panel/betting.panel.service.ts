@@ -2,13 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '@database/datamodels/schemas/user';
-import { Banking } from '@database/datamodels/schemas/banking';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { Play } from '@database/datamodels/schemas/play';
 import { BetDto } from '@betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@betting.panel/dtos/create.bet.dto';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { UpdateBetDto } from '@betting.panel/dtos/update.bet.dto';
+import { Banking } from '@database/datamodels/schemas/banking';
 
 @Injectable()
 export class BettingPanelService {
@@ -72,14 +72,6 @@ export class BettingPanelService {
         return this.mapToDto(betFounded);
     }
 
-    private async canCancelTicket(bet: Bet): Promise<boolean> {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const diffMs = new Date(bet.date) - new Date();
-        const diffMins = diffMs / 60000; // minutes
-        return diffMins > -5;
-    }
-
     async get(id: string): Promise<BetDto> {
         return this.mapToDto(await this.betModel.findById(id).exec());
     }
@@ -93,6 +85,14 @@ export class BettingPanelService {
             sn,
             betStatus,
         };
+    }
+
+    private async canCancelTicket(bet: Bet): Promise<boolean> {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const diffMs = new Date(bet.date) - new Date();
+        const diffMins = diffMs / 60000; // minutes
+        return diffMins > -5;
     }
 
     private async createSN(): Promise<string> {

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { ConsortiumDto } from '@consortiums/dtos/consortium.dto';
@@ -14,10 +14,11 @@ import { Banking } from '@database/datamodels/schemas/banking';
 export class ConsortiumService {
     constructor(
         @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
-        @InjectModel(User.name) private userModel: Model<User>,
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        private userAuthService: AuthUserService,
-        private userService: UsersService,
+        @Inject(forwardRef(() => AuthUserService))
+        private readonly userAuthService: AuthUserService,
+        @Inject(forwardRef(() => UsersService))
+        private readonly userService: UsersService,
     ) {}
 
     async getAll(): Promise<Array<ConsortiumDto>> {
@@ -28,6 +29,11 @@ export class ConsortiumService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
     async getFiltered(q: string, value: any): Promise<Array<Consortium>> {
         return this.consortiumModel.find({ [q]: value }).exec();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
+    async getSingleFiltered(q: string, value: any): Promise<Consortium> {
+        return (await this.consortiumModel.find({ [q]: value }).exec()).pop();
     }
 
     async create(dto: CreateConsortiumDto, loggedUser: User): Promise<Consortium> {
@@ -118,5 +124,9 @@ export class ConsortiumService {
             throw new BadRequestException();
         }
         return consortiums.pop();
+    }
+
+    async getConsortiumName(loggedUser: User) {
+        return (await this.getSingleFiltered('ownerUserId', loggedUser._id)).name;
     }
 }

@@ -12,10 +12,10 @@ import { AdminLotteryResDto } from '@lotteries/admin/dtos/admin.lottery.res.dto'
 @Injectable()
 export class AdminLotteryService {
     constructor(
-        @InjectModel(Lottery.name) private lotteryModel: Model<Lottery>,
-        @InjectModel(LotteryTime.name) private lotteryTimeModel: Model<LotteryTime>,
-        @InjectModel(Result.name) private resultModel: Model<Result>,
-        @InjectModel(Draw.name) private drawModel: Model<Draw>,
+        @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
+        @InjectModel(LotteryTime.name) private readonly lotteryTimeModel: Model<LotteryTime>,
+        @InjectModel(Result.name) private readonly resultModel: Model<Result>,
+        @InjectModel(Draw.name) private readonly drawModel: Model<Draw>,
     ) {}
 
     async getAll(): Promise<Array<AdminLotteryResDto>> {
@@ -98,7 +98,7 @@ export class AdminLotteryService {
             openTime: dto.openTime,
             closeTime: dto.closeTime,
         });
-        let foundLottery: Lottery = await this.lotteryModel.findByIdAndUpdate(
+        const foundLottery: Lottery = await this.lotteryModel.findByIdAndUpdate(
             dto._id,
             {
                 name: dto.name,
@@ -129,13 +129,13 @@ export class AdminLotteryService {
 
     async delete(id: string) {
         //TODO eliminar consortiumLotteries dentro de consortiums
-        let promise = await this.lotteryModel.findByIdAndRemove(id).exec();
+        const promise = await this.lotteryModel.findByIdAndRemove(id).exec();
         console.log(`delete response ${promise}`);
         return promise;
     }
 
     async get(id: string): Promise<AdminLotteryResDto> {
-        let foundLottery = await this.lotteryModel.findById(id).exec();
+        const foundLottery = await this.lotteryModel.findById(id).exec();
         return {
             _id: foundLottery._id,
             name: foundLottery.name,
