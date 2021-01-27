@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { HealthCheckModule } from '@src/modules/health-check/health.check.module';
+import { HealthCheckModule } from '@health-check/health.check.module';
 import { AuthModule } from '@auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
-import { CoreModule } from '@src/modules/manager/core.module';
-import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
+import { CoreModule } from '@manager/core.module';
 import { DatabaseModule } from '@database/database.module';
 import { CommonModule } from '@common.module/common.module';
 
