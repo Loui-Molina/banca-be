@@ -23,11 +23,12 @@ export class ResumeSellsDto {
     winnerBets: number;
     @IsNumber()
     @ApiProperty({ type: Number })
-    reclaimedBets: number;
+    claimedBets: number;
     @IsNumber()
     @ApiProperty({ type: Number })
     loserBets: number;
     // Cantidad total de tickets vendidos
+    @IsNumber()
     @ApiProperty({ type: Number })
     totalBets: number;
     @IsNumber()

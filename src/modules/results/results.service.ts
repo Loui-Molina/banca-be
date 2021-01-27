@@ -7,6 +7,7 @@ import { ResultDto } from '@results/dtos/result.dto';
 import { Lottery } from '@database/datamodels/schemas/lottery';
 import { AddResultDto } from '@results/dtos/add.result.dto';
 import { Model } from 'mongoose';
+import { Bet } from '@database/datamodels/schemas/bet';
 
 @Injectable()
 export class ResultsService {
@@ -104,6 +105,9 @@ export class ResultsService {
         lottery.results.push(result);
         await lottery.save();
         //TODO Calcular ganadores
+
+        // const bets: Bet[] = [];
+
         return result;
     }
 

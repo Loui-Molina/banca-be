@@ -13,7 +13,7 @@ import { UpdateBetDto } from '@betting.panel/dtos/update.bet.dto';
 import { Roles } from '@common/decorators/roles.decorator';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
-import { ReclaimBetDto } from '@betting.panel/dtos/reclaim.bet.dto';
+import { ClaimBetDto } from '@betting.panel/dtos/claimBetDto';
 
 @ApiTags('betting-panel')
 @Controller('betting-panel')
@@ -61,7 +61,7 @@ export class BettingPanelController {
         return this.bettingPanelService.create(dto, loggedUser);
     }
 
-    @Put('/cancel')
+    @Put('cancel')
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
         type: BetDto,
@@ -71,14 +71,14 @@ export class BettingPanelController {
         return this.bettingPanelService.cancelBet(dto, loggedUser);
     }
 
-    @Put('/reclaim')
+    @Put('claim')
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
         type: BetDto,
     })
     @Roles(Role.banker)
-    reclaimTicket(@Body() dto: ReclaimBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
-        return this.bettingPanelService.reclaimTicket(dto, loggedUser);
+    claimTicket(@Body() dto: ClaimBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
+        return this.bettingPanelService.claimTicket(dto, loggedUser);
     }
 
     @Get(':id')

@@ -1,6 +1,6 @@
 export enum BetStatus {
     cancelled = 'cancelled',
-    reclaimed = 'reclaimed',
+    claimed = 'claimed',
     pending = 'pending',
     winner = 'winner',
     loser = 'loser',
