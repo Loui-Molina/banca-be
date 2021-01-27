@@ -1,6 +1,6 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ObjectId } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConstApp } from '@utils/const.app';
@@ -14,6 +14,9 @@ import { TokenService } from '@auth/token.service';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Banking } from '@database/datamodels/schemas/banking';
+import { Consortium } from '@database/datamodels/schemas/consortium';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +27,8 @@ export class AuthService {
         private readonly userAuthService: AuthUserService,
         private readonly jwtService: JwtService,
         private readonly tokenService: TokenService,
+        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
     ) {}
 
     async signUp(signUpCredentialsDto: SignUpCredentialsDto, user: User): Promise<ResponseDto> {
@@ -74,5 +79,37 @@ export class AuthService {
         remember: boolean,
     ): Promise<ResponseDto> {
         return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress, remember);
+    }
+
+    async isLoginEnabled(user: User) {
+        let isEnabled = false;
+        switch (user.role) {
+            case Role.admin:
+                isEnabled = true;
+                break;
+            case Role.banker:
+                // eslint-disable-next-line no-case-declarations
+                const banking = await this.bankingModel.findOne({ ownerUserId: user._id }).exec();
+                isEnabled = banking.status;
+                break;
+            case Role.punter:
+                isEnabled = false;
+                break;
+            case Role.supervisor:
+                isEnabled = false;
+                break;
+            case Role.consortium:
+                const consortium = await this.consortiumModel.findOne({ ownerUserId: user._id }).exec();
+                isEnabled = consortium.status;
+                break;
+            case Role.carrier:
+                isEnabled = false;
+                break;
+            default:
+                isEnabled = false;
+                break;
+        }
+        console.log(isEnabled);
+        return Promise.resolve(isEnabled);
     }
 }
