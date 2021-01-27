@@ -13,14 +13,14 @@ import { TransactionType } from '@database/datamodels/enums/transaction.type';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
-import {ReclaimBetDto} from "@betting.panel/dtos/reclaim.bet.dto";
+import { ReclaimBetDto } from '@betting.panel/dtos/reclaim.bet.dto';
 
 @Injectable()
 export class BettingPanelService {
     constructor(
         @InjectModel(Transaction.name) private readonly transactionModel: Model<Transaction>,
-        @InjectModel(Bet.name) private betModel: Model<Bet>,
-        @InjectModel(Banking.name) private bankingModel: Model<Banking>,
+        @InjectModel(Bet.name) private readonly betModel: Model<Bet>,
+        @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<Bet>> {

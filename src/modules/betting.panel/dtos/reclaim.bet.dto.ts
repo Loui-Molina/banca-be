@@ -3,7 +3,9 @@ import { ObjectId } from 'mongoose';
 import { Play, PlaySchema } from '@database/datamodels/schemas/play';
 import { Prop } from '@nestjs/mongoose';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
+import {IsString} from "class-validator";
 
 export class ReclaimBetDto {
+    @IsString()
     @ApiProperty({ required: true }) sn: string;
 }

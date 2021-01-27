@@ -13,7 +13,7 @@ import { UpdateBetDto } from '@betting.panel/dtos/update.bet.dto';
 import { Roles } from '@common/decorators/roles.decorator';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
-import {ReclaimBetDto} from "@betting.panel/dtos/reclaim.bet.dto";
+import { ReclaimBetDto } from '@betting.panel/dtos/reclaim.bet.dto';
 
 @ApiTags('betting-panel')
 @Controller('betting-panel')
