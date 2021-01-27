@@ -83,6 +83,7 @@ export class BankingsService {
             default:
                 throw new BadRequestException();
         }
+        // TODO aca falta chekear Role.banker para devolver en establishment name
         const banking: Banking = (await this.bankingModel.find({ [field]: value }).exec()).pop();
         return this.mapBanking(banking);
     }
