@@ -1,6 +1,6 @@
-import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
-import { PlayLimit, PlayLimitSchema } from '@src/modules/database/datamodels/schemas/play.limit';
-import { BlockedNumber, BlockedNumberSchema } from '@src/modules/database/datamodels/schemas/blocked.number';
+import { DataObject } from '@database/datamodels/schemas/data.object';
+import { PlayLimit, PlayLimitSchema } from '@database/datamodels/schemas/play.limit';
+import { BlockedNumber, BlockedNumberSchema } from '@database/datamodels/schemas/blocked.number';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';

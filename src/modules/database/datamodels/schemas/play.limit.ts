@@ -1,7 +1,7 @@
-import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
-import { DominicanLotteryPrizes } from '@src/modules/database/datamodels/enums/dominican.lottery.prizes';
-import { UsLotteryPrizes } from '@src/modules/database/datamodels/enums/us.lottery.prizes';
-import { BrasilPrizes } from '@src/modules/database/datamodels/enums/brasil.prizes';
+import { DataObject } from '@database/datamodels/schemas/data.object';
+import { DominicanLotteryPrizes } from '@database/datamodels/enums/dominican.lottery.prizes';
+import { UsLotteryPrizes } from '@database/datamodels/enums/us.lottery.prizes';
+import { BrasilPrizes } from '@database/datamodels/enums/brasil.prizes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';

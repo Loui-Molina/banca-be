@@ -1,9 +1,9 @@
-import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
-import { PlayTypes } from '@src/modules/database/datamodels/enums/play.types';
+import { DataObject } from '@database/datamodels/schemas/data.object';
+import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { PlayNumbers, PlayNumbersSchema } from '@src/modules/database/datamodels/schemas/play.numbers';
+import { PlayNumbers, PlayNumbersSchema } from '@database/datamodels/schemas/play.numbers';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })

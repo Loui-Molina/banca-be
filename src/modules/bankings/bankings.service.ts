@@ -1,4 +1,4 @@
-import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@database/datamodels/schemas/user';
 import { UsersService } from '@users/users.service';
 import { InjectModel } from '@nestjs/mongoose';
@@ -14,7 +14,7 @@ import { ConsortiumService } from '@consortiums/consortium.service';
 @Injectable()
 export class BankingsService {
     constructor(
-        private usersService: UsersService,
+        private readonly usersService: UsersService,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         private readonly userAuthService: AuthUserService,
         private readonly consortiumService: ConsortiumService,

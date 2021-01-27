@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
+import { DataObject } from '@database/datamodels/schemas/data.object';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 

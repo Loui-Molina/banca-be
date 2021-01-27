@@ -1,14 +1,11 @@
-import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
-import {
-    BankingPreference,
-    BankingPreferenceSchema,
-} from '@src/modules/database/datamodels/schemas/banking.preference';
+import { DataObject } from '@database/datamodels/schemas/data.object';
+import { BankingPreference, BankingPreferenceSchema } from '@database/datamodels/schemas/banking.preference';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { Transaction, TransactionSchema } from '@src/modules/database/datamodels/schemas/transaction';
-import { Bet, BetSchema } from '@src/modules/database/datamodels/schemas/bet';
-import { Lottery, LotterySchema } from '@src/modules/database/datamodels/schemas/lottery';
+import { Transaction, TransactionSchema } from '@database/datamodels/schemas/transaction';
+import { Bet, BetSchema } from '@database/datamodels/schemas/bet';
+import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { ApiProperty } from '@nestjs/swagger';
 import { BankingFeeLimit, BankingFeeLimitSchema } from '@database/datamodels/schemas/banking.fee.limit';
 
