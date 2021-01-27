@@ -20,7 +20,7 @@ import { TransactionType } from '@database/datamodels/enums/transaction.type';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
-import { ClaimBetDto } from '@betting.panel/dtos/claimBetDto';
+import { ClaimBetDto } from '@betting.panel/dtos/claim.bet.dto';
 import { ConstApp } from '@utils/const.app';
 
 @Injectable()
@@ -193,6 +193,7 @@ export class BettingPanelService {
             });
             banking.transactions.push(transaction);
             await banking.save();
+            await session.commitTransaction();
         } catch (error) {
             await session.abortTransaction();
             this.logger.error(error);
@@ -247,6 +248,7 @@ export class BettingPanelService {
             });
             banking.transactions.push(transaction);
             await banking.save();
+            await session.commitTransaction();
         } catch (error) {
             await session.abortTransaction();
             this.logger.error(error);
