@@ -1,20 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DashboardDiagramDto } from '@src/modules/dashboard/dtos/dashboard.dto';
-import { DashboardDiagramNodeDto } from '@src/modules/dashboard/dtos/dashboard.node.dto';
-import { DashboardDiagramLinkDto } from '@src/modules/dashboard/dtos/dashboard.link.dto';
-import { DashboardDiagramClusterDto } from '@src/modules/dashboard/dtos/dashboard.cluster.dto';
+import { DashboardDiagramDto } from '@dashboard/dtos/dashboard.dto';
+import { DashboardDiagramNodeDto } from '@dashboard/dtos/dashboard.node.dto';
+import { DashboardDiagramLinkDto } from '@dashboard/dtos/dashboard.link.dto';
+import { DashboardDiagramClusterDto } from '@dashboard/dtos/dashboard.cluster.dto';
 import { Consortium } from '@database/datamodels/schemas/consortium';
 import { Banking } from '@database/datamodels/schemas/banking';
-import { DashboardConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.consortium.dto';
-import { DashboardBankingDto } from '@src/modules/dashboard/dtos/dashboard.banking.dto';
+import { DashboardConsortiumDto } from '@dashboard/dtos/dashboard.consortium.dto';
+import { DashboardBankingDto } from '@dashboard/dtos/dashboard.banking.dto';
 import { User } from '@database/datamodels/schemas/user';
 import { Role } from '@database/datamodels/enums/role';
-import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
-import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
-import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
-import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto';
+import { DashboardGraphConsortiumDto } from '@dashboard/dtos/dashboard.graph.consortium.dto';
+import { DashboardGraphBankingDto } from '@dashboard/dtos/dashboard.graph.banking.dto';
+import { DashboardWidgetsDto } from '@dashboard/dtos/dashboard.widgets.dto';
+import { DashboardGraphBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.balance.banking.dto';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 
 @Injectable()

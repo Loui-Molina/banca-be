@@ -15,9 +15,7 @@ export class ConsortiumService {
     constructor(
         @InjectModel(Consortium.name) private consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
-        @Inject(forwardRef(() => AuthUserService))
         private readonly userAuthService: AuthUserService,
-        @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,
     ) {}
 
