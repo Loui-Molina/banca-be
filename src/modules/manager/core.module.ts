@@ -8,6 +8,7 @@ import { AdminLotteryModule } from '@lotteries/admin/admin.lottery.module';
 import { ConsortiumLotteryModule } from '@lotteries/consortium/consortium.lottery.module';
 import { BettingPanelModule } from '@betting.panel/betting.panel.module';
 import { BankingLotteryModule } from '@lotteries/banking/banking.lottery.module';
+import { LotteriesModule } from '../lotteries/lotteries.module';
 
 @Module({
     imports: [
@@ -17,9 +18,7 @@ import { BankingLotteryModule } from '@lotteries/banking/banking.lottery.module'
         TransactionsModule,
         DashboardModule,
         BankingsModule,
-        AdminLotteryModule,
-        ConsortiumLotteryModule,
-        BankingLotteryModule,
+        LotteriesModule,
     ],
     controllers: [],
     providers: [],
@@ -30,9 +29,7 @@ import { BankingLotteryModule } from '@lotteries/banking/banking.lottery.module'
         TransactionsModule,
         DashboardModule,
         BankingsModule,
-        AdminLotteryModule,
-        ConsortiumLotteryModule,
-        BankingLotteryModule,
+        LotteriesModule,
     ],
 })
-export class ManagerModule {}
+export class CoreModule {}

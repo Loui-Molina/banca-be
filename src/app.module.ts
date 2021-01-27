@@ -4,7 +4,7 @@ import { AuthModule } from '@auth/auth.module';
 import { UsersModule } from '@users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
-import { ManagerModule } from '@src/modules/manager/manager.module';
+import { CoreModule } from '@src/modules/manager/core.module';
 import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
 import { DatabaseModule } from '@database/database.module';
 import { CommonModule } from '@common.module/common.module';
@@ -17,7 +17,7 @@ import { CommonModule } from '@common.module/common.module';
         }),
         DatabaseModule,
         UsersModule,
-        ManagerModule,
+        CoreModule,
         HealthCheckModule,
         AuthModule,
         AuthUserModule,
@@ -26,6 +26,6 @@ import { CommonModule } from '@common.module/common.module';
     ],
     controllers: [],
     providers: [],
-    exports: [UsersModule, UtilsModule, AuthModule, AuthUserModule,DatabaseModule],
+    exports: [UsersModule, CoreModule, UtilsModule, AuthModule, AuthUserModule,DatabaseModule],
 })
 export class AppModule {}
