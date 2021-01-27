@@ -80,6 +80,9 @@ export class BankingsService {
                 const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
                 filter = { [field]: value, consortiumId: consortium._id };
                 break;
+            case Role.banker:
+                filter = { [field]: value, ownerUserId: loggedUser._id };
+                break;
             default:
                 throw new BadRequestException();
         }
@@ -226,6 +229,9 @@ export class BankingsService {
                 // eslint-disable-next-line no-case-declarations
                 const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
                 filter = { [field]: value, consortiumId: consortium._id };
+                break;
+            case Role.banker:
+                filter = { [field]: value, ownerUserId: loggedUser._id };
                 break;
             default:
                 throw new BadRequestException();

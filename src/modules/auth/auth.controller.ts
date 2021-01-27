@@ -61,6 +61,10 @@ export class AuthController {
     }
 
     @Post('/sign-in')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: ResponseSignInDto,
+    })
     async singIn(
         @Ip() userIp: string,
         @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
