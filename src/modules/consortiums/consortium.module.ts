@@ -10,7 +10,7 @@ import { ConstApp } from '@utils/const.app';
 
 @Module({
     imports: [
-        forwardRef(() => UsersModule),
+        UsersModule,
         AuthUserModule,
         MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),

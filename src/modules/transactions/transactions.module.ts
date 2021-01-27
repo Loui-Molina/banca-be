@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TransactionService } from '@src/modules/transactions/transaction.service';
-import { TransactionController } from '@src/modules/transactions/transaction.controller';
+import { TransactionService } from '@src/modules/transactions/transactions.service';
+import { TransactionController } from '@src/modules/transactions/transactions.controller';
 import { Transaction, TransactionSchema } from '@src/modules/database/datamodels/schemas/transaction';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
@@ -19,4 +19,4 @@ import { ConstApp } from '@utils/const.app';
     controllers: [TransactionController],
     exports: [TransactionService, MongooseModule],
 })
-export class TransactionModule {}
+export class TransactionsModule {}

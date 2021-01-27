@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { TransactionService } from '@src/modules/transactions/transaction.service';
+import { TransactionService } from '@src/modules/transactions/transactions.service';
 import { CreateTransactionDto } from '@src/modules/transactions/dtos/create.transaction.dto';
 import { ConstApp } from '@utils/const.app';
 import { Transaction } from '@src/modules/database/datamodels/schemas/transaction';

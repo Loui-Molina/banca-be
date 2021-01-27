@@ -16,8 +16,8 @@ import { CommonModule } from '@common.module/common.module';
             envFilePath: ['.env'],
         }),
         DatabaseModule,
-        ManagerModule,
         UsersModule,
+        ManagerModule,
         HealthCheckModule,
         AuthModule,
         AuthUserModule,
@@ -26,6 +26,6 @@ import { CommonModule } from '@common.module/common.module';
     ],
     controllers: [],
     providers: [],
-    exports: [UsersModule, UtilsModule, AuthModule, AuthUserModule],
+    exports: [UsersModule, UtilsModule, AuthModule, AuthUserModule,DatabaseModule],
 })
 export class AppModule {}
