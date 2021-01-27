@@ -23,6 +23,6 @@ import { CommonModule } from '@common.module/common.module';
     ],
     controllers: [],
     providers: [],
-    exports: [CoreModule, UtilsModule, AuthModule,DatabaseModule],
+    exports: [CoreModule, UtilsModule, AuthModule, DatabaseModule],
 })
 export class AppModule {}
