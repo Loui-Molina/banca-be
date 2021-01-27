@@ -13,6 +13,6 @@ export class AnyExceptionFilter implements ExceptionFilter {
             message: error.message,
             statusCode: status,
         });
-        this.logger.error(JSON.stringify(response) + error.stack);
+        this.logger.error(response + error.stack);
     }
 }
