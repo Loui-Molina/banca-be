@@ -21,8 +21,8 @@ export class ConstApp {
     //ERROR MESSAGES
     public static readonly USERNAME_EXISTS_ERROR = 'Username already exists';
     public static readonly INVALID_CREDENTIALS_ERROR = 'Invalid credentials';
-    public static readonly CAN_NOT_CANCEL_TICKET = 'Can not cancel ticket';
-    public static readonly CAN_NOT_CLAIM_TICKET = 'Can not claim ticket';
+    public static readonly CANNOT_CANCEL_TICKET = 'Cannot cancel ticket';
+    public static readonly CANNOT_CLAIM_TICKET = 'Cannot claim ticket';
     public static readonly REFRESH_TOKEN_ERROR = 'Error to create refresh token';
     public static readonly COULD_NOT_LOG_OUT_ERROR = "Couldn't log out";
     public static readonly COULD_NOT_EMPTY_THE_TOKEN = "Couldn't empty token";

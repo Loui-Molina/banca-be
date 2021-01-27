@@ -165,7 +165,7 @@ export class BettingPanelService {
             const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
             const bet = banking.bets.filter((bet) => bet._id.toString() === dto._id.toString()).pop();
             if (bet.betStatus !== BetStatus.pending || !(await this.canCancelTicket(bet))) {
-                throw new UnauthorizedException(ConstApp.CAN_NOT_CANCEL_TICKET);
+                throw new UnauthorizedException(ConstApp.CANNOT_CANCEL_TICKET);
             }
             let total = 0;
             banking.bets.map((bet: Bet) => {
@@ -217,7 +217,7 @@ export class BettingPanelService {
             const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
             const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
             if (bet.betStatus !== BetStatus.winner || !(await this.canClaimTicket(bet))) {
-                throw new UnauthorizedException(ConstApp.CAN_NOT_CLAIM_TICKET);
+                throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);
             }
             let betFounded: Bet = null;
             let total = 0;
