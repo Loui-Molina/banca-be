@@ -22,12 +22,12 @@ Configuracion del .env para que funcione la app :
 
 # App Configuration
 
-APP_SWAGGER_SETUP=api
-APP_GLOBAL_PREFIX=api
-APP_TITLE=Betting
-APP_DESCRIPTION=Betting for Republic
-APP_VERSION=1.0.2
-APP_TAG=Bet
+APP_SWAGGER_SETUP=api  
+APP_GLOBAL_PREFIX=api  
+APP_TITLE=Betting  
+APP_DESCRIPTION=B teaing  
+APP_VERSION=1.0.3  
+APP_TAG=Bet  
 
 #Token
 
@@ -37,4 +37,4 @@ TOKEN_EXPIRES=300s
 # Database connections
 
 userDB=mongodb://localhost:27017/users
-bancaDB=mongodb://localhost:27017/banca
+bankingDB=mongodb://localhost:27017/banking

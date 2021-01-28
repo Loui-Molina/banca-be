@@ -1,11 +1,20 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from '@src/app.module';
+import { AnyExceptionFilter } from '@common/filters/any.exception.filter';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.enableCors();
     app.setGlobalPrefix(app.get('ConfigService').get('APP_GLOBAL_PREFIX'));
+    app.useGlobalFilters(new AnyExceptionFilter());
+    app.useGlobalPipes(
+        new ValidationPipe({
+            forbidNonWhitelisted: true,
+            whitelist: true,
+        }),
+    );
     const options = new DocumentBuilder()
         .setTitle(app.get('ConfigService').get('APP_TITLE'))
         .setDescription(app.get('ConfigService').get('APP_DESCRIPTION'))
@@ -17,4 +26,5 @@ async function bootstrap() {
 
     await app.listen(3000);
 }
+// noinspection JSIgnoredPromiseFromCall
 bootstrap();

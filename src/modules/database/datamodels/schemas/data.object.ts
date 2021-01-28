@@ -1,5 +1,8 @@
+import { ObjectId } from 'mongoose';
+
 export interface DataObject {
-    creationUserId: string;
-    modificationUserId: string;
+    creationUserId: ObjectId;
+    modificationUserId: ObjectId;
     deletionDate?: Date;
+    //TODO ADD SOMETHING GONZA SAID BUT I DONT REMEMBER
 }

@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "api": "curl.exe --output open-api.json --url http://localhost:3000/api-json && openapi-generator-cli generate && del open-api.json",
+    "api": "curl.exe --output open-api.json --url http://localhost:3000/api-json && rimraf ../banca-fe/local-packages && openapi-generator-cli generate && del open-api.json",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -20,10 +20,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "apiBat": "openApiPackage.bat"
+    "apiBat": "rimraf ../banca-fe/local-packages && openApiPackage.bat",
+    "fixMeAndStart": "npm run prebuild && npm cache clean --force && npm install && npm run start:dev"
   },
   "dependencies": {
-    "@nestjs/common": "^7.6.4",
+    "@nestjs/common": "^7.6.5",
     "@nestjs/config": "^0.6.1",
     "@nestjs/core": "^7.6.4",
     "@nestjs/jwt": "^7.2.0",
@@ -37,7 +38,8 @@
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
     "fastify-swagger": "^3.5.0",
-    "mongoose": "^5.11.8",
+    "jwt-decode": "^3.1.2",
+    "mongoose": "^5.11.12",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

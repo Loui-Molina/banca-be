@@ -1,21 +1,24 @@
 import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { PlayTypes } from '@src/modules/database/datamodels/enums/play.types';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import * as mongoose from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 import { PlayNumbers, PlayNumbersSchema } from '@src/modules/database/datamodels/schemas/play.numbers';
+import { ApiProperty } from '@nestjs/swagger';
 
-export type PlayDocument = Play & Document;
+@Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
+export class Play extends Document implements DataObject {
+    @ApiProperty({ type: String, enum: PlayTypes }) @Prop({ required: true, type: String }) playType?: PlayTypes;
+    @ApiProperty({ type: Number }) @Prop({ required: true }) amount?: number;
+    @ApiProperty({ type: PlayNumbers })
+    @Prop({ required: true, type: PlayNumbersSchema })
+    playNumbers: PlayNumbers;
+    @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) lotteryId?: ObjectId;
 
-@Schema()
-export class Play implements DataObject {
-    @Prop({ required: true, type: String }) playType?: PlayTypes;
-    @Prop({ required: true }) amount?: number;
-    @Prop({ required: true, type: PlayNumbersSchema }) playNumbers: PlayNumbers;
-
-    // Data object members
-    @Prop({ required: true, immutable: true }) creationUserId: string;
+    /** Data object members*/
+    @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId }) creationUserId: ObjectId;
     @Prop() deletionDate?: Date;
-    @Prop({ required: true }) modificationUserId: string;
+    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId }) modificationUserId: ObjectId;
 }
 
-export const PlaySchema = SchemaFactory.createForClass(Play).set('timestamps', true);
+export const PlaySchema = SchemaFactory.createForClass(Play);

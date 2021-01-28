@@ -1,20 +1,14 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserController } from '@users/user.controller';
-import { UserService } from '@users/user.service';
-import { UserAuthService } from '@users/user.auth.service';
-import {AuthService} from "@auth/auth.service";
-import {User, UserSchema} from "@src/modules/database/datamodels/schemas/user";
-import {AuthModule} from "@auth/auth.module";
-import {ConsortiumModule} from "@src/modules/consortiums/consortium.module";
+import { User, UserSchema } from '@database/datamodels/schemas/user';
+import { ConstApp } from '@utils/const.app';
+import { UsersService } from '@users/users.service';
+import { UsersController } from '@users/users.controller';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'), forwardRef(() => AuthModule),
-        ConsortiumModule
-    ],
-    providers: [UserService, AuthService, UserAuthService],
-    controllers: [UserController],
-    exports: [UserService, MongooseModule, UserAuthService],
+    imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], ConstApp.USER)],
+    providers: [UsersService],
+    controllers: [UsersController],
+    exports: [UsersService, MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], ConstApp.USER)],
 })
 export class UsersModule {}

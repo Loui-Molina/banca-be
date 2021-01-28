@@ -1,16 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import {AuthCredentialsDto} from "@auth/dtos/auth.credentials.dto";
+import { Banking } from '@database/datamodels/schemas/banking';
 
 export class ConsortiumDto {
-    @ApiProperty() creationUserId: ObjectId;
-    @ApiProperty() modificationUserId: ObjectId;
-    @ApiProperty() user: AuthCredentialsDto;
     @ApiProperty() ownerName: string;
+    @ApiProperty() ownerUsername: string;
+    @ApiProperty() ownerId: ObjectId;
     @ApiProperty() _id: ObjectId;
     @ApiProperty() name: string;
     @ApiProperty() createdAt: Date;
     @ApiProperty() status: boolean;
     @ApiProperty() firstTransactionDate: Date;
-
+    @ApiProperty() bankings?: Banking[];
 }

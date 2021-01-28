@@ -5,7 +5,6 @@ export class DashboardDiagramClusterDto {
     @ApiProperty() label: string;
     @ApiProperty() childNodeIds: string[];
 
-
     constructor(id: string, label: string, childNodeIds: string[]) {
         this.id = id;
         this.label = label;

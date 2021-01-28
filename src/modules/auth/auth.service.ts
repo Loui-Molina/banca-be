@@ -1,39 +1,78 @@
-import {Injectable, UnauthorizedException, UseGuards} from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ObjectId } from 'mongoose';
 import { ResponsePayload } from '@users/dtos/response.payload.dto';
-import { UserAuthService } from '@users/user.auth.service';
+import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConstApp } from '@utils/const.app';
-import { AuthCredentialsDto } from '@auth/dtos/auth.credentials.dto';
 import { JwtPayload } from '@auth/jwt.payload.interface';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { Role } from '@database/datamodels/enums/role';
-import {User, UserDocument} from "@src/modules/database/datamodels/schemas/user";
-import {UserService} from "@users/user.service";
-import {InjectModel} from "@nestjs/mongoose";
-import {Model} from "mongoose";
+import { User } from '@database/datamodels/schemas/user';
+import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
+import { ConfigService } from '@nestjs/config';
+import { TokenService } from '@auth/token.service';
+import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 
 @Injectable()
 export class AuthService {
-    constructor(private userAuthService: UserAuthService, private jwtService: JwtService, @InjectModel(User.name) private userModel: Model<UserDocument>) {}
+    private logger: Logger = new Logger(AuthService.name);
 
-    async singUp(authCredentialsDto: AuthCredentialsDto): Promise<ResponseDto> {
-        return this.userAuthService.singUp(authCredentialsDto);
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly userAuthService: AuthUserService,
+        private readonly jwtService: JwtService,
+        private readonly tokenService: TokenService,
+    ) {}
+
+    async signUp(signUpCredentialsDto: SignUpCredentialsDto, user: User): Promise<ResponseDto> {
+        return this.userAuthService.signUp(signUpCredentialsDto, user).then((createdUser) => createdUser.response);
     }
 
-    async singIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
+    async signIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
         let responsePayload: ResponsePayload = new ResponsePayload();
-        responsePayload = await this.userAuthService.validateUserPassword(authCredentialsDto);
-        if (!responsePayload.username) {
+        responsePayload = await this.userAuthService.validateUserPassword(signInCredentialsDto);
+        if (!responsePayload.userId) {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
         }
-        const username: string = responsePayload.username;
-        const role: Role = responsePayload.role;
-        const payload: JwtPayload = { username, role };
-        const accessToken = await this.jwtService.signAsync(payload);
-        return { accessToken };
+        return await this.getToken(responsePayload, userIp, false);
     }
 
-    async getLoggedUser(user: UserDocument){
-        return await this.userModel.findById(user.id).exec();
+    async getLoggedUser(user: User) {
+        return await this.userAuthService.getUser(user._id);
+    }
+
+    async getToken(responsePayload: ResponsePayload, userIp: string, logged: boolean): Promise<ResponseSignInDto> {
+        const responseSignInDto: ResponseSignInDto = new ResponseSignInDto();
+        const userId: ObjectId = responsePayload.userId;
+        const role: Role = responsePayload.role;
+        const payload: JwtPayload = { userId, role };
+        if (!logged) {
+            const refreshToken = await this.tokenService.saveRefreshTokenGenerated(userIp, userId);
+            responseSignInDto.refreshToken = await this.jwtService.signAsync(refreshToken, {
+                expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRES'),
+                secret: this.configService.get<string>('REFRESH_TOKEN_SECRET_KEY'),
+            });
+        }
+        responseSignInDto.accessToken = await this.jwtService.signAsync(payload, {
+            expiresIn: this.configService.get<string>('TOKEN_EXPIRES'),
+            secret: this.configService.get<string>('TOKEN_SECRET_KEY'),
+        });
+        responseSignInDto.expiresIn = this.configService.get<string>('TOKEN_EXPIRES');
+        return responseSignInDto;
+    }
+
+    async logOut(ipAdress: string, user: User): Promise<ResponseDto> {
+        return this.tokenService.deleteRefreshToken(ipAdress, user);
+    }
+
+    async changePassword(
+        ipAddress: string,
+        changePasswordDto: ChangePasswordDto,
+        user: User,
+        remember: boolean,
+    ): Promise<ResponseDto> {
+        return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress, remember);
     }
 }
