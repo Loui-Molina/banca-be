@@ -64,12 +64,12 @@ export class TransactionService {
             destinationObject: dto.destinationObject,
             originId: dto.originId,
             destinationId: dto.destinationId,
-            description: 'Transaccion entre banca y consorcio',
             amount: dto.amount * -1,
             creationUserId: loggedUser._id,
             modificationUserId: loggedUser._id,
             lastBalance: originBalance,
             actualBalance: originBalance + dto.amount * -1,
+            description: dto.description,
         });
         const transactionDestination = new this.transactionModel({
             type: TransactionType.credit,
@@ -77,12 +77,12 @@ export class TransactionService {
             destinationObject: dto.destinationObject,
             originId: dto.originId,
             destinationId: dto.destinationId,
-            description: 'Transaccion entre banca y consorcio',
             amount: dto.amount,
             creationUserId: loggedUser._id,
             modificationUserId: loggedUser._id,
             lastBalance: destinationBalance,
             actualBalance: destinationBalance + dto.amount,
+            description: dto.description,
         });
         originObject.transactions.push(transactionOrigin);
         destinationObject.transactions.push(transactionDestination);
@@ -139,6 +139,7 @@ export class TransactionService {
             modificationUserId: loggedUser._id,
             lastBalance: originBalance,
             actualBalance: originBalance + dto.amount * -1,
+            description: dto.description,
         });
         const transactionDestination = new this.transactionModel({
             type: TransactionType.credit,
@@ -151,6 +152,7 @@ export class TransactionService {
             modificationUserId: loggedUser._id,
             lastBalance: destinationBalance,
             actualBalance: destinationBalance + dto.amount,
+            description: dto.description,
         });
         originObject.transactions.push(transactionOrigin);
         destinationObject.transactions.push(transactionDestination);
@@ -166,85 +168,23 @@ export class TransactionService {
     private async getTransactionByAdmin(): Promise<Array<TransactionDto>> {
         const consortiums: Consortium[] = await this.consortiumModel.find().exec();
         const bankings: Banking[] = await this.bankingModel.find().exec();
-        const transactionsDto: TransactionDto[] = [];
-        consortiums.map((consortium: Consortium) => {
-            consortium.transactions.map((transaction) => {
-                let originName;
-                let destinationName;
-                switch (consortium._id.toString()) {
-                    case transaction.originId.toString():
-                        //Consorcio es origen
-                        originName = consortium.name;
-                        destinationName = bankings
-                            .filter((banking) => banking._id.toString() === transaction.destinationId.toString())
-                            .pop().name;
-                        break;
-                    case transaction.destinationId.toString():
-                        //Consorcio es destino
-                        destinationName = consortium.name;
-                        originName = bankings
-                            .filter((banking) => banking._id.toString() === transaction.originId.toString())
-                            .pop().name;
-                        break;
-                }
-                transactionsDto.push({
-                    _id: transaction._id,
-                    type: transaction.type,
-                    amount: transaction.amount,
-                    lastBalance: transaction.lastBalance,
-                    actualBalance: transaction.actualBalance,
-                    originId: transaction.originId,
-                    destinationId: transaction.destinationId,
-                    originObject: transaction.originObject,
-                    destinationObject: transaction.destinationObject,
-                    originName: originName,
-                    destinationName: destinationName,
-                    createdAt: transaction.createdAt,
-                });
-            });
-        });
-        bankings.map((banking: Banking) => {
-            banking.transactions.map((transaction) => {
-                let originName;
-                let destinationName;
-                switch (banking._id.toString()) {
-                    case transaction.originId.toString():
-                        //Consorcio es origen
-                        originName = banking.name;
-                        destinationName = consortiums
-                            .filter((consortium) => consortium._id.toString() === transaction.destinationId.toString())
-                            .pop().name;
-                        break;
-                    case transaction.destinationId.toString():
-                        //Consorcio es destino
-                        destinationName = banking.name;
-                        originName = consortiums
-                            .filter((consortium) => consortium._id.toString() === transaction.originId.toString())
-                            .pop().name;
-                        break;
-                }
-                transactionsDto.push({
-                    _id: transaction._id,
-                    type: transaction.type,
-                    amount: transaction.amount,
-                    lastBalance: transaction.lastBalance,
-                    actualBalance: transaction.actualBalance,
-                    originId: transaction.originId,
-                    destinationId: transaction.destinationId,
-                    originObject: transaction.originObject,
-                    destinationObject: transaction.destinationObject,
-                    originName: originName,
-                    destinationName: destinationName,
-                    createdAt: transaction.createdAt,
-                });
-            });
-        });
-        transactionsDto.sort(function (a, b) {
+        let results: TransactionDto[] = [];
+        for (const consortium of consortiums) {
+            results = results.concat(
+                await Promise.all(consortium.transactions.map((transaction) => this.mapToDto(transaction))),
+            );
+        }
+        for (const banking of bankings) {
+            results = results.concat(
+                await Promise.all(banking.transactions.map((transaction) => this.mapToDto(transaction))),
+            );
+        }
+        results.sort(function (a, b) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
-        return transactionsDto;
+        return results;
     }
 
     private async getTransactionByConsortium(loggedUser: User): Promise<Array<TransactionDto>> {
@@ -254,79 +194,20 @@ export class TransactionService {
         }
         const consortium = consortiums.pop();
         const bankings: Banking[] = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
-        const transactionsDto: TransactionDto[] = [];
-        consortium.transactions.map((transaction) => {
-            let originName;
-            let destinationName;
-            switch (consortium._id.toString()) {
-                case transaction.originId.toString():
-                    //Consorcio es origen
-                    originName = consortium.name;
-                    destinationName = bankings
-                        .filter((banking) => banking._id.toString() === transaction.destinationId.toString())
-                        .pop().name;
-                    break;
-                case transaction.destinationId.toString():
-                    //Consorcio es destino
-                    destinationName = consortium.name;
-                    originName = bankings
-                        .filter((banking) => banking._id.toString() === transaction.originId.toString())
-                        .pop().name;
-                    break;
-            }
-            transactionsDto.push({
-                _id: transaction._id,
-                type: transaction.type,
-                amount: transaction.amount,
-                lastBalance: transaction.lastBalance,
-                actualBalance: transaction.actualBalance,
-                originId: transaction.originId,
-                destinationId: transaction.destinationId,
-                originObject: transaction.originObject,
-                destinationObject: transaction.destinationObject,
-                originName: originName,
-                destinationName: destinationName,
-                createdAt: transaction.createdAt,
-            });
-        });
-        bankings.map((banking: Banking) => {
-            banking.transactions.map((transaction) => {
-                let originName;
-                let destinationName;
-                switch (banking._id.toString()) {
-                    case transaction.originId.toString():
-                        //Consorcio es origen
-                        originName = banking.name;
-                        destinationName = consortium.name;
-                        break;
-                    case transaction.destinationId.toString():
-                        //Consorcio es destino
-                        destinationName = banking.name;
-                        originName = consortium.name;
-                        break;
-                }
-                transactionsDto.push({
-                    _id: transaction._id,
-                    type: transaction.type,
-                    amount: transaction.amount,
-                    lastBalance: transaction.lastBalance,
-                    actualBalance: transaction.actualBalance,
-                    originId: transaction.originId,
-                    destinationId: transaction.destinationId,
-                    originObject: transaction.originObject,
-                    destinationObject: transaction.destinationObject,
-                    originName: originName,
-                    destinationName: destinationName,
-                    createdAt: transaction.createdAt,
-                });
-            });
-        });
-        transactionsDto.sort(function (a, b) {
+        let results: TransactionDto[] = await Promise.all(
+            consortium.transactions.map((transaction) => this.mapToDto(transaction)),
+        );
+        for (const banking of bankings) {
+            results = results.concat(
+                await Promise.all(banking.transactions.map((transaction) => this.mapToDto(transaction))),
+            );
+        }
+        results.sort(function (a, b) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
-        return transactionsDto;
+        return results;
     }
 
     private async getTransactionByBanking(loggedUser: User): Promise<Array<TransactionDto>> {
@@ -335,43 +216,63 @@ export class TransactionService {
             throw new BadRequestException();
         }
         const banking = bankings.pop();
-        const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
-        const transactionsDto: TransactionDto[] = [];
-        banking.transactions.map((transaction) => {
-            let originName;
-            let destinationName;
-            switch (banking._id.toString()) {
-                case transaction.originId.toString():
-                    //Consorcio es origen
-                    originName = banking.name;
-                    destinationName = consortium.name;
-                    break;
-                case transaction.destinationId.toString():
-                    //Consorcio es destino
-                    destinationName = banking.name;
-                    originName = consortium.name;
-                    break;
-            }
-            transactionsDto.push({
-                _id: transaction._id,
-                type: transaction.type,
-                amount: transaction.amount,
-                lastBalance: transaction.lastBalance,
-                actualBalance: transaction.actualBalance,
-                originId: transaction.originId,
-                destinationId: transaction.destinationId,
-                originObject: transaction.originObject,
-                destinationObject: transaction.destinationObject,
-                originName: originName,
-                destinationName: destinationName,
-                createdAt: transaction.createdAt,
-            });
-        });
-        transactionsDto.sort(function (a, b) {
+        const results: TransactionDto[] = await Promise.all(
+            banking.transactions.map((transaction) => this.mapToDto(transaction)),
+        );
+        results.sort(function (a, b) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
-        return transactionsDto;
+        return results;
+    }
+
+    private async mapToDto(transaction: Transaction): Promise<TransactionDto> {
+        const {
+            _id,
+            type,
+            amount,
+            lastBalance,
+            actualBalance,
+            originId,
+            destinationId,
+            originObject,
+            destinationObject,
+            createdAt,
+            description,
+        } = transaction;
+        let originName: string;
+        let destinationName: string;
+        if (transaction.originObject === TransactionObjects.consortium) {
+            const consortium = await this.consortiumModel.findById(transaction.originId).exec();
+            originName = consortium.name;
+        }
+        if (transaction.destinationObject === TransactionObjects.consortium) {
+            const consortium = await this.consortiumModel.findById(transaction.destinationId).exec();
+            destinationName = consortium.name;
+        }
+        if (transaction.originObject === TransactionObjects.banking) {
+            const banking = await this.bankingModel.findById(transaction.originId).exec();
+            originName = banking.name;
+        }
+        if (transaction.destinationObject === TransactionObjects.banking) {
+            const banking = await this.bankingModel.findById(transaction.destinationId).exec();
+            destinationName = banking.name;
+        }
+        return {
+            _id: _id,
+            type: type,
+            amount: amount,
+            lastBalance: lastBalance,
+            actualBalance: actualBalance,
+            originId: originId,
+            destinationId: destinationId,
+            originObject: originObject,
+            destinationObject: destinationObject,
+            originName: originName,
+            destinationName: destinationName,
+            createdAt: createdAt,
+            description: description,
+        };
     }
 }

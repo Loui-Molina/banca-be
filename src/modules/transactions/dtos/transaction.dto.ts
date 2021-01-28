@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { TransactionType } from '@database/datamodels/enums/transaction.type';
 import { ObjectId } from 'mongoose';
 import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
+import { Prop } from '@nestjs/mongoose';
 
 export class TransactionDto {
     @ApiProperty({ required: false }) _id?: ObjectId;
@@ -16,4 +17,5 @@ export class TransactionDto {
     @ApiProperty() originName: string;
     @ApiProperty({ type: String, enum: TransactionObjects }) destinationObject: TransactionObjects;
     @ApiProperty() destinationName: string;
+    @ApiProperty() description?: string;
 }

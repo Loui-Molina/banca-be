@@ -6,12 +6,16 @@ import { ResultsService } from '@results/results.service';
 import { ResultsController } from '@results/results.controller';
 import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { ConstApp } from '@utils/const.app';
+import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
+import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: Lottery.name, schema: LotterySchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Result.name, schema: ResultSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Draw.name, schema: DrawSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], ConstApp.BANKING),
     ],
     providers: [ResultsService],
     controllers: [ResultsController],
