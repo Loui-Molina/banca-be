@@ -14,7 +14,7 @@ export class Bet extends Document implements DataObject {
     @ApiProperty({ type: String }) @Prop({ required: true, immutable: true }) sn: string;
     @ApiProperty({ type: String, enum: BetStatus }) @Prop({ required: true, type: String }) betStatus?: BetStatus;
     @ApiProperty({ type: Number }) @Prop({ required: false }) amountWin?: number = 0;
-
+    @ApiProperty({ type: Date }) @Prop({ required: false }) claimDate?: Date;
     /** Data object members*/
     @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId })
     creationUserId: ObjectId;

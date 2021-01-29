@@ -43,20 +43,18 @@ export class BettingPanelService {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
         const now = new Date();
         now.setHours(0, 0, 0, 0);
+        const betsClaimedToday = banking.bets.filter((bet) => {
+            const a = new Date(bet.claimDate);
+            a.setHours(0, 0, 0, 0);
+            return now.getTime() === a.getTime();
+        });
         const bets = banking.bets.filter((bet) => {
             const a = new Date(bet.date);
             a.setHours(0, 0, 0, 0);
             return now.getTime() === a.getTime();
         });
         const pendingPayments: number = bets.reduce(function (acc, bet) {
-            return (
-                acc +
-                (bet.betStatus === BetStatus.winner
-                    ? bet.plays.reduce(function (acc, play) {
-                          return acc + play.amount;
-                      }, 0)
-                    : 0)
-            );
+            return acc + (bet.betStatus === BetStatus.winner ? bet.amountWin : 0);
         }, 0);
         const totalSells: number = bets.reduce(function (acc, bet) {
             return (
@@ -85,7 +83,7 @@ export class BettingPanelService {
             pendingBets: bets.filter((bet) => bet.betStatus === BetStatus.pending).length,
             winnerBets: bets.filter((bet) => bet.betStatus === BetStatus.winner).length,
             loserBets: bets.filter((bet) => bet.betStatus === BetStatus.loser).length,
-            claimedBets: bets.filter((bet) => bet.betStatus === BetStatus.claimed).length,
+            claimedBets: betsClaimedToday.length,
             totalBets: bets.length,
             totalSells: totalSells,
             totalAwards: totalAwards,
@@ -219,32 +217,28 @@ export class BettingPanelService {
             if (bet.betStatus !== BetStatus.winner || !(await this.canClaimTicket(bet))) {
                 throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);
             }
-            let betFounded: Bet = null;
-            let total = 0;
+            let amountToPay = 0;
             banking.bets.map((bet: Bet) => {
                 if (bet.sn === dto.sn) {
                     bet.betStatus = BetStatus.claimed;
+                    bet.claimDate = new Date();
                     betFounded = bet;
-                    bet.plays.map((play: Play) => {
-                        total += play.amount;
-                    });
+                    amountToPay += bet.amountWin;
                 }
             });
             const balance = await banking.calculateBalance();
-            // TODO calcular cuanto gano la persona y hacer bien la transferencia
-            // con el monto correspondiente
             const transaction = new this.transactionModel({
                 type: TransactionType.debit,
                 originId: null,
                 originObject: TransactionObjects.unknown,
                 destinationId: banking._id,
                 destinationObject: TransactionObjects.banking,
-                amount: total * -1,
+                amount: amountToPay * -1,
                 description: 'A client reclaimed a bet',
                 creationUserId: loggedUser._id,
                 modificationUserId: loggedUser._id,
                 lastBalance: balance,
-                actualBalance: balance + total * -1,
+                actualBalance: balance + amountToPay * -1,
             });
             banking.transactions.push(transaction);
             await banking.save();
@@ -253,7 +247,7 @@ export class BettingPanelService {
             await session.abortTransaction();
             this.logger.error(error);
             if (error.code === 11000) {
-                throw new ConflictException(ConstApp.USERNAME_EXISTS_ERROR);
+                throw new ConflictException(ConstApp.CANNOT_CLAIM_TICKET);
             } else {
                 throw new InternalServerErrorException();
             }
@@ -268,13 +262,15 @@ export class BettingPanelService {
     }
 
     async mapToDto(bet: Bet): Promise<BetDto> {
-        const { _id, plays, date, sn, betStatus } = bet;
+        const { _id, plays, date, sn, betStatus, amountWin, claimDate } = bet;
         return {
             _id,
             plays,
             date,
             sn,
             betStatus,
+            amountWin,
+            claimDate,
         };
     }
 

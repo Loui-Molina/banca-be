@@ -118,14 +118,13 @@ export class ResultsService {
         const bankings = await this.bankingModel.find().exec();
         for (const banking of bankings) {
             const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
-            const configs = consortium.consortiumLotteries.filter(
+            const config = consortium.consortiumLotteries.find(
                 (consortiumLottery) => consortiumLottery.lotteryId.toString() === lottery._id.toString(),
             );
-            if (configs.length === 0) {
+            if (!config) {
                 // El consorcio no configuro esta loteria para esta banca
                 continue;
             }
-            const config = configs.pop();
             const bets = banking.bets.filter((bet) => {
                 const month = `${bet.date.getMonth() + 1}`.padStart(2, '0');
                 const day = `${bet.date.getDate()}`.padStart(2, '0');
@@ -234,14 +233,14 @@ export class ResultsService {
         config: ConsortiumLottery,
         type: DominicanLotteryPrizes | UsLotteryPrizes | BrasilPrizes,
     ): Promise<number> {
-        const limits = config.prizeLimits.filter((value) => value.playType === type);
-        if (limits.length === 0) {
+        const limit = config.prizeLimits.find((value) => value.playType === type);
+        if (!limit) {
             return 0;
         }
-        if (limits.pop().status === false) {
+        if (limit.status === false) {
             return 0;
         }
-        return limits.pop().paymentAmount;
+        return limit.paymentAmount;
     }
 
     async get(id: string): Promise<Result> {
