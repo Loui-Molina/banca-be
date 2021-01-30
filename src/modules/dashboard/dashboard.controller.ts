@@ -114,6 +114,16 @@ export class DashboardController {
         return this.dashboardService.getBankingPlayedNumbersStatistics(loggedUser);
     }
 
+    @Get('consortium-played-numbers-statistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardPlayedNumbersDto,
+    })
+    @Roles(Role.consortium)
+    getConsortiumPlayedNumbersStatistics(@AuthUser() loggedUser: User): Promise<DashboardPlayedNumbersDto> {
+        return this.dashboardService.getConsortiumPlayedNumbersStatistics(loggedUser);
+    }
+
     @Get('graph-banking-balance-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,

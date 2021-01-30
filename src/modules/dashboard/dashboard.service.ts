@@ -252,6 +252,63 @@ export class DashboardService {
         };
     }
 
+    async getConsortiumPlayedNumbersStatistics(loggedUser: User): Promise<DashboardPlayedNumbersDto> {
+        const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id }).exec();
+        if (consortiums.length === 0) {
+            throw new BadRequestException();
+        }
+        const consortium = consortiums.pop();
+        const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+
+        let numbers: PlayedNumbersDto[] = [];
+        const now = new Date();
+        const aux: any = {};
+        for (const banking of bankings) {
+            now.setHours(0, 0, 0, 0);
+            const bets = banking.bets.filter((bet) => {
+                const a = new Date(bet.date);
+                a.setHours(0, 0, 0, 0);
+                return now.getTime() === a.getTime();
+            });
+            bets.map((bet) => {
+                bet.plays.map((play) => {
+                    if (play.playNumbers.first) {
+                        aux[play.playNumbers.first] = !aux[play.playNumbers.first]
+                            ? 1
+                            : aux[play.playNumbers.first] + 1;
+                    }
+                    if (play.playNumbers.second) {
+                        aux[play.playNumbers.second] = !aux[play.playNumbers.second]
+                            ? 1
+                            : aux[play.playNumbers.second] + 1;
+                    }
+                    if (play.playNumbers.third) {
+                        aux[play.playNumbers.third] = !aux[play.playNumbers.third]
+                            ? 1
+                            : aux[play.playNumbers.third] + 1;
+                    }
+                });
+            });
+        }
+
+        for (let i = 0; i < Object.keys(aux).length; i++) {
+            const key = Object.keys(aux)[i];
+            const value = aux[key];
+            numbers.push({
+                amount: value,
+                number: parseInt(key),
+            });
+        }
+        // @ts-ignore
+        numbers.sort(function (a, b) {
+            return b.amount > a.amount;
+        });
+        numbers = numbers.slice(0, 10);
+        return {
+            numbers,
+        };
+    }
+
     async getBankingsStatistics(loggedUser: User): Promise<DashboardBankingDto[]> {
         let bankings: Array<Banking> = [];
         if (loggedUser.role === Role.consortium) {
