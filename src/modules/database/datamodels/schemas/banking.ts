@@ -10,7 +10,6 @@ import { Transaction, TransactionSchema } from '@src/modules/database/datamodels
 import { Bet, BetSchema } from '@src/modules/database/datamodels/schemas/bet';
 import { Lottery, LotterySchema } from '@src/modules/database/datamodels/schemas/lottery';
 import { ApiProperty } from '@nestjs/swagger';
-import { BankingFeeLimit, BankingFeeLimitSchema } from '@database/datamodels/schemas/banking.fee.limit';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true, collection: 'bankings' })
 export class Banking extends Document implements DataObject {
@@ -28,7 +27,7 @@ export class Banking extends Document implements DataObject {
     @ApiProperty() @Prop({ required: true, default: false }) status?: boolean;
 
     // Que porcentaje se le paga a la banca por cada jugada
-    @ApiProperty() @Prop({ type: [BankingFeeLimitSchema] }) bankingFeeLimits?: BankingFeeLimit[];
+    @Prop({ min: 0, max: 100 }) earningPercentage?: number;
     // Que porcentaje se le paga a la banca por el total de sus ventas
     @Prop({ min: 0, max: 100 }) fallbackPercentage?: number;
     @Prop() showPercentage?: boolean;
