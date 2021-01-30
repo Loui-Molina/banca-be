@@ -9,6 +9,7 @@ export class CreateTransactionDto {
     @ApiProperty() originId: ObjectId;
     @ApiProperty() destinationId: ObjectId;
     @ApiProperty({ type: Number }) amount: number;
+    @ApiProperty({ type: String }) description: string;
     @ApiProperty({ type: String, enum: TransactionObjects }) originObject: TransactionObjects;
     @ApiProperty({ type: String, enum: TransactionObjects }) destinationObject: TransactionObjects;
 }
