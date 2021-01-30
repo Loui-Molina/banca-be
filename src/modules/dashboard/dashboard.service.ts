@@ -70,8 +70,8 @@ export class DashboardService {
             let loser = 0;
             let total = 0;
             let profits = 0;
-            let awards = 0;
-            let pendingAwards = 0;
+            let prizes = 0;
+            let pendingPrizes = 0;
             const balance = await consortium.calculateBalance();
             const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
             for await (const banking of bankings) {
@@ -88,12 +88,12 @@ export class DashboardService {
                     [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
                     PosibleSums.amount,
                 );
-                awards += await this.sumBets(
+                prizes += await this.sumBets(
                     banking.bets,
                     [BetStatus.claimed, BetStatus.winner],
                     PosibleSums.amountWin,
                 );
-                pendingAwards += await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.amountWin);
+                pendingPrizes += await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.amountWin);
             }
 
             consortiumsDto.push({
@@ -107,8 +107,8 @@ export class DashboardService {
                 loser,
                 total,
                 profits,
-                awards,
-                pendingAwards,
+                prizes,
+                pendingPrizes,
                 balance,
             });
         }
@@ -118,13 +118,13 @@ export class DashboardService {
     async getAdminWidgetsStatistics(): Promise<DashboardWidgetsDto> {
         const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
         let balance = 0;
-        let awards = 0;
+        let prizes = 0;
         let profits = 0;
         let ticketsSold = 0;
         for await (const consortium of consortiums) {
             const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
             for await (const banking of bankings) {
-                awards += await this.sumBets(
+                prizes += await this.sumBets(
                     banking.bets,
                     [BetStatus.claimed, BetStatus.winner],
                     PosibleSums.amountWin,
@@ -143,7 +143,7 @@ export class DashboardService {
         }
         return {
             balance,
-            awards,
+            prizes,
             profits,
             ticketsSold,
         };
@@ -157,11 +157,11 @@ export class DashboardService {
         const consortium = consortiums.pop();
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         const balance = await consortium.calculateBalance();
-        let awards = 0;
+        let prizes = 0;
         let profits = 0;
         let ticketsSold = 0;
         for await (const banking of bankings) {
-            awards += await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin);
+            prizes += await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin);
             profits += await this.sumBets(
                 banking.bets,
                 [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
@@ -175,7 +175,7 @@ export class DashboardService {
         }
         return {
             balance,
-            awards,
+            prizes,
             profits,
             ticketsSold,
         };
@@ -189,7 +189,7 @@ export class DashboardService {
         const banking = bankings.pop();
         return {
             balance: await banking.calculateBalance(),
-            awards: await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
+            prizes: await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
             profits: await this.sumBets(
                 banking.bets,
                 [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
@@ -234,8 +234,8 @@ export class DashboardService {
                     [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
                     PosibleSums.amount,
                 ),
-                awards: await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
-                pendingAwards: await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.amountWin),
+                prizes: await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
+                pendingPrizes: await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.amountWin),
                 balance: await banking.calculateBalance(),
             });
         }

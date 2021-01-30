@@ -16,7 +16,7 @@ export class DashboardBankingDto {
 
     // Montos
     @ApiProperty() profits: number; // Ganancias (!= cancelled)
-    @ApiProperty() awards: number; // Premios (winner + claimed)
-    @ApiProperty() pendingAwards: number; // Premios pendientes (winner)
+    @ApiProperty() prizes: number; // Premios (winner + claimed)
+    @ApiProperty() pendingPrizes: number; // Premios pendientes (winner)
     @ApiProperty() balance: number; // Balance
 }

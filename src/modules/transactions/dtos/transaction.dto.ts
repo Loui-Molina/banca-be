@@ -3,19 +3,47 @@ import { TransactionType } from '@database/datamodels/enums/transaction.type';
 import { ObjectId } from 'mongoose';
 import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 import { Prop } from '@nestjs/mongoose';
+import { IsDate, IsEnum, IsMongoId, IsNumber, IsString } from 'class-validator';
+import { Role } from '@database/datamodels/enums/role';
 
 export class TransactionDto {
-    @ApiProperty({ required: false }) _id?: ObjectId;
-    @ApiProperty({ type: String, enum: TransactionType, required: false }) type?: TransactionType;
-    @ApiProperty() originId: ObjectId;
-    @ApiProperty() destinationId: ObjectId;
-    @ApiProperty() createdAt: Date;
-    @ApiProperty({ type: Number }) amount: number;
-    @ApiProperty({ type: Number }) actualBalance: number;
-    @ApiProperty({ type: Number }) lastBalance: number;
-    @ApiProperty({ type: String, enum: TransactionObjects }) originObject: TransactionObjects;
-    @ApiProperty() originName: string;
-    @ApiProperty({ type: String, enum: TransactionObjects }) destinationObject: TransactionObjects;
-    @ApiProperty() destinationName: string;
-    @ApiProperty() description?: string;
+    @IsMongoId()
+    @ApiProperty({ required: false })
+    _id?: ObjectId;
+    @IsEnum(TransactionType)
+    @ApiProperty({ type: String, enum: TransactionType, required: false })
+    type?: TransactionType;
+    @IsMongoId()
+    @ApiProperty()
+    originId: ObjectId;
+    @IsMongoId()
+    @ApiProperty()
+    destinationId: ObjectId;
+    @IsDate()
+    @ApiProperty()
+    createdAt: Date;
+    @IsNumber()
+    @ApiProperty({ type: Number })
+    amount: number;
+    @IsNumber()
+    @ApiProperty({ type: Number })
+    actualBalance: number;
+    @IsNumber()
+    @ApiProperty({ type: Number })
+    lastBalance: number;
+    @IsEnum(TransactionObjects)
+    @ApiProperty({ type: String, enum: TransactionObjects })
+    originObject: TransactionObjects;
+    @IsString()
+    @ApiProperty()
+    originName: string;
+    @IsEnum(TransactionObjects)
+    @ApiProperty({ type: String, enum: TransactionObjects })
+    destinationObject: TransactionObjects;
+    @IsString()
+    @ApiProperty()
+    destinationName: string;
+    @IsString()
+    @ApiProperty()
+    description?: string;
 }
