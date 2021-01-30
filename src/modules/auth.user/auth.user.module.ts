@@ -18,6 +18,7 @@ import { ConstApp } from '@utils/const.app';
         AuthUserService,
         MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }], ConstApp.USER),
         MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], ConstApp.USER),
+        UsersModule,
     ],
 })
 export class AuthUserModule {}

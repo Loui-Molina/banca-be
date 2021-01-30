@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Days } from '@database/datamodels/enums/days';
 import { Prop } from '@nestjs/mongoose';
+import { Days } from '@database/datamodels/enums/days';
 import { Result, ResultSchema } from '@database/datamodels/schemas/result';
 
 export class AdminLotteryReqDto {
