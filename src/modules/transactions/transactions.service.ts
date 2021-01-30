@@ -20,7 +20,7 @@ export class TransactionService {
         @InjectModel(Transaction.name) private readonly transactionModel: Model<Transaction>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
-        @InjectConnection(ConstApp.BANKING) private readonly connection:Connection,
+        @InjectConnection(ConstApp.BANKING) private readonly connection: Connection,
         private readonly consortiumService: ConsortiumService,
     ) {}
 
@@ -45,65 +45,63 @@ export class TransactionService {
         let transactionDestination;
         const session = await this.connection.startSession();
         session.startTransaction();
-        try{
-        let originObject;
-        if (dto.originObject === TransactionObjects.consortium) {
-            originObject = await this.consortiumModel.findById(dto.originId);
+        try {
+            let originObject;
+            if (dto.originObject === TransactionObjects.consortium) {
+                originObject = await this.consortiumModel.findById(dto.originId);
+            }
+            if (dto.originObject === TransactionObjects.banking) {
+                originObject = await this.bankingModel.findById(dto.originId);
+            }
+            let destinationObject;
+            if (dto.destinationObject === TransactionObjects.consortium) {
+                destinationObject = await this.consortiumModel.findById(dto.destinationId);
+            }
+            if (dto.destinationObject === TransactionObjects.banking) {
+                destinationObject = await this.bankingModel.findById(dto.destinationId);
+            }
+            if (!destinationObject || !originObject) {
+                throw new BadRequestException(ConstApp.DESTINATION_ORIGIN_NOT_FOUND);
+            }
+            const originBalance = await originObject.calculateBalance();
+            const destinationBalance = await destinationObject.calculateBalance();
+            const transactionOrigin = new this.transactionModel({
+                type: TransactionType.debit,
+                originObject: dto.originObject,
+                destinationObject: dto.destinationObject,
+                originId: dto.originId,
+                destinationId: dto.destinationId,
+                description: 'Transaccion entre banca y consorcio',
+                amount: dto.amount * -1,
+                creationUserId: loggedUser._id,
+                modificationUserId: loggedUser._id,
+                lastBalance: originBalance,
+                actualBalance: originBalance + dto.amount * -1,
+            });
+            const transactionDestination = new this.transactionModel({
+                type: TransactionType.credit,
+                originObject: dto.originObject,
+                destinationObject: dto.destinationObject,
+                originId: dto.originId,
+                destinationId: dto.destinationId,
+                description: 'Transaccion entre banca y consorcio',
+                amount: dto.amount,
+                creationUserId: loggedUser._id,
+                modificationUserId: loggedUser._id,
+                lastBalance: destinationBalance,
+                actualBalance: destinationBalance + dto.amount,
+            });
+            originObject.transactions.push(transactionOrigin);
+            destinationObject.transactions.push(transactionDestination);
+            await originObject.save();
+            await destinationObject.save();
+            session.commitTransaction();
+        } catch (error) {
+            session.abortTransaction();
+            throw new SomethingWentWrongException();
+        } finally {
+            session.endSession();
         }
-        if (dto.originObject === TransactionObjects.banking) {
-            originObject = await this.bankingModel.findById(dto.originId);
-        }
-        let destinationObject;
-        if (dto.destinationObject === TransactionObjects.consortium) {
-            destinationObject = await this.consortiumModel.findById(dto.destinationId);
-        }
-        if (dto.destinationObject === TransactionObjects.banking) {
-            destinationObject = await this.bankingModel.findById(dto.destinationId);
-        }
-        if (!destinationObject || !originObject) {
-            throw new BadRequestException(ConstApp.DESTINATION_ORIGIN_NOT_FOUND);
-        }
-        const originBalance = await originObject.calculateBalance();
-        const destinationBalance = await destinationObject.calculateBalance();
-        const transactionOrigin = new this.transactionModel({
-            type: TransactionType.debit,
-            originObject: dto.originObject,
-            destinationObject: dto.destinationObject,
-            originId: dto.originId,
-            destinationId: dto.destinationId,
-            description: 'Transaccion entre banca y consorcio',
-            amount: dto.amount * -1,
-            creationUserId: loggedUser._id,
-            modificationUserId: loggedUser._id,
-            lastBalance: originBalance,
-            actualBalance: originBalance + dto.amount * -1,
-        });
-        const transactionDestination = new this.transactionModel({
-            type: TransactionType.credit,
-            originObject: dto.originObject,
-            destinationObject: dto.destinationObject,
-            originId: dto.originId,
-            destinationId: dto.destinationId,
-            description: 'Transaccion entre banca y consorcio',
-            amount: dto.amount,
-            creationUserId: loggedUser._id,
-            modificationUserId: loggedUser._id,
-            lastBalance: destinationBalance,
-            actualBalance: destinationBalance + dto.amount,
-        });
-        originObject.transactions.push(transactionOrigin);
-        destinationObject.transactions.push(transactionDestination);
-        await originObject.save();
-        await destinationObject.save();
-        session.commitTransaction();
-    }
-    catch(error){
-        session.abortTransaction();
-        throw new SomethingWentWrongException();
-    }
-    finally{
-        session.endSession();
-    }
         return transactionDestination;
     }
 
@@ -112,78 +110,78 @@ export class TransactionService {
         let originObject: Consortium | Banking;
         const session = await this.connection.startSession();
         session.startTransaction();
-        try{
-        const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
-        const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
-        if (dto.originObject === TransactionObjects.consortium) {
-            originObject = await this.consortiumModel.findById(dto.originId);
-            if (originObject._id.toString() !== consortium._id.toString()) {
+        try {
+            const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
+            const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+            if (dto.originObject === TransactionObjects.consortium) {
+                originObject = await this.consortiumModel.findById(dto.originId);
+                if (originObject._id.toString() !== consortium._id.toString()) {
+                    throw new BadRequestException();
+                }
+            }
+            if (dto.originObject === TransactionObjects.banking) {
+                originObject = await this.bankingModel.findById(dto.originId);
+                if (bankings.filter((banking) => banking._id.toString() === originObject._id.toString()).length === 0) {
+                    throw new BadRequestException();
+                }
+            }
+            let destinationObject: Consortium | Banking;
+            if (dto.destinationObject === TransactionObjects.consortium) {
+                destinationObject = await this.consortiumModel.findById(dto.destinationId);
+                if (destinationObject._id.toString() !== consortium._id.toString()) {
+                    throw new BadRequestException();
+                }
+            }
+            if (dto.destinationObject === TransactionObjects.banking) {
+                destinationObject = await this.bankingModel.findById(dto.destinationId);
+                if (
+                    bankings.filter((banking) => banking._id.toString() === destinationObject._id.toString()).length ===
+                    0
+                ) {
+                    throw new BadRequestException();
+                }
+            }
+            if (!destinationObject || !originObject) {
                 throw new BadRequestException();
             }
-        }
-        if (dto.originObject === TransactionObjects.banking) {
-            originObject = await this.bankingModel.findById(dto.originId);
-            if (bankings.filter((banking) => banking._id.toString() === originObject._id.toString()).length === 0) {
-                throw new BadRequestException();
-            }
-        }
-        let destinationObject: Consortium | Banking;
-        if (dto.destinationObject === TransactionObjects.consortium) {
-            destinationObject = await this.consortiumModel.findById(dto.destinationId);
-            if (destinationObject._id.toString() !== consortium._id.toString()) {
-                throw new BadRequestException();
-            }
-        }
-        if (dto.destinationObject === TransactionObjects.banking) {
-            destinationObject = await this.bankingModel.findById(dto.destinationId);
-            if (
-                bankings.filter((banking) => banking._id.toString() === destinationObject._id.toString()).length === 0
-            ) {
-                throw new BadRequestException();
-            }
-        }
-        if (!destinationObject || !originObject) {
-            throw new BadRequestException();
-        }
 
-        const originBalance = await originObject.calculateBalance();
-        const destinationBalance = await destinationObject.calculateBalance();
-        const transactionOrigin = new this.transactionModel({
-            type: TransactionType.debit,
-            originObject: dto.originObject,
-            destinationObject: dto.destinationObject,
-            originId: dto.originId,
-            destinationId: dto.destinationId,
-            amount: dto.amount * -1,
-            creationUserId: loggedUser._id,
-            modificationUserId: loggedUser._id,
-            lastBalance: originBalance,
-            actualBalance: originBalance + dto.amount * -1,
-        });
-        transactionDestination = new this.transactionModel({
-            type: TransactionType.credit,
-            originObject: dto.originObject,
-            destinationObject: dto.destinationObject,
-            originId: dto.originId,
-            destinationId: dto.destinationId,
-            amount: dto.amount,
-            creationUserId: loggedUser._id,
-            modificationUserId: loggedUser._id,
-            lastBalance: destinationBalance,
-            actualBalance: destinationBalance + dto.amount,
-        });
-        originObject.transactions.push(transactionOrigin);
-        destinationObject.transactions.push(transactionDestination);
-        await originObject.save();
-        await destinationObject.save();
-        session.commitTransaction();
-    }catch(error){
-        session.abortTransaction();
-        throw new SomethingWentWrongException();
-    }
-    finally{
-        session.endSession();
-    }
+            const originBalance = await originObject.calculateBalance();
+            const destinationBalance = await destinationObject.calculateBalance();
+            const transactionOrigin = new this.transactionModel({
+                type: TransactionType.debit,
+                originObject: dto.originObject,
+                destinationObject: dto.destinationObject,
+                originId: dto.originId,
+                destinationId: dto.destinationId,
+                amount: dto.amount * -1,
+                creationUserId: loggedUser._id,
+                modificationUserId: loggedUser._id,
+                lastBalance: originBalance,
+                actualBalance: originBalance + dto.amount * -1,
+            });
+            transactionDestination = new this.transactionModel({
+                type: TransactionType.credit,
+                originObject: dto.originObject,
+                destinationObject: dto.destinationObject,
+                originId: dto.originId,
+                destinationId: dto.destinationId,
+                amount: dto.amount,
+                creationUserId: loggedUser._id,
+                modificationUserId: loggedUser._id,
+                lastBalance: destinationBalance,
+                actualBalance: destinationBalance + dto.amount,
+            });
+            originObject.transactions.push(transactionOrigin);
+            destinationObject.transactions.push(transactionDestination);
+            await originObject.save();
+            await destinationObject.save();
+            session.commitTransaction();
+        } catch (error) {
+            session.abortTransaction();
+            throw new SomethingWentWrongException();
+        } finally {
+            session.endSession();
+        }
         return transactionDestination;
     }
     async get(id: string): Promise<Transaction> {

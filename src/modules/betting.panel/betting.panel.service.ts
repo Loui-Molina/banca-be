@@ -34,13 +34,12 @@ export class BettingPanelService {
         @InjectModel(Bet.name) private readonly betModel: Model<Bet>,
         @InjectConnection(ConstApp.BANKING) private readonly connection: Connection,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
-        private readonly bankingService:BankingsService,
+        private readonly bankingService: BankingsService,
     ) {}
 
-
-a(): Banking | ConsortiumLottery {
-    return {} as Banking | ConsortiumLottery
-}
+    a(): Banking | ConsortiumLottery {
+        return {} as Banking | ConsortiumLottery;
+    }
 
     async getAll(loggedUser: User): Promise<Array<Bet>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
