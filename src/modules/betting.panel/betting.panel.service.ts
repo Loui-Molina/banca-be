@@ -43,43 +43,27 @@ export class BettingPanelService {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
         const now = new Date();
         now.setHours(0, 0, 0, 0);
-        const betsClaimedToday = banking.bets.filter((bet) => {
-            const a = new Date(bet.claimDate);
-            a.setHours(0, 0, 0, 0);
-            return now.getTime() === a.getTime();
-        });
         const bets = banking.bets.filter((bet) => {
             const a = new Date(bet.date);
             a.setHours(0, 0, 0, 0);
             return now.getTime() === a.getTime();
         });
-        const pendingPayments: number = bets.reduce(function (acc, bet) {
-            return acc + (bet.betStatus === BetStatus.winner ? bet.amountWin : 0);
-        }, 0);
-        const totalSells: number = bets.reduce(function (acc, bet) {
-            return (
-                acc +
-                (bet.betStatus !== BetStatus.cancelled
-                    ? bet.plays.reduce(function (acc, play) {
-                          return acc + play.amount;
-                      }, 0)
-                    : 0)
-            );
-        }, 0);
-        const totalAwards: number = bets.reduce(function (acc, bet) {
-            return acc + ([BetStatus.winner, BetStatus.claimed].includes(bet.betStatus) ? bet.amountWin : 0);
-        }, 0);
         return {
+            cancelled: await this.sumBets(bets, [BetStatus.cancelled], PosibleSums.count),
+            expired: await this.sumBets(bets, [BetStatus.expired], PosibleSums.count),
+            claimed: await this.sumBets(bets, [BetStatus.claimed], PosibleSums.count),
+            pending: await this.sumBets(bets, [BetStatus.pending], PosibleSums.count),
+            winner: await this.sumBets(bets, [BetStatus.winner], PosibleSums.count),
+            loser: await this.sumBets(bets, [BetStatus.loser], PosibleSums.count),
+            total: bets.length,
+            profits: await this.sumBets(
+                bets,
+                [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                PosibleSums.amount,
+            ),
+            prizes: await this.sumBets(bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
+            pendingPrizes: await this.sumBets(bets, [BetStatus.pending], PosibleSums.amountWin),
             balance: await banking.calculateBalance(),
-            pendingPayments: pendingPayments,
-            cancelledBets: bets.filter((bet) => bet.betStatus === BetStatus.cancelled).length,
-            pendingBets: bets.filter((bet) => bet.betStatus === BetStatus.pending).length,
-            winnerBets: bets.filter((bet) => bet.betStatus === BetStatus.winner).length,
-            loserBets: bets.filter((bet) => bet.betStatus === BetStatus.loser).length,
-            claimedBets: betsClaimedToday.length,
-            totalBets: bets.length,
-            totalSells: totalSells,
-            totalAwards: totalAwards,
         };
     }
 
@@ -286,4 +270,33 @@ export class BettingPanelService {
     private async createSN(): Promise<string> {
         return new Date().getTime().toString() + parseInt(String(Math.random() * (999 - 100) + 100), 0).toString();
     }
+
+    private async sumBets(bets: Bet[], betStatus: BetStatus[], key: PosibleSums): Promise<number> {
+        switch (key) {
+            case PosibleSums.amount:
+                return bets.reduce(function (acc, bet) {
+                    return (
+                        acc +
+                        (betStatus.includes(bet.betStatus)
+                            ? bet.plays.reduce(function (acc, play) {
+                                return acc + (play.amount ? play.amount : 0);
+                            }, 0)
+                            : 0)
+                    );
+                }, 0);
+            case PosibleSums.amountWin:
+                return bets.reduce(function (acc, bet) {
+                    return acc + (betStatus.includes(bet.betStatus) ? (bet.amountWin ? bet.amountWin : 0) : 0);
+                }, 0);
+            case PosibleSums.count:
+                return bets.filter((bet) => betStatus.includes(bet.betStatus)).length;
+        }
+        return 0;
+    }
+}
+
+enum PosibleSums {
+    'amount',
+    'amountWin',
+    'count',
 }
