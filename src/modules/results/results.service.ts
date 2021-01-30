@@ -7,15 +7,15 @@ import { ResultDto } from '@results/dtos/result.dto';
 import { Lottery } from '@database/datamodels/schemas/lottery';
 import { AddResultDto } from '@results/dtos/add.result.dto';
 import { Model } from 'mongoose';
-import { Bet } from '@database/datamodels/schemas/bet';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { BetStatus } from '@database/datamodels/enums/bet.status';
-import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { Consortium } from '@database/datamodels/schemas/consortium';
+import { Banking } from '@database/datamodels/schemas/banking';
 import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
 import { DominicanLotteryPrizes } from '@database/datamodels/enums/dominican.lottery.prizes';
 import { UsLotteryPrizes } from '@database/datamodels/enums/us.lottery.prizes';
 import { BrasilPrizes } from '@database/datamodels/enums/brasil.prizes';
+import { BetStatus } from '@database/datamodels/enums/bet.status';
+import { PlayTypes } from '@database/datamodels/enums/play.types';
+import { Bet } from '@database/datamodels/schemas/bet';
 
 @Injectable()
 export class ResultsService {

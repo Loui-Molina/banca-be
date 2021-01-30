@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
+import { DataObject } from '@database/datamodels/schemas/data.object';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { Draw, DrawSchema } from '@src/modules/database/datamodels/schemas/draw';
+import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })

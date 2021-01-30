@@ -1,6 +1,6 @@
-import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
-import { BettingLimit, BettingLimitSchema } from '@src/modules/database/datamodels/schemas/betting.limit';
-import { PrizeLimit, PrizeLimitSchema } from '@src/modules/database/datamodels/schemas/prize.limit';
+import { DataObject } from '@database/datamodels/schemas/data.object';
+import { BettingLimit, BettingLimitSchema } from '@database/datamodels/schemas/betting.limit';
+import { PrizeLimit, PrizeLimitSchema } from '@database/datamodels/schemas/prize.limit';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';

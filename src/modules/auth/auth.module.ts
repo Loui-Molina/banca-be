@@ -44,6 +44,7 @@ import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/conso
         JwtStrategy,
         RefreshStrategy,
         TokenService,
+        AuthUserModule,
     ],
 })
 export class AuthModule {}

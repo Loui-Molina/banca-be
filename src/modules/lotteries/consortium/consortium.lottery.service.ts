@@ -1,10 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { LotteryTime } from '@database/datamodels/schemas/lottery.time';
 import { Lottery } from '@database/datamodels/schemas/lottery';
-import { Result } from '@database/datamodels/schemas/result';
-import { Draw } from '@database/datamodels/schemas/draw';
 import { User } from '@database/datamodels/schemas/user';
 import { ConsortiumLotteryDto } from '@lotteries/consortium/dtos/consortium.lottery.dto';
 import { ConsortiumUpdateLotteryDto } from '@lotteries/consortium/dtos/consortium.update.lottery.dto';
@@ -15,11 +12,8 @@ import { Consortium } from '@database/datamodels/schemas/consortium';
 export class ConsortiumLotteryService {
     constructor(
         @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
-        @InjectModel(LotteryTime.name) private readonly lotteryTimeModel: Model<LotteryTime>,
         @InjectModel(ConsortiumLottery.name) private readonly consortiumLotteryModel: Model<ConsortiumLottery>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
-        @InjectModel(Result.name) private readonly resultModel: Model<Result>,
-        @InjectModel(Draw.name) private readonly drawModel: Model<Draw>,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<ConsortiumLotteryDto>> {

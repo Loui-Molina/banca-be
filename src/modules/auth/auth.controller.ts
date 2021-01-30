@@ -124,7 +124,7 @@ export class AuthController {
         return this.authService.logOut(ipAdress, user);
     }
 
-    @Get('/isEnabled')
+    @Get('/is-enabled')
     @UseGuards(AuthGuard())
     isLoginEnabled(@AuthUser() user: User): Promise<boolean> {
         return this.authService.isLoginEnabled(user);

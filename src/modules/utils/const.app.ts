@@ -29,4 +29,9 @@ export class ConstApp {
     public static readonly COULD_NOT_CHANGE_PASSWORD = 'PASSWORD NOT CHANGED';
     public static readonly NOT_LOGGE = 'PASSWORD NOT CHANGED';
     public static readonly PASSWORD_NOT_MATCH = 'PASSWORD NOT MATCH';
+    public static readonly ESTABLISHMENT_NOT_FOUND = 'ESTABLISHMENT NOT FOUND';
+    public static readonly DESTINATION_ORIGIN_NOT_FOUND = 'DESTINATION || ORIGIN NOT FOUND';
+
+    //Exceptions Messages
+    public static readonly SOMETHING_WRONG_EXCEPTION = 'Something went Wrong';
 }
