@@ -15,7 +15,7 @@ export class TasksService {
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
     ) {}
 
-    @Cron(CronExpression.EVERY_5_SECONDS) // @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
+    @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
     handleCron() {
         this.expireBets();
     }

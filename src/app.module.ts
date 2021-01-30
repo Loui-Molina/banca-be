@@ -24,7 +24,7 @@ import { TasksService } from '@src/modules/services/tasks.service';
         CommonModule, // TODO CHECK IF NEEDED TO MOVE TO MANAGER MODULE
     ],
     controllers: [],
-    providers: [],
+    providers: [TasksService],
     exports: [CoreModule, UtilsModule, AuthModule, DatabaseModule],
 })
 export class AppModule {}
