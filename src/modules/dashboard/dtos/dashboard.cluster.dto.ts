@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsString } from 'class-validator';
 
 export class DashboardDiagramClusterDto {
-    @ApiProperty() id: string;
-    @ApiProperty() label: string;
-    @ApiProperty() childNodeIds: string[];
+    @ApiProperty() @IsString() id: string;
+    @ApiProperty() @IsString() label: string;
+    @ApiProperty() @IsArray() childNodeIds: string[];
 
     constructor(id: string, label: string, childNodeIds: string[]) {
         this.id = id;

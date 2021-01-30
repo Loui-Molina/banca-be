@@ -2,48 +2,49 @@ import { ApiProperty } from '@nestjs/swagger';
 import { TransactionType } from '@database/datamodels/enums/transaction.type';
 import { ObjectId } from 'mongoose';
 import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
-import { Prop } from '@nestjs/mongoose';
-import { IsDate, IsEnum, IsMongoId, IsNumber, IsString } from 'class-validator';
-import { Role } from '@database/datamodels/enums/role';
+import { IsDate, IsEnum, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class TransactionDto {
-    @IsMongoId()
     @ApiProperty({ required: false })
+    @IsMongoId()
+    @IsOptional()
     _id?: ObjectId;
-    @IsEnum(TransactionType)
     @ApiProperty({ type: String, enum: TransactionType, required: false })
+    @IsEnum(TransactionType)
+    @IsOptional()
     type?: TransactionType;
-    @IsMongoId()
     @ApiProperty()
+    @IsMongoId()
     originId: ObjectId;
+    @ApiProperty()
     @IsMongoId()
-    @ApiProperty()
     destinationId: ObjectId;
+    @ApiProperty()
     @IsDate()
-    @ApiProperty()
     createdAt: Date;
-    @IsNumber()
     @ApiProperty({ type: Number })
+    @IsNumber()
     amount: number;
-    @IsNumber()
     @ApiProperty({ type: Number })
+    @IsNumber()
     actualBalance: number;
-    @IsNumber()
     @ApiProperty({ type: Number })
+    @IsNumber()
     lastBalance: number;
-    @IsEnum(TransactionObjects)
     @ApiProperty({ type: String, enum: TransactionObjects })
+    @IsEnum(TransactionObjects)
     originObject: TransactionObjects;
-    @IsString()
     @ApiProperty()
+    @IsString()
     originName: string;
-    @IsEnum(TransactionObjects)
     @ApiProperty({ type: String, enum: TransactionObjects })
+    @IsEnum(TransactionObjects)
     destinationObject: TransactionObjects;
-    @IsString()
     @ApiProperty()
+    @IsString()
     destinationName: string;
-    @IsString()
     @ApiProperty()
+    @IsString()
+    @IsOptional()
     description?: string;
 }
