@@ -3,7 +3,7 @@ import { BankingsModule } from '@bankings/bankings.module';
 import { ConsortiumModule } from '@consortiums/consortium.module';
 import { DashboardModule } from '@dashboard/dashboard.module';
 import { ResultsModule } from '@results/results.module';
-import { TransactionsModule } from '@src/modules/transactions/transactions.module';
+import { TransactionsModule } from '@transactions/transactions.module';
 import { BettingPanelModule } from '@betting.panel/betting.panel.module';
 import { LotteriesModule } from '@lotteries/lotteries.module';
 

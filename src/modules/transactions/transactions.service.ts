@@ -12,7 +12,7 @@ import { TransactionObjects } from '@database/datamodels/enums/transaction.objec
 import { Role } from '@database/datamodels/enums/role';
 import { ConsortiumService } from '@consortiums/consortium.service';
 import { ConstApp } from '@utils/const.app';
-import { SomethingWentWrongException } from '@src/common/exceptions/something.went.wrong.exception';
+import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
 
 @Injectable()
 export class TransactionService {

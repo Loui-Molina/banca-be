@@ -1,14 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { TransactionService } from '@src/modules/transactions/transactions.service';
-import { CreateTransactionDto } from '@src/modules/transactions/dtos/create.transaction.dto';
+import { TransactionService } from '@transactions/transactions.service';
+import { CreateTransactionDto } from '@transactions/dtos/create.transaction.dto';
 import { ConstApp } from '@utils/const.app';
-import { Transaction } from '@src/modules/database/datamodels/schemas/transaction';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { Transaction } from '@database/datamodels/schemas/transaction';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
-import { TransactionDto } from '@src/modules/transactions/dtos/transaction.dto';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { TransactionDto } from '@transactions/dtos/transaction.dto';
+import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
 
