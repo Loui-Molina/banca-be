@@ -17,6 +17,7 @@ import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widge
 import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
+import { Bet } from '@database/datamodels/schemas/bet';
 
 @Injectable()
 export class DashboardService {
@@ -61,10 +62,53 @@ export class DashboardService {
         const consortiumsDto: DashboardConsortiumDto[] = [];
         const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
         for await (const consortium of consortiums) {
+            let cancelled = 0;
+            let expired = 0;
+            let claimed = 0;
+            let pending = 0;
+            let winner = 0;
+            let loser = 0;
+            let total = 0;
+            let profits = 0;
+            let awards = 0;
+            let pendingAwards = 0;
             const balance = await consortium.calculateBalance();
+            const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+            for await (const banking of bankings) {
+                cancelled += await this.sumBets(banking.bets, [BetStatus.cancelled], PosibleSums.count);
+                expired += await this.sumBets(banking.bets, [BetStatus.expired], PosibleSums.count);
+                claimed += await this.sumBets(banking.bets, [BetStatus.claimed], PosibleSums.count);
+                pending += await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.count);
+                winner += await this.sumBets(banking.bets, [BetStatus.winner], PosibleSums.count);
+                loser += await this.sumBets(banking.bets, [BetStatus.loser], PosibleSums.count);
+                total += banking.bets.length;
+
+                profits += await this.sumBets(
+                    banking.bets,
+                    [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                    PosibleSums.amount,
+                );
+                awards += await this.sumBets(
+                    banking.bets,
+                    [BetStatus.claimed, BetStatus.winner],
+                    PosibleSums.amountWin,
+                );
+                pendingAwards += await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.amountWin);
+            }
+
             consortiumsDto.push({
                 _id: consortium._id,
                 name: consortium.name,
+                cancelled,
+                expired,
+                claimed,
+                pending,
+                winner,
+                loser,
+                total,
+                profits,
+                awards,
+                pendingAwards,
                 balance,
             });
         }
@@ -74,33 +118,32 @@ export class DashboardService {
     async getAdminWidgetsStatistics(): Promise<DashboardWidgetsDto> {
         const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
         let balance = 0;
-        let losses = 0;
+        let awards = 0;
         let profits = 0;
         let ticketsSold = 0;
         for await (const consortium of consortiums) {
             const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
             for await (const banking of bankings) {
-                const totalSells: number = banking.bets.reduce(function (acc, bet) {
-                    return (
-                        acc +
-                        (bet.betStatus !== BetStatus.cancelled
-                            ? bet.plays.reduce(function (acc, play) {
-                                  return acc + play.amount;
-                              }, 0)
-                            : 0)
-                    );
-                }, 0);
-                const totalAwards: number = banking.bets.reduce(function (acc, bet) {
-                    return acc + ([BetStatus.winner, BetStatus.claimed].includes(bet.betStatus) ? bet.amountWin : 0);
-                }, 0);
-                losses += totalAwards;
-                profits += totalSells;
-                ticketsSold += banking.bets.filter((bet) => bet.betStatus !== BetStatus.cancelled).length;
+                awards += await this.sumBets(
+                    banking.bets,
+                    [BetStatus.claimed, BetStatus.winner],
+                    PosibleSums.amountWin,
+                );
+                profits += await this.sumBets(
+                    banking.bets,
+                    [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                    PosibleSums.amount,
+                );
+                ticketsSold += await this.sumBets(
+                    banking.bets,
+                    [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                    PosibleSums.count,
+                );
             }
         }
         return {
             balance,
-            losses,
+            awards,
             profits,
             ticketsSold,
         };
@@ -114,30 +157,25 @@ export class DashboardService {
         const consortium = consortiums.pop();
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         const balance = await consortium.calculateBalance();
-        let losses = 0;
+        let awards = 0;
         let profits = 0;
         let ticketsSold = 0;
         for await (const banking of bankings) {
-            const totalSells: number = banking.bets.reduce(function (acc, bet) {
-                return (
-                    acc +
-                    (bet.betStatus !== BetStatus.cancelled
-                        ? bet.plays.reduce(function (acc, play) {
-                              return acc + play.amount;
-                          }, 0)
-                        : 0)
-                );
-            }, 0);
-            const totalAwards: number = banking.bets.reduce(function (acc, bet) {
-                return acc + ([BetStatus.winner, BetStatus.claimed].includes(bet.betStatus) ? bet.amountWin : 0);
-            }, 0);
-            losses += totalAwards;
-            profits += totalSells;
-            ticketsSold += banking.bets.filter((bet) => bet.betStatus !== BetStatus.cancelled).length;
+            awards += await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin);
+            profits += await this.sumBets(
+                banking.bets,
+                [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                PosibleSums.amount,
+            );
+            ticketsSold += await this.sumBets(
+                banking.bets,
+                [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                PosibleSums.count,
+            );
         }
         return {
             balance,
-            losses,
+            awards,
             profits,
             ticketsSold,
         };
@@ -149,26 +187,22 @@ export class DashboardService {
             throw new BadRequestException();
         }
         const banking = bankings.pop();
-        const totalSells: number = banking.bets.reduce(function (acc, bet) {
-            return (
-                acc +
-                (bet.betStatus !== BetStatus.cancelled
-                    ? bet.plays.reduce(function (acc, play) {
-                          return acc + play.amount;
-                      }, 0)
-                    : 0)
-            );
-        }, 0);
-        const totalAwards: number = banking.bets.reduce(function (acc, bet) {
-            return acc + ([BetStatus.winner, BetStatus.claimed].includes(bet.betStatus) ? bet.amountWin : 0);
-        }, 0);
         return {
             balance: await banking.calculateBalance(),
-            losses: totalAwards,
-            profits: totalSells,
-            ticketsSold: banking.bets.filter((bet) => bet.betStatus !== BetStatus.cancelled).length,
+            awards: await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
+            profits: await this.sumBets(
+                banking.bets,
+                [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                PosibleSums.amount,
+            ),
+            ticketsSold: await this.sumBets(
+                banking.bets,
+                [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                PosibleSums.count,
+            ),
         };
     }
+
     async getBankingsStatistics(loggedUser: User): Promise<DashboardBankingDto[]> {
         let bankings: Array<Banking> = [];
         if (loggedUser.role === Role.consortium) {
@@ -185,11 +219,24 @@ export class DashboardService {
         }
         const bankingsDto: DashboardBankingDto[] = [];
         for await (const banking of bankings) {
-            const balance = await banking.calculateBalance();
             bankingsDto.push({
                 _id: banking._id,
                 name: banking.name,
-                balance,
+                cancelled: await this.sumBets(banking.bets, [BetStatus.cancelled], PosibleSums.count),
+                expired: await this.sumBets(banking.bets, [BetStatus.expired], PosibleSums.count),
+                claimed: await this.sumBets(banking.bets, [BetStatus.claimed], PosibleSums.count),
+                pending: await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.count),
+                winner: await this.sumBets(banking.bets, [BetStatus.winner], PosibleSums.count),
+                loser: await this.sumBets(banking.bets, [BetStatus.loser], PosibleSums.count),
+                total: banking.bets.length,
+                profits: await this.sumBets(
+                    banking.bets,
+                    [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                    PosibleSums.amount,
+                ),
+                awards: await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
+                pendingAwards: await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.amountWin),
+                balance: await banking.calculateBalance(),
             });
         }
         return bankingsDto;
@@ -270,4 +317,33 @@ export class DashboardService {
         const now = new Date();
         return new Date(now.getTime() + 24 * 60 * 60 * 1000 * days);
     }
+
+    private async sumBets(bets: Bet[], betStatus: BetStatus[], key: PosibleSums): Promise<number> {
+        switch (key) {
+            case PosibleSums.amount:
+                return bets.reduce(function (acc, bet) {
+                    return (
+                        acc +
+                        (betStatus.includes(bet.betStatus)
+                            ? bet.plays.reduce(function (acc, play) {
+                                  return acc + (play.amount ? play.amount : 0);
+                              }, 0)
+                            : 0)
+                    );
+                }, 0);
+            case PosibleSums.amountWin:
+                return bets.reduce(function (acc, bet) {
+                    return acc + (betStatus.includes(bet.betStatus) ? (bet.amountWin ? bet.amountWin : 0) : 0);
+                }, 0);
+            case PosibleSums.count:
+                return bets.filter((bet) => betStatus.includes(bet.betStatus)).length;
+        }
+        return 0;
+    }
+}
+
+enum PosibleSums {
+    'amount',
+    'amountWin',
+    'count',
 }
