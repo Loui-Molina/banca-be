@@ -16,6 +16,7 @@ import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.
 import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
 import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto';
 import { Transaction } from '@database/datamodels/schemas/transaction';
+import { BetStatus } from '@database/datamodels/enums/bet.status';
 
 @Injectable()
 export class DashboardService {
@@ -77,10 +78,25 @@ export class DashboardService {
         let profits = 0;
         let ticketsSold = 0;
         for await (const consortium of consortiums) {
-            balance += await consortium.calculateBalance();
-            losses += 1;
-            profits += 1;
-            ticketsSold += 1;
+            const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+            for await (const banking of bankings) {
+                const totalSells: number = banking.bets.reduce(function (acc, bet) {
+                    return (
+                        acc +
+                        (bet.betStatus !== BetStatus.cancelled
+                            ? bet.plays.reduce(function (acc, play) {
+                                  return acc + play.amount;
+                              }, 0)
+                            : 0)
+                    );
+                }, 0);
+                const totalAwards: number = banking.bets.reduce(function (acc, bet) {
+                    return acc + ([BetStatus.winner, BetStatus.claimed].includes(bet.betStatus) ? bet.amountWin : 0);
+                }, 0);
+                losses += totalAwards;
+                profits += totalSells;
+                ticketsSold += banking.bets.filter((bet) => bet.betStatus !== BetStatus.cancelled).length;
+            }
         }
         return {
             balance,
@@ -102,9 +118,22 @@ export class DashboardService {
         let profits = 0;
         let ticketsSold = 0;
         for await (const banking of bankings) {
-            losses += 1;
-            profits += 1;
-            ticketsSold += 1;
+            const totalSells: number = banking.bets.reduce(function (acc, bet) {
+                return (
+                    acc +
+                    (bet.betStatus !== BetStatus.cancelled
+                        ? bet.plays.reduce(function (acc, play) {
+                              return acc + play.amount;
+                          }, 0)
+                        : 0)
+                );
+            }, 0);
+            const totalAwards: number = banking.bets.reduce(function (acc, bet) {
+                return acc + ([BetStatus.winner, BetStatus.claimed].includes(bet.betStatus) ? bet.amountWin : 0);
+            }, 0);
+            losses += totalAwards;
+            profits += totalSells;
+            ticketsSold += banking.bets.filter((bet) => bet.betStatus !== BetStatus.cancelled).length;
         }
         return {
             balance,
@@ -120,11 +149,24 @@ export class DashboardService {
             throw new BadRequestException();
         }
         const banking = bankings.pop();
+        const totalSells: number = banking.bets.reduce(function (acc, bet) {
+            return (
+                acc +
+                (bet.betStatus !== BetStatus.cancelled
+                    ? bet.plays.reduce(function (acc, play) {
+                          return acc + play.amount;
+                      }, 0)
+                    : 0)
+            );
+        }, 0);
+        const totalAwards: number = banking.bets.reduce(function (acc, bet) {
+            return acc + ([BetStatus.winner, BetStatus.claimed].includes(bet.betStatus) ? bet.amountWin : 0);
+        }, 0);
         return {
             balance: await banking.calculateBalance(),
-            losses: 0,
-            profits: 0,
-            ticketsSold: 0,
+            losses: totalAwards,
+            profits: totalSells,
+            ticketsSold: banking.bets.filter((bet) => bet.betStatus !== BetStatus.cancelled).length,
         };
     }
     async getBankingsStatistics(loggedUser: User): Promise<DashboardBankingDto[]> {
