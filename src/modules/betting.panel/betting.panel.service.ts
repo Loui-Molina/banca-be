@@ -34,7 +34,6 @@ export class BettingPanelService {
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
     ) {}
 
-
     async getAll(loggedUser: User): Promise<Array<Bet>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
         return banking.bets.reverse();

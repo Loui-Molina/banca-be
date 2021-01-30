@@ -1,10 +1,10 @@
-import {Injectable, Logger} from '@nestjs/common';
-import {Cron, CronExpression} from '@nestjs/schedule';
-import {InjectModel} from '@nestjs/mongoose';
-import {Consortium} from '@database/datamodels/schemas/consortium';
-import {Model} from 'mongoose';
-import {Banking} from '@database/datamodels/schemas/banking';
-import {BetStatus} from '@database/datamodels/enums/bet.status';
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { InjectModel } from '@nestjs/mongoose';
+import { Consortium } from '@database/datamodels/schemas/consortium';
+import { Model } from 'mongoose';
+import { Banking } from '@database/datamodels/schemas/banking';
+import { BetStatus } from '@database/datamodels/enums/bet.status';
 
 @Injectable()
 export class TasksService {
@@ -27,7 +27,9 @@ export class TasksService {
         myDate.setTime(myDate.getTime() - dateOffset);
         const bankings = await this.bankingModel.find().exec();
         for (const banking of bankings) {
-            const bets = banking.bets.filter((bet) => [BetStatus.pending, BetStatus.winner].includes(bet.betStatus) && bet.date < myDate);
+            const bets = banking.bets.filter(
+                (bet) => [BetStatus.pending, BetStatus.winner].includes(bet.betStatus) && bet.date < myDate,
+            );
             for (const bet of bets) {
                 this.logger.debug(bet.date.toISOString() + ' ' + myDate.toISOString());
                 bet.betStatus = BetStatus.expired;
