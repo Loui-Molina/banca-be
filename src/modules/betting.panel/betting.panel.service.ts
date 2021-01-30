@@ -279,8 +279,8 @@ export class BettingPanelService {
                         acc +
                         (betStatus.includes(bet.betStatus)
                             ? bet.plays.reduce(function (acc, play) {
-                                return acc + (play.amount ? play.amount : 0);
-                            }, 0)
+                                  return acc + (play.amount ? play.amount : 0);
+                              }, 0)
                             : 0)
                     );
                 }, 0);

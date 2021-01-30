@@ -16,6 +16,7 @@ import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.
 import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
 
 import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto';
+import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
 
 @ApiTags('dashboard')
 @Controller('dashboard')
@@ -101,6 +102,16 @@ export class DashboardController {
     @Roles(Role.banker)
     getBankingWidgetsStatistics(@AuthUser() loggedUser: User): Promise<DashboardWidgetsDto> {
         return this.dashboardService.getBankingWidgetsStatistics(loggedUser);
+    }
+
+    @Get('banking-played-numbers-statistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardPlayedNumbersDto,
+    })
+    @Roles(Role.banker)
+    getBankingPlayedNumbersStatistics(@AuthUser() loggedUser: User): Promise<DashboardPlayedNumbersDto> {
+        return this.dashboardService.getBankingPlayedNumbersStatistics(loggedUser);
     }
 
     @Get('graph-banking-balance-statistics')

@@ -18,6 +18,8 @@ import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/das
 import { Transaction } from '@database/datamodels/schemas/transaction';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { Bet } from '@database/datamodels/schemas/bet';
+import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
+import { PlayedNumbersDto } from '@dashboard/dtos/played.numbers.dto';
 
 @Injectable()
 export class DashboardService {
@@ -200,6 +202,53 @@ export class DashboardService {
                 [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
                 PosibleSums.count,
             ),
+        };
+    }
+
+    async getBankingPlayedNumbersStatistics(loggedUser: User): Promise<DashboardPlayedNumbersDto> {
+        const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
+        if (bankings.length === 0) {
+            throw new BadRequestException();
+        }
+        const banking = bankings.pop();
+        let numbers: PlayedNumbersDto[] = [];
+        const now = new Date();
+        const aux: any = {};
+        now.setHours(0, 0, 0, 0);
+        const bets = banking.bets.filter((bet) => {
+            const a = new Date(bet.date);
+            a.setHours(0, 0, 0, 0);
+            return now.getTime() === a.getTime();
+        });
+        bets.map((bet) => {
+            bet.plays.map((play) => {
+                if (play.playNumbers.first) {
+                    aux[play.playNumbers.first] = !aux[play.playNumbers.first] ? 1 : aux[play.playNumbers.first] + 1;
+                }
+                if (play.playNumbers.second) {
+                    aux[play.playNumbers.second] = !aux[play.playNumbers.second] ? 1 : aux[play.playNumbers.second] + 1;
+                }
+                if (play.playNumbers.third) {
+                    aux[play.playNumbers.third] = !aux[play.playNumbers.third] ? 1 : aux[play.playNumbers.third] + 1;
+                }
+            });
+        });
+
+        for (let i = 0; i < Object.keys(aux).length; i++) {
+            const key = Object.keys(aux)[i];
+            const value = aux[key];
+            numbers.push({
+                amount: value,
+                number: parseInt(key),
+            });
+        }
+        // @ts-ignore
+        numbers.sort(function (a, b) {
+            return b.amount > a.amount;
+        });
+        numbers = numbers.slice(0, 10);
+        return {
+            numbers,
         };
     }
 
