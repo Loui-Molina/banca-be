@@ -22,6 +22,8 @@ import { TransactionObjects } from '@database/datamodels/enums/transaction.objec
 import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
 import { ClaimBetDto } from '@betting.panel/dtos/claim.bet.dto';
 import { ConstApp } from '@utils/const.app';
+import { BankingsService } from '../bankings/bankings.service';
+import { ConsortiumLottery } from '../database/datamodels/schemas/consortium.lottery';
 
 @Injectable()
 export class BettingPanelService {
@@ -32,7 +34,13 @@ export class BettingPanelService {
         @InjectModel(Bet.name) private readonly betModel: Model<Bet>,
         @InjectConnection(ConstApp.BANKING) private readonly connection: Connection,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        private readonly bankingService:BankingsService,
     ) {}
+
+
+a(): Banking | ConsortiumLottery {
+    return {} as Banking | ConsortiumLottery
+}
 
     async getAll(loggedUser: User): Promise<Array<Bet>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();

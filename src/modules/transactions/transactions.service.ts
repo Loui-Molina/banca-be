@@ -1,16 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateTransactionDto } from '@src/modules/transactions/dtos/create.transaction.dto';
-import { Transaction } from '@src/modules/database/datamodels/schemas/transaction';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model } from 'mongoose';
+import { CreateTransactionDto } from '@transactions/dtos/create.transaction.dto';
+import { Transaction } from '@database/datamodels/schemas/transaction';
 import { User } from '@database/datamodels/schemas/user';
 import { TransactionType } from '@database/datamodels/enums/transaction.type';
 import { Consortium } from '@database/datamodels/schemas/consortium';
 import { Banking } from '@database/datamodels/schemas/banking';
-import { TransactionDto } from '@src/modules/transactions/dtos/transaction.dto';
+import { TransactionDto } from '@transactions/dtos/transaction.dto';
 import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 import { Role } from '@database/datamodels/enums/role';
-import { ConsortiumService } from '@src/modules/consortiums/consortium.service';
+import { ConsortiumService } from '@consortiums/consortium.service';
+import { ConstApp } from '@utils/const.app';
+import { SomethingWentWrongException } from '@src/common/exceptions/something.went.wrong.exception';
 
 @Injectable()
 export class TransactionService {
@@ -18,6 +20,7 @@ export class TransactionService {
         @InjectModel(Transaction.name) private readonly transactionModel: Model<Transaction>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        @InjectConnection(ConstApp.BANKING) private readonly connection:Connection,
         private readonly consortiumService: ConsortiumService,
     ) {}
 
@@ -39,6 +42,10 @@ export class TransactionService {
     }
 
     async createTransactionAdmin(dto: CreateTransactionDto, loggedUser: User): Promise<Transaction> {
+        let transactionDestination;
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try{
         let originObject;
         if (dto.originObject === TransactionObjects.consortium) {
             originObject = await this.consortiumModel.findById(dto.originId);
@@ -54,7 +61,7 @@ export class TransactionService {
             destinationObject = await this.bankingModel.findById(dto.destinationId);
         }
         if (!destinationObject || !originObject) {
-            throw new BadRequestException();
+            throw new BadRequestException(ConstApp.DESTINATION_ORIGIN_NOT_FOUND);
         }
         const originBalance = await originObject.calculateBalance();
         const destinationBalance = await destinationObject.calculateBalance();
@@ -88,11 +95,24 @@ export class TransactionService {
         destinationObject.transactions.push(transactionDestination);
         await originObject.save();
         await destinationObject.save();
+        session.commitTransaction();
+    }
+    catch(error){
+        session.abortTransaction();
+        throw new SomethingWentWrongException();
+    }
+    finally{
+        session.endSession();
+    }
         return transactionDestination;
     }
 
     async createTransactionConsortium(dto: CreateTransactionDto, loggedUser: User): Promise<Transaction> {
+        let transactionDestination;
         let originObject: Consortium | Banking;
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try{
         const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         if (dto.originObject === TransactionObjects.consortium) {
@@ -140,7 +160,7 @@ export class TransactionService {
             lastBalance: originBalance,
             actualBalance: originBalance + dto.amount * -1,
         });
-        const transactionDestination = new this.transactionModel({
+        transactionDestination = new this.transactionModel({
             type: TransactionType.credit,
             originObject: dto.originObject,
             destinationObject: dto.destinationObject,
@@ -156,9 +176,16 @@ export class TransactionService {
         destinationObject.transactions.push(transactionDestination);
         await originObject.save();
         await destinationObject.save();
+        session.commitTransaction();
+    }catch(error){
+        session.abortTransaction();
+        throw new SomethingWentWrongException();
+    }
+    finally{
+        session.endSession();
+    }
         return transactionDestination;
     }
-
     async get(id: string): Promise<Transaction> {
         return await this.transactionModel.findById(id).exec();
     }
@@ -332,7 +359,7 @@ export class TransactionService {
     private async getTransactionByBanking(loggedUser: User): Promise<Array<TransactionDto>> {
         const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id });
         if (bankings.length === 0) {
-            throw new BadRequestException();
+            throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
         }
         const banking = bankings.pop();
         const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
@@ -342,12 +369,12 @@ export class TransactionService {
             let destinationName;
             switch (banking._id.toString()) {
                 case transaction.originId.toString():
-                    //Consorcio es origen
+                    //Consortium is origin
                     originName = banking.name;
                     destinationName = consortium.name;
                     break;
                 case transaction.destinationId.toString():
-                    //Consorcio es destino
+                    //Consortium is destination
                     destinationName = banking.name;
                     originName = consortium.name;
                     break;
