@@ -26,7 +26,6 @@ import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
-import { SomethingWentWrongException } from '@src/common/exceptions/something.went.wrong.exception';
 
 @ApiTags('auth')
 @Controller('auth')
