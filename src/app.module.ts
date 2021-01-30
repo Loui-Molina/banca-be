@@ -6,6 +6,8 @@ import { UtilsModule } from '@utils/utils.module';
 import { CoreModule } from '@manager/core.module';
 import { DatabaseModule } from '@database/database.module';
 import { CommonModule } from '@common.module/common.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksService } from '@src/modules/services/tasks.service';
 
 @Module({
     imports: [
@@ -17,6 +19,7 @@ import { CommonModule } from '@common.module/common.module';
         DatabaseModule,
         CoreModule,
         HealthCheckModule,
+        ScheduleModule.forRoot(),
         UtilsModule,
         CommonModule, // TODO CHECK IF NEEDED TO MOVE TO MANAGER MODULE
     ],
