@@ -97,12 +97,11 @@ export class DashboardService {
         }
         const consortium = consortiums.pop();
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
-        let balance = 0;
+        const balance = await consortium.calculateBalance();
         let losses = 0;
         let profits = 0;
         let ticketsSold = 0;
         for await (const banking of bankings) {
-            balance += await banking.calculateBalance();
             losses += 1;
             profits += 1;
             ticketsSold += 1;

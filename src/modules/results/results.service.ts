@@ -114,7 +114,7 @@ export class ResultsService {
         }
         lottery.results.push(result);
         await lottery.save();
-        // TODO Calcular ganadores
+        // Calculando ganadores
         const bankings = await this.bankingModel.find().exec();
         for (const banking of bankings) {
             const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
@@ -129,7 +129,11 @@ export class ResultsService {
                 const month = `${bet.date.getMonth() + 1}`.padStart(2, '0');
                 const day = `${bet.date.getDate()}`.padStart(2, '0');
                 const dateParsed = new Date(`${bet.date.getFullYear()}-${month}-${day}T05:00:00.000Z`);
-                if (filterDateA <= dateParsed && filterDateB >= dateParsed) {
+                if (
+                    filterDateA <= dateParsed &&
+                    filterDateB >= dateParsed &&
+                    ![BetStatus.claimed, BetStatus.cancelled].includes(bet.betStatus)
+                ) {
                     return true;
                 }
                 return false;

@@ -67,14 +67,7 @@ export class BettingPanelService {
             );
         }, 0);
         const totalAwards: number = bets.reduce(function (acc, bet) {
-            return (
-                acc +
-                (bet.betStatus === BetStatus.winner || bet.betStatus === BetStatus.claimed
-                    ? bet.plays.reduce(function (acc, play) {
-                          return acc + play.amount;
-                      }, 0)
-                    : 0)
-            );
+            return acc + ([BetStatus.winner, BetStatus.claimed].includes(bet.betStatus) ? bet.amountWin : 0);
         }, 0);
         return {
             balance: await banking.calculateBalance(),
@@ -234,7 +227,7 @@ export class BettingPanelService {
                 destinationId: banking._id,
                 destinationObject: TransactionObjects.banking,
                 amount: amountToPay * -1,
-                description: 'A client reclaimed a bet',
+                description: 'A client claimed a bet',
                 creationUserId: loggedUser._id,
                 modificationUserId: loggedUser._id,
                 lastBalance: balance,
