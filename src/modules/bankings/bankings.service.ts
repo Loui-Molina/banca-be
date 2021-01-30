@@ -93,6 +93,7 @@ export class BankingsService {
 
     async create(createBankingDto: CreateBankingDto, loggedUser: User): Promise<Banking> {
         const consortium = await this.consortiumService.getConsortiumForUser(createBankingDto.consortiumId, loggedUser);
+        const { showPercentage, name, status, earningPercentage } = createBankingDto.banking;
 
         //The rol is hardcoded to prevent issues
         createBankingDto.user.role = Role.banker;
@@ -102,14 +103,15 @@ export class BankingsService {
         try {
             createdUser = (await this.userAuthService.signUp(createBankingDto.user, loggedUser)).user;
             newObject = new this.bankingModel({
-                name: createBankingDto.banking.name,
-                status: createBankingDto.banking.status,
+                name: name,
+                status: status,
                 consortiumId: consortium._id,
                 ownerUserId: createdUser.id,
-                showPercentage: createBankingDto.banking.showPercentage,
+                showPercentage: showPercentage,
                 creationUserId: loggedUser._id,
                 modificationUserId: loggedUser._id,
-            });
+                earningPercentage: earningPercentage,
+            } as Banking);
             await newObject.save();
         } catch (e) {
             if (createdUser) {
@@ -167,6 +169,7 @@ export class BankingsService {
             showPercentage: banking.showPercentage,
             startOfOperation: banking.startOfOperation,
             status: banking.status,
+            earningPercentage: banking.earningPercentage,
             ownerUsername: bankingUser ? bankingUser.username : null,
             ownerName: bankingUser ? bankingUser.name : null,
         };
@@ -192,13 +195,7 @@ export class BankingsService {
             default:
                 throw new BadRequestException();
         }
-
-        const bankings: Array<Banking> = await this.bankingModel.find(filter).exec();
-        const bankingsDto: BankingDto[] = [];
-        for await (const banking of bankings) {
-            bankingsDto.push(banking);
-        }
-        return bankings;
+        return await this.bankingModel.find(filter).exec();
     }
 
     async getFilteredDocuments(field: string, value: any, loggedUser: User): Promise<Banking[]> {
@@ -215,8 +212,7 @@ export class BankingsService {
             default:
                 throw new BadRequestException();
         }
-        const bankings: Array<Banking> = await this.bankingModel.find(filter).exec();
-        return Promise.all(bankings.filter((banking: Banking) => banking[field as keyof Banking] === value));
+        return await this.bankingModel.find(filter).exec();
     }
 
     async getSingleFilteredDocument(field: string, value: any, loggedUser: User): Promise<Banking> {

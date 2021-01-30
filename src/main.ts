@@ -9,12 +9,7 @@ async function bootstrap() {
     app.enableCors();
     app.setGlobalPrefix(app.get('ConfigService').get('APP_GLOBAL_PREFIX'));
     app.useGlobalFilters(new AnyExceptionFilter());
-    // app.useGlobalPipes(
-    //     new ValidationPipe({
-    //         forbidNonWhitelisted: true,
-    //         whitelist: true,
-    //     }),
-    // );
+    app.useGlobalPipes(new ValidationPipe());
     const options = new DocumentBuilder()
         .setTitle(app.get('ConfigService').get('APP_TITLE'))
         .setDescription(app.get('ConfigService').get('APP_DESCRIPTION'))
@@ -26,5 +21,6 @@ async function bootstrap() {
 
     await app.listen(3000);
 }
+
 // noinspection JSIgnoredPromiseFromCall
 bootstrap();

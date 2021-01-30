@@ -11,6 +11,7 @@ import { CreateConsortiumDto } from '@consortiums/dtos/create.consortium.dto';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
+import { UpdateConsortiumDto } from '@consortiums/dtos/update.consortium.dto';
 
 @ApiTags('consortiums')
 @Controller('consortiums')
@@ -54,7 +55,7 @@ export class ConsortiumController {
         type: Consortium,
     })
     @Roles(Role.admin)
-    update(@Body() dto: CreateConsortiumDto, @AuthUser() loggedUser: User): Promise<Consortium> {
+    update(@Body() dto: UpdateConsortiumDto, @AuthUser() loggedUser: User): Promise<Consortium> {
         return this.consortiumService.update(dto, loggedUser);
     }
 
