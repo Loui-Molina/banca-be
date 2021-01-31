@@ -1,20 +1,24 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
+import {BadRequestException, ConflictException, Injectable, InternalServerErrorException, Logger} from '@nestjs/common';
+import {InjectConnection, InjectModel} from '@nestjs/mongoose';
 import {User} from '@database/datamodels/schemas/user';
-import {Model, ObjectId} from 'mongoose';
+import {Connection, Model, ObjectId} from 'mongoose';
 import {Consortium} from '@database/datamodels/schemas/consortium';
 import {Banking} from '@database/datamodels/schemas/banking';
 import {MessageDto} from '@src/modules/chat/dtos/message.dto';
 import {CreateMessageDto} from '@src/modules/chat/dtos/create.message.dto';
 import {Role} from '@database/datamodels/enums/role';
 import {Message} from '@database/datamodels/schemas/message';
+import {ConstApp} from "@utils/const.app";
 
 @Injectable()
 export class ChatService {
+    private readonly logger: Logger = new Logger(ChatService.name);
+
     constructor(
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Message.name) private readonly messageModel: Model<Message>,
+        @InjectConnection(ConstApp.BANKING) private readonly connection: Connection,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<MessageDto>> {
@@ -65,29 +69,45 @@ export class ChatService {
     }
 
     async create(dto: CreateMessageDto, loggedUser: User): Promise<MessageDto> {
-        const id = await this.getIdOfConsortiumBanking(loggedUser);
-        if (!id) {
-            throw new BadRequestException();
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        let msg: Message;
+        try {
+            const id = await this.getIdOfConsortiumBanking(loggedUser);
+            if (!id) {
+                throw new BadRequestException();
+            }
+            let destinationId;
+            if (loggedUser.role === Role.consortium) {
+                const banking = await this.bankingModel.findById(dto.destinationId).exec();
+                destinationId = banking._id;
+            }
+            if (loggedUser.role === Role.banker) {
+                const banking = await this.bankingModel.findById(id).exec();
+                destinationId = banking.consortiumId;
+            }
+            await this.consortiumModel.findById(dto.destinationId);
+            msg = new this.messageModel({
+                originId: id,
+                destinationId: destinationId,
+                message: dto.message,
+                creationUserId: loggedUser._id,
+                modificationUserId: loggedUser._id,
+                date: new Date(),
+            });
+            await msg.save();
+            await session.commitTransaction();
+        } catch (error) {
+            await session.abortTransaction();
+            this.logger.error(error);
+            if (error.code === 11000) {
+                throw new ConflictException(ConstApp.USERNAME_EXISTS_ERROR);
+            } else {
+                throw new InternalServerErrorException();
+            }
+        } finally {
+            session.endSession();
         }
-        let destinationId;
-        if (loggedUser.role === Role.consortium) {
-            const banking = await this.bankingModel.findById(dto.destinationId).exec();
-            destinationId = banking._id;
-        }
-        if (loggedUser.role === Role.banker) {
-            const banking = await this.bankingModel.findById(id).exec();
-            destinationId = banking.consortiumId;
-        }
-        await this.consortiumModel.findById(dto.destinationId);
-        const msg = new this.messageModel({
-            originId: id,
-            destinationId: destinationId,
-            message: dto.message,
-            creationUserId: loggedUser._id,
-            modificationUserId: loggedUser._id,
-            date: new Date(),
-        });
-        await msg.save();
         return this.mapToDto(msg);
     }
 
