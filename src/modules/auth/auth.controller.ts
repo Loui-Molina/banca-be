@@ -65,10 +65,7 @@ export class AuthController {
         description: ConstApp.DEFAULT_GET_OK,
         type: ResponseSignInDto,
     })
-    async singIn(
-        @Ip() userIp: string,
-        @Body() signInCredentialsDto: SignInCredentialsDto,
-    ): Promise<ResponseSignInDto> {
+    async singIn(@Ip() userIp: string, @Body() signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
         this.logger.debug('UserIp ' + userIp);
         return this.authService.signIn(userIp, signInCredentialsDto);
     }

@@ -4,8 +4,8 @@ import { ConstApp } from '@utils/const.app';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { Message, MessageSchema } from '@database/datamodels/schemas/message';
-import { ChatService } from '@src/modules/chat/chat.service';
-import { ChatController } from '@src/modules/chat/chat.controller';
+import { ChatService } from '@chat/chat.service';
+import { ChatController } from '@chat/chat.controller';
 
 @Module({
     imports: [

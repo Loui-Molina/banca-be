@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import {IsBoolean, IsDate, IsMongoId, IsString} from 'class-validator';
+import { IsBoolean, IsDate, IsMongoId, IsString } from 'class-validator';
 
 export class MessageDto {
     @IsMongoId() @ApiProperty() _id: ObjectId;
