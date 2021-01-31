@@ -71,7 +71,7 @@ export class BettingPanelController {
         return this.bettingPanelService.cancelBet(dto, loggedUser);
     }
 
-    @Put('get/claim')
+    @Put('search/ticket')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_PUT_OK,
         type: BetDto,
