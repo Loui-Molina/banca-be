@@ -71,6 +71,16 @@ export class BettingPanelController {
         return this.bettingPanelService.cancelBet(dto, loggedUser);
     }
 
+    @Put('search/ticket')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_PUT_OK,
+        type: BetDto,
+    })
+    @Roles(Role.banker)
+    getClaimTicket(@Body() dto: ClaimBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
+        return this.bettingPanelService.getClaimTicket(dto, loggedUser);
+    }
+
     @Put('claim')
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,

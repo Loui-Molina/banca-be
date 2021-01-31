@@ -189,6 +189,15 @@ export class BettingPanelService {
         return this.mapToDto(betFounded);
     }
 
+    async getClaimTicket(dto: ClaimBetDto, loggedUser: User): Promise<BetDto> {
+        const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+        const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
+        if (bet.betStatus !== BetStatus.winner) {
+            throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);
+        }
+        return this.mapToDto(bet);
+    }
+
     async claimTicket(dto: ClaimBetDto, loggedUser: User): Promise<BetDto> {
         const session = await this.connection.startSession();
         session.startTransaction();
