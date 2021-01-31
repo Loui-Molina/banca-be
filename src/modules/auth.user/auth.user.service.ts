@@ -163,7 +163,7 @@ export class AuthUserService {
         return bcrypt.hash(password, salt);
     }
 
-    async getUserByUsernameRole(username:string,role:Role):Promise<User>{
-        return await this.usersService.getUserByUsernameRole(username,role);
+    async getUserByUsernameRole(username: string, role: Role): Promise<User> {
+        return await this.usersService.getUserByUsernameRole(username, role);
     }
 }

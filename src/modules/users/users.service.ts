@@ -5,7 +5,6 @@ import { Repository } from '@common/interfaces/repository';
 import { User } from '@database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
 import { Role } from '@database/datamodels/enums/role';
-import { exec } from 'child_process';
 
 @Injectable()
 export class UsersService implements Repository<User, UserDto> {
@@ -80,7 +79,7 @@ password
         return await this.userModel.findById({ _id, role }).exec();
     }
 
-    async getUserByUsernameRole(username:string, role:Role):Promise<User>{
-        return await this.userModel.findOne({username, role}).exec();
-        }
+    async getUserByUsernameRole(username: string, role: Role): Promise<User> {
+        return await this.userModel.findOne({ username, role }).exec();
+    }
 }
