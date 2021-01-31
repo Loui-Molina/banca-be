@@ -118,6 +118,7 @@ export class BettingPanelService {
             });
             banking.transactions.push(transaction);
             await banking.save();
+            await session.commitTransaction();
         } catch (error) {
             await session.abortTransaction();
             this.logger.error(error);
