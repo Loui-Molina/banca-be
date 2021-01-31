@@ -1,22 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
+import { IsMongoId, IsNumber, IsString } from 'class-validator';
 
 export class DashboardBankingDto {
-    @ApiProperty() _id: ObjectId;
-    @ApiProperty() name: string;
+    @ApiProperty() @IsMongoId() _id: ObjectId;
+    @ApiProperty() @IsString() name: string;
 
     // Cantidades
-    @ApiProperty() cancelled: number; // Tickets cancelados
-    @ApiProperty() expired: number; // Tickets expirados
-    @ApiProperty() claimed: number; // Tickets reclamados
-    @ApiProperty() pending: number; // Tickets pendientes
-    @ApiProperty() winner: number; // Tickets ganadores
-    @ApiProperty() loser: number; // Tickets perdidos
-    @ApiProperty() total: number; // Sumatoria de tickets
+    @ApiProperty() @IsNumber() cancelled: number; // Tickets cancelados
+    @ApiProperty() @IsNumber() expired: number; // Tickets expirados
+    @ApiProperty() @IsNumber() claimed: number; // Tickets reclamados
+    @ApiProperty() @IsNumber() pending: number; // Tickets pendientes
+    @ApiProperty() @IsNumber() winner: number; // Tickets ganadores
+    @ApiProperty() @IsNumber() loser: number; // Tickets perdidos
+    @ApiProperty() @IsNumber() total: number; // Sumatoria de tickets
 
     // Montos
-    @ApiProperty() profits: number; // Ganancias (!= cancelled)
-    @ApiProperty() prizes: number; // Premios (winner + claimed)
-    @ApiProperty() pendingPrizes: number; // Premios pendientes (winner)
-    @ApiProperty() balance: number; // Balance
+    @ApiProperty() @IsNumber() profits: number; // Ganancias (!= cancelled)
+    @ApiProperty() @IsNumber() prizes: number; // Premios (winner + claimed)
+    @ApiProperty() @IsNumber() pendingPrizes: number; // Premios pendientes (winner)
+    @ApiProperty() @IsNumber() balance: number; // Balance
 }
