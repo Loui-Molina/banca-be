@@ -1,6 +1,7 @@
 import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException, Logger } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
+import { User } from '@database/datamodels/schemas/user';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
@@ -19,7 +20,7 @@ export class ValidationPipe implements PipeTransform<any> {
     }
 
     private toValidate(metatype: Function): boolean {
-        const types: Function[] = [String, Boolean, Number, Array, Object];
+        const types: Function[] = [String, Boolean, Number, Array, Object, User];
         return !types.includes(metatype);
     }
 }
