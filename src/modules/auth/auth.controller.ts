@@ -55,7 +55,7 @@ export class AuthController {
     })
     async singUpLogged(
         @AuthUser() user: User,
-        @Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto,
+        @Body() signUpCredentialsDto: SignUpCredentialsDto,
     ): Promise<ResponseDto> {
         return this.authService.signUp(signUpCredentialsDto, user);
     }
@@ -67,7 +67,7 @@ export class AuthController {
     })
     async singIn(
         @Ip() userIp: string,
-        @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
+        @Body() signInCredentialsDto: SignInCredentialsDto,
     ): Promise<ResponseSignInDto> {
         this.logger.debug('UserIp ' + userIp);
         return this.authService.signIn(userIp, signInCredentialsDto);
@@ -78,7 +78,7 @@ export class AuthController {
     @Roles(Role.admin)
     async changePasswordRemember(
         @Ip() userIp: string,
-        @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
+        @Body() changePasswordDto: ChangePasswordDto,
         @AuthUser() user: User,
     ): Promise<ResponseDto> {
         return this.authService.changePassword(userIp, changePasswordDto, user, true);
