@@ -26,6 +26,7 @@ import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { AuthRefreshToken } from '@src/common/decorators/auth.refresh.token.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -111,7 +112,7 @@ export class AuthController {
         description: ConstApp.DEFAULT_GET_OK,
         type: String,
     })
-    getToken(@Ip() ipAdress: string, @AuthUser() refreshToken: RefreshToken): Promise<ResponseSignInDto> {
+    getToken(@Ip() ipAdress: string, @AuthRefreshToken() refreshToken: RefreshToken): Promise<ResponseSignInDto> {
         return this.tokenService.getRefreshToken(ipAdress, refreshToken, true);
     }
 
