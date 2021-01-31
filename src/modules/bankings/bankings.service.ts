@@ -90,7 +90,10 @@ export class BankingsService {
     async create(createBankingDto: CreateBankingDto, loggedUser: User): Promise<Banking> {
         const consortium = await this.consortiumService.getConsortiumForUser(createBankingDto.consortiumId, loggedUser);
         const { showPercentage, name, status, earningPercentage } = createBankingDto.banking;
-
+        if (!consortium.startOfOperation){
+            //Inicio de operacion
+            consortium.startOfOperation = new Date();
+        }
         //The rol is hardcoded to prevent issues
         createBankingDto.user.role = Role.banker;
 

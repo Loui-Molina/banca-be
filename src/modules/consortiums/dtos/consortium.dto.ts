@@ -11,6 +11,6 @@ export class ConsortiumDto {
     @ApiProperty() @IsString() name: string;
     @ApiProperty() @IsDate() createdAt: Date;
     @ApiProperty() @IsBoolean() status: boolean;
-    @ApiProperty() @IsDate() firstTransactionDate: Date;
+    @ApiProperty() @IsDate() startOfOperation: Date;
     @ApiProperty() @IsArray() @IsOptional() bankings?: Banking[];
 }

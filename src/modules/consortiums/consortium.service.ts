@@ -86,7 +86,7 @@ export class ConsortiumService {
         return {
             _id: consortium._id,
             name: consortium.name,
-            firstTransactionDate: consortium.firstTransactionDate,
+            startOfOperation: consortium.startOfOperation,
             status: consortium.status,
             createdAt: consortium.createdAt,
             bankings,
