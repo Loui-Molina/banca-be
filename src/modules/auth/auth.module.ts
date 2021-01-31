@@ -12,6 +12,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { ConstApp } from '@utils/const.app';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
+import { UsersAdminInitializeService } from './users.admin.initialize.service';
 
 @Global()
 @Module({
@@ -34,7 +35,7 @@ import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/conso
         }),
         AuthUserModule,
     ],
-    providers: [AuthService, JwtStrategy, TokenService, RefreshStrategy],
+    providers: [AuthService, UsersAdminInitializeService,JwtStrategy, TokenService, RefreshStrategy],
     controllers: [AuthController],
     exports: [
         JwtModule,
