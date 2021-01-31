@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { HealthCheckModule } from '@src/modules/health-check/health.check.module';
+import { HealthCheckModule } from '@health-check/health.check.module';
 import { AuthModule } from '@auth/auth.module';
-import { UsersModule } from '@users/users.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
-import { ManagerModule } from '@src/modules/manager/manager.module';
-import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
+import { CoreModule } from '@manager/core.module';
 import { DatabaseModule } from '@database/database.module';
+import { CommonModule } from '@common.module/common.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksService } from '@src/modules/services/tasks.service';
 
 @Module({
     imports: [
@@ -15,36 +15,16 @@ import { DatabaseModule } from '@database/database.module';
             isGlobal: true,
             envFilePath: ['.env'],
         }),
-        MongooseModule.forRootAsync({
-            imports: [ConfigModule],
-            connectionName: 'banca',
-            useFactory: async (config: ConfigService) => ({
-                uri: config.get('bancaDB'),
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            }),
-            inject: [ConfigService],
-        }),
-        MongooseModule.forRootAsync({
-            imports: [ConfigModule],
-            connectionName: 'user',
-            useFactory: async (config: ConfigService) => ({
-                uri: config.get('userDB'),
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            }),
-            inject: [ConfigService],
-        }),
-        ManagerModule,
-        HealthCheckModule,
-        DatabaseModule,
         AuthModule,
-        AuthUserModule,
-        UsersModule,
+        DatabaseModule,
+        CoreModule,
+        HealthCheckModule,
+        ScheduleModule.forRoot(),
         UtilsModule,
+        CommonModule, // TODO CHECK IF NEEDED TO MOVE TO MANAGER MODULE
     ],
     controllers: [],
-    providers: [],
-    exports: [UsersModule, UtilsModule, AuthModule, AuthUserModule],
+    providers: [TasksService],
+    exports: [CoreModule, UtilsModule, AuthModule, DatabaseModule],
 })
 export class AppModule {}

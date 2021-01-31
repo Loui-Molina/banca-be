@@ -1,4 +1,6 @@
+import { ObjectId } from 'mongoose';
+
 export interface JwtPayloadRefresh {
-    userId: string;
+    userId: ObjectId;
     value: string;
 }

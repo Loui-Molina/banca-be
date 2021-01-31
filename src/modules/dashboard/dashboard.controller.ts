@@ -1,20 +1,21 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { DashboardDiagramDto } from '@src/modules/dashboard/dtos/dashboard.dto';
-import { DashboardService } from '@src/modules/dashboard/dashboard.service';
-import { ConstApp } from '@utils/const.app';
-import { Roles } from '@src/common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
-import { DashboardConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.consortium.dto';
-import { DashboardBankingDto } from '@src/modules/dashboard/dtos/dashboard.banking.dto';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { UserDocument } from '@database/datamodels/schemas/user';
-import { DashboardGraphConsortiumDto } from '@src/modules/dashboard/dtos/dashboard.graph.consortium.dto';
-import { DashboardGraphBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.banking.dto';
-import { DashboardWidgetsDto } from '@src/modules/dashboard/dtos/dashboard.widgets.dto';
 import { RolesGuard } from '@auth/guards/roles.guard';
-import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/dashboard.graph.balance.banking.dto';
+import { DashboardDiagramDto } from '@dashboard/dtos/dashboard.dto';
+import { DashboardService } from '@dashboard/dashboard.service';
+import { ConstApp } from '@utils/const.app';
+import { Roles } from '@common/decorators/roles.decorator';
+import { Role } from '@database/datamodels/enums/role';
+import { DashboardConsortiumDto } from '@dashboard/dtos/dashboard.consortium.dto';
+import { DashboardBankingDto } from '@dashboard/dtos/dashboard.banking.dto';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
+import { User } from '@database/datamodels/schemas/user';
+import { DashboardGraphConsortiumDto } from '@dashboard/dtos/dashboard.graph.consortium.dto';
+import { DashboardGraphBankingDto } from '@dashboard/dtos/dashboard.graph.banking.dto';
+import { DashboardWidgetsDto } from '@dashboard/dtos/dashboard.widgets.dto';
+import { DashboardGraphBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.balance.banking.dto';
+import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
 
 @ApiTags('dashboard')
 @Controller('dashboard')
@@ -22,7 +23,7 @@ import { DashboardGraphBalanceBankingDto } from '@src/modules/dashboard/dtos/das
 export class DashboardController {
     constructor(private readonly dashboardService: DashboardService) {}
 
-    @Get('getDashboardDiagram')
+    @Get('diagram')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardDiagramDto,
@@ -32,7 +33,7 @@ export class DashboardController {
         return this.dashboardService.getDashboardDiagram();
     }
 
-    @Get('getConsortiumsStatistics')
+    @Get('consortiums-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardConsortiumDto,
@@ -42,17 +43,17 @@ export class DashboardController {
         return this.dashboardService.getConsortiumsStatistics();
     }
 
-    @Get('getBankingsStatistics')
+    @Get('banking-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardBankingDto,
     })
     @Roles(Role.admin, Role.consortium)
-    getBankingsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardBankingDto[]> {
+    getBankingsStatistics(@AuthUser() loggedUser: User): Promise<DashboardBankingDto[]> {
         return this.dashboardService.getBankingsStatistics(loggedUser);
     }
 
-    @Get('getGraphConsortiumStatistics')
+    @Get('graph-consortium-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardGraphConsortiumDto,
@@ -62,17 +63,17 @@ export class DashboardController {
         return this.dashboardService.getGraphConsortiumStatistics();
     }
 
-    @Get('getGraphBankingStatistics')
+    @Get('graph-banking-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardGraphBankingDto,
     })
     @Roles(Role.admin, Role.consortium)
-    getGraphBankingStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardGraphBankingDto[]> {
+    getGraphBankingStatistics(@AuthUser() loggedUser: User): Promise<DashboardGraphBankingDto[]> {
         return this.dashboardService.getGraphBankingStatistics(loggedUser);
     }
 
-    @Get('getAdminWidgetsStatistics')
+    @Get('admin-widgets-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardWidgetsDto,
@@ -82,33 +83,53 @@ export class DashboardController {
         return this.dashboardService.getAdminWidgetsStatistics();
     }
 
-    @Get('getConsortiumWidgetsStatistics')
+    @Get('consortium-widgets-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardWidgetsDto,
     })
     @Roles(Role.consortium)
-    getConsortiumWidgetsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+    getConsortiumWidgetsStatistics(@AuthUser() loggedUser: User): Promise<DashboardWidgetsDto> {
         return this.dashboardService.getConsortiumWidgetsStatistics(loggedUser);
     }
 
-    @Get('getBankingWidgetsStatistics')
+    @Get('banking-widgets-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardWidgetsDto,
     })
     @Roles(Role.banker)
-    getBankingWidgetsStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardWidgetsDto> {
+    getBankingWidgetsStatistics(@AuthUser() loggedUser: User): Promise<DashboardWidgetsDto> {
         return this.dashboardService.getBankingWidgetsStatistics(loggedUser);
     }
 
-    @Get('getGraphBankingBalanceStatistics')
+    @Get('banking-played-numbers-statistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardPlayedNumbersDto,
+    })
+    @Roles(Role.banker)
+    getBankingPlayedNumbersStatistics(@AuthUser() loggedUser: User): Promise<DashboardPlayedNumbersDto> {
+        return this.dashboardService.getBankingPlayedNumbersStatistics(loggedUser);
+    }
+
+    @Get('consortium-played-numbers-statistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardPlayedNumbersDto,
+    })
+    @Roles(Role.consortium)
+    getConsortiumPlayedNumbersStatistics(@AuthUser() loggedUser: User): Promise<DashboardPlayedNumbersDto> {
+        return this.dashboardService.getConsortiumPlayedNumbersStatistics(loggedUser);
+    }
+
+    @Get('graph-banking-balance-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: DashboardGraphBalanceBankingDto,
     })
     @Roles(Role.banker)
-    getGraphBankingBalanceStatistics(@AuthUser() loggedUser: UserDocument): Promise<DashboardGraphBalanceBankingDto[]> {
+    getGraphBankingBalanceStatistics(@AuthUser() loggedUser: User): Promise<DashboardGraphBalanceBankingDto[]> {
         return this.dashboardService.getGraphBankingBalanceStatistics(loggedUser);
     }
 }

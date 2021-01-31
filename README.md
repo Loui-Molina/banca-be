@@ -37,4 +37,4 @@ TOKEN_EXPIRES=300s
 # Database connections
 
 userDB=mongodb://localhost:27017/users
-bancaDB=mongodb://localhost:27017/banca
+bankingDB=mongodb://localhost:27017/banking

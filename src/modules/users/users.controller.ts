@@ -1,20 +1,22 @@
-import { Body, Controller, Delete, Get, Ip, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Ip, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
-import { UserService } from '@users/user.service';
-import { User, UserDocument } from '@src/modules/database/datamodels/schemas/user';
+import { UsersService } from '@users/users.service';
+import { User } from '@database/datamodels/schemas/user';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
 import { ConstApp } from '@utils/const.app';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { AuthUser } from '@common/decorators/auth.user.decorator';
+import * as mongoose from 'mongoose';
+import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
 
 @ApiTags('users')
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
-export class UserController {
-    constructor(private readonly userService: UserService) {}
+export class UsersController {
+    constructor(private readonly userService: UsersService) {}
 
     @Get()
     @Roles(Role.admin)
@@ -22,8 +24,9 @@ export class UserController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getAll(): Promise<Array<User>> {
-        return this.userService.getAll();
+    getAll(@Query() paginationQueryDto: PaginationQueryDto): Promise<Array<User>> {
+        const { limit, offset } = paginationQueryDto;
+        return this.userService.getAll(limit, offset);
     }
 
     @Get('search')
@@ -36,23 +39,13 @@ export class UserController {
         return this.userService.getFiltered(q, value);
     }
 
-    @Post()
-    @Roles(Role.admin)
-    @ApiCreatedResponse({
-        description: ConstApp.DEFAULT_POST_OK,
-        type: User,
-    })
-    create(@Body() dto: UserDto, @AuthUser() loggedUser: UserDocument): Promise<User> {
-        return this.userService.create(dto, loggedUser);
-    }
-
     @Put()
     @Roles(Role.admin)
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
         type: User,
     })
-    update(@Ip() userIp: string, @Body() dto: UserDto, @AuthUser() loggedUser: UserDocument): Promise<User> {
+    update(@Ip() userIp: string, @Body() dto: UserDto, @AuthUser() loggedUser: User): Promise<User> {
         return this.userService.update(dto, loggedUser, userIp);
     }
 
@@ -63,16 +56,16 @@ export class UserController {
         type: User,
     })
     delete(@Param('id') id: string): Promise<User> {
-        return this.userService.delete(id);
+        return this.userService.delete(new mongoose.Schema.Types.ObjectId(id));
     }
 
-    @Get('get/:id')
+    @Get(':id')
     @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
     async get(@Param('id') id: string): Promise<User> {
-        return await this.userService.get(id);
+        return await this.userService.get(new mongoose.Schema.Types.ObjectId(id));
     }
 }

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserController } from '@users/user.controller';
-import { UserService } from '@users/user.service';
-import { User, UserSchema } from '@src/modules/database/datamodels/schemas/user';
-import { AuthUserModule } from '@src/modules/auth.user/auth.user.module';
+import { User, UserSchema } from '@database/datamodels/schemas/user';
+import { ConstApp } from '@utils/const.app';
+import { UsersService } from '@users/users.service';
+import { UsersController } from '@users/users.controller';
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user'), AuthUserModule],
-    providers: [UserService],
-    controllers: [UserController],
-    exports: [UserService, MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], 'user')],
+    imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], ConstApp.USER)],
+    providers: [UsersService],
+    controllers: [UsersController],
+    exports: [UsersService],
 })
 export class UsersModule {}

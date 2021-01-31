@@ -1,9 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Play, PlaySchema } from '@database/datamodels/schemas/play';
-import { Prop } from '@nestjs/mongoose';
+import { Play } from '@database/datamodels/schemas/play';
+import { IsArray, IsMongoId, IsOptional } from 'class-validator';
 
 export class CreateBetDto {
-    @ApiProperty({ required: false }) _id: ObjectId;
-    @ApiProperty({ type: [Play] }) @Prop({ immutable: true, type: [PlaySchema] }) plays: Play[];
+    @IsMongoId()
+    @IsOptional()
+    @ApiProperty({ required: false })
+    _id?: ObjectId;
+    @ApiProperty({ type: [Play] })
+    @IsArray()
+    plays: Play[];
 }

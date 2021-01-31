@@ -8,10 +8,16 @@ import { JwtStrategy } from '@auth/jwt.strategy';
 import { AuthUserModule } from '@auth.user/auth.user.module';
 import { TokenService } from '@auth/token.service';
 import { RefreshStrategy } from '@auth/refresh.strategy';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
+import { ConstApp } from '@utils/const.app';
+import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 
 @Global()
 @Module({
     imports: [
+        MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], ConstApp.BANKING),
         JwtModule.registerAsync({
             useFactory: async (configService: ConfigService) => {
                 return {
@@ -37,6 +43,8 @@ import { RefreshStrategy } from '@auth/refresh.strategy';
         }),
         JwtStrategy,
         RefreshStrategy,
+        TokenService,
+        AuthUserModule,
     ],
 })
 export class AuthModule {}

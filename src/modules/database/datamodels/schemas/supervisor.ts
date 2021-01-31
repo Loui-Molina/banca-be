@@ -1,10 +1,8 @@
-import { DataObject } from '@src/modules/database/datamodels/schemas/data.object';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import * as mongoose from 'mongoose';
 
-export type SupervisorDocument = Supervisor & Document;
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
-export class Supervisor implements DataObject {
+export class Supervisor extends mongoose.Document /*implements DataObject*/ {
     @Prop({ required: true }) userId: string;
     @Prop() bankingIds: string[];
 
