@@ -78,4 +78,8 @@ password
     async getForValidation(_id: ObjectId, role: Role): Promise<User> {
         return await this.userModel.findById({ _id, role }).exec();
     }
+
+    async getUserByUsernameRole(username: string, role: Role): Promise<User> {
+        return await this.userModel.findOne({ username, role }).exec();
+    }
 }
