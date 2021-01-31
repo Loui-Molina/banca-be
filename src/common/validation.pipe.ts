@@ -2,6 +2,7 @@ import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException, Logge
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { User } from '@database/datamodels/schemas/user';
+import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
@@ -20,7 +21,7 @@ export class ValidationPipe implements PipeTransform<any> {
     }
 
     private toValidate(metatype: Function): boolean {
-        const types: Function[] = [String, Boolean, Number, Array, Object, User];
+        const types: Function[] = [String, Boolean, Number, Array, Object, User, RefreshToken];
         return !types.includes(metatype);
     }
 }
