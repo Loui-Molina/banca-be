@@ -13,6 +13,7 @@ export class SignUpCredentialsDto {
     @IsString()
     @MinLength(8)
     @MaxLength(35)
+    @IsOptional() // Solo para el edit
     // @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: ConstApp.PASSWORD_MESSAGE })
     password: string;
 
