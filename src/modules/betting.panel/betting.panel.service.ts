@@ -34,7 +34,6 @@ export class BettingPanelService {
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
     ) {}
 
-
     async getAll(loggedUser: User): Promise<Array<Bet>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
         return banking.bets.reverse();
@@ -192,7 +191,7 @@ export class BettingPanelService {
         try {
             const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
             const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
-            if (bet.betStatus !== BetStatus.winner || !(await this.canClaimTicket(bet))) {
+            if (bet.betStatus !== BetStatus.winner) {
                 throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);
             }
             let amountToPay = 0;
@@ -258,14 +257,6 @@ export class BettingPanelService {
         const diffMs = new Date(bet.date) - new Date();
         const diffMins = diffMs / 60000; // minutes
         return diffMins > -5;
-    }
-
-    private async canClaimTicket(bet: Bet): Promise<boolean> {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const diffDays = (new Date(bet.date) - new Date()) / 86400000;
-        // No se paga el ticket si ya pasaron 5 dias desde la creacion del mismo
-        return diffDays > -5;
     }
 
     private async createSN(): Promise<string> {
