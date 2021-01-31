@@ -1,16 +1,14 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Play, PlaySchema } from '@database/datamodels/schemas/play';
-import { Prop } from '@nestjs/mongoose';
-import { IsMongoId, IsOptional, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
-import { PlayBetDto } from '@betting.panel/dtos/play.bet.dto';
+import { Play } from '@database/datamodels/schemas/play';
+import { IsArray, IsMongoId, IsOptional } from 'class-validator';
 
 export class CreateBetDto {
     @IsMongoId()
     @IsOptional()
     @ApiProperty({ required: false })
-    _id: ObjectId;
+    _id?: ObjectId;
     @ApiProperty({ type: [Play] })
+    @IsArray()
     plays: Play[];
 }
