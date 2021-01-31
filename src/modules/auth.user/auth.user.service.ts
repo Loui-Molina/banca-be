@@ -162,4 +162,8 @@ export class AuthUserService {
     private async hashPassword(password: string, salt: string): Promise<string> {
         return bcrypt.hash(password, salt);
     }
+
+    async getUserByUsernameRole(username: string, role: Role): Promise<User> {
+        return await this.usersService.getUserByUsernameRole(username, role);
+    }
 }
