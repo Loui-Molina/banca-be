@@ -9,6 +9,7 @@ export class Message extends Document implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty({ type: Date }) @Prop({ immutable: true }) date: Date;
     @ApiProperty({ type: String }) @Prop({ required: true }) message: string;
+    @ApiProperty({ type: Boolean }) @Prop({ required: false }) readed: boolean;
     @Prop({ required: true, type: mongoose.Schema.Types.ObjectId })
     originId: ObjectId;
     @Prop({ required: true, type: mongoose.Schema.Types.ObjectId })

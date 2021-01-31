@@ -7,6 +7,7 @@ export class MessageDto {
     @IsMongoId() @ApiProperty() originId: ObjectId;
     @IsMongoId() @ApiProperty() destinationId: ObjectId;
     @IsString() @ApiProperty() message: string;
+    @IsBoolean() @ApiProperty() readed: boolean;
     @IsString() @ApiProperty() destinationName?: string;
     @IsString() @ApiProperty() originName?: string;
     @IsBoolean() @ApiProperty() sender?: boolean;

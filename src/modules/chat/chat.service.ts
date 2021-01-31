@@ -15,6 +15,7 @@ import { CreateMessageDto } from '@chat/dtos/create.message.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { Message } from '@database/datamodels/schemas/message';
 import { ConstApp } from '@utils/const.app';
+import { ReadMessageDto } from '@chat/dtos/read.message.dto';
 
 @Injectable()
 export class ChatService {
@@ -74,6 +75,79 @@ export class ChatService {
         return messagesDto;
     }
 
+    async getAllUnreadMessages(loggedUser: User): Promise<Array<MessageDto>> {
+        const id = await this.getIdOfConsortiumBanking(loggedUser);
+        if (!id) {
+            throw new BadRequestException();
+        }
+        const messagesDto: MessageDto[] = [];
+        const messages = await this.messageModel
+            .find()
+            .and([{ destinationId: id }, { readed: false }])
+            .exec();
+        for await (const msg of messages) {
+            const msgDto = await this.mapToDto(msg);
+            let sender = false;
+            if (msgDto.originId.toString() === id.toString()) {
+                // Vos lo enviaste
+                let destinationName: string;
+                if (loggedUser.role === Role.consortium) {
+                    const banking = await this.bankingModel.findById(msg.destinationId).exec();
+                    destinationName = banking.name;
+                }
+                if (loggedUser.role === Role.banker) {
+                    const banking = await this.bankingModel.findById(id).exec();
+                    const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
+                    destinationName = consortium.name;
+                }
+                msgDto.destinationName = destinationName;
+                sender = true;
+            } else {
+                // Te lo enviaron
+                let originName: string;
+                if (loggedUser.role === Role.consortium) {
+                    const banking = await this.bankingModel.findById(msg.originId).exec();
+                    originName = banking.name;
+                }
+                if (loggedUser.role === Role.banker) {
+                    const banking = await this.bankingModel.findById(id).exec();
+                    const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
+                    originName = consortium.name;
+                }
+                msgDto.originName = originName;
+            }
+            msgDto.sender = sender;
+            messagesDto.push(msgDto);
+        }
+        return messagesDto;
+    }
+
+    async readMessages(dto: ReadMessageDto, loggedUser: User): Promise<boolean> {
+        const id = await this.getIdOfConsortiumBanking(loggedUser);
+        if (!id) {
+            throw new BadRequestException();
+        }
+        let originId;
+        if (loggedUser.role === Role.consortium) {
+            const banking = await this.bankingModel.findById(dto.originId).exec();
+            originId = banking._id;
+        }
+        if (loggedUser.role === Role.banker) {
+            const banking = await this.bankingModel.findById(id).exec();
+            originId = banking.consortiumId;
+        }
+        const messages = await this.messageModel
+            .find()
+            .and([{ originId: originId }, { destinationId: id }, { readed: false }])
+            .exec();
+        for (const message of messages) {
+            message.readed = true;
+            console.log('msg', message.message);
+            await message.save();
+        }
+        return true;
+    }
+
     async create(dto: CreateMessageDto, loggedUser: User): Promise<MessageDto> {
         const session = await this.connection.startSession();
         session.startTransaction();
@@ -100,6 +174,7 @@ export class ChatService {
                 creationUserId: loggedUser._id,
                 modificationUserId: loggedUser._id,
                 date: new Date(),
+                readed: false,
             });
             await msg.save();
             await session.commitTransaction();
@@ -141,13 +216,14 @@ export class ChatService {
     }
 
     private async mapToDto(msg: Message): Promise<MessageDto> {
-        const { _id, date, message, originId, destinationId } = msg;
+        const { _id, date, message, originId, destinationId, readed } = msg;
         return {
             _id,
             date,
             message,
             originId,
             destinationId,
+            readed,
         };
     }
 }
