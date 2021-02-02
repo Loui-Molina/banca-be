@@ -1,22 +1,23 @@
-import {Injectable, Logger, UnauthorizedException} from '@nestjs/common';
-import {JwtService} from '@nestjs/jwt';
-import {Model, ObjectId} from 'mongoose';
-import {ResponsePayload} from '@users/dtos/response.payload.dto';
-import {AuthUserService} from '@auth.user/auth.user.service';
-import {ConstApp} from '@utils/const.app';
-import {JwtPayload} from '@auth/jwt.payload.interface';
-import {ResponseDto} from '@utils/dtos/response.dto';
-import {Role} from '@database/datamodels/enums/role';
-import {User} from '@database/datamodels/schemas/user';
-import {ResponseSignInDto} from '@auth/dtos/response.sign.in.dto';
-import {ConfigService} from '@nestjs/config';
-import {TokenService} from '@auth/token.service';
-import {SignInCredentialsDto} from '@auth/dtos/sign.in.credentials.dto';
-import {SignUpCredentialsDto} from '@auth/dtos/sign.up.credentials.dto';
-import {ChangePasswordDto} from '@auth/dtos/change.password.dto';
-import {InjectModel} from '@nestjs/mongoose';
-import {Banking} from '@database/datamodels/schemas/banking';
-import {Consortium} from '@database/datamodels/schemas/consortium';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Model, ObjectId } from 'mongoose';
+import { ResponsePayload } from '@users/dtos/response.payload.dto';
+import { AuthUserService } from '@auth.user/auth.user.service';
+import { ConstApp } from '@utils/const.app';
+import { JwtPayload } from '@auth/jwt.payload.interface';
+import { ResponseDto } from '@utils/dtos/response.dto';
+import { Role } from '@database/datamodels/enums/role';
+import { User } from '@database/datamodels/schemas/user';
+import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
+import { ConfigService } from '@nestjs/config';
+import { TokenService } from '@auth/token.service';
+import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Banking } from '@database/datamodels/schemas/banking';
+import { Consortium } from '@database/datamodels/schemas/consortium';
+import {WebUser} from "@database/datamodels/schemas/web.user";
 
 @Injectable()
 export class AuthService {
@@ -29,6 +30,7 @@ export class AuthService {
         private readonly tokenService: TokenService,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
+        @InjectModel(WebUser.name) private readonly webUserModel: Model<WebUser>,
     ) {}
 
     async signUp(signUpCredentialsDto: SignUpCredentialsDto, user: User): Promise<ResponseDto> {
@@ -105,15 +107,18 @@ export class AuthService {
                 const banking = await this.bankingModel.findOne({ ownerUserId: user._id }).exec();
                 isEnabled = banking.status;
                 break;
-            case Role.punter:
-                isEnabled = false;
-                break;
             case Role.supervisor:
                 isEnabled = false;
                 break;
             case Role.consortium:
+                // eslint-disable-next-line no-case-declarations
                 const consortium = await this.consortiumModel.findOne({ ownerUserId: user._id }).exec();
                 isEnabled = consortium.status;
+                break;
+            case Role.webuser:
+                // eslint-disable-next-line no-case-declarations
+                const webUserModel = await this.webUserModel.findOne({ ownerUserId: user._id }).exec();
+                isEnabled = webUserModel.status;
                 break;
             case Role.carrier:
                 isEnabled = false;

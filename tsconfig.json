@@ -47,6 +47,7 @@
       "@results/*": ["src/modules/results/*"],
       "@bankings/*": ["src/modules/bankings/*"],
       "@chat/*": ["src/modules/chat/*"],
+      "@web.users/*": ["src/modules/web-users/*"],
       "@common.module/*": ["src/modules/common/*"]
     },
   }

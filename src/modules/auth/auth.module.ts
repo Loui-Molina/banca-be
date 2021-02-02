@@ -13,12 +13,14 @@ import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { ConstApp } from '@utils/const.app';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { UsersAdminInitializeService } from '@auth/users.admin.initialize.service';
+import {WebUser, WebUserSchema} from "@database/datamodels/schemas/web.user";
 
 @Global()
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: WebUser.name, schema: WebUserSchema }], ConstApp.BANKING),
         JwtModule.registerAsync({
             useFactory: async (configService: ConfigService) => {
                 return {

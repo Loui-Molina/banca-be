@@ -7,6 +7,7 @@ import { TransactionsModule } from '@transactions/transactions.module';
 import { BettingPanelModule } from '@betting.panel/betting.panel.module';
 import { LotteriesModule } from '@lotteries/lotteries.module';
 import { ChatModule } from '@src/modules/chat/chat.module';
+import { WebUsersModule } from '@web.users/web.users.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { ChatModule } from '@src/modules/chat/chat.module';
         BankingsModule,
         LotteriesModule,
         ChatModule,
+        WebUsersModule,
     ],
     controllers: [],
     providers: [],
@@ -30,6 +32,7 @@ import { ChatModule } from '@src/modules/chat/chat.module';
         BankingsModule,
         LotteriesModule,
         ChatModule,
+        WebUsersModule,
     ],
 })
 export class CoreModule {}

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@database/datamodels/enums/role';
-import { IsEnum, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { ObjectId } from 'mongoose';
 
 export class SignUpCredentialsDto {
     @ApiProperty({ type: String })
@@ -27,4 +28,6 @@ export class SignUpCredentialsDto {
     @IsString()
     @IsOptional()
     role: Role;
+
+    @ApiProperty({ required: false }) @IsMongoId() @IsOptional() _id?: ObjectId;
 }

@@ -4,11 +4,13 @@ import { User } from '@database/datamodels/schemas/user';
 import { ConsortiumService } from '@consortiums/consortium.service';
 import { ConfigService } from '@nestjs/config';
 import { BankingsService } from '@bankings/bankings.service';
+import {WebUsersService} from "@web.users/web.users.service";
 
 @Injectable()
 export class CommonService {
     constructor(
         private readonly bankingService: BankingsService,
+        private readonly webUserService: WebUsersService,
         private readonly consortiumService: ConsortiumService,
         private readonly configService: ConfigService,
     ) {}
@@ -17,7 +19,10 @@ export class CommonService {
         const userRole: Role = loggedUser.role;
         let establishmentName: string;
         switch (userRole) {
-            case Role.banker || Role.punter:
+            case Role.webuser:
+                establishmentName = await this.webUserService.getWebUserName(loggedUser);
+                break;
+            case Role.banker:
                 establishmentName = await this.bankingService.getBankingName(loggedUser);
                 break;
             case Role.consortium:

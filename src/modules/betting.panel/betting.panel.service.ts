@@ -83,7 +83,7 @@ export class BettingPanelService {
         let newObject: Bet = null;
         try {
             const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
-            if (!banking.startOfOperation){
+            if (!banking.startOfOperation) {
                 //Inicio de operacion
                 banking.startOfOperation = new Date();
             }

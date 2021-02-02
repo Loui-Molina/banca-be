@@ -103,6 +103,16 @@ export class DashboardController {
         return this.dashboardService.getBankingWidgetsStatistics(loggedUser);
     }
 
+    @Get('webuser-widgets-statistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardWidgetsDto,
+    })
+    @Roles(Role.webuser)
+    getWebUserWidgetsStatistics(@AuthUser() loggedUser: User): Promise<DashboardWidgetsDto> {
+        return this.dashboardService.getWebUserWidgetsStatistics(loggedUser);
+    }
+
     @Get('banking-played-numbers-statistics')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
