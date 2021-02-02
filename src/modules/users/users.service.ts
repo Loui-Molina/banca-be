@@ -60,7 +60,7 @@ password
     }
 
     async delete(id: ObjectId): Promise<User> {
-        return this.userModel.findByIdAndRemove(id).exec();
+        return this.userModel.findOneAndDelete(id).exec();
     }
 
     async get(id: ObjectId): Promise<User> {

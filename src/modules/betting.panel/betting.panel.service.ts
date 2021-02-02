@@ -35,7 +35,7 @@ export class BettingPanelService {
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<BetDto>> {
-        const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+        const banking = (await this.bankingModel.findOne({ ownerUserId: loggedUser._id })).pop();
         const betDtos: BetDto[] = [];
         for await (const bet of banking.bets){
             betDtos.push(await this.mapToDto(bet));
@@ -44,7 +44,7 @@ export class BettingPanelService {
     }
 
     async getResumeSells(loggedUser: User): Promise<ResumeSellsDto> {
-        const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+        const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
         const now = new Date();
         now.setHours(0, 0, 0, 0);
         const bets = banking.bets.filter((bet) => {
@@ -86,7 +86,7 @@ export class BettingPanelService {
         session.startTransaction();
         let newObject: Bet = null;
         try {
-            const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
             if (!banking.startOfOperation) {
                 //Inicio de operacion
                 banking.startOfOperation = new Date();
@@ -146,7 +146,7 @@ export class BettingPanelService {
         session.startTransaction();
         let betFounded: Bet = null;
         try {
-            const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
             const bet = banking.bets.filter((bet) => bet._id.toString() === dto._id.toString()).pop();
             if (bet.betStatus !== BetStatus.pending || !(await this.canCancelTicket(bet))) {
                 throw new UnauthorizedException(ConstApp.CANNOT_CANCEL_TICKET);
@@ -194,7 +194,7 @@ export class BettingPanelService {
     }
 
     async getClaimTicket(dto: ClaimBetDto, loggedUser: User): Promise<BetDto> {
-        const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+        const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
         const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
         if (bet.betStatus !== BetStatus.winner) {
             throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);
@@ -207,7 +207,7 @@ export class BettingPanelService {
         session.startTransaction();
         let betFounded: Bet = null;
         try {
-            const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
             const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
             if (bet.betStatus !== BetStatus.winner) {
                 throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);

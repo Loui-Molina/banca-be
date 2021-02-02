@@ -120,7 +120,7 @@ export class AuthUserService {
         const userId = userLogged._id;
         const refreshToken = await this.tokenService.getRefreshTokenByUserId(userId);
         if (newPassword !== verifyPassword) {
-            throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);
+            throw new BadRequestException(ConstApp.PASSWORD_DOESNT_MATCH);
         }
         if (!refreshToken) {
             throw new InternalServerErrorException();

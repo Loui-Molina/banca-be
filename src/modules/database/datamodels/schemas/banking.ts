@@ -23,6 +23,9 @@ export class Banking extends Document implements DataObject {
     @ApiProperty() @Prop() startOfOperation?: Date;
     @ApiProperty() @Prop({ required: true, default: false }) status?: boolean;
 
+    @Prop({ required: true }) header: string;
+    @Prop({ required: true }) footer: string;
+
     // Que porcentaje se le paga a la banca por cada jugada
     @Prop({ min: 0, max: 100 }) earningPercentage?: number;
     // Que porcentaje se le paga a la banca por el total de sus ventas

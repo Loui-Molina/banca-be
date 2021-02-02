@@ -36,25 +36,34 @@ export class AuthService {
     }
 
     async signIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
-        let responsePayload: ResponsePayload = new ResponsePayload();
-        responsePayload = await this.userAuthService.validateUserPassword(signInCredentialsDto);
+        const responsePayload: ResponsePayload = await this.userAuthService.validateUserPassword(signInCredentialsDto);
         if (!responsePayload.userId) {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
         }
-        const user = await this.userAuthService.getUser(responsePayload.userId);
-        if (user.role === Role.consortium) {
-            const consortiums = await this.consortiumModel.find({ ownerUserId: user._id });
-            if (consortiums.length === 0 || consortiums.pop().status === false) {
-                throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
-            }
-        }
-        if (user.role === Role.banker) {
-            const bankings = await this.bankingModel.find({ ownerUserId: user._id });
-            if (bankings.length === 0 || bankings.pop().status === false) {
-                throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
-            }
-        }
+        await this.verifyStatus(responsePayload);
         return await this.getToken(responsePayload, userIp, false);
+    }
+
+    async verifyStatus(responsePayload: ResponsePayload) {
+        const user = await this.userAuthService.getUser(responsePayload.userId);
+        switch (user.role) {
+            case Role.consortium:
+                // eslint-disable-next-line no-case-declarations
+                const consortiums = await this.consortiumModel.findOne({ ownerUserId: user._id });
+                if (consortiums.status === false) {
+                    throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
+                }
+                break;
+            case Role.banker:
+                // eslint-disable-next-line no-case-declarations
+                const banking = await this.bankingModel.findOne({ ownerUserId: user._id });
+                // eslint-disable-next-line no-case-declarations
+                const bankingConsortium = await this.consortiumModel.findOne({ _id: banking.consortiumId });
+                if (banking.status === false || bankingConsortium.status === false) {
+                    throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
+                }
+                break;
+        }
     }
 
     async getLoggedUser(user: User) {
@@ -66,6 +75,7 @@ export class AuthService {
         const userId: ObjectId = responsePayload.userId;
         const role: Role = responsePayload.role;
         const payload: JwtPayload = { userId, role };
+        await this.verifyStatus(responsePayload);
         if (!logged) {
             const refreshToken = await this.tokenService.saveRefreshTokenGenerated(userIp, userId);
             responseSignInDto.refreshToken = await this.jwtService.signAsync(refreshToken, {
@@ -92,37 +102,5 @@ export class AuthService {
         remember: boolean,
     ): Promise<ResponseDto> {
         return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress, remember);
-    }
-
-    async isLoginEnabled(user: User) {
-        let isEnabled = false;
-        switch (user.role) {
-            case Role.admin:
-                isEnabled = true;
-                break;
-            case Role.banker:
-                // eslint-disable-next-line no-case-declarations
-                const banking = await this.bankingModel.findOne({ ownerUserId: user._id }).exec();
-                isEnabled = banking.status;
-                break;
-            case Role.punter:
-                isEnabled = false;
-                break;
-            case Role.supervisor:
-                isEnabled = false;
-                break;
-            case Role.consortium:
-                const consortium = await this.consortiumModel.findOne({ ownerUserId: user._id }).exec();
-                isEnabled = consortium.status;
-                break;
-            case Role.carrier:
-                isEnabled = false;
-                break;
-            default:
-                isEnabled = false;
-                break;
-        }
-        console.log(isEnabled);
-        return Promise.resolve(isEnabled);
     }
 }

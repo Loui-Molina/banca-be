@@ -92,7 +92,7 @@ export class TokenService {
     }
 
     async createRefreshToken(_id: ObjectId) {
-        let refreshToken = new this.refreshTokenModel();
+        const refreshToken = new this.refreshTokenModel();
         refreshToken.userId = _id;
         refreshToken.refreshTokenId = null;
         refreshToken.ipAddress = '';
