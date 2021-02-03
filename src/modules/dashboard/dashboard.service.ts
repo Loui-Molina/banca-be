@@ -20,7 +20,7 @@ import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
 import { PlayedNumbersDto } from '@dashboard/dtos/played.numbers.dto';
-import {DashboardGraphConsortiumBalanceBankingDto} from "@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto";
+import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
 
 @Injectable()
 export class DashboardService {
@@ -243,7 +243,7 @@ export class DashboardService {
                 number: parseInt(key),
             });
         }
-        numbers.sort((a, b) => (a.amount < b.amount) ? 1 : ((b.amount < a.amount) ? -1 : 0));
+        numbers.sort((a, b) => (a.amount < b.amount ? 1 : b.amount < a.amount ? -1 : 0));
         numbers = numbers.slice(0, 10);
         return {
             numbers,
@@ -297,7 +297,7 @@ export class DashboardService {
                 number: parseInt(key),
             });
         }
-        numbers.sort((a, b) => (a.amount < b.amount) ? 1 : ((b.amount < a.amount) ? -1 : 0));
+        numbers.sort((a, b) => (a.amount < b.amount ? 1 : b.amount < a.amount ? -1 : 0));
         numbers = numbers.slice(0, 10);
         return {
             numbers,
@@ -404,7 +404,9 @@ export class DashboardService {
         return data;
     }
 
-    async getGraphConsortiumBankingBalanceStatistics(loggedUser: User): Promise<DashboardGraphConsortiumBalanceBankingDto[]> {
+    async getGraphConsortiumBankingBalanceStatistics(
+        loggedUser: User,
+    ): Promise<DashboardGraphConsortiumBalanceBankingDto[]> {
         const consortium = await this.consortiumModel.findOne({ ownerUserId: loggedUser._id }).exec();
         if (!consortium) {
             throw new BadRequestException();
@@ -416,7 +418,7 @@ export class DashboardService {
             dates.unshift(await this.sumDate(-i));
         }
 
-        for await (const banking of bankings){
+        for await (const banking of bankings) {
             const series = [];
             for await (const date of dates) {
                 const balance = await this.getBalanceByDate(banking.transactions, date);

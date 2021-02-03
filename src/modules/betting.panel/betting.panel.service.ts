@@ -35,9 +35,9 @@ export class BettingPanelService {
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<BetDto>> {
-        const banking = (await this.bankingModel.findOne({ ownerUserId: loggedUser._id })).pop();
+        const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
         const betDtos: BetDto[] = [];
-        for await (const bet of banking.bets){
+        for await (const bet of banking.bets) {
             betDtos.push(await this.mapToDto(bet));
         }
         return betDtos.reverse();

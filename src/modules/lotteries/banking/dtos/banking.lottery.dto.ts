@@ -6,7 +6,7 @@ import { PrizeLimit } from '@database/datamodels/schemas/prize.limit';
 import { BettingLimit } from '@database/datamodels/schemas/betting.limit';
 import { IsArray, IsBoolean, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import {BettingLimitVariableDto} from "@lotteries/banking/dtos/betting.limit.variable.dto";
+import { BettingLimitVariableDto } from '@lotteries/banking/dtos/betting.limit.variable.dto';
 
 export class BankingLotteryDto {
     @ApiProperty({ required: false }) @IsOptional() @IsMongoId() _id?: ObjectId;
