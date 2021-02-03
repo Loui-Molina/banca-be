@@ -242,7 +242,7 @@ export class DashboardService {
                 number: parseInt(key),
             });
         }
-        numbers.sort((a, b) => (a.number < b.number) ? 1 : ((b.number < a.number) ? -1 : 0));
+        numbers.sort((a, b) => (a.amount < b.amount) ? 1 : ((b.amount < a.amount) ? -1 : 0));
         numbers = numbers.slice(0, 10);
         return {
             numbers,
@@ -296,7 +296,7 @@ export class DashboardService {
                 number: parseInt(key),
             });
         }
-        numbers.sort((a, b) => (a.number < b.number) ? 1 : ((b.number < a.number) ? -1 : 0));
+        numbers.sort((a, b) => (a.amount < b.amount) ? 1 : ((b.amount < a.amount) ? -1 : 0));
         numbers = numbers.slice(0, 10);
         return {
             numbers,

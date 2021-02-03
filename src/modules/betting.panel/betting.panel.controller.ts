@@ -24,10 +24,10 @@ export class BettingPanelController {
     @Get()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: Bet,
+        type: BetDto,
     })
     @Roles(Role.banker)
-    getAll(@AuthUser() loggedUser: User): Promise<Array<Bet>> {
+    getAll(@AuthUser() loggedUser: User): Promise<Array<BetDto>> {
         return this.bettingPanelService.getAll(loggedUser);
     }
 

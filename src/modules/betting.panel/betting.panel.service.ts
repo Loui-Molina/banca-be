@@ -34,9 +34,13 @@ export class BettingPanelService {
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
     ) {}
 
-    async getAll(loggedUser: User): Promise<Array<Bet>> {
+    async getAll(loggedUser: User): Promise<Array<BetDto>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
-        return banking.bets.reverse();
+        const betDtos: BetDto[] = [];
+        for await (const bet of banking.bets){
+            betDtos.push(await this.mapToDto(bet));
+        }
+        return betDtos.reverse();
     }
 
     async getResumeSells(loggedUser: User): Promise<ResumeSellsDto> {
@@ -253,7 +257,11 @@ export class BettingPanelService {
     }
 
     async mapToDto(bet: Bet): Promise<BetDto> {
-        const { _id, plays, date, sn, betStatus, amountWin, claimDate } = bet;
+        const { _id, plays, date, betStatus, amountWin, claimDate } = bet;
+        let { sn } = bet;
+        if (!(await this.canSeeSn(bet))) {
+            sn = null;
+        }
         return {
             _id,
             plays,
@@ -271,6 +279,14 @@ export class BettingPanelService {
         const diffMs = new Date(bet.date) - new Date();
         const diffMins = diffMs / 60000; // minutes
         return diffMins > -5;
+    }
+
+    private async canSeeSn(bet: Bet): Promise<boolean> {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const diffMs = new Date(bet.date) - new Date();
+        const diffMins = diffMs / 60000; // minutes
+        return diffMins > -10;
     }
 
     private async createSN(): Promise<string> {
