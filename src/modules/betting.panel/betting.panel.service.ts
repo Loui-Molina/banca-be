@@ -22,6 +22,8 @@ import { TransactionObjects } from '@database/datamodels/enums/transaction.objec
 import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
 import { ClaimBetDto } from '@betting.panel/dtos/claim.bet.dto';
 import { ConstApp } from '@utils/const.app';
+import { Lottery } from '@database/datamodels/schemas/lottery';
+import { PlayDto } from '@betting.panel/dtos/play.dto';
 
 @Injectable()
 export class BettingPanelService {
@@ -29,6 +31,7 @@ export class BettingPanelService {
 
     constructor(
         @InjectModel(Transaction.name) private readonly transactionModel: Model<Transaction>,
+        @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
         @InjectModel(Bet.name) private readonly betModel: Model<Bet>,
         @InjectConnection(ConstApp.BANKING) private readonly connection: Connection,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
@@ -262,9 +265,20 @@ export class BettingPanelService {
         if (!(await this.canSeeSn(bet))) {
             sn = null;
         }
+        const playDtos: PlayDto[] = [];
+        for await (const play of plays) {
+            const lotteryName = (await this.lotteryModel.findOne({ _id: play.lotteryId })).name;
+            playDtos.push({
+                amount: play.amount,
+                lotteryId: play.lotteryId,
+                playNumbers: play.playNumbers,
+                playType: play.playType,
+                lotteryName,
+            });
+        }
         return {
             _id,
-            plays,
+            plays: playDtos,
             date,
             sn,
             betStatus,
