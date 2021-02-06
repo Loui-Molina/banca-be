@@ -270,19 +270,27 @@ export class TransactionService {
         let destinationName: string;
         if (transaction.originObject === TransactionObjects.consortium) {
             const consortium = await this.consortiumModel.findById(transaction.originId).exec();
-            originName = consortium.name;
+            if (consortium) {
+                originName = consortium.name;
+            }
         }
         if (transaction.destinationObject === TransactionObjects.consortium) {
             const consortium = await this.consortiumModel.findById(transaction.destinationId).exec();
-            destinationName = consortium.name;
+            if (consortium) {
+                destinationName = consortium.name;
+            }
         }
         if (transaction.originObject === TransactionObjects.banking) {
             const banking = await this.bankingModel.findById(transaction.originId).exec();
-            originName = banking.name;
+            if (banking) {
+                originName = banking.name;
+            }
         }
         if (transaction.destinationObject === TransactionObjects.banking) {
             const banking = await this.bankingModel.findById(transaction.destinationId).exec();
-            destinationName = banking.name;
+            if (banking) {
+                destinationName = banking.name;
+            }
         }
         return {
             _id: _id,
