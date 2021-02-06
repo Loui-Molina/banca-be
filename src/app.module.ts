@@ -8,6 +8,10 @@ import { DatabaseModule } from '@database/database.module';
 import { CommonModule } from '@common.module/common.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TasksService } from '@src/modules/services/tasks.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
+import { ConstApp } from '@utils/const.app';
+import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool';
 
 @Module({
     imports: [
@@ -22,6 +26,7 @@ import { TasksService } from '@src/modules/services/tasks.service';
         ScheduleModule.forRoot(),
         UtilsModule,
         CommonModule, // TODO CHECK IF NEEDED TO MOVE TO MANAGER MODULE
+        MongooseModule.forFeature([{ name: PlayPool.name, schema: PlayPoolSchema }], ConstApp.BANKING), // FOR tasks service
     ],
     controllers: [],
     providers: [TasksService],

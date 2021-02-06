@@ -89,7 +89,15 @@ export class BankingsService {
 
     async create(createBankingDto: CreateBankingDto, loggedUser: User): Promise<Banking> {
         const consortium = await this.consortiumService.getConsortiumForUser(createBankingDto.consortiumId, loggedUser);
-        const { showPercentage, name, status, earningPercentage, header, footer, cancellationTime } = createBankingDto.banking;
+        const {
+            showPercentage,
+            name,
+            status,
+            earningPercentage,
+            header,
+            footer,
+            cancellationTime,
+        } = createBankingDto.banking;
         if (!consortium.startOfOperation) {
             //Inicio de operacion
             consortium.startOfOperation = new Date();
