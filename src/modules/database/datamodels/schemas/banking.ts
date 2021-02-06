@@ -20,6 +20,7 @@ export class Banking extends Document implements DataObject {
     @Prop({ type: [BetSchema] }) bets?: Bet[];
     @Prop({ required: true }) name: string;
     @Prop({ required: true, default: 0 }) balance?: number;
+    @ApiProperty() @Prop({ required: true, default: 5 }) cancellationTime?: number;
     @ApiProperty() @Prop() startOfOperation?: Date;
     @ApiProperty() @Prop({ required: true, default: false }) status?: boolean;
 

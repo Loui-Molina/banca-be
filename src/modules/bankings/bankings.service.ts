@@ -89,7 +89,7 @@ export class BankingsService {
 
     async create(createBankingDto: CreateBankingDto, loggedUser: User): Promise<Banking> {
         const consortium = await this.consortiumService.getConsortiumForUser(createBankingDto.consortiumId, loggedUser);
-        const { showPercentage, name, status, earningPercentage, header, footer } = createBankingDto.banking;
+        const { showPercentage, name, status, earningPercentage, header, footer, cancellationTime } = createBankingDto.banking;
         if (!consortium.startOfOperation) {
             //Inicio de operacion
             consortium.startOfOperation = new Date();
@@ -110,6 +110,7 @@ export class BankingsService {
                 creationUserId: loggedUser._id,
                 modificationUserId: loggedUser._id,
                 earningPercentage,
+                cancellationTime,
                 header,
                 footer,
             } as Banking);
@@ -135,6 +136,7 @@ export class BankingsService {
         banking.name = updateBankingDto.name;
         banking.status = updateBankingDto.status;
         banking.showPercentage = updateBankingDto.showPercentage;
+        banking.cancellationTime = updateBankingDto.cancellationTime;
         banking.consortiumId = loggedUser.role === Role.admin ? consortium._id : banking.consortiumId;
         banking.modificationUserId = loggedUser._id;
         banking.header = updateBankingDto.header;
@@ -239,5 +241,12 @@ export class BankingsService {
                 throw new BadRequestException();
         }
         return (await this.bankingModel.find(filter).exec()).pop();
+    }
+
+    async getBankingOfBanquer(loggedUser: User): Promise<Banking> {
+        if (loggedUser.role === Role.banker) {
+            return (await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec()).pop();
+        }
+        throw new BadRequestException();
     }
 }

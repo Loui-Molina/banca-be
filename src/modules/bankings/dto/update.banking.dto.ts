@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
-import { IsBoolean, IsMongoId, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {IsBoolean, IsMongoId, IsNumber, IsOptional, IsString, ValidateNested} from 'class-validator';
 import { Type } from 'class-transformer';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 
@@ -12,6 +12,7 @@ export class UpdateBankingDto {
     @ApiProperty({ required: false }) @IsMongoId() @IsOptional() ownerUserId?: ObjectId;
     @ApiProperty() @ValidateNested() @Type(() => SignInCredentialsDto) user: SignUpCredentialsDto;
     @ApiProperty() @IsBoolean() showPercentage: boolean;
+    @ApiProperty() @IsNumber() @IsOptional() cancellationTime?: number;
     @ApiProperty() @IsMongoId() selectedConsortium: ObjectId;
     @ApiProperty() @IsString() header: string;
     @ApiProperty() @IsString() footer: string;
