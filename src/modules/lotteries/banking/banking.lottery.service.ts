@@ -123,11 +123,6 @@ export class BankingLotteryService {
                         lottery.bankings = consortiumLottery.bankingIds;
                         lottery.prizeLimits = consortiumLottery.prizeLimits;
                         lottery.bettingLimits = consortiumLottery.bettingLimits;
-                        lottery.bettingLimitsVariables = [];
-                        lottery.bettingLimitsVariables.push({
-                            betAmount: 300,
-                            number: 30,
-                        });
                         lottery.leftTime = leftTime;
                         lotteriesDtos.push(lottery);
                     }
