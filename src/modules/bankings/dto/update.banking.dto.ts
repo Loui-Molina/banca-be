@@ -1,9 +1,6 @@
 import { ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
-import { IsBoolean, IsMongoId, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
-import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { IsBoolean, IsMongoId, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
 
 export class UpdateBankingDto {
