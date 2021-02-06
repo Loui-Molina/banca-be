@@ -17,11 +17,11 @@ export class UsersService implements Repository<User, UserDto> {
         return this.userModel.find().skip(offset).limit(limit).exec();
     }
 
-    async getFiltered(q: string, value: any): Promise<User[]> {
+    async find(q: string, value: any): Promise<User[]> {
         return await this.userModel.find({ [q]: value }).exec();
     }
 
-    async getSingleFiltered(q: string, value: any): Promise<User> {
+    async findOne(q: string, value: any): Promise<User> {
         return (await this.userModel.find({ [q]: value }).exec()).pop();
     }
 
@@ -69,10 +69,6 @@ password
 
     newUserModel(): User {
         return new this.userModel();
-    }
-
-    getEstablishmentName(loggedUser: User) {
-        return Promise.resolve({ name: 'test' });
     }
 
     async getForValidation(_id: ObjectId, role: Role): Promise<User> {

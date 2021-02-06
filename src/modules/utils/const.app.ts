@@ -4,6 +4,7 @@ export class ConstApp {
      * */
     public static readonly USER = 'user';
     public static readonly BANKING = 'banking';
+    public static readonly SUSBCRIPTIONS = 'subscriptions';
 
     /***
      * RESPONSES

@@ -36,7 +36,7 @@ export class UsersController {
         type: User,
     })
     getFiltered(@Query('q') q: string, @Query('value') value: string): Promise<Array<User>> {
-        return this.userService.getFiltered(q, value);
+        return this.userService.find(q, value);
     }
 
     @Put()

@@ -165,7 +165,7 @@ export class BankingsService {
 
     private async mapBanking(banking: BankingDto): Promise<BankingDto> {
         // we get the username of the assigned user
-        const bankingUser = await this.usersService.getSingleFiltered('_id', banking.ownerUserId);
+        const bankingUser = await this.usersService.findOne('_id', banking.ownerUserId);
         return {
             _id: banking._id,
             consortiumId: banking.consortiumId,
