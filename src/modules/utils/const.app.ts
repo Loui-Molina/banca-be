@@ -28,7 +28,6 @@ export class ConstApp {
     public static readonly COULD_NOT_LOG_OUT_ERROR = "Couldn't log out";
     public static readonly COULD_NOT_EMPTY_THE_TOKEN = "Couldn't empty token";
     public static readonly COULD_NOT_CHANGE_PASSWORD = 'PASSWORD NOT CHANGED';
-    public static readonly NOT_LOGGE = 'PASSWORD NOT CHANGED';
     public static readonly PASSWORD_NOT_MATCH = 'PASSWORD NOT MATCH';
     public static readonly ESTABLISHMENT_NOT_FOUND = 'ESTABLISHMENT NOT FOUND';
     public static readonly DESTINATION_ORIGIN_NOT_FOUND = 'DESTINATION || ORIGIN NOT FOUND';
@@ -38,6 +37,7 @@ export class ConstApp {
     public static readonly CANNOT_CHANGE_PASSWORD_OF_THE_SAME_ROLE = 'CANT CHANGE PASSWORD OF THE SAME OR ABOVE ROLE';
     public static readonly UNAUTHORIZE_TO_CHANGE_PASSWORD = 'UNAUTHORIZE TO CHANGE PASSWORD';
     public static readonly UNABLE_TO_CHANGE_PASSWORD = 'UNABLE TO CHANGE PASSWORD';
+    public static readonly NOT_LOGGED = 'NOT LOGGED';
 
     //Exceptions Messages
     public static readonly SOMETHING_WRONG_EXCEPTION = 'Something went Wrong';
