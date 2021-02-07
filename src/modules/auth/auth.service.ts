@@ -13,7 +13,6 @@ import { ConfigService } from '@nestjs/config';
 import { TokenService } from '@auth/token.service';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Consortium } from '@database/datamodels/schemas/consortium';
@@ -42,7 +41,7 @@ export class AuthService {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
         }
         const user = await this.userAuthService.getUser(responsePayload.userId);
-        if (user.role === Role.consortium) {
+        /*if (user.role === Role.consortium) {
             const consortiums = await this.consortiumModel.find({ ownerUserId: user._id });
             if (consortiums.length === 0 || consortiums.pop().status === false) {
                 throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
@@ -53,7 +52,7 @@ export class AuthService {
             if (bankings.length === 0 || bankings.pop().status === false) {
                 throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
             }
-        }
+        }*/
         return await this.getToken(responsePayload, userIp, false);
     }
 
@@ -82,16 +81,7 @@ export class AuthService {
     }
 
     async logOut(ipAdress: string, user: User): Promise<ResponseDto> {
-        return this.tokenService.deleteRefreshToken(ipAdress, user);
-    }
-
-    async changePassword(
-        ipAddress: string,
-        changePasswordDto: ChangePasswordDto,
-        user: User,
-        remember: boolean,
-    ): Promise<ResponseDto> {
-        return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress, remember);
+        return this.tokenService.deleteRefreshToken(ipAdress, user, true);
     }
 
     async isLoginEnabled(user: User) {

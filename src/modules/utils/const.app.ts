@@ -32,6 +32,12 @@ export class ConstApp {
     public static readonly PASSWORD_NOT_MATCH = 'PASSWORD NOT MATCH';
     public static readonly ESTABLISHMENT_NOT_FOUND = 'ESTABLISHMENT NOT FOUND';
     public static readonly DESTINATION_ORIGIN_NOT_FOUND = 'DESTINATION || ORIGIN NOT FOUND';
+    public static readonly PASSWORD_SHOULD_NOT_BE_THE_SAME_ERROR = "New password can't be the same as old one";
+    public static readonly PASSWORD_SHOULD_NOT_BE_OLD = 'New password was used before';
+    public static readonly USER_NOT_FOUND = 'USER_NOT_FOUND';
+    public static readonly CANNOT_CHANGE_PASSWORD_OF_THE_SAME_ROLE = 'CANT CHANGE PASSWORD OF THE SAME OR ABOVE ROLE';
+    public static readonly UNAUTHORIZE_TO_CHANGE_PASSWORD = 'UNAUTHORIZE TO CHANGE PASSWORD';
+    public static readonly UNABLE_TO_CHANGE_PASSWORD = 'UNABLE TO CHANGE PASSWORD';
 
     //Exceptions Messages
     public static readonly SOMETHING_WRONG_EXCEPTION = 'Something went Wrong';
