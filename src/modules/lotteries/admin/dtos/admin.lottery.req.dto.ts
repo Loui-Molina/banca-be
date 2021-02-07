@@ -6,7 +6,7 @@ import { IsArray, IsBoolean, IsHexColor, IsMongoId, IsOptional, IsString } from 
 import { Type } from 'class-transformer';
 
 export class AdminLotteryReqDto {
-    @ApiProperty({ required: false }) @IsMongoId() _id?: ObjectId;
+    @ApiProperty({ required: false }) @IsMongoId() @IsOptional() _id?: ObjectId;
     @ApiProperty() @IsString() name: string;
     @ApiProperty() @IsString() nickname: string;
     @ApiProperty() @IsHexColor() color: string;

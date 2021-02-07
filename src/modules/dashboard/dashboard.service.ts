@@ -20,6 +20,7 @@ import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
 import { PlayedNumbersDto } from '@dashboard/dtos/played.numbers.dto';
+import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
 
 @Injectable()
 export class DashboardService {
@@ -242,10 +243,7 @@ export class DashboardService {
                 number: parseInt(key),
             });
         }
-        // @ts-ignore
-        numbers.sort(function (a, b) {
-            return b.amount > a.amount;
-        });
+        numbers.sort((a, b) => (a.amount < b.amount ? 1 : b.amount < a.amount ? -1 : 0));
         numbers = numbers.slice(0, 10);
         return {
             numbers,
@@ -299,10 +297,7 @@ export class DashboardService {
                 number: parseInt(key),
             });
         }
-        // @ts-ignore
-        numbers.sort(function (a, b) {
-            return b.amount > a.amount;
-        });
+        numbers.sort((a, b) => (a.amount < b.amount ? 1 : b.amount < a.amount ? -1 : 0));
         numbers = numbers.slice(0, 10);
         return {
             numbers,
@@ -404,6 +399,37 @@ export class DashboardService {
             data.push({
                 name: date.toISOString(),
                 value: balance,
+            });
+        }
+        return data;
+    }
+
+    async getGraphConsortiumBankingBalanceStatistics(
+        loggedUser: User,
+    ): Promise<DashboardGraphConsortiumBalanceBankingDto[]> {
+        const consortium = await this.consortiumModel.findOne({ ownerUserId: loggedUser._id }).exec();
+        if (!consortium) {
+            throw new BadRequestException();
+        }
+        const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+        const data: DashboardGraphConsortiumBalanceBankingDto[] = [];
+        const dates: Date[] = [];
+        for (let i = 0; i < 30; i++) {
+            dates.unshift(await this.sumDate(-i));
+        }
+
+        for await (const banking of bankings) {
+            const series = [];
+            for await (const date of dates) {
+                const balance = await this.getBalanceByDate(banking.transactions, date);
+                series.push({
+                    name: date.toISOString(),
+                    value: balance,
+                });
+            }
+            data.push({
+                name: banking.name,
+                series,
             });
         }
         return data;

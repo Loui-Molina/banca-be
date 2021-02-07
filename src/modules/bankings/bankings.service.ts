@@ -83,13 +83,21 @@ export class BankingsService {
                 throw new BadRequestException();
         }
         // TODO aca falta chekear Role.banker para devolver en establishment name
-        const banking: Banking = (await this.bankingModel.find({ [field]: value }).exec()).pop();
+        const banking: Banking = await this.bankingModel.findOne(filter).exec();
         return this.mapBanking(banking);
     }
 
     async create(createBankingDto: CreateBankingDto, loggedUser: User): Promise<Banking> {
         const consortium = await this.consortiumService.getConsortiumForUser(createBankingDto.consortiumId, loggedUser);
-        const { showPercentage, name, status, earningPercentage } = createBankingDto.banking;
+        const {
+            showPercentage,
+            name,
+            status,
+            earningPercentage,
+            header,
+            footer,
+            cancellationTime,
+        } = createBankingDto.banking;
         if (!consortium.startOfOperation) {
             //Inicio de operacion
             consortium.startOfOperation = new Date();
@@ -102,16 +110,20 @@ export class BankingsService {
         try {
             createdUser = (await this.userAuthService.signUp(createBankingDto.user, loggedUser)).user;
             newObject = new this.bankingModel({
-                name: name,
-                status: status,
+                name,
+                status,
                 consortiumId: consortium._id,
                 ownerUserId: createdUser.id,
                 showPercentage: showPercentage,
                 creationUserId: loggedUser._id,
                 modificationUserId: loggedUser._id,
-                earningPercentage: earningPercentage,
+                earningPercentage,
+                cancellationTime,
+                header,
+                footer,
             } as Banking);
             await newObject.save();
+            await consortium.save();
         } catch (e) {
             if (createdUser) {
                 await this.usersService.delete(createdUser._id);
@@ -132,8 +144,11 @@ export class BankingsService {
         banking.name = updateBankingDto.name;
         banking.status = updateBankingDto.status;
         banking.showPercentage = updateBankingDto.showPercentage;
+        banking.cancellationTime = updateBankingDto.cancellationTime;
         banking.consortiumId = loggedUser.role === Role.admin ? consortium._id : banking.consortiumId;
         banking.modificationUserId = loggedUser._id;
+        banking.header = updateBankingDto.header;
+        banking.footer = updateBankingDto.footer;
         //TODO checkear que el modificatedAt cambie
         await banking.save();
         return banking;
@@ -158,7 +173,7 @@ export class BankingsService {
 
     private async mapBanking(banking: BankingDto): Promise<BankingDto> {
         // we get the username of the assigned user
-        const bankingUser = await this.usersService.getSingleFiltered('_id', banking.ownerUserId);
+        const bankingUser = await this.usersService.findOne('_id', banking.ownerUserId);
         return {
             _id: banking._id,
             consortiumId: banking.consortiumId,
@@ -171,6 +186,8 @@ export class BankingsService {
             earningPercentage: banking.earningPercentage,
             ownerUsername: bankingUser ? bankingUser.username : null,
             ownerName: bankingUser ? bankingUser.name : null,
+            header: banking.header,
+            footer: banking.footer,
         };
     }
 
@@ -232,5 +249,12 @@ export class BankingsService {
                 throw new BadRequestException();
         }
         return (await this.bankingModel.find(filter).exec()).pop();
+    }
+
+    async getBankingOfBanquer(loggedUser: User): Promise<Banking> {
+        if (loggedUser.role === Role.banker) {
+            return (await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec()).pop();
+        }
+        throw new BadRequestException();
     }
 }

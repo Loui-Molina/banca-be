@@ -106,10 +106,4 @@ export class AuthController {
     logOut(@Ip() ipAdress: string, @AuthUser() user: User): Promise<ResponseDto> {
         return this.authService.logOut(ipAdress, user);
     }
-
-    @Get('/is-enabled')
-    @UseGuards(AuthGuard())
-    isLoginEnabled(@AuthUser() user: User): Promise<boolean> {
-        return this.authService.isLoginEnabled(user);
-    }
 }
