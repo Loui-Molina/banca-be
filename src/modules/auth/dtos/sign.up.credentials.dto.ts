@@ -25,5 +25,6 @@ export class SignUpCredentialsDto {
     @ApiProperty({ type: String, enum: Role, required: false })
     @IsEnum(Role)
     @IsString()
+    @IsOptional()
     role: Role;
 }
