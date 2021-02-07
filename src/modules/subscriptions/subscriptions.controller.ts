@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { SubscriptionsService } from './subscriptions.service';
-import { CreateSubscriptionDto } from './dto/create-subscription.dto';
-import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { ObjectId } from 'mongoose';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
+import { CreateSubscriptionDto } from '@subscriptions/dto/create-subscription.dto';
+import { UpdateSubscriptionDto } from '@subscriptions/dto/update-subscription.dto';
+import { SubscriptionsService } from '@subscriptions/subscriptions.service';
 
 @Controller('subscriptions')
 export class SubscriptionsController {
@@ -15,12 +15,12 @@ export class SubscriptionsController {
         return this.subscriptionsService.create(createSubscriptionDto);
     }
 
-    @Get('find')
+    @Get('all')
     findAll(@Query('q') q: string, @Query('value') value: string) {
         return this.subscriptionsService.find(q, value);
     }
 
-    @Get('findOne')
+    @Get()
     findOne(@Query('q') q: string, @Query('value') value: string) {
         return this.subscriptionsService.findOne(q, value);
     }

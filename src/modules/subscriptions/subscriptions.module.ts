@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SubscriptionsService } from './subscriptions.service';
-import { SubscriptionsController } from './subscriptions.controller';
+import { SubscriptionsService } from '@subscriptions/subscriptions.service';
+import { SubscriptionsController } from '@subscriptions/subscriptions.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { ConstApp } from '@utils/const.app';

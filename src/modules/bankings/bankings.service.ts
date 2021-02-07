@@ -251,7 +251,7 @@ export class BankingsService {
         return (await this.bankingModel.find(filter).exec()).pop();
     }
 
-    async getBankingOfBanquer(loggedUser: User): Promise<Banking> {
+    async getUserBanking(loggedUser: User): Promise<Banking> {
         if (loggedUser.role === Role.banker) {
             return (await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec()).pop();
         }

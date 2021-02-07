@@ -63,6 +63,11 @@ export class AuthService {
                     throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
                 }
                 break;
+            case Role.admin:
+                break;
+            default:
+                throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
+                break;
         }
     }
 

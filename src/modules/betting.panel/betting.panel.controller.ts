@@ -62,7 +62,7 @@ export class BettingPanelController {
         return this.bettingPanelService.create(dto, loggedUser);
     }
 
-    @Post('verifyLimit')
+    @Post('verify-limit')
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_POST_OK,
         type: Number,

@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 import { Days } from '@database/datamodels/enums/days';
-import { Result } from '@database/datamodels/schemas/result';
-import { PrizeLimit } from '@database/datamodels/schemas/prize.limit';
-import { BettingLimit } from '@database/datamodels/schemas/betting.limit';
-import { IsArray, IsBoolean, IsHexColor, IsMongoId, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsHexColor, IsMongoId, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
+import { BettingLimitDto } from '@database/dto/betting.limit.dto';
+import { PrizeLimitDto } from '@database/dto/prize.limit.dto';
+import { ResultDto } from '@database/dto/result.dto';
 
 export class ConsortiumLotteryDto {
     @ApiProperty({ required: false }) @IsMongoId() @IsOptional() _id?: ObjectId;
@@ -13,26 +13,26 @@ export class ConsortiumLotteryDto {
     @ApiProperty({
         isArray: true,
         required: false,
-        type: BettingLimit,
+        type: BettingLimitDto,
     })
     @IsArray()
     @IsOptional()
-    bettingLimits?: BettingLimit[];
+    bettingLimits?: BettingLimitDto[];
     @ApiProperty({
         isArray: true,
         required: false,
-        type: PrizeLimit,
+        type: PrizeLimitDto,
     })
     @IsArray()
     @IsOptional()
-    prizeLimits?: PrizeLimit[];
+    prizeLimits?: PrizeLimitDto[];
     @ApiProperty() @IsString() name: string;
     @ApiProperty() @IsString() nickname: string;
     @ApiProperty() @IsHexColor() color: string;
     @ApiProperty() @IsString() playTime: string;
     @ApiProperty() @IsBoolean() status: boolean;
-    @ApiProperty() @IsArray() @Type(() => Result) results?: Result[];
+    @ApiProperty() @IsArray() @Type(() => ResultDto) results?: ResultDto[];
     @ApiProperty({ required: false }) @IsArray() @IsOptional() openTime?: string;
     @ApiProperty({ required: false }) @IsArray() @IsOptional() closeTime?: string;
-    @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsArray() day: Days[];
+    @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsEnum(Days) day: Days[];
 }
