@@ -1,6 +1,6 @@
 import { Body, Controller, Ip, Logger, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
 import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
@@ -10,6 +10,7 @@ import { Role } from '@database/datamodels/enums/role';
 import { AuthPasswordService } from '@auth/auth.password.service';
 import { ResponseDto } from '@utils/dtos/response.dto';
 import { ChangeOldPasswordDto } from '@auth/dtos/change.old.password.dto';
+import { ConstApp } from '@utils/const.app';
 
 @ApiTags('auth/password')
 @Controller('auth/password')
@@ -18,6 +19,10 @@ export class AuthPasswordController {
 
     constructor(private readonly authPasswordService: AuthPasswordService) {}
 
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: ResponseDto,
+    })
     @Post('/change')
     @UseGuards(AuthGuard(), RolesGuard)
     @Roles(Role.admin, Role.consortium)
@@ -29,6 +34,10 @@ export class AuthPasswordController {
         return this.authPasswordService.changePassword(userIp, changePasswordDto, user);
     }
 
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: ResponseDto,
+    })
     @Post()
     @UseGuards(AuthGuard(), RolesGuard)
     async changePassword(

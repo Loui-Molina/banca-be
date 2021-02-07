@@ -9,8 +9,8 @@ import { TokenService } from '@auth/token.service';
 import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
 import { Role } from '@database/datamodels/enums/role';
 import { ResponseDto } from '@utils/dtos/response.dto';
-import { ChangeOldPasswordDto } from './dtos/change.old.password.dto';
-import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
+import { ChangeOldPasswordDto } from '@auth/dtos/change.old.password.dto';
+import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 
 @Injectable()
 export class AuthPasswordService {
