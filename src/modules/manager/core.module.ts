@@ -6,8 +6,8 @@ import { ResultsModule } from '@results/results.module';
 import { TransactionsModule } from '@transactions/transactions.module';
 import { BettingPanelModule } from '@betting.panel/betting.panel.module';
 import { LotteriesModule } from '@lotteries/lotteries.module';
-import { ChatModule } from '@src/modules/chat/chat.module';
-import { SubscriptionsModule } from '@src/modules/subscriptions/subscriptions.module';
+import { ChatModule } from '@chat/chat.module';
+import { SubscriptionsModule } from '@subscriptions/subscriptions.module';
 
 @Module({
     imports: [
