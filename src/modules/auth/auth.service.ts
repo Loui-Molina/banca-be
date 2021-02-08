@@ -13,7 +13,6 @@ import { ConfigService } from '@nestjs/config';
 import { TokenService } from '@auth/token.service';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Consortium } from '@database/datamodels/schemas/consortium';
@@ -97,15 +96,6 @@ export class AuthService {
     }
 
     async logOut(ipAdress: string, user: User): Promise<ResponseDto> {
-        return this.tokenService.deleteRefreshToken(ipAdress, user);
-    }
-
-    async changePassword(
-        ipAddress: string,
-        changePasswordDto: ChangePasswordDto,
-        user: User,
-        remember: boolean,
-    ): Promise<ResponseDto> {
-        return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress, remember);
+        return this.tokenService.deleteRefreshToken(ipAdress, user, true);
     }
 }

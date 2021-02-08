@@ -13,6 +13,8 @@ import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { ConstApp } from '@utils/const.app';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { UsersAdminInitializeService } from '@auth/users.admin.initialize.service';
+import { AuthPasswordController } from '@auth/auth.password.controller';
+import { AuthPasswordService } from '@auth/auth.password.service';
 
 @Global()
 @Module({
@@ -35,8 +37,15 @@ import { UsersAdminInitializeService } from '@auth/users.admin.initialize.servic
         }),
         AuthUserModule,
     ],
-    providers: [AuthService, UsersAdminInitializeService, JwtStrategy, TokenService, RefreshStrategy],
-    controllers: [AuthController],
+    providers: [
+        AuthService,
+        AuthPasswordService,
+        UsersAdminInitializeService,
+        JwtStrategy,
+        TokenService,
+        RefreshStrategy,
+    ],
+    controllers: [AuthController, AuthPasswordController],
     exports: [
         JwtModule,
         PassportModule.register({

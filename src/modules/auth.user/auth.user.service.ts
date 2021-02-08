@@ -16,7 +16,6 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 import { User } from '@database/datamodels/schemas/user';
 import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { UsersService } from '@users/users.service';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { Event } from '@database/datamodels/schemas/event';
@@ -45,6 +44,7 @@ export class AuthUserService {
             user.username = username;
             user.salt = await bcrypt.genSalt();
             user.password = await this.hashPassword(password, user.salt);
+            user.oldPasswords[0] = user.password;
             user.role = role;
             if (!loggedUser) {
                 user.creationUserId = user._id;
@@ -107,50 +107,6 @@ export class AuthUserService {
         }
     }
 
-    async changePassword(
-        changePasswordDto: ChangePasswordDto,
-        userLogged: User,
-        ipAddress: string,
-        remember: boolean,
-    ): Promise<ResponseDto> {
-        const { username, password, newPassword, verifyPassword } = changePasswordDto;
-        const session = await this.connection.startSession();
-        session.startTransaction();
-        const user = await this.usersService.getSingleFilteredComplete('username', username);
-        const userId = userLogged._id;
-        const refreshToken = await this.tokenService.getRefreshTokenByUserId(userId);
-        if (newPassword !== verifyPassword) {
-            throw new BadRequestException(ConstApp.PASSWORD_DOESNT_MATCH);
-        }
-        if (!refreshToken) {
-            throw new InternalServerErrorException();
-        } else if (refreshToken.ipAddress === ipAddress) {
-            //TODO para que lo puedan utilizar ahora
-            if (/*(user && await user.validatePassword(password))||*/ remember) {
-                try {
-                    user.salt = await bcrypt.genSalt();
-                    user.password = await this.hashPassword(newPassword, user.salt);
-                    user.modificationUserId = userLogged._id;
-                    await user.save();
-                    session.commitTransaction();
-                } catch (error) {
-                    session.abortTransaction();
-                    throw new InternalServerErrorException(ConstApp.COULD_NOT_CHANGE_PASSWORD);
-                } finally {
-                    session.endSession();
-                }
-                const responseDto: ResponseDto = new ResponseDto();
-                responseDto.message = ConstApp.PASSWORD_CHANGED;
-                responseDto.statusCode = HttpStatus.OK;
-                return responseDto;
-            } else {
-                throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
-            }
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
     async getUser(_id: ObjectId) {
         return await this.usersService.get(_id);
     }
@@ -159,11 +115,19 @@ export class AuthUserService {
         return await this.usersService.getForValidation(id, role);
     }
 
-    private async hashPassword(password: string, salt: string): Promise<string> {
+    async hashPassword(password: string, salt: string): Promise<string> {
         return bcrypt.hash(password, salt);
     }
 
     async getUserByUsernameRole(username: string, role: Role): Promise<User> {
         return await this.usersService.getUserByUsernameRole(username, role);
+    }
+
+    async getUserByUsername(username: string): Promise<User> {
+        return await this.usersService.getUserByUsernameAndSalt(username);
+    }
+
+    async validateOldPassword(user: User, password: string): Promise<boolean> {
+        return await user.validateOldPassword(password);
     }
 }

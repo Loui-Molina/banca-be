@@ -21,11 +21,8 @@ import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { AuthRefreshToken } from '@common/decorators/auth.refresh.token.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -70,17 +67,6 @@ export class AuthController {
         return this.authService.signIn(userIp, signInCredentialsDto);
     }
 
-    @Post('/change-password')
-    @UseGuards(AuthGuard(), RolesGuard)
-    @Roles(Role.admin)
-    async changePasswordRemember(
-        @Ip() userIp: string,
-        @Body() changePasswordDto: ChangePasswordDto,
-        @AuthUser() user: User,
-    ): Promise<ResponseDto> {
-        return this.authService.changePassword(userIp, changePasswordDto, user, true);
-    }
-
     @Get('/logged-user')
     @UseGuards(AuthGuard())
     @ApiFoundResponse({
@@ -111,7 +97,7 @@ export class AuthController {
         description: ConstApp.DEFAULT_GET_OK,
         type: String,
     })
-    getToken(@Ip() ipAdress: string, @AuthUser() refreshToken: RefreshToken): Promise<ResponseSignInDto> {
+    getToken(@Ip() ipAdress: string, @AuthRefreshToken() refreshToken: RefreshToken): Promise<ResponseSignInDto> {
         return this.tokenService.getRefreshToken(ipAdress, refreshToken, true);
     }
 

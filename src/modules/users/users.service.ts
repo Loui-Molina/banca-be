@@ -78,4 +78,8 @@ password
     async getUserByUsernameRole(username: string, role: Role): Promise<User> {
         return await this.userModel.findOne({ username, role }).exec();
     }
+
+    async getUserByUsernameAndSalt(username: string): Promise<User> {
+        return await this.userModel.findOne({ username }).select('+salt').exec();
+    }
 }

@@ -68,10 +68,14 @@ export class TokenService {
         }
     }
 
-    async deleteRefreshToken(ipAddress: string, user: User): Promise<ResponseDto> {
+    async deleteRefreshToken(ipAddress: string, user: User, required: boolean): Promise<ResponseDto> {
         let refreshTokenModel = new this.refreshTokenModel();
         const userId: ObjectId = user._id;
-        refreshTokenModel = await this.refreshTokenModel.findOne({ userId, ipAddress });
+        if (required) {
+            refreshTokenModel = await this.refreshTokenModel.findOne({ userId, ipAddress });
+        } else {
+            refreshTokenModel = await this.refreshTokenModel.findOne({ userId });
+        }
         if (refreshTokenModel == null) {
             throw new ForbiddenException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
         }
