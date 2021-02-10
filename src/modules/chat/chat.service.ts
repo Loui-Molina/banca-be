@@ -30,61 +30,35 @@ export class ChatService {
 
     async getAll(loggedUser: User): Promise<Array<MessageDto>> {
         const id = await this.getIdOfConsortiumBanking(loggedUser);
-        if (!id) {
-            throw new BadRequestException();
-        }
+        if (!id) throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
+
         const messagesDto: MessageDto[] = [];
         const messages = await this.messageModel
             .find()
             .or([{ originId: id }, { destinationId: id }])
             .exec();
-        for await (const msg of messages) {
-            const msgDto = await this.mapToDto(msg);
-            let sender = false;
-            if (msgDto.originId.toString() === id.toString()) {
-                // Vos lo enviaste
-                let destinationName: string;
-                if (loggedUser.role === Role.consortium) {
-                    const banking = await this.bankingModel.findById(msg.destinationId).exec();
-                    destinationName = banking.name;
-                }
-                if (loggedUser.role === Role.banker) {
-                    const banking = await this.bankingModel.findById(id).exec();
-                    const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
-                    destinationName = consortium.name;
-                }
-                msgDto.destinationName = destinationName;
-                sender = true;
-            } else {
-                // Te lo enviaron
-                let originName: string;
-                if (loggedUser.role === Role.consortium) {
-                    const banking = await this.bankingModel.findById(msg.originId).exec();
-                    originName = banking.name;
-                }
-                if (loggedUser.role === Role.banker) {
-                    const banking = await this.bankingModel.findById(id).exec();
-                    const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
-                    originName = consortium.name;
-                }
-                msgDto.originName = originName;
-            }
-            msgDto.sender = sender;
-            messagesDto.push(msgDto);
-        }
-        return messagesDto;
+        return await this.getMessages(messages, id, loggedUser, messagesDto);
     }
 
     async getAllUnreadMessages(loggedUser: User): Promise<Array<MessageDto>> {
         const id = await this.getIdOfConsortiumBanking(loggedUser);
-        if (!id) {
-            throw new BadRequestException();
-        }
+        if (!id) throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
+
         const messagesDto: MessageDto[] = [];
         const messages = await this.messageModel
             .find()
             .and([{ destinationId: id }, { readed: false }])
             .exec();
+
+        return await this.getMessages(messages, id, loggedUser, messagesDto);
+    }
+
+    private async getMessages(
+        messages: Array<Message>,
+        id: ObjectId,
+        loggedUser: User,
+        messagesDto: MessageDto[],
+    ): Promise<MessageDto[]> {
         for await (const msg of messages) {
             const msgDto = await this.mapToDto(msg);
             let sender = false;
@@ -124,9 +98,8 @@ export class ChatService {
 
     async readMessages(dto: ReadMessageDto, loggedUser: User): Promise<boolean> {
         const id = await this.getIdOfConsortiumBanking(loggedUser);
-        if (!id) {
-            throw new BadRequestException();
-        }
+        if (!id) throw new BadRequestException();
+
         let originId;
         if (loggedUser.role === Role.consortium) {
             const banking = await this.bankingModel.findById(dto.originId).exec();
@@ -140,6 +113,8 @@ export class ChatService {
             .find()
             .and([{ originId: originId }, { destinationId: id }, { readed: false }])
             .exec();
+
+        if (!messages) throw new BadRequestException(ConstApp.SOMETHING_WRONG_EXCEPTION);
         for (const message of messages) {
             message.readed = true;
             console.log('msg', message.message);
@@ -154,9 +129,8 @@ export class ChatService {
         let msg: Message;
         try {
             const id = await this.getIdOfConsortiumBanking(loggedUser);
-            if (!id) {
-                throw new BadRequestException();
-            }
+            if (!id) throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
+
             let destinationId;
             if (loggedUser.role === Role.consortium) {
                 const banking = await this.bankingModel.findById(dto.destinationId).exec();
@@ -199,7 +173,7 @@ export class ChatService {
                 // eslint-disable-next-line no-case-declarations
                 const consortiums = await this.consortiumModel.find({ ownerUserId: loggedUser._id }).exec();
                 if (consortiums.length === 0) {
-                    throw new BadRequestException();
+                    throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
                 }
                 id = consortiums.pop()._id;
                 break;
@@ -207,7 +181,7 @@ export class ChatService {
                 // eslint-disable-next-line no-case-declarations
                 const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
                 if (bankings.length === 0) {
-                    throw new BadRequestException();
+                    throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
                 }
                 id = bankings.pop()._id;
                 break;

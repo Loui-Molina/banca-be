@@ -48,6 +48,7 @@ export class ConstApp {
     public static readonly UNAUTHORIZE_TO_CHANGE_PASSWORD = 'UNAUTHORIZE TO CHANGE PASSWORD';
     public static readonly UNABLE_TO_CHANGE_PASSWORD = 'UNABLE TO CHANGE PASSWORD';
     public static readonly NOT_LOGGED = 'NOT LOGGED';
+    public static readonly UNAUTHORIZED = 'UNAUTHORIZED';
 
     /***
      * EXCEPTIONS MESSAGES

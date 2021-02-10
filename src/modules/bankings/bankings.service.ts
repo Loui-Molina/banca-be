@@ -10,6 +10,7 @@ import { UpdateBankingDto } from '@bankings/dto/update.banking.dto';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConsortiumService } from '@consortiums/consortium.service';
+import { ConstApp } from '@utils/const.app';
 
 @Injectable()
 export class BankingsService {
@@ -32,7 +33,7 @@ export class BankingsService {
                 filter = { consortiumId: consortium._id };
                 break;
             default:
-                throw new BadRequestException();
+                throw new BadRequestException(ConstApp.UNAUTHORIZED);
         }
 
         const bankings: Array<Banking> = await this.bankingModel.find(filter).exec();
@@ -55,7 +56,7 @@ export class BankingsService {
                 filter = { [field]: value, consortiumId: consortium._id };
                 break;
             default:
-                throw new BadRequestException();
+                throw new BadRequestException(ConstApp.UNAUTHORIZED);
         }
         const bankings: Array<Banking> = await this.bankingModel.find(filter).exec();
         return Promise.all(
@@ -80,7 +81,7 @@ export class BankingsService {
                 filter = { [field]: value, ownerUserId: loggedUser._id };
                 break;
             default:
-                throw new BadRequestException();
+                throw new BadRequestException(ConstApp.UNAUTHORIZED);
         }
         // TODO aca falta chekear Role.banker para devolver en establishment name
         const banking: Banking = await this.bankingModel.findOne(filter).exec();
@@ -88,6 +89,7 @@ export class BankingsService {
     }
 
     async create(createBankingDto: CreateBankingDto, loggedUser: User): Promise<Banking> {
+        //TODO TRANSACTION
         const consortium = await this.consortiumService.getConsortiumForUser(createBankingDto.consortiumId, loggedUser);
         const {
             showPercentage,
@@ -128,7 +130,7 @@ export class BankingsService {
             if (createdUser) {
                 await this.usersService.delete(createdUser._id);
             }
-            throw new BadRequestException();
+            throw new BadRequestException(ConstApp.SOMETHING_WRONG_EXCEPTION);
         }
         return newObject;
     }
@@ -139,6 +141,7 @@ export class BankingsService {
             loggedUser,
         );
 
+        //FIXME TRANSACTION
         await this.userAuthService.updateUser(updateBankingDto.ownerUserId, updateBankingDto.user, loggedUser);
         const banking: Banking = await this.bankingModel.findById(updateBankingDto._id);
         banking.name = updateBankingDto.name;
@@ -160,7 +163,7 @@ export class BankingsService {
             const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
             if (consortium._id.toString() !== banking.consortiumId.toString()) {
                 //Cant modify a bank that is not yours
-                throw new BadRequestException();
+                throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
             }
         }
         await this.userAuthService.deleteUser(banking.ownerUserId);
@@ -209,7 +212,7 @@ export class BankingsService {
                 filter = { consortiumId: consortium._id };
                 break;
             default:
-                throw new BadRequestException();
+                throw new BadRequestException(ConstApp.UNAUTHORIZED);
         }
         return await this.bankingModel.find(filter).exec();
     }
@@ -226,7 +229,7 @@ export class BankingsService {
                 filter = { [field]: value, consortiumId: consortium._id };
                 break;
             default:
-                throw new BadRequestException();
+                throw new BadRequestException(ConstApp.UNAUTHORIZED);
         }
         return await this.bankingModel.find(filter).exec();
     }
@@ -246,15 +249,17 @@ export class BankingsService {
                 filter = { [field]: value, ownerUserId: loggedUser._id };
                 break;
             default:
-                throw new BadRequestException();
+                throw new BadRequestException(ConstApp.UNAUTHORIZED);
         }
         return (await this.bankingModel.find(filter).exec()).pop();
     }
 
     async getUserBanking(loggedUser: User): Promise<Banking> {
         if (loggedUser.role === Role.banker) {
-            return (await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec()).pop();
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id }).exec();
+            if (!banking) throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
+            return banking;
         }
-        throw new BadRequestException();
+        throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
     }
 }

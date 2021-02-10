@@ -46,6 +46,8 @@ export class ResultsService {
     }
 
     async create(dto: AddResultDto, loggedUser: User): Promise<Result> {
+        // FIXME TRANSACCION
+
         //TODO chekear si la fecha de sorteo ya paso
         const lottery = await this.lotteryModel.findById(dto.lotteryId).exec();
         if (!lottery) {

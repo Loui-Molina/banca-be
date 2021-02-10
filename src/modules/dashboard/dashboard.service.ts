@@ -21,6 +21,7 @@ import { Bet } from '@database/datamodels/schemas/bet';
 import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
 import { PlayedNumbersDto } from '@dashboard/dtos/played.numbers.dto';
 import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
+import { ConstApp } from '@utils/const.app';
 
 @Injectable()
 export class DashboardService {
@@ -77,6 +78,7 @@ export class DashboardService {
             let pendingPrizes = 0;
             const balance = await consortium.calculateBalance();
             const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+            if (!bankings) throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
             for await (const banking of bankings) {
                 cancelled += await this.sumBets(banking.bets, [BetStatus.cancelled], PosibleSums.count);
                 expired += await this.sumBets(banking.bets, [BetStatus.expired], PosibleSums.count);
@@ -120,7 +122,7 @@ export class DashboardService {
 
     async getAdminWidgetsStatistics(): Promise<DashboardWidgetsDto> {
         const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
-        let balance = 0;
+        const balance = 0;
         let prizes = 0;
         let profits = 0;
         let ticketsSold = 0;
@@ -209,7 +211,7 @@ export class DashboardService {
     async getBankingPlayedNumbersStatistics(loggedUser: User): Promise<DashboardPlayedNumbersDto> {
         const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
         if (bankings.length === 0) {
-            throw new BadRequestException();
+            throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
         }
         const banking = bankings.pop();
         let numbers: PlayedNumbersDto[] = [];
