@@ -73,7 +73,7 @@ export class AuthPasswordService {
         const session = await this.connection.startSession();
         session.startTransaction();
         try {
-            changed = await this.changeUserPassword(user, newPassword);
+            changed = await this.changeUserPassword(user, newPassword, userLogged);
             session.commitTransaction();
             responseDto.message = 'Password changed';
             responseDto.statusCode = 200;
@@ -112,7 +112,7 @@ export class AuthPasswordService {
                         throw new ForbiddenException(ConstApp.UNAUTHORIZE_TO_CHANGE_PASSWORD);
                     }
                     try {
-                        changed = await this.changeUserPassword(user, newPassword);
+                        changed = await this.changeUserPassword(user, newPassword, userLogged);
                         session.commitTransaction();
                     } catch (e) {
                         throw new BadRequestException(ConstApp.PASSWORD_SHOULD_NOT_BE_OLD);
@@ -123,7 +123,7 @@ export class AuthPasswordService {
                         throw new ForbiddenException(ConstApp.CANNOT_CHANGE_PASSWORD_OF_THE_SAME_ROLE);
                     }
                     try {
-                        changed = await this.changeUserPassword(user, newPassword);
+                        changed = await this.changeUserPassword(user, newPassword, userLogged);
                         session.commitTransaction();
                     } catch (e) {
                         throw new BadRequestException(ConstApp.PASSWORD_SHOULD_NOT_BE_OLD);
@@ -149,13 +149,14 @@ export class AuthPasswordService {
         return responseDto;
     }
 
-    private async changeUserPassword(user: User, newPassword: string): Promise<boolean> {
+    private async changeUserPassword(user: User, newPassword: string, userLogged: User): Promise<boolean> {
         let userSaved = false;
         user.password = await this.userAuthService.hashPassword(newPassword, user.salt);
         const valid = await this.userAuthService.validateOldPassword(user, newPassword);
         if (!valid) {
             user.oldPasswords.push(user.password);
             await this.tokenService.deleteRefreshToken(null, user, false);
+            user.modificationUserId = userLogged._id;
             await user.save();
             userSaved = true;
         } else {

@@ -8,9 +8,9 @@ import {
     Logger,
     UnauthorizedException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { randomBytes } from 'crypto';
-import { Model, ObjectId } from 'mongoose';
+import { Connection, Model, ObjectId } from 'mongoose';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { ConstApp } from '@utils/const.app';
@@ -31,6 +31,7 @@ export class TokenService {
         @Inject(forwardRef(() => AuthService))
         private readonly authService: AuthService,
         @InjectModel(RefreshToken.name) private readonly refreshTokenModel: Model<RefreshToken>,
+        @InjectConnection(ConstApp.USER) private readonly connection: Connection,
     ) {}
 
     async getRefreshToken(ipAdress: string, refreshToken: RefreshToken, logged: boolean): Promise<ResponseSignInDto> {
@@ -55,20 +56,28 @@ export class TokenService {
     }
 
     async saveRefreshTokenGenerated(userIp: string, userId: ObjectId): Promise<JwtPayloadRefresh> {
+        const session = await this.connection.startSession();
+        session.startTransaction();
         try {
             const refreshTokenModel = await this.refreshTokenModel.findOne({ userId }).exec();
             const value = randomBytes(64).toString('hex');
             refreshTokenModel.refreshTokenId = value;
             refreshTokenModel.ipAddress = userIp;
             await refreshTokenModel.save();
+            session.commitTransaction();
             return { value, userId } as JwtPayloadRefresh;
         } catch (error) {
             this.logger.error(ConstApp.REFRESH_TOKEN_ERROR + error);
+            session.abortTransaction();
             throw new InternalServerErrorException(ConstApp.REFRESH_TOKEN_ERROR);
+        }
+        finally{
+            session.endSession();
         }
     }
 
     async deleteRefreshToken(ipAddress: string, user: User, required: boolean): Promise<ResponseDto> {
+        const responseDto: ResponseDto = new ResponseDto();
         let refreshTokenModel = new this.refreshTokenModel();
         const userId: ObjectId = user._id;
         if (required) {
@@ -79,15 +88,25 @@ export class TokenService {
         if (refreshTokenModel == null) {
             throw new ForbiddenException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
         }
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try{
         refreshTokenModel.ipAddress = '';
         refreshTokenModel.refreshTokenId = '';
         refreshTokenModel = await refreshTokenModel.save();
-        if (!refreshTokenModel) {
-            throw new InternalServerErrorException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
-        }
-        const responseDto: ResponseDto = new ResponseDto();
+        session.commitTransaction();
         responseDto.message = ConstApp.LOG_OUT_OK;
         responseDto.statusCode = HttpStatus.OK;
+        if (!refreshTokenModel) {
+            throw new InternalServerErrorException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
+        }}
+        catch(e){
+            session.abortTransaction();
+            throw new InternalServerErrorException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
+        }
+        finally{
+            session.endSession();
+        }
         return responseDto;
     }
 

@@ -40,7 +40,7 @@ export class UsersController {
     }
 
     @Put()
-    @Roles(Role.admin)
+    @Roles(Role.admin, Role.consortium)
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
         type: User,

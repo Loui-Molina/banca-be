@@ -36,17 +36,20 @@ export class AuthService {
 
     async signIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
         const responsePayload: ResponsePayload = await this.userAuthService.validateUserPassword(signInCredentialsDto);
+        let responseSignInDto : ResponseSignInDto = new ResponseSignInDto();
         if (!responsePayload.userId) {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
         }
         await this.verifyStatus(responsePayload);
-        return await this.getToken(responsePayload, userIp, false);
+        responseSignInDto = await this.getToken(responsePayload, userIp, false);
+        
+        return responseSignInDto
     }
 
     async verifyStatus(responsePayload: ResponsePayload) {
         const user = await this.userAuthService.getUser(responsePayload.userId);
         switch (user.role) {
-            case Role.consortium:
+            /*case Role.consortium:
                 // eslint-disable-next-line no-case-declarations
                 const consortiums = await this.consortiumModel.findOne({ ownerUserId: user._id });
                 if (consortiums.status === false) {
@@ -66,7 +69,7 @@ export class AuthService {
                 break;
             default:
                 throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
-                break;
+                break;*/
         }
     }
 

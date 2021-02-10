@@ -47,6 +47,8 @@ export class ConstApp {
     public static readonly CANNOT_CHANGE_PASSWORD_OF_THE_SAME_ROLE = 'CANT CHANGE PASSWORD OF THE SAME OR ABOVE ROLE';
     public static readonly UNAUTHORIZE_TO_CHANGE_PASSWORD = 'UNAUTHORIZE TO CHANGE PASSWORD';
     public static readonly UNABLE_TO_CHANGE_PASSWORD = 'UNABLE TO CHANGE PASSWORD';
+    public static readonly UNABLE_TO_UPDATE_USER = 'UNABLE TO UPDATE USER';
+    public static readonly UNAUTHORIZE_TO_UPDATE_USER = 'UNAUTHORIZE TO UPDATE USER';
     public static readonly NOT_LOGGED = 'NOT LOGGED';
 
     /***

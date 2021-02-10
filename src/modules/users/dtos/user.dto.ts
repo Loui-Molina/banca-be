@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@database/datamodels/enums/role';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { Type } from 'class-transformer';
 
 export class UserDto {
     @ApiProperty({ type: String })
@@ -13,10 +15,6 @@ export class UserDto {
     @IsString()
     @IsOptional()
     username?: string;
-    @ApiProperty({ type: String })
-    @IsString()
-    @IsOptional()
-    password?: string;
     @ApiProperty({ type: String, enum: Role })
     @IsEnum(Role)
     role?: Role;

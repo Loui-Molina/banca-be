@@ -31,6 +31,9 @@ export class AuthController {
 
     constructor(private readonly authService: AuthService, private readonly tokenService: TokenService) {}
 
+
+    //THIS METHOD SHOULDNT BE IN PROD 
+    //WARNING
     @Post('/sign-up')
     @HttpCode(HttpStatus.CREATED)
     @ApiOkResponse({ type: ResponseDto, description: 'Successfully Registered' })
@@ -75,20 +78,6 @@ export class AuthController {
     })
     getLoggedUser(@AuthUser() user: User): Promise<User> {
         return this.authService.getLoggedUser(user);
-    }
-
-    @Post('/test')
-    @UseGuards(AuthGuard())
-    test(@AuthUser() user: User) {
-        console.log(user);
-    }
-
-    @Post('/test1')
-    @UseGuards(AuthGuard('refresh'))
-    test1(@AuthUser() refreshToken: RefreshToken) {
-        console.log('SUCESSFULL PASS JWT REFRESH');
-        this.logger.debug('Refresh token ' + refreshToken);
-        return refreshToken;
     }
 
     @Get('/refresh-token')
