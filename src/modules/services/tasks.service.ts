@@ -27,6 +27,8 @@ export class TasksService {
     }
 
     async expireBets(): Promise<void> {
+        // FIXME TRANSACCION
+
         // Se ejecuta para expirar bets en pending o winner
         // si ya pasaron 5 dias se expiran
         const days = 5;
@@ -48,6 +50,8 @@ export class TasksService {
     }
 
     async deleteOldMessages(): Promise<void> {
+        // FIXME TRANSACCION
+
         // Se ejecuta para eliminar viejos
         // si ya pasaron 30 dias se eliminan
         const days = 30;
@@ -70,6 +74,7 @@ export class TasksService {
     async deleteOldPlayPools(): Promise<void> {
         // Se ejecuta para eliminar viejos
         // si ya pasaron 5 dias se eliminan
+        // FIXME TRANSACCION
         const days = 5;
         const dateOffset = days * 24 * 3600 * 1000; //5 days
         const myDate = new Date();

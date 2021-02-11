@@ -51,6 +51,7 @@ export class ConstApp {
     public static readonly UNABLE_TO_UPDATE_USER = 'UNABLE TO UPDATE USER';
     public static readonly UNAUTHORIZE_TO_UPDATE_USER = 'UNAUTHORIZE TO UPDATE USER';
     public static readonly NOT_LOGGED = 'NOT LOGGED';
+    public static readonly UNAUTHORIZED = 'UNAUTHORIZED';
 
     /***
      * EXCEPTIONS MESSAGES

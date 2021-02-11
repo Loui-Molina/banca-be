@@ -5,6 +5,7 @@ import { IsDate, IsMongoId, IsNumber, IsObject, IsOptional, IsString } from 'cla
 import { PlayDto } from '@betting.panel/dtos/play.dto';
 
 export class BetDto {
+    // FIXME DTO INSTEAD OF MODELS
     @ApiProperty() @IsMongoId() _id: ObjectId;
     @ApiProperty({ type: [PlayDto] }) @IsObject() plays: PlayDto[];
     @ApiProperty({ type: String }) @IsString() sn: string;
