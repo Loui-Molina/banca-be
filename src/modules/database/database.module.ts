@@ -12,7 +12,7 @@ import { ConstApp } from '@utils/const.app';
             useFactory: async (config: ConfigService) => ({
                 uri: config.get('bankingDB'),
                 useNewUrlParser: true,
-                useUnifiedTopology: true,               
+                useUnifiedTopology: true,
             }),
             inject: [ConfigService],
         }),

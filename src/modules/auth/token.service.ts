@@ -70,8 +70,7 @@ export class TokenService {
             this.logger.error(ConstApp.REFRESH_TOKEN_ERROR + error);
             session.abortTransaction();
             throw new InternalServerErrorException(ConstApp.REFRESH_TOKEN_ERROR);
-        }
-        finally{
+        } finally {
             session.endSession();
         }
     }
@@ -90,21 +89,20 @@ export class TokenService {
         }
         const session = await this.connection.startSession();
         session.startTransaction();
-        try{
-        refreshTokenModel.ipAddress = '';
-        refreshTokenModel.refreshTokenId = '';
-        refreshTokenModel = await refreshTokenModel.save();
-        session.commitTransaction();
-        responseDto.message = ConstApp.LOG_OUT_OK;
-        responseDto.statusCode = HttpStatus.OK;
-        if (!refreshTokenModel) {
-            throw new InternalServerErrorException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
-        }}
-        catch(e){
+        try {
+            refreshTokenModel.ipAddress = '';
+            refreshTokenModel.refreshTokenId = '';
+            refreshTokenModel = await refreshTokenModel.save();
+            session.commitTransaction();
+            responseDto.message = ConstApp.LOG_OUT_OK;
+            responseDto.statusCode = HttpStatus.OK;
+            if (!refreshTokenModel) {
+                throw new InternalServerErrorException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
+            }
+        } catch (e) {
             session.abortTransaction();
             throw new InternalServerErrorException(ConstApp.COULD_NOT_LOG_OUT_ERROR);
-        }
-        finally{
+        } finally {
             session.endSession();
         }
         return responseDto;

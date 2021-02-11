@@ -31,8 +31,7 @@ export class AuthController {
 
     constructor(private readonly authService: AuthService, private readonly tokenService: TokenService) {}
 
-
-    //THIS METHOD SHOULDNT BE IN PROD 
+    //THIS METHOD SHOULDNT BE IN PROD
     //WARNING
     @Post('/sign-up')
     @HttpCode(HttpStatus.CREATED)

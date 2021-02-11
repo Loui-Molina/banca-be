@@ -12,6 +12,7 @@ export class ConstApp {
     public static readonly USER_CREATED_OK = 'User created correctly';
     public static readonly LOG_OUT_OK = 'Successful log out';
     public static readonly PASSWORD_CHANGED = 'PASSWORD_CHANGED';
+    public static readonly USER_UPDATED = 'User updated';
 
     /***
      * MESSAGES

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Ip, Param, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Ip, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UsersService } from '@users/users.service';
 import { User } from '@database/datamodels/schemas/user';
@@ -11,6 +11,7 @@ import { ConstApp } from '@utils/const.app';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import * as mongoose from 'mongoose';
 import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
+import { ResponseDto } from '../utils/dtos/response.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -45,8 +46,16 @@ export class UsersController {
         description: ConstApp.DEFAULT_PUT_OK,
         type: User,
     })
-    update(@Ip() userIp: string, @Body() dto: UserDto, @AuthUser() loggedUser: User): Promise<User> {
-        return this.userService.update(dto, loggedUser, userIp);
+    update(@Ip() userIp: string, @Body() dto: UserDto, @AuthUser() loggedUser: User): ResponseDto {
+        const user = this.userService.update(dto, loggedUser, userIp);
+        let responseDto: ResponseDto = new ResponseDto();
+        if (!user) {
+            responseDto.statusCode = HttpStatus.BAD_REQUEST;
+            responseDto.message = ConstApp.UNABLE_TO_UPDATE_USER;
+        }
+        responseDto.statusCode = HttpStatus.OK;
+        responseDto.message = ConstApp.USER_UPDATED;
+        return responseDto;
     }
 
     @Delete(':id')

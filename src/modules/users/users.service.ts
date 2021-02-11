@@ -44,20 +44,26 @@ export class UsersService implements Repository<User, UserDto> {
     async update(userDto: UserDto, loggedUser: User, userIp: string): Promise<User> {
         const session = await this.connection.startSession();
         session.startTransaction();
+
         let userUpdated: User;
         try {
-            if (loggedUser.role === Role.consortium && userDto.role === Role.admin) {
+            if (
+                loggedUser.role === Role.consortium &&
+                (userDto.role === Role.admin || userDto.role === Role.consortium)
+            ) {
                 throw new BadRequestException(ConstApp.UNAUTHORIZE_TO_UPDATE_USER);
             }
-            userUpdated = await this.userModel.findByIdAndUpdate(userDto._id, {
-                username: userDto.username,
-                name: userDto.name,
-                role: userDto.role,
-                modificationUserId: loggedUser._id,
-            });
+            userUpdated = await this.userModel.findByIdAndUpdate(
+                userDto._id,
+                {
+                    ...userDto,
+                },
+                { new: true },
+            );
             if (!userUpdated) {
                 throw new SomethingWentWrongException();
             }
+            session.commitTransaction();
         } catch (e) {
             this.logger.debug(e);
             session.abortTransaction();
