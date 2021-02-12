@@ -4,7 +4,6 @@ import { IsMongoId, IsString, Matches, MaxLength, MinLength } from 'class-valida
 import { ObjectId } from 'mongoose';
 
 export class ChangeOldPasswordDto {
-
     @ApiProperty()
     @IsMongoId()
     _id: ObjectId;

@@ -94,6 +94,6 @@ export class UsersService implements Repository<User, UserDto> {
     }
 
     async getUserByUsernameAndSalt(_id: ObjectId): Promise<User> {
-        return await this.userModel.findById( _id ).select('+salt').exec();
+        return await this.userModel.findById(_id).select('+salt').exec();
     }
 }
