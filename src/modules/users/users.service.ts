@@ -93,7 +93,7 @@ export class UsersService implements Repository<User, UserDto> {
         return await this.userModel.findOne({ username, role }).exec();
     }
 
-    async getUserByUsernameAndSalt(username: string): Promise<User> {
-        return await this.userModel.findOne({ username }).select('+salt').exec();
+    async getUserByUsernameAndSalt(_id: ObjectId): Promise<User> {
+        return await this.userModel.findById( _id ).select('+salt').exec();
     }
 }

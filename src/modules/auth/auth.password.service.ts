@@ -27,7 +27,7 @@ export class AuthPasswordService {
         changeOldPasswordDto: ChangeOldPasswordDto,
         userLogged: User,
     ): Promise<ResponseDto> {
-        const { username, oldPassword, newPassword, verifyPassword } = changeOldPasswordDto;
+        const { _id, oldPassword, newPassword, verifyPassword } = changeOldPasswordDto;
         let responseDto: ResponseDto = new ResponseDto();
         let signInCredentialsDto: SignInCredentialsDto = new SignInCredentialsDto();
         let changed: boolean;
@@ -37,7 +37,7 @@ export class AuthPasswordService {
         if (oldPassword === newPassword) {
             throw new BadRequestException(ConstApp.PASSWORD_SHOULD_NOT_BE_THE_SAME_ERROR);
         }
-        const user = await this.userAuthService.getUserByUsername(username);
+        const user = await this.userAuthService.getUserByIdComplete(_id);
         if (!user) {
             throw new BadRequestException(ConstApp.USER_NOT_FOUND);
         }
@@ -63,7 +63,7 @@ export class AuthPasswordService {
              * **/
             throw new BadRequestException();
         }
-        signInCredentialsDto.username = username;
+        signInCredentialsDto.username = user.username;
         signInCredentialsDto.password = oldPassword;
         const valid = await this.userAuthService.validateUserPassword(signInCredentialsDto);
         this.logger.debug('Is valid: ' + valid);
@@ -93,13 +93,13 @@ export class AuthPasswordService {
     }
 
     async changePassword(userIp: string, changePasswordDto: ChangePasswordDto, userLogged: User): Promise<ResponseDto> {
-        const { username, newPassword, verifyPassword } = changePasswordDto;
+        const { _id, newPassword, verifyPassword } = changePasswordDto;
         let responseDto: ResponseDto = new ResponseDto();
         let changed: boolean;
         if (newPassword !== verifyPassword) {
             throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);
         }
-        const user = await this.userAuthService.getUserByUsername(username);
+        const user = await this.userAuthService.getUserByIdComplete(_id);
         if (!user) {
             throw new BadRequestException(ConstApp.USER_NOT_FOUND);
         }

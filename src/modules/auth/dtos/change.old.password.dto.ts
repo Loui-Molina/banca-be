@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ConstApp } from '@utils/const.app';
-import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsMongoId, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { ObjectId } from 'mongoose';
 
 export class ChangeOldPasswordDto {
-    @ApiProperty({ type: String })
-    @IsString()
-    @MinLength(4)
-    @MaxLength(20)
-    username: string;
+
+    @ApiProperty()
+    @IsMongoId()
+    _id: ObjectId;
 
     @ApiProperty({ type: String })
     @IsString()

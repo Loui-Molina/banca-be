@@ -123,8 +123,8 @@ export class AuthUserService {
         return await this.usersService.getUserByUsernameRole(username, role);
     }
 
-    async getUserByUsername(username: string): Promise<User> {
-        return await this.usersService.getUserByUsernameAndSalt(username);
+    async getUserByIdComplete(_id: ObjectId): Promise<User> {
+        return await this.usersService.getUserByUsernameAndSalt(_id);
     }
 
     async validateOldPassword(user: User, password: string): Promise<boolean> {
