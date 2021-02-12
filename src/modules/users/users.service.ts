@@ -1,16 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model, ObjectId } from 'mongoose';
 import { Repository } from '@common/interfaces/repository';
 import { User } from '@database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
 import { Role } from '@database/datamodels/enums/role';
+import { ConstApp } from '@utils/const.app';
+import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
 
 @Injectable()
 export class UsersService implements Repository<User, UserDto> {
+    private readonly logger: Logger = new Logger(UsersService.name);
+
     constructor(
         @InjectModel(User.name)
         private readonly userModel: Model<User>,
+        @InjectConnection(ConstApp.USER) private readonly connection: Connection,
     ) {}
 
     async getAll(limit: number, offset: number): Promise<Array<User>> {
@@ -35,28 +40,37 @@ export class UsersService implements Repository<User, UserDto> {
         ).pop();
     }
 
-    async update(dto: UserDto, loggedUser: User, userIp: string): Promise<User> {
-        //TODO cambio de password no funciona
-        /*if (dto.password != null && dto.password.length > 0){
-const userChange: User = await this.userModel.findById(dto._id).exec();
-await this.userAuthService.changePassword({
-userChange.username,
-password
-}, loggedUserIp)
-}*/
-        return this.userModel.findByIdAndUpdate(
-            dto._id,
-            {
-                username: dto.username,
-                // password: dto.password,
-                name: dto.name,
-                modificationDate: new Date(),
-                modificationUserId: loggedUser._id,
-            },
-            {
-                new: true,
-            },
-        );
+    async update(userDto: UserDto, loggedUser: User, userIp: string): Promise<User> {
+        const session = await this.connection.startSession();
+        session.startTransaction();
+
+        let userUpdated: User;
+        try {
+            if (
+                loggedUser.role === Role.consortium &&
+                (userDto.role === Role.admin || userDto.role === Role.consortium)
+            ) {
+                throw new BadRequestException(ConstApp.UNAUTHORIZE_TO_UPDATE_USER);
+            }
+            userUpdated = await this.userModel.findByIdAndUpdate(
+                userDto._id,
+                {
+                    ...userDto,
+                },
+                { new: true },
+            );
+            if (!userUpdated) {
+                throw new SomethingWentWrongException();
+            }
+            session.commitTransaction();
+        } catch (e) {
+            this.logger.debug(e);
+            session.abortTransaction();
+            throw new BadRequestException(ConstApp.UNABLE_TO_UPDATE_USER);
+        } finally {
+            session.endSession();
+        }
+        return userUpdated;
     }
 
     async delete(id: ObjectId): Promise<User> {

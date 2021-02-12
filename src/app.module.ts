@@ -9,7 +9,6 @@ import { CommonModule } from '@common.module/common.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TasksService } from '@src/modules/services/tasks.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { ConstApp } from '@utils/const.app';
 import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool';
 

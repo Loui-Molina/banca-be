@@ -12,6 +12,7 @@ export class ConstApp {
     public static readonly USER_CREATED_OK = 'User created correctly';
     public static readonly LOG_OUT_OK = 'Successful log out';
     public static readonly PASSWORD_CHANGED = 'PASSWORD_CHANGED';
+    public static readonly USER_UPDATED = 'User updated';
 
     /***
      * MESSAGES
@@ -47,6 +48,8 @@ export class ConstApp {
     public static readonly CANNOT_CHANGE_PASSWORD_OF_THE_SAME_ROLE = 'CANT CHANGE PASSWORD OF THE SAME OR ABOVE ROLE';
     public static readonly UNAUTHORIZE_TO_CHANGE_PASSWORD = 'UNAUTHORIZE TO CHANGE PASSWORD';
     public static readonly UNABLE_TO_CHANGE_PASSWORD = 'UNABLE TO CHANGE PASSWORD';
+    public static readonly UNABLE_TO_UPDATE_USER = 'UNABLE TO UPDATE USER';
+    public static readonly UNAUTHORIZE_TO_UPDATE_USER = 'UNAUTHORIZE TO UPDATE USER';
     public static readonly NOT_LOGGED = 'NOT LOGGED';
     public static readonly UNAUTHORIZED = 'UNAUTHORIZED';
 

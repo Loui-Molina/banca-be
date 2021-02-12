@@ -5,7 +5,6 @@ import { User } from '@database/datamodels/schemas/user';
 import { ConstApp } from '@utils/const.app';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
-import { Bet } from '@database/datamodels/schemas/bet';
 import { BettingPanelService } from '@betting.panel/betting.panel.service';
 import { BetDto } from '@betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@betting.panel/dtos/create.bet.dto';
