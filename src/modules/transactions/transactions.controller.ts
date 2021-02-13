@@ -59,6 +59,16 @@ export class TransactionController {
         return this.transactionService.createTransactionConsortium(dto, loggedUser);
     }
 
+    @Post('create/transaction/banker')
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_POST_OK,
+        type: Transaction,
+    })
+    @Roles(Role.banker)
+    createTransactionBanking(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser: User): Promise<Transaction> {
+        return this.transactionService.createTransactionBanking(dto, loggedUser);
+    }
+
     @Get(':id')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
