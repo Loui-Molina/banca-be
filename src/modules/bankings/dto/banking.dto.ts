@@ -14,4 +14,7 @@ export class BankingDto {
     @ApiProperty() @IsDate() @IsOptional() startOfOperation?: Date;
     @ApiProperty() @IsBoolean() @IsOptional() showPercentage?: boolean;
     @ApiProperty() @IsNumber() @IsOptional() earningPercentage?: number;
+    @ApiProperty() @IsNumber() @IsOptional() cancellationTime?: number;
+    @ApiProperty() @IsString() header: string;
+    @ApiProperty() @IsString() footer: string;
 }

@@ -20,6 +20,8 @@ import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
 import { PlayedNumbersDto } from '@dashboard/dtos/played.numbers.dto';
+import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
+import { ConstApp } from '@utils/const.app';
 import {WebUser} from "@database/datamodels/schemas/web.user";
 
 @Injectable()
@@ -78,6 +80,7 @@ export class DashboardService {
             let pendingPrizes = 0;
             const balance = await consortium.calculateBalance();
             const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+            if (!bankings) throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
             for await (const banking of bankings) {
                 cancelled += await this.sumBets(banking.bets, [BetStatus.cancelled], PosibleSums.count);
                 expired += await this.sumBets(banking.bets, [BetStatus.expired], PosibleSums.count);
@@ -121,7 +124,7 @@ export class DashboardService {
 
     async getAdminWidgetsStatistics(): Promise<DashboardWidgetsDto> {
         const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
-        let balance = 0;
+        const balance = 0;
         let prizes = 0;
         let profits = 0;
         let ticketsSold = 0;
@@ -221,7 +224,7 @@ export class DashboardService {
     async getBankingPlayedNumbersStatistics(loggedUser: User): Promise<DashboardPlayedNumbersDto> {
         const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
         if (bankings.length === 0) {
-            throw new BadRequestException();
+            throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
         }
         const banking = bankings.pop();
         let numbers: PlayedNumbersDto[] = [];
@@ -255,10 +258,7 @@ export class DashboardService {
                 number: parseInt(key),
             });
         }
-        // @ts-ignore
-        numbers.sort(function (a, b) {
-            return b.amount > a.amount;
-        });
+        numbers.sort((a, b) => (a.amount < b.amount ? 1 : b.amount < a.amount ? -1 : 0));
         numbers = numbers.slice(0, 10);
         return {
             numbers,
@@ -312,10 +312,7 @@ export class DashboardService {
                 number: parseInt(key),
             });
         }
-        // @ts-ignore
-        numbers.sort(function (a, b) {
-            return b.amount > a.amount;
-        });
+        numbers.sort((a, b) => (a.amount < b.amount ? 1 : b.amount < a.amount ? -1 : 0));
         numbers = numbers.slice(0, 10);
         return {
             numbers,
@@ -417,6 +414,37 @@ export class DashboardService {
             data.push({
                 name: date.toISOString(),
                 value: balance,
+            });
+        }
+        return data;
+    }
+
+    async getGraphConsortiumBankingBalanceStatistics(
+        loggedUser: User,
+    ): Promise<DashboardGraphConsortiumBalanceBankingDto[]> {
+        const consortium = await this.consortiumModel.findOne({ ownerUserId: loggedUser._id }).exec();
+        if (!consortium) {
+            throw new BadRequestException();
+        }
+        const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+        const data: DashboardGraphConsortiumBalanceBankingDto[] = [];
+        const dates: Date[] = [];
+        for (let i = 0; i < 30; i++) {
+            dates.unshift(await this.sumDate(-i));
+        }
+
+        for await (const banking of bankings) {
+            const series = [];
+            for await (const date of dates) {
+                const balance = await this.getBalanceByDate(banking.transactions, date);
+                series.push({
+                    name: date.toISOString(),
+                    value: balance,
+                });
+            }
+            data.push({
+                name: banking.name,
+                series,
             });
         }
         return data;

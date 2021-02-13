@@ -19,8 +19,13 @@ export class Banking extends Document implements DataObject {
     @Prop({ type: [LotterySchema] }) lotteries?: Lottery[];
     @Prop({ type: [BetSchema] }) bets?: Bet[];
     @Prop({ required: true }) name: string;
+    @Prop({ required: true, default: 0 }) balance?: number;
+    @ApiProperty() @Prop({ required: true, default: 5 }) cancellationTime?: number;
     @ApiProperty() @Prop() startOfOperation?: Date;
     @ApiProperty() @Prop({ required: true, default: false }) status?: boolean;
+
+    @Prop({ required: true }) header: string;
+    @Prop({ required: true }) footer: string;
 
     // Que porcentaje se le paga a la banca por cada jugada
     @Prop({ min: 0, max: 100 }) earningPercentage?: number;

@@ -16,6 +16,7 @@ import { DashboardGraphBankingDto } from '@dashboard/dtos/dashboard.graph.bankin
 import { DashboardWidgetsDto } from '@dashboard/dtos/dashboard.widgets.dto';
 import { DashboardGraphBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.balance.banking.dto';
 import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
+import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
 
 @ApiTags('dashboard')
 @Controller('dashboard')
@@ -141,5 +142,17 @@ export class DashboardController {
     @Roles(Role.banker)
     getGraphBankingBalanceStatistics(@AuthUser() loggedUser: User): Promise<DashboardGraphBalanceBankingDto[]> {
         return this.dashboardService.getGraphBankingBalanceStatistics(loggedUser);
+    }
+
+    @Get('graph-consortium-banking-balance-statistics')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: DashboardGraphConsortiumBalanceBankingDto,
+    })
+    @Roles(Role.consortium)
+    getGraphConsortiumBankingBalanceStatistics(
+        @AuthUser() loggedUser: User,
+    ): Promise<DashboardGraphConsortiumBalanceBankingDto[]> {
+        return this.dashboardService.getGraphConsortiumBankingBalanceStatistics(loggedUser);
     }
 }

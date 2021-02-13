@@ -21,11 +21,8 @@ import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { AuthRefreshToken } from '@common/decorators/auth.refresh.token.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -34,6 +31,8 @@ export class AuthController {
 
     constructor(private readonly authService: AuthService, private readonly tokenService: TokenService) {}
 
+    //THIS METHOD SHOULDNT BE IN PROD
+    //WARNING
     @Post('/sign-up')
     @HttpCode(HttpStatus.CREATED)
     @ApiOkResponse({ type: ResponseDto, description: 'Successfully Registered' })
@@ -70,17 +69,6 @@ export class AuthController {
         return this.authService.signIn(userIp, signInCredentialsDto);
     }
 
-    @Post('/change-password')
-    @UseGuards(AuthGuard(), RolesGuard)
-    @Roles(Role.admin)
-    async changePasswordRemember(
-        @Ip() userIp: string,
-        @Body() changePasswordDto: ChangePasswordDto,
-        @AuthUser() user: User,
-    ): Promise<ResponseDto> {
-        return this.authService.changePassword(userIp, changePasswordDto, user, true);
-    }
-
     @Get('/logged-user')
     @UseGuards(AuthGuard())
     @ApiFoundResponse({
@@ -91,27 +79,13 @@ export class AuthController {
         return this.authService.getLoggedUser(user);
     }
 
-    @Post('/test')
-    @UseGuards(AuthGuard())
-    test(@AuthUser() user: User) {
-        console.log(user);
-    }
-
-    @Post('/test1')
-    @UseGuards(AuthGuard('refresh'))
-    test1(@AuthUser() refreshToken: RefreshToken) {
-        console.log('SUCESSFULL PASS JWT REFRESH');
-        this.logger.debug('Refresh token ' + refreshToken);
-        return refreshToken;
-    }
-
     @Get('/refresh-token')
     @UseGuards(AuthGuard('refresh'))
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: String,
     })
-    getToken(@Ip() ipAdress: string, @AuthUser() refreshToken: RefreshToken): Promise<ResponseSignInDto> {
+    getToken(@Ip() ipAdress: string, @AuthRefreshToken() refreshToken: RefreshToken): Promise<ResponseSignInDto> {
         return this.tokenService.getRefreshToken(ipAdress, refreshToken, true);
     }
 
@@ -119,11 +93,5 @@ export class AuthController {
     @UseGuards(AuthGuard())
     logOut(@Ip() ipAdress: string, @AuthUser() user: User): Promise<ResponseDto> {
         return this.authService.logOut(ipAdress, user);
-    }
-
-    @Get('/is-enabled')
-    @UseGuards(AuthGuard())
-    isLoginEnabled(@AuthUser() user: User): Promise<boolean> {
-        return this.authService.isLoginEnabled(user);
     }
 }

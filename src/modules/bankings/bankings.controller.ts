@@ -39,6 +39,16 @@ export class BankingsController {
         return this.bankingService.getFiltered(field, value, user);
     }
 
+    @Get('user-banking')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: Banking,
+    })
+    @Roles(Role.banker)
+    getUserBanking(@AuthUser() user: User): Promise<Banking> {
+        return this.bankingService.getUserBanking(user);
+    }
+
     @Post()
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_POST_OK,

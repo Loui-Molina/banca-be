@@ -13,7 +13,6 @@ import { ConfigService } from '@nestjs/config';
 import { TokenService } from '@auth/token.service';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Consortium } from '@database/datamodels/schemas/consortium';
@@ -38,25 +37,44 @@ export class AuthService {
     }
 
     async signIn(userIp: string, signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
-        let responsePayload: ResponsePayload = new ResponsePayload();
-        responsePayload = await this.userAuthService.validateUserPassword(signInCredentialsDto);
+        const responsePayload: ResponsePayload = await this.userAuthService.validateUserPassword(signInCredentialsDto);
+        let responseSignInDto: ResponseSignInDto = new ResponseSignInDto();
         if (!responsePayload.userId) {
             throw new UnauthorizedException(ConstApp.INVALID_CREDENTIALS_ERROR);
         }
+        await this.verifyStatus(responsePayload);
+        responseSignInDto = await this.getToken(responsePayload, userIp, false);
+
+        return responseSignInDto;
+    }
+
+    async verifyStatus(responsePayload: ResponsePayload) {
         const user = await this.userAuthService.getUser(responsePayload.userId);
-        if (user.role === Role.consortium) {
-            const consortiums = await this.consortiumModel.find({ ownerUserId: user._id });
-            if (consortiums.length === 0 || consortiums.pop().status === false) {
+        switch (
+            user.role
+            /*case Role.consortium:
+                // eslint-disable-next-line no-case-declarations
+                const consortiums = await this.consortiumModel.findOne({ ownerUserId: user._id });
+                if (consortiums.status === false) {
+                    throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
+                }
+                break;
+            case Role.banker:
+                // eslint-disable-next-line no-case-declarations
+                const banking = await this.bankingModel.findOne({ ownerUserId: user._id });
+                // eslint-disable-next-line no-case-declarations
+                const bankingConsortium = await this.consortiumModel.findOne({ _id: banking.consortiumId });
+                if (banking.status === false || bankingConsortium.status === false) {
+                    throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
+                }
+                break;
+            case Role.admin:
+                break;
+            default:
                 throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
-            }
+                break;*/
+        ) {
         }
-        if (user.role === Role.banker) {
-            const bankings = await this.bankingModel.find({ ownerUserId: user._id });
-            if (bankings.length === 0 || bankings.pop().status === false) {
-                throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
-            }
-        }
-        return await this.getToken(responsePayload, userIp, false);
     }
 
     async getLoggedUser(user: User) {
@@ -68,6 +86,7 @@ export class AuthService {
         const userId: ObjectId = responsePayload.userId;
         const role: Role = responsePayload.role;
         const payload: JwtPayload = { userId, role };
+        await this.verifyStatus(responsePayload);
         if (!logged) {
             const refreshToken = await this.tokenService.saveRefreshTokenGenerated(userIp, userId);
             responseSignInDto.refreshToken = await this.jwtService.signAsync(refreshToken, {
@@ -84,50 +103,6 @@ export class AuthService {
     }
 
     async logOut(ipAdress: string, user: User): Promise<ResponseDto> {
-        return this.tokenService.deleteRefreshToken(ipAdress, user);
-    }
-
-    async changePassword(
-        ipAddress: string,
-        changePasswordDto: ChangePasswordDto,
-        user: User,
-        remember: boolean,
-    ): Promise<ResponseDto> {
-        return await this.userAuthService.changePassword(changePasswordDto, user, ipAddress, remember);
-    }
-
-    async isLoginEnabled(user: User) {
-        let isEnabled = false;
-        switch (user.role) {
-            case Role.admin:
-                isEnabled = true;
-                break;
-            case Role.banker:
-                // eslint-disable-next-line no-case-declarations
-                const banking = await this.bankingModel.findOne({ ownerUserId: user._id }).exec();
-                isEnabled = banking.status;
-                break;
-            case Role.supervisor:
-                isEnabled = false;
-                break;
-            case Role.consortium:
-                // eslint-disable-next-line no-case-declarations
-                const consortium = await this.consortiumModel.findOne({ ownerUserId: user._id }).exec();
-                isEnabled = consortium.status;
-                break;
-            case Role.webuser:
-                // eslint-disable-next-line no-case-declarations
-                const webUserModel = await this.webUserModel.findOne({ ownerUserId: user._id }).exec();
-                isEnabled = webUserModel.status;
-                break;
-            case Role.carrier:
-                isEnabled = false;
-                break;
-            default:
-                isEnabled = false;
-                break;
-        }
-        console.log(isEnabled);
-        return Promise.resolve(isEnabled);
+        return this.tokenService.deleteRefreshToken(ipAdress, user, true);
     }
 }

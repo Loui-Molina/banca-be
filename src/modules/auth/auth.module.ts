@@ -14,6 +14,8 @@ import { ConstApp } from '@utils/const.app';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { UsersAdminInitializeService } from '@auth/users.admin.initialize.service';
 import {WebUser, WebUserSchema} from "@database/datamodels/schemas/web.user";
+import { AuthPasswordController } from '@auth/auth.password.controller';
+import { AuthPasswordService } from '@auth/auth.password.service';
 
 @Global()
 @Module({
@@ -37,8 +39,15 @@ import {WebUser, WebUserSchema} from "@database/datamodels/schemas/web.user";
         }),
         AuthUserModule,
     ],
-    providers: [AuthService, UsersAdminInitializeService, JwtStrategy, TokenService, RefreshStrategy],
-    controllers: [AuthController],
+    providers: [
+        AuthService,
+        AuthPasswordService,
+        UsersAdminInitializeService,
+        JwtStrategy,
+        TokenService,
+        RefreshStrategy,
+    ],
+    controllers: [AuthController, AuthPasswordController],
     exports: [
         JwtModule,
         PassportModule.register({

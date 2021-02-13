@@ -5,7 +5,6 @@ import { User } from '@database/datamodels/schemas/user';
 import { ConstApp } from '@utils/const.app';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
-import { Bet } from '@database/datamodels/schemas/bet';
 import { BettingPanelService } from '@betting.panel/betting.panel.service';
 import { BetDto } from '@betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@betting.panel/dtos/create.bet.dto';
@@ -14,6 +13,7 @@ import { Roles } from '@common/decorators/roles.decorator';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
 import { ClaimBetDto } from '@betting.panel/dtos/claim.bet.dto';
+import { LimitVerifyDto } from '@betting.panel/dtos/limit.verify.dto';
 
 @ApiTags('betting-panel')
 @Controller('betting-panel')
@@ -24,10 +24,10 @@ export class BettingPanelController {
     @Get()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: Bet,
+        type: BetDto,
     })
     @Roles(Role.banker)
-    getAll(@AuthUser() loggedUser: User): Promise<Array<Bet>> {
+    getAll(@AuthUser() loggedUser: User): Promise<Array<BetDto>> {
         return this.bettingPanelService.getAll(loggedUser);
     }
 
@@ -59,6 +59,16 @@ export class BettingPanelController {
     @Roles(Role.banker)
     create(@Body() dto: CreateBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
         return this.bettingPanelService.create(dto, loggedUser);
+    }
+
+    @Post('verify-limit')
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_POST_OK,
+        type: Number,
+    })
+    @Roles(Role.banker)
+    verifyLimit(@Body() dto: LimitVerifyDto, @AuthUser() loggedUser: User): Promise<number> {
+        return this.bettingPanelService.verifyLimit(dto, loggedUser);
     }
 
     @Put('cancel')
