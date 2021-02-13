@@ -16,6 +16,7 @@ import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Consortium } from '@database/datamodels/schemas/consortium';
+import { WebUser } from '@database/datamodels/schemas/web.user';
 
 @Injectable()
 export class AuthService {
@@ -28,6 +29,7 @@ export class AuthService {
         private readonly tokenService: TokenService,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
+        @InjectModel(WebUser.name) private readonly webUserModel: Model<WebUser>,
     ) {}
 
     async signUp(signUpCredentialsDto: SignUpCredentialsDto, user: User): Promise<ResponseDto> {
@@ -48,9 +50,8 @@ export class AuthService {
 
     async verifyStatus(responsePayload: ResponsePayload) {
         const user = await this.userAuthService.getUser(responsePayload.userId);
-        switch (
-            user.role
-            /*case Role.consortium:
+        switch (user.role) {
+            case Role.consortium:
                 // eslint-disable-next-line no-case-declarations
                 const consortiums = await this.consortiumModel.findOne({ ownerUserId: user._id });
                 if (consortiums.status === false) {
@@ -68,10 +69,20 @@ export class AuthService {
                 break;
             case Role.admin:
                 break;
+            case Role.webuser:
+                // eslint-disable-next-line no-case-declarations
+                const webuser = await this.webUserModel.findOne({ ownerUserId: user._id });
+                // eslint-disable-next-line no-case-declarations
+                const bankingWeb = await this.bankingModel.findOne({ _id: webuser.bankingId });
+                // eslint-disable-next-line no-case-declarations
+                const bankingConsortiumWeb = await this.consortiumModel.findOne({ _id: bankingWeb.consortiumId });
+                if (webuser.status === false || bankingWeb.status === false || bankingConsortiumWeb.status === false) {
+                    throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
+                }
+                break;
             default:
                 throw new UnauthorizedException(ConstApp.CANNOT_LOGIN);
-                break;*/
-        ) {
+                break;
         }
     }
 

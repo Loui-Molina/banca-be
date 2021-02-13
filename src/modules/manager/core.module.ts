@@ -8,6 +8,7 @@ import { BettingPanelModule } from '@betting.panel/betting.panel.module';
 import { LotteriesModule } from '@lotteries/lotteries.module';
 import { ChatModule } from '@chat/chat.module';
 import { SubscriptionsModule } from '@subscriptions/subscriptions.module';
+import { WebUsersModule } from '@web.users/web.users.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { SubscriptionsModule } from '@subscriptions/subscriptions.module';
         BankingsModule,
         LotteriesModule,
         ChatModule,
+        WebUsersModule,
         SubscriptionsModule,
     ],
     controllers: [],
@@ -32,6 +34,7 @@ import { SubscriptionsModule } from '@subscriptions/subscriptions.module';
         BankingsModule,
         LotteriesModule,
         ChatModule,
+        WebUsersModule,
         SubscriptionsModule,
     ],
 })

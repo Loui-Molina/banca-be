@@ -48,7 +48,8 @@
       "@bankings/*": ["src/modules/bankings/*"],
       "@chat/*": ["src/modules/chat/*"],
       "@common.module/*": ["src/modules/common/*"],
-      "@subscriptions/*": ["src/modules/subscriptions/*"]
+      "@subscriptions/*": ["src/modules/subscriptions/*"],
+      "@web.users/*": ["src/modules/web-users/*"]
     },
   }
 }

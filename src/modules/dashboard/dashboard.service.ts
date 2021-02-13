@@ -22,12 +22,14 @@ import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numb
 import { PlayedNumbersDto } from '@dashboard/dtos/played.numbers.dto';
 import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
 import { ConstApp } from '@utils/const.app';
+import { WebUser } from '@database/datamodels/schemas/web.user';
 
 @Injectable()
 export class DashboardService {
     constructor(
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        @InjectModel(WebUser.name) private readonly webUserModel: Model<WebUser>,
     ) {}
 
     async getDashboardDiagram(): Promise<DashboardDiagramDto> {
@@ -205,6 +207,19 @@ export class DashboardService {
                 [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
                 PosibleSums.count,
             ),
+        };
+    }
+
+    async getWebUserWidgetsStatistics(loggedUser: User): Promise<DashboardWidgetsDto> {
+        const webUser = await this.webUserModel.findOne({ ownerUserId: loggedUser._id }).exec();
+        if (!webUser) {
+            throw new BadRequestException();
+        }
+        return {
+            prizes: 0,
+            profits: 0,
+            ticketsSold: 0,
+            balance: await webUser.calculateBalance(),
         };
     }
 

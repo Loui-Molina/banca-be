@@ -13,6 +13,8 @@ import { Role } from '@database/datamodels/enums/role';
 import { ConsortiumService } from '@consortiums/consortium.service';
 import { ConstApp } from '@utils/const.app';
 import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
+import { BankingsService } from '@bankings/bankings.service';
+import { WebUser } from '@database/datamodels/schemas/web.user';
 
 @Injectable()
 export class TransactionService {
@@ -20,8 +22,10 @@ export class TransactionService {
         @InjectModel(Transaction.name) private readonly transactionModel: Model<Transaction>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        @InjectModel(WebUser.name) private readonly webUserModel: Model<WebUser>,
         @InjectConnection(ConstApp.BANKING) private readonly connection: Connection,
         private readonly consortiumService: ConsortiumService,
+        private readonly bankingsService: BankingsService,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<TransactionDto>> {
@@ -186,6 +190,91 @@ export class TransactionService {
         }
         return transactionDestination;
     }
+
+    async createTransactionBanking(dto: CreateTransactionDto, loggedUser: User): Promise<Transaction> {
+        let transactionDestination;
+        let originObject: Banking | WebUser;
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try {
+            const banking = await this.bankingsService.getUserBanking(loggedUser);
+            const websusers = await this.webUserModel.find({ bankingId: banking._id }).exec();
+            if (dto.originObject === TransactionObjects.banking) {
+                originObject = await this.bankingModel.findById(dto.originId);
+                if (originObject._id.toString() !== banking._id.toString()) {
+                    throw new BadRequestException();
+                }
+            }
+            if (dto.originObject === TransactionObjects.webuser) {
+                originObject = await this.webUserModel.findById(dto.originId);
+                if (
+                    websusers.filter((websuser) => websuser._id.toString() === originObject._id.toString()).length === 0
+                ) {
+                    throw new BadRequestException();
+                }
+            }
+            let destinationObject: Banking | WebUser;
+            if (dto.destinationObject === TransactionObjects.banking) {
+                destinationObject = await this.bankingModel.findById(dto.destinationId);
+                if (destinationObject._id.toString() !== banking._id.toString()) {
+                    throw new BadRequestException();
+                }
+            }
+            if (dto.destinationObject === TransactionObjects.webuser) {
+                destinationObject = await this.webUserModel.findById(dto.destinationId);
+                if (
+                    websusers.filter((websuser) => websuser._id.toString() === destinationObject._id.toString())
+                        .length === 0
+                ) {
+                    throw new BadRequestException();
+                }
+            }
+            if (!destinationObject || !originObject) {
+                throw new BadRequestException();
+            }
+
+            const originBalance = await originObject.calculateBalance();
+            const destinationBalance = await destinationObject.calculateBalance();
+            const transactionOrigin = new this.transactionModel({
+                type: TransactionType.credit,
+                originObject: dto.originObject,
+                destinationObject: dto.destinationObject,
+                originId: dto.originId,
+                destinationId: dto.destinationId,
+                amount: dto.amount,
+                creationUserId: loggedUser._id,
+                modificationUserId: loggedUser._id,
+                lastBalance: originBalance,
+                actualBalance: originBalance + dto.amount,
+                description: dto.description,
+            });
+            transactionDestination = new this.transactionModel({
+                type: TransactionType.credit,
+                originObject: dto.originObject,
+                destinationObject: dto.destinationObject,
+                originId: dto.originId,
+                destinationId: dto.destinationId,
+                amount: dto.amount,
+                creationUserId: loggedUser._id,
+                modificationUserId: loggedUser._id,
+                lastBalance: destinationBalance,
+                actualBalance: destinationBalance + dto.amount,
+                description: dto.description,
+            });
+            originObject.transactions.push(transactionOrigin);
+            destinationObject.transactions.push(transactionDestination);
+            await originObject.save();
+            await destinationObject.save();
+            session.commitTransaction();
+        } catch (error) {
+            session.abortTransaction();
+            throw new SomethingWentWrongException();
+        } finally {
+            session.endSession();
+        }
+        return transactionDestination;
+    }
+
     async get(id: string): Promise<Transaction> {
         return await this.transactionModel.findById(id).exec();
     }
