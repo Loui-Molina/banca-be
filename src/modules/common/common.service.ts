@@ -4,7 +4,7 @@ import { User } from '@database/datamodels/schemas/user';
 import { ConsortiumService } from '@consortiums/consortium.service';
 import { ConfigService } from '@nestjs/config';
 import { BankingsService } from '@bankings/bankings.service';
-import {WebUsersService} from "@web.users/web.users.service";
+import { WebUsersService } from '@web.users/web.users.service';
 
 @Injectable()
 export class CommonService {

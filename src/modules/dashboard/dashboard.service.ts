@@ -22,7 +22,7 @@ import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numb
 import { PlayedNumbersDto } from '@dashboard/dtos/played.numbers.dto';
 import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
 import { ConstApp } from '@utils/const.app';
-import {WebUser} from "@database/datamodels/schemas/web.user";
+import { WebUser } from '@database/datamodels/schemas/web.user';
 
 @Injectable()
 export class DashboardService {
@@ -216,7 +216,9 @@ export class DashboardService {
             throw new BadRequestException();
         }
         return {
-            prizes: 0, profits: 0, ticketsSold: 0,
+            prizes: 0,
+            profits: 0,
+            ticketsSold: 0,
             balance: await webUser.calculateBalance(),
         };
     }

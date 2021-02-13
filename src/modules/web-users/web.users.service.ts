@@ -11,7 +11,6 @@ import { CreateWebUserDto } from '@web.users/dto/create.web.user.dto';
 import { UpdateWebUserDto } from '@web.users/dto/update.web.user.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { BankingsService } from '@bankings/bankings.service';
-import { BankingDto } from '@bankings/dto/banking.dto';
 import { Banking } from '@database/datamodels/schemas/banking';
 
 @Injectable()
@@ -129,9 +128,7 @@ export class WebUsersService {
     }
 
     async getWebUserName(loggedUser: User): Promise<string> {
-        const webUser = await this.getSingleFiltered('ownerUserId', loggedUser._id, loggedUser);
-        const webUserUser = await this.usersService.getSingleFiltered('_id', webUser.ownerUserId);
-        return webUserUser.name;
+        return loggedUser.name;
     }
 
     private async mapWebUser(webUser: WebUser): Promise<WebUserDto> {

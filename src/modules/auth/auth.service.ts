@@ -16,7 +16,7 @@ import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Consortium } from '@database/datamodels/schemas/consortium';
-import {WebUser} from "@database/datamodels/schemas/web.user";
+import { WebUser } from '@database/datamodels/schemas/web.user';
 
 @Injectable()
 export class AuthService {

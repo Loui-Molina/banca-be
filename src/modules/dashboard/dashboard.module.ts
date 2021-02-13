@@ -5,7 +5,7 @@ import { DashboardController } from '@dashboard/dashboard.controller';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { ConstApp } from '@utils/const.app';
-import {WebUser, WebUserSchema} from "@database/datamodels/schemas/web.user";
+import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
 
 @Module({
     imports: [
