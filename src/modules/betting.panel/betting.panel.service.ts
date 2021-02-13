@@ -301,6 +301,9 @@ export class BettingPanelService {
     async getClaimTicket(dto: ClaimBetDto, loggedUser: User): Promise<BetDto> {
         const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
         const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
+        if (!bet) {
+            throw new UnauthorizedException(ConstApp.CANNOT_FIND_TICKET);
+        }
         if (bet.betStatus !== BetStatus.winner) {
             throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);
         }
@@ -314,6 +317,9 @@ export class BettingPanelService {
         try {
             const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
             const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
+            if (!bet) {
+                throw new UnauthorizedException(ConstApp.CANNOT_FIND_TICKET);
+            }
             if (bet.betStatus !== BetStatus.winner) {
                 throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);
             }
