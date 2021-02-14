@@ -129,6 +129,17 @@ export class AuthPasswordService {
                         throw new BadRequestException(ConstApp.PASSWORD_SHOULD_NOT_BE_OLD);
                     }
                     break;
+                case Role.banker:
+                    if (user.role === Role.consortium || user.role === Role.admin || user.role === Role.banker) {
+                        throw new ForbiddenException(ConstApp.CANNOT_CHANGE_PASSWORD_OF_THE_SAME_ROLE);
+                    }
+                    try {
+                        changed = await this.changeUserPassword(user, newPassword, userLogged);
+                        session.commitTransaction();
+                    } catch (e) {
+                        throw new BadRequestException(ConstApp.PASSWORD_SHOULD_NOT_BE_OLD);
+                    }
+                    break;
                 default:
                     throw new ForbiddenException(ConstApp.CANNOT_CHANGE_PASSWORD_OF_THE_SAME_ROLE);
             }
