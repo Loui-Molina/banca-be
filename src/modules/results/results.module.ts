@@ -8,6 +8,7 @@ import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { ConstApp } from '@utils/const.app';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
+import {User, UserSchema} from "@database/datamodels/schemas/user";
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/conso
         MongooseModule.forFeature([{ name: Draw.name, schema: DrawSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }], ConstApp.USER),
     ],
     providers: [ResultsService],
     controllers: [ResultsController],

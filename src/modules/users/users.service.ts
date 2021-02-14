@@ -27,7 +27,7 @@ export class UsersService implements Repository<User, UserDto> {
     }
 
     async findOne(q: string, value: any): Promise<User> {
-        return (await this.userModel.find({ [q]: value }).exec()).pop();
+        return await this.userModel.findOne({ [q]: value }).exec();
     }
 
     async getSingleFilteredComplete(q: string, value: any): Promise<User> {

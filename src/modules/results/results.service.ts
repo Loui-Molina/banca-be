@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Result } from '@database/datamodels/schemas/result';
 import { Draw } from '@database/datamodels/schemas/draw';
@@ -16,6 +16,7 @@ import { BrasilPrizes } from '@database/datamodels/enums/brasil.prizes';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { Bet } from '@database/datamodels/schemas/bet';
+import {ConstApp} from "@utils/const.app";
 
 @Injectable()
 export class ResultsService {
@@ -23,18 +24,20 @@ export class ResultsService {
         @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
         @InjectModel(Result.name) private readonly resultModel: Model<Result>,
         @InjectModel(Draw.name) private readonly drawModel: Model<Draw>,
+        @InjectModel(User.name) private readonly userModel: Model<User>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
     ) {}
 
     async getAll(): Promise<Array<ResultDto>> {
-        return this.lotteryModel.aggregate([
+        const data: ResultDto[] = await this.lotteryModel.aggregate([
             { $match: {} },
             { $unwind: '$results' },
             {
                 $project: {
                     _id: '$results._id',
                     date: '$results.date',
+                    creationUserId: '$results.creationUserId',
                     createdAt: '$results.createdAt',
                     draw: '$results.draw',
                     lotteryId: '$_id',
@@ -43,6 +46,13 @@ export class ResultsService {
             },
             { $sort: { date: -1 } },
         ]);
+        for await (const item of data) {
+            const user = await this.userModel.findById(item.creationUserId).exec();
+            if (user) {
+                item.creationUsername = user.username;
+            }
+        }
+        return data;
     }
 
     async create(dto: AddResultDto, loggedUser: User): Promise<Result> {
@@ -51,7 +61,7 @@ export class ResultsService {
         //TODO chekear si la fecha de sorteo ya paso
         const lottery = await this.lotteryModel.findById(dto.lotteryId).exec();
         if (!lottery) {
-            throw new BadRequestException();
+            throw new UnauthorizedException(ConstApp.CANNOT_FIND_LOTTERY);
         }
 
         //First time of date and last
@@ -79,11 +89,12 @@ export class ResultsService {
         }
 
         let results = await this.lotteryModel.aggregate([
-            { $match: { 'results.date': { $gte: filterDateA, $lt: filterDateB } } },
             { $unwind: '$results' },
+            { $match: { 'results.date': { $gte: filterDateA, $lt: filterDateB } } },
             {
                 $project: {
                     _id: '$results._id',
+                    date: '$results.date',
                     lotteryId: '$_id',
                 },
             },

@@ -36,6 +36,7 @@ export class ConstApp {
     public static readonly CANNOT_CANCEL_TICKET = 'Cannot cancel ticket';
     public static readonly CANNOT_CLAIM_TICKET = 'Cannot claim ticket';
     public static readonly CANNOT_FIND_TICKET = 'Cannot find ticket';
+    public static readonly CANNOT_FIND_LOTTERY = 'Cannot find lottery';
     public static readonly REFRESH_TOKEN_ERROR = 'Error to create refresh token';
     public static readonly COULD_NOT_LOG_OUT_ERROR = "Couldn't log out";
     public static readonly COULD_NOT_EMPTY_TOKEN = "Couldn't empty token";
