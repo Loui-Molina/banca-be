@@ -8,7 +8,8 @@
   "scripts": {
     "api": "curl.exe --output open-api.json --url http://localhost:3000/api-json && rimraf ../banca-fe/local-packages && openapi-generator-cli generate && del open-api.json",
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "tsc -p tsconfig.build.json",
+    "gcp-build": "npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
