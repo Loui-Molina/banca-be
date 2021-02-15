@@ -4,6 +4,7 @@ import { IsArray, IsMongoId, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PrizeLimitUpdateLotteryDto } from '@lotteries/consortium/dtos/prize.limit.update.lottery.dto';
 import { BettingLimitUpdateLotteryDto } from '@lotteries/consortium/dtos/betting.limit.update.lottery.dto';
+import { BlockedNumberDto } from '@database/dto/blocked.number.dto';
 
 export class ConsortiumUpdateLotteryDto {
     @ApiProperty({ required: false })
@@ -22,4 +23,8 @@ export class ConsortiumUpdateLotteryDto {
     @IsArray()
     @Type(() => PrizeLimitUpdateLotteryDto)
     prizeLimits?: PrizeLimitUpdateLotteryDto[];
+    @ApiProperty({ isArray: true, required: false, type: BlockedNumberDto })
+    @IsArray()
+    @Type(() => BlockedNumberDto)
+    blockedNumbers?: BlockedNumberDto[];
 }

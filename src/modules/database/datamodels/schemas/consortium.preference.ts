@@ -1,6 +1,5 @@
 import { DataObject } from '@database/datamodels/schemas/data.object';
 import { PlayLimit, PlayLimitSchema } from '@database/datamodels/schemas/play.limit';
-import { BlockedNumber, BlockedNumberSchema } from '@database/datamodels/schemas/blocked.number';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
@@ -8,7 +7,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class ConsortiumPreference extends Document implements DataObject {
     @Prop({ type: [PlayLimitSchema] }) limits?: PlayLimit[];
-    @Prop({ type: [BlockedNumberSchema] }) blockedNumbers?: BlockedNumber[];
 
     /** Data object members*/
     @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId }) creationUserId: ObjectId;
