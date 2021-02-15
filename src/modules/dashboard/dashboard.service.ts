@@ -400,10 +400,14 @@ export class DashboardService {
                 const webusersBanking = await this.webUserModel.find({ bankingId: banking._id }).exec();
                 webusers = webusers.concat(webusersBanking);
             }
-        } else if (loggedUser.role === Role.admin) {
-            //If is banker
-            webusers = await this.webUserModel.find({ ownerUserId: loggedUser._id }).exec();
         } else if (loggedUser.role === Role.banker) {
+            //If is banker
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id }).exec();
+            if (!banking) {
+                throw new BadRequestException();
+            }
+            webusers = await this.webUserModel.find({ bankingId: banking._id }).exec();
+        } else if (loggedUser.role === Role.admin) {
             //If is admin
             webusers = await this.webUserModel.find().exec();
         } else {
