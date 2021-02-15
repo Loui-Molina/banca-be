@@ -25,7 +25,7 @@ export class AuthPasswordController {
     })
     @Post('/change')
     @UseGuards(AuthGuard(), RolesGuard)
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin, Role.consortium, Role.banker)
     async changePasswordFromWindows(
         @Ip() userIp: string,
         @Body() changePasswordDto: ChangePasswordDto,
