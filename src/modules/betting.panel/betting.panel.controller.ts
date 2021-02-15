@@ -76,7 +76,7 @@ export class BettingPanelController {
         description: ConstApp.DEFAULT_POST_OK,
         type: Number,
     })
-    @Roles(Role.banker)
+    @Roles(Role.banker, Role.webuser)
     verifyLimit(@Body() dto: LimitVerifyDto, @AuthUser() loggedUser: User): Promise<number> {
         return this.bettingPanelService.verifyLimit(dto, loggedUser);
     }

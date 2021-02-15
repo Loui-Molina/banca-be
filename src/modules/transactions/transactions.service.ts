@@ -1,20 +1,20 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
-import { CreateTransactionDto } from '@transactions/dtos/create.transaction.dto';
-import { Transaction } from '@database/datamodels/schemas/transaction';
-import { User } from '@database/datamodels/schemas/user';
-import { TransactionType } from '@database/datamodels/enums/transaction.type';
-import { Consortium } from '@database/datamodels/schemas/consortium';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { TransactionDto } from '@transactions/dtos/transaction.dto';
-import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
-import { Role } from '@database/datamodels/enums/role';
-import { ConsortiumService } from '@consortiums/consortium.service';
-import { ConstApp } from '@utils/const.app';
-import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
-import { BankingsService } from '@bankings/bankings.service';
-import { WebUser } from '@database/datamodels/schemas/web.user';
+import {BadRequestException, Injectable} from '@nestjs/common';
+import {InjectConnection, InjectModel} from '@nestjs/mongoose';
+import {Connection, Model} from 'mongoose';
+import {CreateTransactionDto} from '@transactions/dtos/create.transaction.dto';
+import {Transaction} from '@database/datamodels/schemas/transaction';
+import {User} from '@database/datamodels/schemas/user';
+import {TransactionType} from '@database/datamodels/enums/transaction.type';
+import {Consortium} from '@database/datamodels/schemas/consortium';
+import {Banking} from '@database/datamodels/schemas/banking';
+import {TransactionDto} from '@transactions/dtos/transaction.dto';
+import {TransactionObjects} from '@database/datamodels/enums/transaction.objects';
+import {Role} from '@database/datamodels/enums/role';
+import {ConsortiumService} from '@consortiums/consortium.service';
+import {ConstApp} from '@utils/const.app';
+import {SomethingWentWrongException} from '@common/exceptions/something.went.wrong.exception';
+import {BankingsService} from '@bankings/bankings.service';
+import {WebUser} from '@database/datamodels/schemas/web.user';
 
 @Injectable()
 export class TransactionService {
@@ -215,6 +215,10 @@ export class TransactionService {
                 ) {
                     throw new BadRequestException();
                 }
+                const originBalance = await originObject.calculateBalance();
+                if (dto.type === TransactionType.debit && originBalance < dto.amount) {
+                    throw new BadRequestException(ConstApp.BALANCE_IS_NOT_ENOUGH);
+                }
             }
             let destinationObject: Banking | WebUser;
             if (dto.destinationObject === TransactionObjects.banking) {
@@ -238,30 +242,37 @@ export class TransactionService {
 
             const originBalance = await originObject.calculateBalance();
             const destinationBalance = await destinationObject.calculateBalance();
+            let amount: number;
+            if (dto.type === TransactionType.credit) {
+                amount = dto.amount;
+            }
+            if (dto.type === TransactionType.debit) {
+                amount = dto.amount * -1;
+            }
             const transactionOrigin = new this.transactionModel({
-                type: TransactionType.credit,
+                type: dto.type,
                 originObject: dto.originObject,
                 destinationObject: dto.destinationObject,
                 originId: dto.originId,
                 destinationId: dto.destinationId,
-                amount: dto.amount,
+                amount: amount,
                 creationUserId: loggedUser._id,
                 modificationUserId: loggedUser._id,
                 lastBalance: originBalance,
-                actualBalance: originBalance + dto.amount,
+                actualBalance: originBalance + amount,
                 description: dto.description,
             });
             transactionDestination = new this.transactionModel({
-                type: TransactionType.credit,
+                type: dto.type,
                 originObject: dto.originObject,
                 destinationObject: dto.destinationObject,
                 originId: dto.originId,
                 destinationId: dto.destinationId,
-                amount: dto.amount,
+                amount: amount,
                 creationUserId: loggedUser._id,
                 modificationUserId: loggedUser._id,
                 lastBalance: destinationBalance,
-                actualBalance: destinationBalance + dto.amount,
+                actualBalance: destinationBalance + amount,
                 description: dto.description,
             });
             originObject.transactions.push(transactionOrigin);
@@ -271,6 +282,9 @@ export class TransactionService {
             session.commitTransaction();
         } catch (error) {
             session.abortTransaction();
+            if(error.status === 400){
+                throw error;
+            }
             throw new SomethingWentWrongException();
         } finally {
             session.endSession();
@@ -410,7 +424,7 @@ export class TransactionService {
             const webuser = await this.webUserModel.findById(transaction.destinationId).exec();
             const webuser_user = await this.userModel.findById(webuser.ownerUserId).exec();
             if (webuser_user) {
-                originName = webuser_user.name;
+                destinationName = webuser_user.name;
             }
         }
         return {

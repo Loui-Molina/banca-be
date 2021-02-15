@@ -23,6 +23,7 @@ import { PlayedNumbersDto } from '@dashboard/dtos/played.numbers.dto';
 import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
 import { ConstApp } from '@utils/const.app';
 import { WebUser } from '@database/datamodels/schemas/web.user';
+import {DashboardWebuserDto} from "@dashboard/dtos/dashboard.webuser.dto";
 
 @Injectable()
 export class DashboardService {
@@ -30,6 +31,7 @@ export class DashboardService {
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(WebUser.name) private readonly webUserModel: Model<WebUser>,
+        @InjectModel(User.name) private readonly userModel: Model<User>,
     ) {}
 
     async getDashboardDiagram(): Promise<DashboardDiagramDto> {
@@ -358,6 +360,55 @@ export class DashboardService {
             });
         }
         return bankingsDto;
+    }
+
+    async getWebUsersStatistics(loggedUser: User): Promise<DashboardWebuserDto[]> {
+        let webusers: Array<WebUser> = [];
+        if (loggedUser.role === Role.consortium) {
+            //If is consortium
+            const consortium = await this.consortiumModel.findOne({ ownerUserId: loggedUser._id }).exec();
+            if (!consortium) {
+                throw new BadRequestException();
+            }
+            const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+            for await (const banking of bankings) {
+                const webusersBanking = await this.webUserModel.find({ bankingId: banking._id }).exec();
+                webusers = webusers.concat(webusersBanking);
+            }
+        } else if (loggedUser.role === Role.admin) {
+            //If is banker
+            webusers = await this.webUserModel.find({ ownerUserId: loggedUser._id }).exec();
+        } else if (loggedUser.role === Role.banker) {
+            //If is admin
+            webusers = await this.webUserModel.find().exec();
+        } else {
+            throw new BadRequestException();
+        }
+        const webuserDtos: DashboardWebuserDto[] = [];
+        for await (const webuser of webusers) {
+            const user = await this.userModel.findById(webuser.ownerUserId).exec();
+            const banking = await this.bankingModel.findById(webuser.bankingId).exec();
+            const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
+            webuserDtos.push({
+                _id: webuser._id,
+                name: user.name,
+                bankingName: banking.name,
+                consortiumName: consortium.name,
+                claimed: await this.sumBets(webuser.bets, [BetStatus.claimed], PosibleSums.count),
+                pending: await this.sumBets(webuser.bets, [BetStatus.pending], PosibleSums.count),
+                loser: await this.sumBets(webuser.bets, [BetStatus.loser], PosibleSums.count),
+                total: webuser.bets.length,
+                profits: await this.sumBets(
+                    webuser.bets,
+                    [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                    PosibleSums.amount,
+                ),
+                prizes: await this.sumBets(webuser.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
+                pendingPrizes: await this.sumBets(webuser.bets, [BetStatus.pending], PosibleSums.amountWin),
+                balance: await webuser.calculateBalance(),
+            });
+        }
+        return webuserDtos;
     }
 
     async getGraphConsortiumStatistics(): Promise<DashboardGraphConsortiumDto[]> {

@@ -14,6 +14,8 @@ import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool'
 import { BankingLotteryModule } from '@lotteries/banking/banking.lottery.module';
 import { BankingLotteryService } from '@lotteries/banking/banking.lottery.service';
 import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
+import {WebUserLotteryModule} from "@lotteries/web-user/web-user.lottery.module";
+import {WebUserLotteryService} from "@lotteries/web-user/web-user.lottery.service";
 
 @Module({
     imports: [
@@ -21,6 +23,7 @@ import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
         AuthUserModule,
         BankingsModule,
         BankingLotteryModule,
+        WebUserLotteryModule,
         MongooseModule.forFeature([{ name: Transaction.name, schema: TransactionSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Lottery.name, schema: LotterySchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Bet.name, schema: BetSchema }], ConstApp.BANKING),
@@ -28,7 +31,7 @@ import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
         MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: PlayPool.name, schema: PlayPoolSchema }], ConstApp.BANKING),
     ],
-    providers: [BettingPanelService, BankingLotteryService],
+    providers: [BettingPanelService, BankingLotteryService, WebUserLotteryService],
     controllers: [BettingPanelController],
     exports: [BettingPanelService],
 })

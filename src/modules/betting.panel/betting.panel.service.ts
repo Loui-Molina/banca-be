@@ -30,6 +30,8 @@ import {BankingLotteryService} from '@lotteries/banking/banking.lottery.service'
 import {PlayTypes} from '@database/datamodels/enums/play.types';
 import {WebUser} from '@database/datamodels/schemas/web.user';
 import {Role} from "@database/datamodels/enums/role";
+import {BankingLotteryDto} from "@lotteries/banking/dtos/banking.lottery.dto";
+import {WebUserLotteryService} from "@lotteries/web-user/web-user.lottery.service";
 
 @Injectable()
 export class BettingPanelService {
@@ -44,6 +46,7 @@ export class BettingPanelService {
         @InjectModel(WebUser.name) private readonly webUserModel: Model<WebUser>,
         @InjectModel(PlayPool.name) private readonly playPoolModel: Model<PlayPool>,
         private readonly bankingLotteryService: BankingLotteryService,
+        private readonly webUserLotteryService: WebUserLotteryService,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<BetDto>> {
@@ -101,7 +104,13 @@ export class BettingPanelService {
     }
 
     async verifyLimit(req: LimitVerifyDto, loggedUser: User): Promise<number> {
-        const lotteries = await this.bankingLotteryService.getAll(loggedUser);
+        let lotteries: BankingLotteryDto[] = [];
+        if (loggedUser.role === Role.banker) {
+            lotteries = await this.bankingLotteryService.getAll(loggedUser);
+        }
+        if (loggedUser.role === Role.webuser) {
+            lotteries = await this.webUserLotteryService.getAll(loggedUser);
+        }
         const lottery = lotteries.find((lottery) => lottery._id.toString() === req.lotteryId);
         if (!lottery) {
             return null;
