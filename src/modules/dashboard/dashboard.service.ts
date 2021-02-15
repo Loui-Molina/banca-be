@@ -38,12 +38,18 @@ export class DashboardService {
         const res = new DashboardDiagramDto();
         const consortiumIds: string[] = [];
         const bankingIds: string[] = [];
+        const webUsersIds: string[] = [];
         const consortiums: Array<Consortium> = await this.consortiumModel.find().exec();
         const bankings: Array<Banking> = await this.bankingModel.find().exec();
-        consortiums.forEach((consortium, index) => {
+        const webusers: Array<WebUser> = await this.webUserModel.find().exec();
+        let index = 0;
+        for await (const consortium of consortiums) {
+            index += 1;
             res.nodes.push(new DashboardDiagramNodeDto(consortium._id.toString(), consortium.name));
             consortiumIds.push(consortium._id.toString());
-            bankings.forEach((banking: Banking, index2) => {
+            let index2 = 0;
+            for await (const banking of bankings) {
+                index2 += 1;
                 if (banking.consortiumId.toString() === consortium._id.toString()) {
                     bankingIds.push(banking._id.toString());
                     res.nodes.push(new DashboardDiagramNodeDto(banking._id.toString(), banking.name));
@@ -54,14 +60,33 @@ export class DashboardService {
                             banking._id.toString(),
                         ),
                     );
+                    let index3 = 0;
+                    for await (const webuser of webusers) {
+                        index3 += 1;
+                        if (webuser.bankingId.toString() === banking._id.toString()) {
+                            const webuser_user = await this.userModel.findById(webuser.ownerUserId).exec();
+                            webUsersIds.push(webuser._id.toString());
+                            res.nodes.push(new DashboardDiagramNodeDto(webuser._id.toString(), webuser_user.name));
+                            res.links.push(
+                                new DashboardDiagramLinkDto(
+                                    'link' + (index + 1).toString() + (index2 + 1) + (index3 + 1).toString(),
+                                    banking._id.toString(),
+                                    webuser._id.toString(),
+                                ),
+                            );
+                        }
+                    }
                 }
-            });
-        });
+            }
+        }
         if (consortiumIds.length > 0) {
             res.clusters.push(new DashboardDiagramClusterDto('cluster0', 'Consorcios', consortiumIds));
         }
         if (bankingIds.length > 0) {
             res.clusters.push(new DashboardDiagramClusterDto('cluster1', 'Bancas', bankingIds));
+        }
+        if (webUsersIds.length > 0) {
+            res.clusters.push(new DashboardDiagramClusterDto('cluster2', 'Usuarios web', webUsersIds));
         }
         return res;
     }

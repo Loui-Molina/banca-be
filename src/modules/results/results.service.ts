@@ -118,7 +118,7 @@ export class ResultsService {
             modificationUserId: loggedUser.id,
         });
         const result: Result = new this.resultModel({
-            date: filterDateA,
+            date: new Date(`${date.getFullYear()}-${month}-${day}T12:00:00.000Z`),
             createdAt: new Date(),
             draw: draw,
             creationUserId: loggedUser.id,
