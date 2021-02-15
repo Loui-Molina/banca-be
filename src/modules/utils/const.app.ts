@@ -43,6 +43,7 @@ export class ConstApp {
     public static readonly COULD_NOT_CHANGE_PASSWORD = 'PASSWORD NOT CHANGED';
     public static readonly PASSWORD_NOT_MATCH = 'PASSWORD NOT MATCH';
     public static readonly ESTABLISHMENT_NOT_FOUND = 'ESTABLISHMENT NOT FOUND';
+    public static readonly BET_NOT_FOUND = 'BET NOT FOUND';
     public static readonly DESTINATION_ORIGIN_NOT_FOUND = 'DESTINATION || ORIGIN NOT FOUND';
     public static readonly PASSWORD_SHOULD_NOT_BE_THE_SAME_ERROR = "New password can't be the same as old one";
     public static readonly PASSWORD_SHOULD_NOT_BE_OLD = 'New password was used before';
@@ -52,6 +53,7 @@ export class ConstApp {
     public static readonly UNABLE_TO_CHANGE_PASSWORD = 'UNABLE TO CHANGE PASSWORD';
     public static readonly UNABLE_TO_UPDATE_USER = 'UNABLE TO UPDATE USER';
     public static readonly UNAUTHORIZE_TO_UPDATE_USER = 'UNAUTHORIZE TO UPDATE USER';
+    public static readonly BALANCE_IS_NOT_ENOUGH = 'Balance is not enough';
     public static readonly NOT_LOGGED = 'NOT LOGGED';
     public static readonly UNAUTHORIZED = 'UNAUTHORIZED';
 

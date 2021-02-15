@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@common/decorators/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
@@ -24,5 +24,15 @@ export class WebUserLotteryController {
     @Roles(Role.webuser)
     getAll(@AuthUser() loggedUser: User): Promise<Array<WebUserLotteryDto>> {
         return this.lotteryService.getAll(loggedUser);
+    }
+
+    @Get(':id')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: WebUserLotteryDto,
+    })
+    @Roles(Role.webuser)
+    async get(@Param('id') id: string, @AuthUser() loggedUser: User): Promise<WebUserLotteryDto> {
+        return await this.lotteryService.get(id, loggedUser);
     }
 }

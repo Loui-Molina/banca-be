@@ -17,6 +17,10 @@ import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { ConstApp } from '@utils/const.app';
+import {WebUser} from "@database/datamodels/schemas/web.user";
+import {TransactionType} from "@database/datamodels/enums/transaction.type";
+import {Transaction} from "@database/datamodels/schemas/transaction";
+import {TransactionObjects} from "@database/datamodels/enums/transaction.objects";
 
 @Injectable()
 export class ResultsService {
@@ -26,7 +30,9 @@ export class ResultsService {
         @InjectModel(Draw.name) private readonly drawModel: Model<Draw>,
         @InjectModel(User.name) private readonly userModel: Model<User>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        @InjectModel(WebUser.name) private readonly webUserModel: Model<WebUser>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
+        @InjectModel(Transaction.name) private readonly transactionModel: Model<Transaction>,
     ) {}
 
     async getAll(): Promise<Array<ResultDto>> {
@@ -172,6 +178,64 @@ export class ResultsService {
             }
             await banking.save();
         }
+
+        // Calculando ganadores web users
+        const webusers = await this.webUserModel.find().exec();
+        for (const webuser of webusers) {
+            const banking = await this.bankingModel.findById(webuser.bankingId).exec();
+            const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
+            const config = consortium.consortiumLotteries.find(
+                (consortiumLottery) => consortiumLottery.lotteryId.toString() === lottery._id.toString(),
+            );
+            if (!config) {
+                // El consorcio no configuro esta loteria para esta banca
+                continue;
+            }
+            const bets = webuser.bets.filter((bet) => {
+                const month = `${bet.date.getMonth() + 1}`.padStart(2, '0');
+                const day = `${bet.date.getDate()}`.padStart(2, '0');
+                const dateParsed = new Date(`${bet.date.getFullYear()}-${month}-${day}T05:00:00.000Z`);
+                if (
+                    filterDateA <= dateParsed &&
+                    filterDateB >= dateParsed &&
+                    [BetStatus.pending].includes(bet.betStatus)
+                ) {
+                    return true;
+                }
+                return false;
+            });
+            for (const bet of bets) {
+                const amount = await this.calculateWinPlays(bet, draw, lottery, config);
+                if (amount !== null) {
+                    if (!bet.amountWin) {
+                        bet.amountWin = 0;
+                    }
+                    bet.amountWin += amount;
+                    if (amount > 0) {
+                        bet.betStatus = BetStatus.claimed;
+                        const balance = await webuser.calculateBalance();
+                        const transactionDestination = new this.transactionModel({
+                            type: TransactionType.credit,
+                            originObject: TransactionObjects.unknown,
+                            destinationObject: TransactionObjects.webuser,
+                            originId: null,
+                            destinationId: webuser._id,
+                            description: 'Won a bet',
+                            amount: amount,
+                            creationUserId: loggedUser._id,
+                            modificationUserId: loggedUser._id,
+                            lastBalance: balance,
+                            actualBalance: balance + amount,
+                        });
+                        webuser.transactions.push(transactionDestination);
+                    } else {
+                        bet.betStatus = BetStatus.loser;
+                    }
+                }
+            }
+            await webuser.save();
+        }
+
         return result;
     }
 

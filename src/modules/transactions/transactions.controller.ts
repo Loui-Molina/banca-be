@@ -23,7 +23,7 @@ export class TransactionController {
         description: ConstApp.DEFAULT_GET_OK,
         type: TransactionDto,
     })
-    @Roles(Role.admin, Role.consortium, Role.banker)
+    @Roles(Role.admin, Role.consortium, Role.banker, Role.webuser)
     getAll(@AuthUser() loggedUser: User): Promise<Array<TransactionDto>> {
         return this.transactionService.getAll(loggedUser);
     }

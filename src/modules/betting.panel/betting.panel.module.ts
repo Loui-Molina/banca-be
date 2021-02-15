@@ -13,6 +13,7 @@ import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool';
 import { BankingLotteryModule } from '@lotteries/banking/banking.lottery.module';
 import { BankingLotteryService } from '@lotteries/banking/banking.lottery.service';
+import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { BankingLotteryService } from '@lotteries/banking/banking.lottery.servic
         MongooseModule.forFeature([{ name: Transaction.name, schema: TransactionSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Lottery.name, schema: LotterySchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Bet.name, schema: BetSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: WebUser.name, schema: WebUserSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
         MongooseModule.forFeature([{ name: PlayPool.name, schema: PlayPoolSchema }], ConstApp.BANKING),
     ],

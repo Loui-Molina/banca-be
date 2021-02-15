@@ -23,6 +23,7 @@ export class TransactionService {
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(WebUser.name) private readonly webUserModel: Model<WebUser>,
+        @InjectModel(User.name) private readonly userModel: Model<User>,
         @InjectConnection(ConstApp.BANKING) private readonly connection: Connection,
         private readonly consortiumService: ConsortiumService,
         private readonly bankingsService: BankingsService,
@@ -36,6 +37,8 @@ export class TransactionService {
                 return await this.getTransactionByConsortium(loggedUser);
             case Role.banker:
                 return await this.getTransactionByBanking(loggedUser);
+            case Role.webuser:
+                return await this.getTransactionByWebUser(loggedUser);
             default:
                 throw new BadRequestException();
         }
@@ -325,13 +328,28 @@ export class TransactionService {
     }
 
     private async getTransactionByBanking(loggedUser: User): Promise<Array<TransactionDto>> {
-        const bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id });
-        if (bankings.length === 0) {
+        const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
+        if (!banking) {
             throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
         }
-        const banking = bankings.pop();
         const results: TransactionDto[] = await Promise.all(
             banking.transactions.map((transaction) => this.mapToDto(transaction)),
+        );
+        results.sort(function (a, b) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+        return results;
+    }
+
+    private async getTransactionByWebUser(loggedUser: User): Promise<Array<TransactionDto>> {
+        const webuser = await this.webUserModel.findOne({ ownerUserId: loggedUser._id });
+        if (!webuser) {
+            throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
+        }
+        const results: TransactionDto[] = await Promise.all(
+            webuser.transactions.map((transaction) => this.mapToDto(transaction)),
         );
         results.sort(function (a, b) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -379,6 +397,20 @@ export class TransactionService {
             const banking = await this.bankingModel.findById(transaction.destinationId).exec();
             if (banking) {
                 destinationName = banking.name;
+            }
+        }
+        if (transaction.originObject === TransactionObjects.webuser) {
+            const webuser = await this.webUserModel.findById(transaction.originId).exec();
+            const webuser_user = await this.userModel.findById(webuser.ownerUserId).exec();
+            if (webuser_user) {
+                originName = webuser_user.name;
+            }
+        }
+        if (transaction.destinationObject === TransactionObjects.webuser) {
+            const webuser = await this.webUserModel.findById(transaction.destinationId).exec();
+            const webuser_user = await this.userModel.findById(webuser.ownerUserId).exec();
+            if (webuser_user) {
+                originName = webuser_user.name;
             }
         }
         return {

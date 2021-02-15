@@ -26,7 +26,7 @@ export class BettingPanelController {
         description: ConstApp.DEFAULT_GET_OK,
         type: BetDto,
     })
-    @Roles(Role.banker)
+    @Roles(Role.banker, Role.webuser)
     getAll(@AuthUser() loggedUser: User): Promise<Array<BetDto>> {
         return this.bettingPanelService.getAll(loggedUser);
     }
@@ -59,6 +59,16 @@ export class BettingPanelController {
     @Roles(Role.banker)
     create(@Body() dto: CreateBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
         return this.bettingPanelService.create(dto, loggedUser);
+    }
+
+    @Post('create/webuser')
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_POST_OK,
+        type: BetDto,
+    })
+    @Roles(Role.webuser)
+    createForWebUser(@Body() dto: CreateBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
+        return this.bettingPanelService.createForWebUser(dto, loggedUser);
     }
 
     @Post('verify-limit')
@@ -106,8 +116,8 @@ export class BettingPanelController {
         description: ConstApp.DEFAULT_GET_OK,
         type: BetDto,
     })
-    @Roles(Role.banker)
-    async get(@Param('id') id: string): Promise<BetDto> {
-        return await this.bettingPanelService.get(id);
+    @Roles(Role.banker, Role.webuser)
+    async get(@Param('id') id: string, @AuthUser() loggedUser: User): Promise<BetDto> {
+        return await this.bettingPanelService.get(id, loggedUser);
     }
 }
