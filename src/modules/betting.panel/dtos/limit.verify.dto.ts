@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PlayTypes } from '@src/modules/database/datamodels/enums/play.types';
-import { PlayNumbersDto } from '@src/modules/database/dto/play.numbers.dto';
+import { PlayTypes } from 'src/modules/database/datamodels/enums/play.types';
+import { PlayNumbersDto } from 'src/modules/database/dto/play.numbers.dto';
 import { IsEnum, IsObject, IsString } from 'class-validator';
 
 

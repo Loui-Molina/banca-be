@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
-import { SomethingWentWrongException } from '@src/common/exceptions/something.went.wrong.exception';
+import { SomethingWentWrongException } from 'src/common/exceptions/something.went.wrong.exception';
 import { Connection } from 'mongoose';
 import { AuthUserService } from '../auth.user/auth.user.service';
 import { Role } from '../database/datamodels/enums/role';

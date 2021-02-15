@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { AuthUser } from 'src/common/decorators/auth.user.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Role } from '../database/datamodels/enums/role';
 import { Consortium } from '../database/datamodels/schemas/consortium';

@@ -5,7 +5,7 @@ import { Consortium, ConsortiumSchema } from 'src/modules/database/datamodels/sc
 import { ConsortiumLottery, ConsortiumLotterySchema } from 'src/modules/database/datamodels/schemas/consortium.lottery';
 import { Draw, DrawSchema } from 'src/modules/database/datamodels/schemas/draw';
 import { Lottery, LotterySchema } from 'src/modules/database/datamodels/schemas/lottery';
-import { LotteryTime, LotteryTimeSchema } from '@src/modules/database/datamodels/schemas/lottery.time';
+import { LotteryTime, LotteryTimeSchema } from 'src/modules/database/datamodels/schemas/lottery.time';
 import { Result, ResultSchema } from 'src/modules/database/datamodels/schemas/result';
 import { WebUser, WebUserSchema } from 'src/modules/database/datamodels/schemas/web.user';
 import { ConstApp } from 'src/modules/utils/const.app';

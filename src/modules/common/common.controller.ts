@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiFoundResponse } from '@nestjs/swagger';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { AuthUser } from 'src/common/decorators/auth.user.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { User } from '../database/datamodels/schemas/user';
 import { ConstApp } from '../utils/const.app';

@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiOkResponse, ApiCreatedResponse, ApiFoundResponse } from '@nestjs/swagger';
-import { AuthRefreshToken } from '@src/common/decorators/auth.refresh.token.decorator';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { AuthRefreshToken } from 'src/common/decorators/auth.refresh.token.decorator';
+import { AuthUser } from 'src/common/decorators/auth.user.decorator';
 import { RefreshToken } from '../database/datamodels/schemas/refresh.token';
 import { User } from '../database/datamodels/schemas/user';
 import { ConstApp } from '../utils/const.app';

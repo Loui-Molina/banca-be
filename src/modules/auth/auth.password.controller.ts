@@ -1,8 +1,8 @@
 import { Body, Controller, Ip, Logger, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
-import { AuthUser } from '@src/common/decorators/auth.user.decorator';
-import { Roles } from '@src/common/decorators/roles.decorator';
+import { AuthUser } from 'src/common/decorators/auth.user.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from '../database/datamodels/enums/role';
 import { User } from '../database/datamodels/schemas/user';
 import { ConstApp } from '../utils/const.app';

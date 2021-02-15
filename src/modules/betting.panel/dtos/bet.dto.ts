@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BetStatus } from '@src/modules/database/datamodels/enums/bet.status';
+import { BetStatus } from 'src/modules/database/datamodels/enums/bet.status';
 import { IsMongoId, IsObject, IsString, IsDate, IsOptional, IsNumber } from 'class-validator';
 import { ObjectId } from 'mongoose';
 import { PlayDto } from './play.dto';

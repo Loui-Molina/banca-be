@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Banking, BankingSchema } from '@src/modules/database/datamodels/schemas/banking';
-import { Consortium, ConsortiumSchema } from '@src/modules/database/datamodels/schemas/consortium';
-import { ConsortiumLottery, ConsortiumLotterySchema } from '@src/modules/database/datamodels/schemas/consortium.lottery';
-import { Draw, DrawSchema } from '@src/modules/database/datamodels/schemas/draw';
-import { Lottery, LotterySchema } from '@src/modules/database/datamodels/schemas/lottery';
-import { LotteryTime, LotteryTimeSchema } from '@src/modules/database/datamodels/schemas/lottery.time';
-import { Result, ResultSchema } from '@src/modules/database/datamodels/schemas/result';
-import { ConstApp } from '@src/modules/utils/const.app';
+import { Banking, BankingSchema } from 'src/modules/database/datamodels/schemas/banking';
+import { Consortium, ConsortiumSchema } from 'src/modules/database/datamodels/schemas/consortium';
+import { ConsortiumLottery, ConsortiumLotterySchema } from 'src/modules/database/datamodels/schemas/consortium.lottery';
+import { Draw, DrawSchema } from 'src/modules/database/datamodels/schemas/draw';
+import { Lottery, LotterySchema } from 'src/modules/database/datamodels/schemas/lottery';
+import { LotteryTime, LotteryTimeSchema } from 'src/modules/database/datamodels/schemas/lottery.time';
+import { Result, ResultSchema } from 'src/modules/database/datamodels/schemas/result';
+import { ConstApp } from 'src/modules/utils/const.app';
 import { BankingLotteryController } from './banking.lottery.controller';
 import { BankingLotteryService } from './banking.lottery.service';
 

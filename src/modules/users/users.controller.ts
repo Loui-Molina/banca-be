@@ -1,9 +1,9 @@
 import { Controller, UseGuards, Get, Query, Put, Ip, Body, HttpStatus, Delete, Param } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { ApiTags, ApiFoundResponse, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
-import { AuthUser } from "@src/common/decorators/auth.user.decorator";
-import { Roles } from "@src/common/decorators/roles.decorator";
-import { PaginationQueryDto } from "@src/common/dto/pagination-query.dto";
+import { AuthUser } from "src/common/decorators/auth.user.decorator";
+import { Roles } from "src/common/decorators/roles.decorator";
+import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
 import { RolesGuard } from "../auth/guards/roles.guard";
 import { Role } from "../database/datamodels/enums/role";
 import { User } from "../database/datamodels/schemas/user";

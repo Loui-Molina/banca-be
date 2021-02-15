@@ -2,10 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 import { IsArray, IsBoolean, IsEnum, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { BettingLimitDto } from '@src/modules/database/dto/betting.limit.dto';
-import { PrizeLimitDto } from '@src/modules/database/dto/prize.limit.dto';
-import { ResultDto } from '@src/modules/database/dto/result.dto';
-import { Days } from '@src/modules/database/datamodels/enums/days';
+import { BettingLimitDto } from 'src/modules/database/dto/betting.limit.dto';
+import { PrizeLimitDto } from 'src/modules/database/dto/prize.limit.dto';
+import { ResultDto } from 'src/modules/database/dto/result.dto';
+import { Days } from 'src/modules/database/datamodels/enums/days';
 
 
 export class WebUserLotteryDto {
