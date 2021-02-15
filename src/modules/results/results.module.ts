@@ -8,7 +8,7 @@ import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { ConstApp } from '@utils/const.app';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
-import {User, UserSchema} from "@database/datamodels/schemas/user";
+import { User, UserSchema } from '@database/datamodels/schemas/user';
 
 @Module({
     imports: [

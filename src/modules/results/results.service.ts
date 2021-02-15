@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Result } from '@database/datamodels/schemas/result';
 import { Draw } from '@database/datamodels/schemas/draw';
@@ -16,7 +16,7 @@ import { BrasilPrizes } from '@database/datamodels/enums/brasil.prizes';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { Bet } from '@database/datamodels/schemas/bet';
-import {ConstApp} from "@utils/const.app";
+import { ConstApp } from '@utils/const.app';
 
 @Injectable()
 export class ResultsService {
