@@ -1,19 +1,20 @@
 import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '@database/datamodels/schemas/user';
-import { ConstApp } from '@utils/const.app';
-import { Role } from '@database/datamodels/enums/role';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { BettingPanelService } from '@betting.panel/betting.panel.service';
-import { BetDto } from '@betting.panel/dtos/bet.dto';
-import { CreateBetDto } from '@betting.panel/dtos/create.bet.dto';
-import { UpdateBetDto } from '@betting.panel/dtos/update.bet.dto';
-import { Roles } from '@common/decorators/roles.decorator';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
-import { ClaimBetDto } from '@betting.panel/dtos/claim.bet.dto';
-import { LimitVerifyDto } from '@betting.panel/dtos/limit.verify.dto';
+import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Role } from '../database/datamodels/enums/role';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { BettingPanelService } from './betting.panel.service';
+import { BetDto } from './dtos/bet.dto';
+import { ClaimBetDto } from './dtos/claim.bet.dto';
+import { CreateBetDto } from './dtos/create.bet.dto';
+import { LimitVerifyDto } from './dtos/limit.verify.dto';
+import { ResumeSellsDto } from './dtos/resume.sells.dto';
+import { UpdateBetDto } from './dtos/update.bet.dto';
+
 
 @ApiTags('betting-panel')
 @Controller('betting-panel')

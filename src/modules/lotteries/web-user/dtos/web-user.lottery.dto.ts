@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Days } from '@database/datamodels/enums/days';
 import { IsArray, IsBoolean, IsEnum, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { BettingLimitDto } from '@database/dto/betting.limit.dto';
-import { PrizeLimitDto } from '@database/dto/prize.limit.dto';
-import { ResultDto } from '@database/dto/result.dto';
+import { BettingLimitDto } from '@src/modules/database/dto/betting.limit.dto';
+import { PrizeLimitDto } from '@src/modules/database/dto/prize.limit.dto';
+import { ResultDto } from '@src/modules/database/dto/result.dto';
+import { Days } from '@src/modules/database/datamodels/enums/days';
+
 
 export class WebUserLotteryDto {
     @ApiProperty({ required: false }) @IsOptional() @IsMongoId() _id?: ObjectId;

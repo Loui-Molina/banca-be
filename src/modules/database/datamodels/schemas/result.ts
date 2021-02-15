@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DataObject } from '@database/datamodels/schemas/data.object';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
 import { ApiProperty } from '@nestjs/swagger';
+import { DrawSchema, Draw } from './draw';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Result extends Document implements DataObject {

@@ -1,16 +1,16 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { AuthUserService } from '@auth.user/auth.user.service';
-import { User } from '@database/datamodels/schemas/user';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
-import { ConstApp } from '@utils/const.app';
 import { InjectConnection } from '@nestjs/mongoose';
+import { SomethingWentWrongException } from '@src/common/exceptions/something.went.wrong.exception';
 import { Connection } from 'mongoose';
-import { TokenService } from '@auth/token.service';
-import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
-import { Role } from '@database/datamodels/enums/role';
-import { ResponseDto } from '@utils/dtos/response.dto';
-import { ChangeOldPasswordDto } from '@auth/dtos/change.old.password.dto';
-import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
+import { AuthUserService } from '../auth.user/auth.user.service';
+import { Role } from '../database/datamodels/enums/role';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { ResponseDto } from '../utils/dtos/response.dto';
+import { ChangeOldPasswordDto } from './dtos/change.old.password.dto';
+import { ChangePasswordDto } from './dtos/change.password.dto';
+import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthPasswordService {

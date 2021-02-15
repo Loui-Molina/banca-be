@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BetStatus } from '@src/modules/database/datamodels/enums/bet.status';
+import { IsMongoId, IsObject, IsString, IsDate, IsOptional, IsNumber } from 'class-validator';
 import { ObjectId } from 'mongoose';
-import { BetStatus } from '@database/datamodels/enums/bet.status';
-import { IsDate, IsMongoId, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
-import { PlayDto } from '@betting.panel/dtos/play.dto';
+import { PlayDto } from './play.dto';
+
 
 export class BetDto {
     // FIXME DTO INSTEAD OF MODELS

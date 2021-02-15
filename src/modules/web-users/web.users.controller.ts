@@ -1,17 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { WebUsersService } from './web.users.service';
-import { CreateWebUserDto } from './dto/create.web.user.dto';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { ConstApp } from '@utils/const.app';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { WebUserDto } from '@web.users/dto/web.user.dto';
-import { WebUser } from '@database/datamodels/schemas/web.user';
-import { UpdateWebUserDto } from '@web.users/dto/update.web.user.dto';
+import { Controller, UseGuards, Get, Query, Post, Body, Put, Delete, Param } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { ApiTags, ApiFoundResponse, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
+import { AuthUser } from "src/common/decorators/auth.user.decorator";
+import { Roles } from "src/common/decorators/roles.decorator";
+import { RolesGuard } from "../auth/guards/roles.guard";
+import { Role } from "../database/datamodels/enums/role";
+import { User } from "../database/datamodels/schemas/user";
+import { WebUser } from "../database/datamodels/schemas/web.user";
+import { ConstApp } from "../utils/const.app";
+import { CreateWebUserDto } from "./dto/create.web.user.dto";
+import { UpdateWebUserDto } from "./dto/update.web.user.dto";
+import { WebUserDto } from "./dto/web.user.dto";
+import { WebUsersService } from "./web.users.service";
+
 
 @Controller('webusers')
 @ApiTags('webusers')

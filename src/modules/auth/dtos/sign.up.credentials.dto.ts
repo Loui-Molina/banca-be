@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@database/datamodels/enums/role';
+import { Role } from '@src/modules/database/datamodels/enums/role';
 import { IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { ObjectId } from 'mongoose';
 

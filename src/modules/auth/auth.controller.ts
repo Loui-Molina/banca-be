@@ -10,19 +10,20 @@ import {
     UseGuards,
     ValidationPipe,
 } from '@nestjs/common';
-import { AuthService } from '@auth/auth.service';
-import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
-import { ResponseDto } from '@utils/dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ConstApp } from '@utils/const.app';
-import { User } from '@database/datamodels/schemas/user';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
-import { TokenService } from '@auth/token.service';
-import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
-import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
-import { AuthRefreshToken } from '@common/decorators/auth.refresh.token.decorator';
+import { ApiTags, ApiOkResponse, ApiCreatedResponse, ApiFoundResponse } from '@nestjs/swagger';
+import { AuthRefreshToken } from '@src/common/decorators/auth.refresh.token.decorator';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { RefreshToken } from '../database/datamodels/schemas/refresh.token';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { ResponseDto } from '../utils/dtos/response.dto';
+import { AuthService } from './auth.service';
+import { ResponseSignInDto } from './dtos/response.sign.in.dto';
+import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from './dtos/sign.up.credentials.dto';
+import { TokenService } from './token.service';
+
 
 @ApiTags('auth')
 @Controller('auth')

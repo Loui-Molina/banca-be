@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TransactionType } from '@database/datamodels/enums/transaction.type';
 import { ObjectId } from 'mongoose';
-import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 import { IsEnum, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
+import { TransactionObjects } from 'src/modules/database/datamodels/enums/transaction.objects';
+import { TransactionType } from 'src/modules/database/datamodels/enums/transaction.type';
 
 export class CreateTransactionDto {
     @ApiProperty({ required: false }) @IsMongoId() @IsOptional() _id?: ObjectId;

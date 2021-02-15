@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/mongoose';
-import { Consortium } from '@database/datamodels/schemas/consortium';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Model } from 'mongoose';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { BetStatus } from '@database/datamodels/enums/bet.status';
-import { Message } from '@database/datamodels/schemas/message';
-import { PlayPool } from '@database/datamodels/schemas/playPool';
+import { BetStatus } from '../database/datamodels/enums/bet.status';
+import { Banking } from '../database/datamodels/schemas/banking';
+import { Consortium } from '../database/datamodels/schemas/consortium';
+import { Message } from '../database/datamodels/schemas/message';
+import { PlayPool } from '../database/datamodels/schemas/playPool';
+
 
 @Injectable()
 export class TasksService {

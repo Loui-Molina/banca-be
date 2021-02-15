@@ -1,14 +1,14 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
-import { Roles } from '@common/decorators/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
-import { ConstApp } from '@utils/const.app';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { Role } from '@database/datamodels/enums/role';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { WebUserLotteryDto } from '@lotteries/web-user/dtos/web-user.lottery.dto';
-import { WebUserLotteryService } from '@lotteries/web-user/web-user.lottery.service';
+import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
+import { AuthUser } from 'src/common/decorators/auth.user.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
+import { Role } from 'src/modules/database/datamodels/enums/role';
+import { User } from 'src/modules/database/datamodels/schemas/user';
+import { ConstApp } from 'src/modules/utils/const.app';
+import { WebUserLotteryDto } from './dtos/web-user.lottery.dto';
+import { WebUserLotteryService } from './web-user.lottery.service';
 
 @ApiTags('web-user/lotteries')
 @Controller('web-user/lotteries')

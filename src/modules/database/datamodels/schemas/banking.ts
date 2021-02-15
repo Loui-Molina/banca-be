@@ -1,12 +1,12 @@
-import { DataObject } from '@database/datamodels/schemas/data.object';
-import { BankingPreference, BankingPreferenceSchema } from '@database/datamodels/schemas/banking.preference';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { Transaction, TransactionSchema } from '@database/datamodels/schemas/transaction';
-import { Bet, BetSchema } from '@database/datamodels/schemas/bet';
-import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
-import { ApiProperty } from '@nestjs/swagger';
+import { BankingPreferenceSchema, BankingPreference } from './banking.preference';
+import { BetSchema, Bet } from './bet';
+import { DataObject } from './data.object';
+import { LotterySchema, Lottery } from './lottery';
+import { TransactionSchema, Transaction } from './transaction';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true, collection: 'bankings' })
 export class Banking extends Document implements DataObject {

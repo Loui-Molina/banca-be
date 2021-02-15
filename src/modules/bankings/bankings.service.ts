@@ -1,16 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { User } from '@database/datamodels/schemas/user';
-import { UsersService } from '@users/users.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateBankingDto } from '@bankings/dto/create.banking.dto';
-import { Role } from '@database/datamodels/enums/role';
 import { Model, ObjectId } from 'mongoose';
-import { BankingDto } from '@bankings/dto/banking.dto';
-import { UpdateBankingDto } from '@bankings/dto/update.banking.dto';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { AuthUserService } from '@auth.user/auth.user.service';
-import { ConsortiumService } from '@consortiums/consortium.service';
-import { ConstApp } from '@utils/const.app';
+import { AuthUserService } from '../auth.user/auth.user.service';
+import { ConsortiumService } from '../consortiums/consortium.service';
+import { ConstApp } from '../utils/const.app';
+import { Banking } from '../database/datamodels/schemas/banking';
+import { Role } from '../database/datamodels/enums/role';
+import { UpdateBankingDto } from './dto/update.banking.dto';
+import { CreateBankingDto } from './dto/create.banking.dto';
+import { UsersService } from '../users/users.service';
+import { BankingDto } from './dto/banking.dto';
+import { User } from '../database/datamodels/schemas/user';
 
 @Injectable()
 export class BankingsService {

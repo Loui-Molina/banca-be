@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@database/datamodels/enums/role';
+import { Role } from 'src/modules/database/datamodels/enums/role';
 import { IsEnum, IsMongoId, IsOptional, IsString } from 'class-validator';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
-import { Type } from 'class-transformer';
 import { ObjectId } from 'mongoose';
 
 export class UserDto {

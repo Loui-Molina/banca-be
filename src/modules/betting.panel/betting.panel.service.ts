@@ -7,26 +7,26 @@ import {
 } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model } from 'mongoose';
-import { User } from '@database/datamodels/schemas/user';
-import { Bet } from '@database/datamodels/schemas/bet';
-import { Play } from '@database/datamodels/schemas/play';
-import { BetDto } from '@betting.panel/dtos/bet.dto';
-import { CreateBetDto } from '@betting.panel/dtos/create.bet.dto';
-import { BetStatus } from '@database/datamodels/enums/bet.status';
-import { UpdateBetDto } from '@betting.panel/dtos/update.bet.dto';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { TransactionType } from '@database/datamodels/enums/transaction.type';
-import { Transaction } from '@database/datamodels/schemas/transaction';
-import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
-import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
-import { ClaimBetDto } from '@betting.panel/dtos/claim.bet.dto';
-import { ConstApp } from '@utils/const.app';
-import { Lottery } from '@database/datamodels/schemas/lottery';
-import { PlayDto } from '@betting.panel/dtos/play.dto';
-import { PlayPool } from '@database/datamodels/schemas/playPool';
-import { LimitVerifyDto } from '@betting.panel/dtos/limit.verify.dto';
-import { BankingLotteryService } from '@lotteries/banking/banking.lottery.service';
-import { PlayTypes } from '@database/datamodels/enums/play.types';
+import { BetStatus } from '../database/datamodels/enums/bet.status';
+import { PlayTypes } from '../database/datamodels/enums/play.types';
+import { TransactionObjects } from '../database/datamodels/enums/transaction.objects';
+import { TransactionType } from '../database/datamodels/enums/transaction.type';
+import { Banking } from '../database/datamodels/schemas/banking';
+import { Bet } from '../database/datamodels/schemas/bet';
+import { Lottery } from '../database/datamodels/schemas/lottery';
+import { Play } from '../database/datamodels/schemas/play';
+import { PlayPool } from '../database/datamodels/schemas/playPool';
+import { Transaction } from '../database/datamodels/schemas/transaction';
+import { User } from '../database/datamodels/schemas/user';
+import { BankingLotteryService } from '../lotteries/banking/banking.lottery.service';
+import { ConstApp } from '../utils/const.app';
+import { BetDto } from './dtos/bet.dto';
+import { ClaimBetDto } from './dtos/claim.bet.dto';
+import { CreateBetDto } from './dtos/create.bet.dto';
+import { LimitVerifyDto } from './dtos/limit.verify.dto';
+import { PlayDto } from './dtos/play.dto';
+import { ResumeSellsDto } from './dtos/resume.sells.dto';
+import { UpdateBetDto } from './dtos/update.bet.dto';
 
 @Injectable()
 export class BettingPanelService {

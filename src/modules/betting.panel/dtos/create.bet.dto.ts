@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Play } from '@database/datamodels/schemas/play';
 import { IsArray, IsMongoId, IsOptional } from 'class-validator';
+import { Play } from '@src/modules/database/datamodels/schemas/play';
 
 export class CreateBetDto {
     @IsMongoId()

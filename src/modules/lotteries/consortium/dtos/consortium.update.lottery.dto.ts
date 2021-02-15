@@ -2,8 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 import { IsArray, IsMongoId, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
-import { PrizeLimitUpdateLotteryDto } from '@lotteries/consortium/dtos/prize.limit.update.lottery.dto';
-import { BettingLimitUpdateLotteryDto } from '@lotteries/consortium/dtos/betting.limit.update.lottery.dto';
+import { BettingLimitUpdateLotteryDto } from './betting.limit.update.lottery.dto';
+import { PrizeLimitUpdateLotteryDto } from './prize.limit.update.lottery.dto';
+
 
 export class ConsortiumUpdateLotteryDto {
     @ApiProperty({ required: false })

@@ -1,17 +1,17 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { BankingsService } from './bankings.service';
-import { CreateBankingDto } from './dto/create.banking.dto';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { ConstApp } from '@utils/const.app';
-import { BankingDto } from '@bankings/dto/banking.dto';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { UpdateBankingDto } from '@bankings/dto/update.banking.dto';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
-import { RolesGuard } from '@auth/guards/roles.guard';
+import { ApiTags, ApiFoundResponse, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Role } from '../database/datamodels/enums/role';
+import { Banking } from '../database/datamodels/schemas/banking';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { BankingsService } from './bankings.service';
+import { BankingDto } from './dto/banking.dto';
+import { CreateBankingDto } from './dto/create.banking.dto';
+import { UpdateBankingDto } from './dto/update.banking.dto';
 
 @Controller('banking')
 @ApiTags('banking')

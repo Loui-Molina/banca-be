@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Consortium } from 'src/modules/database/datamodels/schemas/consortium';
+import { ConsortiumLottery } from 'src/modules/database/datamodels/schemas/consortium.lottery';
+import { Lottery } from 'src/modules/database/datamodels/schemas/lottery';
+import { User } from 'src/modules/database/datamodels/schemas/user';
 import { Model } from 'mongoose';
-import { Lottery } from '@database/datamodels/schemas/lottery';
-import { User } from '@database/datamodels/schemas/user';
-import { ConsortiumLotteryDto } from '@lotteries/consortium/dtos/consortium.lottery.dto';
-import { ConsortiumUpdateLotteryDto } from '@lotteries/consortium/dtos/consortium.update.lottery.dto';
-import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
-import { Consortium } from '@database/datamodels/schemas/consortium';
+import { ConsortiumLotteryDto } from './dtos/consortium.lottery.dto';
+import { ConsortiumUpdateLotteryDto } from './dtos/consortium.update.lottery.dto';
 
 @Injectable()
 export class ConsortiumLotteryService {

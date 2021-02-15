@@ -1,9 +1,9 @@
-import { DataObject } from '@database/datamodels/schemas/data.object';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { PlayTypes } from '@database/datamodels/enums/play.types';
-import { ApiProperty } from '@nestjs/swagger';
+import { PlayTypes } from '../enums/play.types';
+import { DataObject } from './data.object';
 
 // Estado y limite de apuesta en cada jugada
 

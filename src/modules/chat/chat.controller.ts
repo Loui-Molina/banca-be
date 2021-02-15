@@ -1,16 +1,16 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
-import { Roles } from '@common/decorators/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
-import { ConstApp } from '@utils/const.app';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { Role } from '@database/datamodels/enums/role';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { MessageDto } from '@chat/dtos/message.dto';
-import { CreateMessageDto } from '@chat/dtos/create.message.dto';
-import { ChatService } from '@chat/chat.service';
-import { ReadMessageDto } from '@chat/dtos/read.message.dto';
+import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Role } from '../database/datamodels/enums/role';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { ChatService } from './chat.service';
+import { CreateMessageDto } from './dtos/create.message.dto';
+import { MessageDto } from './dtos/message.dto';
+import { ReadMessageDto } from './dtos/read.message.dto';
 
 @ApiTags('messages')
 @Controller('messages')

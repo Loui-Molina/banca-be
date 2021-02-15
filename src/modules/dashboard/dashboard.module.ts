@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { DashboardService } from '@dashboard/dashboard.service';
-import { DashboardController } from '@dashboard/dashboard.controller';
-import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
-import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
-import { ConstApp } from '@utils/const.app';
-import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
+import { Banking, BankingSchema } from '../database/datamodels/schemas/banking';
+import { Consortium, ConsortiumSchema } from '../database/datamodels/schemas/consortium';
+import { WebUser, WebUserSchema } from '../database/datamodels/schemas/web.user';
+import { ConstApp } from '../utils/const.app';
+import { DashboardController } from './dashboard.controller';
+import { DashboardService } from './dashboard.service';
+
 
 @Module({
     imports: [

@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { PlayTypes } from '@database/datamodels/enums/play.types';
-import { PlayNumbers, PlayNumbersSchema } from '@database/datamodels/schemas/play.numbers';
+import { PlayTypes } from '../enums/play.types';
+import { PlayNumbers, PlayNumbersSchema } from './play.numbers';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class PlayPool extends Document {

@@ -6,16 +6,17 @@ import {
     Logger,
 } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { User } from '@database/datamodels/schemas/user';
-import { Connection, Model, ObjectId } from 'mongoose';
-import { Consortium } from '@database/datamodels/schemas/consortium';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { MessageDto } from '@chat/dtos/message.dto';
-import { CreateMessageDto } from '@chat/dtos/create.message.dto';
-import { Role } from '@database/datamodels/enums/role';
-import { Message } from '@database/datamodels/schemas/message';
-import { ConstApp } from '@utils/const.app';
-import { ReadMessageDto } from '@chat/dtos/read.message.dto';
+import { Model, Connection, ObjectId } from 'mongoose';
+import { Role } from '../database/datamodels/enums/role';
+import { Banking } from '../database/datamodels/schemas/banking';
+import { Consortium } from '../database/datamodels/schemas/consortium';
+import { Message } from '../database/datamodels/schemas/message';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { CreateMessageDto } from './dtos/create.message.dto';
+import { MessageDto } from './dtos/message.dto';
+import { ReadMessageDto } from './dtos/read.message.dto';
+
 
 @Injectable()
 export class ChatService {

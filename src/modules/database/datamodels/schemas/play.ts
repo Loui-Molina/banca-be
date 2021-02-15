@@ -1,10 +1,10 @@
-import { DataObject } from '@database/datamodels/schemas/data.object';
-import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { PlayNumbers, PlayNumbersSchema } from '@database/datamodels/schemas/play.numbers';
 import { ApiProperty } from '@nestjs/swagger';
+import { PlayTypes } from '../enums/play.types';
+import { DataObject } from './data.object';
+import { PlayNumbers, PlayNumbersSchema } from './play.numbers';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Play extends Document implements DataObject {

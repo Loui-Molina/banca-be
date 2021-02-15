@@ -1,15 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { ConsortiumDto } from '@consortiums/dtos/consortium.dto';
-import { Consortium } from '@database/datamodels/schemas/consortium';
-import { User } from '@database/datamodels/schemas/user';
-import { AuthUserService } from '@auth.user/auth.user.service';
-import { Role } from '@database/datamodels/enums/role';
-import { CreateConsortiumDto } from '@consortiums/dtos/create.consortium.dto';
-import { UsersService } from '@users/users.service';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { ConstApp } from '@utils/const.app';
+import { AuthUserService } from '../auth.user/auth.user.service';
+import { Role } from '../database/datamodels/enums/role';
+import { Banking } from '../database/datamodels/schemas/banking';
+import { Consortium } from '../database/datamodels/schemas/consortium';
+import { User } from '../database/datamodels/schemas/user';
+import { UsersService } from '../users/users.service';
+import { ConstApp } from '../utils/const.app';
+import { ConsortiumDto } from './dtos/consortium.dto';
+import { CreateConsortiumDto } from './dtos/create.consortium.dto';
 
 @Injectable()
 export class ConsortiumService {

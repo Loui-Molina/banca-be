@@ -1,22 +1,23 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Result } from '@database/datamodels/schemas/result';
-import { Draw } from '@database/datamodels/schemas/draw';
-import { User } from '@database/datamodels/schemas/user';
-import { ResultDto } from '@results/dtos/result.dto';
-import { Lottery } from '@database/datamodels/schemas/lottery';
-import { AddResultDto } from '@results/dtos/add.result.dto';
 import { Model } from 'mongoose';
-import { Consortium } from '@database/datamodels/schemas/consortium';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
-import { DominicanLotteryPrizes } from '@database/datamodels/enums/dominican.lottery.prizes';
-import { UsLotteryPrizes } from '@database/datamodels/enums/us.lottery.prizes';
-import { BrasilPrizes } from '@database/datamodels/enums/brasil.prizes';
-import { BetStatus } from '@database/datamodels/enums/bet.status';
-import { PlayTypes } from '@database/datamodels/enums/play.types';
-import { Bet } from '@database/datamodels/schemas/bet';
-import { ConstApp } from '@utils/const.app';
+import { BetStatus } from '../database/datamodels/enums/bet.status';
+import { BrasilPrizes } from '../database/datamodels/enums/brasil.prizes';
+import { DominicanLotteryPrizes } from '../database/datamodels/enums/dominican.lottery.prizes';
+import { PlayTypes } from '../database/datamodels/enums/play.types';
+import { UsLotteryPrizes } from '../database/datamodels/enums/us.lottery.prizes';
+import { Banking } from '../database/datamodels/schemas/banking';
+import { Bet } from '../database/datamodels/schemas/bet';
+import { Consortium } from '../database/datamodels/schemas/consortium';
+import { ConsortiumLottery } from '../database/datamodels/schemas/consortium.lottery';
+import { Draw } from '../database/datamodels/schemas/draw';
+import { Lottery } from '../database/datamodels/schemas/lottery';
+import { Result } from '../database/datamodels/schemas/result';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { AddResultDto } from './dtos/add.result.dto';
+import { ResultDto } from './dtos/result.dto';
+
 
 @Injectable()
 export class ResultsService {

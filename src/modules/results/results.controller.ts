@@ -1,16 +1,16 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
-import { Roles } from '@common/decorators/roles.decorator';
-import { AuthGuard } from '@nestjs/passport';
-import { ConstApp } from '@utils/const.app';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { Result } from '@database/datamodels/schemas/result';
-import { ResultsService } from '@results/results.service';
-import { ResultDto } from '@results/dtos/result.dto';
-import { AddResultDto } from '@results/dtos/add.result.dto';
-import { Role } from '@database/datamodels/enums/role';
-import { RolesGuard } from '@auth/guards/roles.guard';
+import { Controller, UseGuards, Get, Post, Body, Param } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { ApiTags, ApiFoundResponse, ApiCreatedResponse } from "@nestjs/swagger";
+import { AuthUser } from "src/common/decorators/auth.user.decorator";
+import { Roles } from "src/common/decorators/roles.decorator";
+import { RolesGuard } from "../auth/guards/roles.guard";
+import { Role } from "../database/datamodels/enums/role";
+import { Result } from "../database/datamodels/schemas/result";
+import { User } from "../database/datamodels/schemas/user";
+import { ConstApp } from "../utils/const.app";
+import { AddResultDto } from "./dtos/add.result.dto";
+import { ResultDto } from "./dtos/result.dto";
+import { ResultsService } from "./results.service";
 
 @ApiTags('results')
 @Controller('results')

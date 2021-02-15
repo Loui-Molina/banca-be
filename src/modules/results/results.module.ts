@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Result, ResultSchema } from '@database/datamodels/schemas/result';
-import { Draw, DrawSchema } from '@database/datamodels/schemas/draw';
-import { ResultsService } from '@results/results.service';
-import { ResultsController } from '@results/results.controller';
-import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
-import { ConstApp } from '@utils/const.app';
-import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
-import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
-import { User, UserSchema } from '@database/datamodels/schemas/user';
+import { Banking, BankingSchema } from '../database/datamodels/schemas/banking';
+import { Consortium, ConsortiumSchema } from '../database/datamodels/schemas/consortium';
+import { Draw, DrawSchema } from '../database/datamodels/schemas/draw';
+import { Lottery, LotterySchema } from '../database/datamodels/schemas/lottery';
+import { Result, ResultSchema } from '../database/datamodels/schemas/result';
+import { User, UserSchema } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { ResultsController } from './results.controller';
+import { ResultsService } from './results.service';
+
 
 @Module({
     imports: [

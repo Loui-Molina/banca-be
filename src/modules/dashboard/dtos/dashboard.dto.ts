@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DashboardDiagramNodeDto } from '@dashboard/dtos/dashboard.node.dto';
-import { DashboardDiagramLinkDto } from '@dashboard/dtos/dashboard.link.dto';
-import { DashboardDiagramClusterDto } from '@dashboard/dtos/dashboard.cluster.dto';
 import { IsArray } from 'class-validator';
+import { DashboardDiagramClusterDto } from './dashboard.cluster.dto';
+import { DashboardDiagramLinkDto } from './dashboard.link.dto';
+import { DashboardDiagramNodeDto } from './dashboard.node.dto';
 
 export class DashboardDiagramDto {
     @ApiProperty({ type: DashboardDiagramNodeDto, isArray: true })

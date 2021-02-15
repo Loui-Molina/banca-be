@@ -9,18 +9,18 @@ import {
 } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model, ObjectId } from 'mongoose';
+import { SignInCredentialsDto } from '../auth/dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from '../auth/dtos/sign.up.credentials.dto';
+import { TokenService } from '../auth/token.service';
+import { Role } from '../database/datamodels/enums/role';
+import { Event } from '../database/datamodels/schemas/event';
+import { User } from '../database/datamodels/schemas/user';
+import { ResponsePayload } from '../users/dtos/response.payload.dto';
+import { UserCreatedEntity } from '../users/entities/user.created.entity';
+import { UsersService } from '../users/users.service';
+import { ConstApp } from '../utils/const.app';
+import { ResponseDto } from '../utils/dtos/response.dto';
 import * as bcrypt from 'bcrypt';
-import { ResponsePayload } from '@users/dtos/response.payload.dto';
-import { ConstApp } from '@utils/const.app';
-import { ResponseDto } from '@utils/dtos/response.dto';
-import { User } from '@database/datamodels/schemas/user';
-import { UserCreatedEntity } from '@users/entities/user.created.entity';
-import { UsersService } from '@users/users.service';
-import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
-import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
-import { Event } from '@database/datamodels/schemas/event';
-import { Role } from '@database/datamodels/enums/role';
-import { TokenService } from '@auth/token.service';
 
 @Injectable()
 export class AuthUserService {

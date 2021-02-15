@@ -1,10 +1,11 @@
-import { DataObject } from '@database/datamodels/schemas/data.object';
-import { BettingLimit, BettingLimitSchema } from '@database/datamodels/schemas/betting.limit';
-import { PrizeLimit, PrizeLimitSchema } from '@database/datamodels/schemas/prize.limit';
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { ApiProperty } from '@nestjs/swagger';
+import { BettingLimitSchema, BettingLimit } from './betting.limit';
+import { DataObject } from './data.object';
+import { PrizeLimitSchema, PrizeLimit } from './prize.limit';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class ConsortiumLottery extends Document implements DataObject {

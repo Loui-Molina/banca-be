@@ -3,9 +3,9 @@ import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Transaction, TransactionSchema } from '@database/datamodels/schemas/transaction';
-import { Supervisor, SupervisorSchema } from '@database/datamodels/schemas/supervisor';
-import { ConsortiumLottery, ConsortiumLotterySchema } from '@database/datamodels/schemas/consortium.lottery';
+import { Supervisor, SupervisorSchema } from './supervisor';
+import { ConsortiumLotterySchema, ConsortiumLottery } from './consortium.lottery';
+import { TransactionSchema, Transaction } from './transaction';
 
 @Schema({
     timestamps: true,

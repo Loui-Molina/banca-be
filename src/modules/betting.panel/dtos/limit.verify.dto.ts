@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PlayTypes } from '@database/datamodels/enums/play.types';
+import { PlayTypes } from '@src/modules/database/datamodels/enums/play.types';
+import { PlayNumbersDto } from '@src/modules/database/dto/play.numbers.dto';
 import { IsEnum, IsObject, IsString } from 'class-validator';
-import { PlayNumbersDto } from '@database/dto/play.numbers.dto';
+
 
 export class LimitVerifyDto {
     @ApiProperty({ type: String, enum: PlayTypes }) @IsEnum(PlayTypes) playType?: PlayTypes;

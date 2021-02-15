@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Role } from '@database/datamodels/enums/role';
-import { User } from '@database/datamodels/schemas/user';
-import { ConsortiumService } from '@consortiums/consortium.service';
 import { ConfigService } from '@nestjs/config';
-import { BankingsService } from '@bankings/bankings.service';
-import { WebUsersService } from '@web.users/web.users.service';
+import { BankingsService } from '../bankings/bankings.service';
+import { ConsortiumService } from '../consortiums/consortium.service';
+import { Role } from '../database/datamodels/enums/role';
+import { User } from '../database/datamodels/schemas/user';
+import { WebUsersService } from '../web-users/web.users.service';
+
 
 @Injectable()
 export class CommonService {

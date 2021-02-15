@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { IsBoolean, IsMongoId, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { SignUpCredentialsDto } from '@src/modules/auth/dtos/sign.up.credentials.dto';
 
 export class UpdateConsortiumDto {
     @ApiProperty()

@@ -1,10 +1,10 @@
-import { DataObject } from '@database/datamodels/schemas/data.object';
-import { DominicanLotteryPrizes } from '@database/datamodels/enums/dominican.lottery.prizes';
-import { UsLotteryPrizes } from '@database/datamodels/enums/us.lottery.prizes';
-import { BrasilPrizes } from '@database/datamodels/enums/brasil.prizes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
+import { BrasilPrizes } from '../enums/brasil.prizes';
+import { DominicanLotteryPrizes } from '../enums/dominican.lottery.prizes';
+import { UsLotteryPrizes } from '../enums/us.lottery.prizes';
+import { DataObject } from './data.object';
 
 // cantidad de veces que se puede hacer una jugada
 

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Draw } from '@database/datamodels/schemas/draw';
 import { ObjectId } from 'mongoose';
 import { IsDate, IsMongoId, IsOptional, IsString } from 'class-validator';
+import { Draw } from 'src/modules/database/datamodels/schemas/draw';
 
 export class ResultDto {
     @ApiProperty() @IsMongoId() _id: ObjectId;

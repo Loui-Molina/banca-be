@@ -1,17 +1,17 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { ConsortiumService } from '@consortiums/consortium.service';
-import { ConsortiumDto } from '@consortiums/dtos/consortium.dto';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { ConstApp } from '@utils/const.app';
-import { Consortium } from '@database/datamodels/schemas/consortium';
-import { CreateConsortiumDto } from '@consortiums/dtos/create.consortium.dto';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { UpdateConsortiumDto } from '@consortiums/dtos/update.consortium.dto';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Role } from '../database/datamodels/enums/role';
+import { Consortium } from '../database/datamodels/schemas/consortium';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { ConsortiumService } from './consortium.service';
+import { ConsortiumDto } from './dtos/consortium.dto';
+import { CreateConsortiumDto } from './dtos/create.consortium.dto';
+import { UpdateConsortiumDto } from './dtos/update.consortium.dto';
 
 @ApiTags('consortiums')
 @Controller('consortiums')

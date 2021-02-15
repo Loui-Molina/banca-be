@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { HealthCheckModule } from '@health-check/health.check.module';
-import { AuthModule } from '@auth/auth.module';
+import { HealthCheckModule } from './modules/health-check/health.check.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { UtilsModule } from '@utils/utils.module';
-import { CoreModule } from '@manager/core.module';
-import { DatabaseModule } from '@database/database.module';
-import { CommonModule } from '@common.module/common.module';
+import { UtilsModule } from './modules/utils/utils.module';
+import { CoreModule } from './modules/manager/core.module';
+import { DatabaseModule } from './modules/database/database.module';
+import { CommonModule } from './modules//common/common.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { TasksService } from '@src/modules/services/tasks.service';
+import { TasksService } from './modules/services/tasks.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConstApp } from '@utils/const.app';
-import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool';
+import { ConstApp } from './modules/utils/const.app';
+import { PlayPool, PlayPoolSchema } from './modules/database/datamodels/schemas/playPool';
 
 @Module({
     imports: [

@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { BlockedNumber } from '@database/datamodels/schemas/blocked.number';
+import { BlockedNumber } from '../datamodels/schemas/blocked.number';
 
 export class BlockedNumberDto extends PartialType(BlockedNumber) {}

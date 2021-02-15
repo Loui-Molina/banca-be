@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from '@src/app.module';
-import { AnyExceptionFilter } from '@common/filters/any.exception.filter';
-import { ValidationPipe } from '@common/pipes/validation.pipe';
+import { AppModule } from './app.module';
 import * as Express from 'express';
 import { ExpressAdapter } from '@nestjs/platform-express';
+import { ValidationPipe } from '@nestjs/common';
+import { AnyExceptionFilter } from './common/filters/any.exception.filter';
 
 const server = Express();
 server.get('/',(req,res)=> res.send('ok'));

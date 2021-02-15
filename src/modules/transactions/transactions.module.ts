@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConsortiumModule } from '@consortiums/consortium.module';
-import { TransactionService } from '@transactions/transactions.service';
-import { TransactionController } from '@transactions/transactions.controller';
-import { Transaction, TransactionSchema } from '@database/datamodels/schemas/transaction';
-import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
-import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
-import { ConstApp } from '@utils/const.app';
-import { BankingsModule } from '@bankings/bankings.module';
-import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
+import { BankingsModule } from '../bankings/bankings.module';
+import { ConsortiumModule } from '../consortiums/consortium.module';
+import { Banking, BankingSchema } from '../database/datamodels/schemas/banking';
+import { Consortium, ConsortiumSchema } from '../database/datamodels/schemas/consortium';
+import { Transaction, TransactionSchema } from '../database/datamodels/schemas/transaction';
+import { WebUser, WebUserSchema } from '../database/datamodels/schemas/web.user';
+import { ConstApp } from '../utils/const.app';
+import { TransactionController } from './transactions.controller';
+import { TransactionService } from './transactions.service';
 
 @Module({
     imports: [

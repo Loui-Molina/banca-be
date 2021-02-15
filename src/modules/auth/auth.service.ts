@@ -1,22 +1,22 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Model, ObjectId } from 'mongoose';
-import { ResponsePayload } from '@users/dtos/response.payload.dto';
-import { AuthUserService } from '@auth.user/auth.user.service';
-import { ConstApp } from '@utils/const.app';
-import { JwtPayload } from '@auth/jwt.payload.interface';
-import { ResponseDto } from '@utils/dtos/response.dto';
-import { Role } from '@database/datamodels/enums/role';
-import { User } from '@database/datamodels/schemas/user';
-import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { ConfigService } from '@nestjs/config';
-import { TokenService } from '@auth/token.service';
-import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
-import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
+import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { Consortium } from '@database/datamodels/schemas/consortium';
-import { WebUser } from '@database/datamodels/schemas/web.user';
+import { Model, ObjectId } from 'mongoose';
+import { AuthUserService } from '../auth.user/auth.user.service';
+import { Role } from '../database/datamodels/enums/role';
+import { Banking } from '../database/datamodels/schemas/banking';
+import { Consortium } from '../database/datamodels/schemas/consortium';
+import { User } from '../database/datamodels/schemas/user';
+import { WebUser } from '../database/datamodels/schemas/web.user';
+import { ResponsePayload } from '../users/dtos/response.payload.dto';
+import { ConstApp } from '../utils/const.app';
+import { ResponseDto } from '../utils/dtos/response.dto';
+import { ResponseSignInDto } from './dtos/response.sign.in.dto';
+import { SignInCredentialsDto } from './dtos/sign.in.credentials.dto';
+import { SignUpCredentialsDto } from './dtos/sign.up.credentials.dto';
+import { JwtPayload } from './jwt.payload.interface';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {

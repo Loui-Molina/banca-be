@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Days } from 'src/modules/database/datamodels/enums/days';
+import { Banking } from 'src/modules/database/datamodels/schemas/banking';
+import { Consortium } from 'src/modules/database/datamodels/schemas/consortium';
+import { ConsortiumLottery } from 'src/modules/database/datamodels/schemas/consortium.lottery';
+import { Lottery } from 'src/modules/database/datamodels/schemas/lottery';
+import { User } from 'src/modules/database/datamodels/schemas/user';
+import { WebUser } from 'src/modules/database/datamodels/schemas/web.user';
 import { Model } from 'mongoose';
-import { Lottery } from '@database/datamodels/schemas/lottery';
-import { User } from '@database/datamodels/schemas/user';
-import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
-import { Consortium } from '@database/datamodels/schemas/consortium';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { Days } from '@database/datamodels/enums/days';
-import { WebUserLotteryDto } from '@lotteries/web-user/dtos/web-user.lottery.dto';
-import { WebUser } from '@database/datamodels/schemas/web.user';
+import { WebUserLotteryDto } from './dtos/web-user.lottery.dto';
+
 
 @Injectable()
 export class WebUserLotteryService {

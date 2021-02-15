@@ -1,16 +1,16 @@
 import { Body, Controller, Ip, Logger, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
-import { AuthPasswordService } from '@auth/auth.password.service';
-import { ResponseDto } from '@utils/dtos/response.dto';
-import { ChangeOldPasswordDto } from '@auth/dtos/change.old.password.dto';
-import { ConstApp } from '@utils/const.app';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '../database/datamodels/enums/role';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { ResponseDto } from '../utils/dtos/response.dto';
+import { AuthPasswordService } from './auth.password.service';
+import { ChangeOldPasswordDto } from './dtos/change.old.password.dto';
+import { ChangePasswordDto } from './dtos/change.password.dto';
+import { RolesGuard } from './guards/roles.guard';
 
 @ApiTags('auth/password')
 @Controller('auth/password')

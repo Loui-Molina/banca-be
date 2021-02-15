@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { IsMongoId, IsObject, IsOptional, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { WebUserDto } from '@web.users/dto/web.user.dto';
 import { ObjectId } from 'mongoose';
+import { SignUpCredentialsDto } from 'src/modules/auth/dtos/sign.up.credentials.dto';
+import { WebUserDto } from './web.user.dto';
 
 export class UpdateWebUserDto {
     @ApiProperty() @ValidateNested() @Type(() => SignUpCredentialsDto) user: SignUpCredentialsDto;

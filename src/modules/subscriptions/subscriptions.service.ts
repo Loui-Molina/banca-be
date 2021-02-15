@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { Repository } from '@common/interfaces/repository';
-import { User } from '@database/datamodels/schemas/user';
-import { ObjectId } from 'mongoose';
-import { Subscriptions } from '@database/datamodels/schemas/subscriptions';
+import { Injectable } from "@nestjs/common";
+import { Repository } from "src/common/interfaces/repository";
+import { ObjectId } from "mongoose";
+import { Subscriptions } from "../database/datamodels/schemas/subscriptions";
+import { User } from "../database/datamodels/schemas/user";
+
 
 @Injectable()
 export class SubscriptionsService implements Repository<Subscriptions, any> {

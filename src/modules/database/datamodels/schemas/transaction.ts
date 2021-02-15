@@ -1,11 +1,11 @@
-import { DataObject } from '@database/datamodels/schemas/data.object';
-import { TransactionType } from '@database/datamodels/enums/transaction.type';
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
-
+import { TransactionObjects } from '../enums/transaction.objects';
+import { TransactionType } from '../enums/transaction.type';
+import { DataObject } from './data.object';
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class Transaction extends Document implements DataObject {
     @ApiProperty() _id?: ObjectId;

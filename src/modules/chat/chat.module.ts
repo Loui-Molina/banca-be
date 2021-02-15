@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConstApp } from '@utils/const.app';
-import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
-import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
-import { Message, MessageSchema } from '@database/datamodels/schemas/message';
-import { ChatService } from '@chat/chat.service';
-import { ChatController } from '@chat/chat.controller';
+import { Banking, BankingSchema } from '../database/datamodels/schemas/banking';
+import { Consortium, ConsortiumSchema } from '../database/datamodels/schemas/consortium';
+import { Message, MessageSchema } from '../database/datamodels/schemas/message';
+import { ConstApp } from '../utils/const.app';
+import { ChatController } from './chat.controller';
+import { ChatService } from './chat.service';
+
 
 @Module({
     imports: [

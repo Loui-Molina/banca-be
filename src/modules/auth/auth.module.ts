@@ -1,21 +1,22 @@
-import { Global, Module } from '@nestjs/common';
-import { AuthController } from '@auth/auth.controller';
-import { AuthService } from '@auth/auth.service';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import { ConfigService } from '@nestjs/config';
-import { JwtStrategy } from '@auth/jwt.strategy';
-import { AuthUserModule } from '@auth.user/auth.user.module';
-import { TokenService } from '@auth/token.service';
-import { RefreshStrategy } from '@auth/refresh.strategy';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
-import { ConstApp } from '@utils/const.app';
-import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
-import { UsersAdminInitializeService } from '@auth/users.admin.initialize.service';
-import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
-import { AuthPasswordController } from '@auth/auth.password.controller';
-import { AuthPasswordService } from '@auth/auth.password.service';
+import { Global, Module } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
+import { MongooseModule } from "@nestjs/mongoose";
+import { PassportModule } from "@nestjs/passport";
+import { AuthUserModule } from "../auth.user/auth.user.module";
+import { Banking, BankingSchema } from "../database/datamodels/schemas/banking";
+import { Consortium, ConsortiumSchema } from "../database/datamodels/schemas/consortium";
+import { WebUser, WebUserSchema } from "../database/datamodels/schemas/web.user";
+import { ConstApp } from "../utils/const.app";
+import { AuthController } from "./auth.controller";
+import { AuthPasswordController } from "./auth.password.controller";
+import { AuthPasswordService } from "./auth.password.service";
+import { AuthService } from "./auth.service";
+import { JwtStrategy } from "./jwt.strategy";
+import { RefreshStrategy } from "./refresh.strategy";
+import { TokenService } from "./token.service";
+import { UsersAdminInitializeService } from "./users.admin.initialize.service";
+
 
 @Global()
 @Module({

@@ -1,9 +1,11 @@
-import { DataObject } from '@database/datamodels/schemas/data.object';
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Languages } from '@database/datamodels/enums/languages';
+import { Languages } from '../enums/languages';
+import { DataObject } from './data.object';
+
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class UserPreference extends Document implements DataObject {

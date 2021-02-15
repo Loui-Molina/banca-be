@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from '@users/users.module';
-import { AuthUserModule } from '@auth.user/auth.user.module';
-import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
-import { Bet, BetSchema } from '@database/datamodels/schemas/bet';
-import { BettingPanelService } from '@betting.panel/betting.panel.service';
-import { BettingPanelController } from '@betting.panel/betting.panel.controller';
-import { ConstApp } from '@utils/const.app';
-import { BankingsModule } from '@bankings/bankings.module';
-import { Transaction, TransactionSchema } from '@database/datamodels/schemas/transaction';
-import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
-import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool';
-import { BankingLotteryModule } from '@lotteries/banking/banking.lottery.module';
-import { BankingLotteryService } from '@lotteries/banking/banking.lottery.service';
+import { AuthUserModule } from '../auth.user/auth.user.module';
+import { BankingsModule } from '../bankings/bankings.module';
+import { Banking, BankingSchema } from '../database/datamodels/schemas/banking';
+import { Bet, BetSchema } from '../database/datamodels/schemas/bet';
+import { Lottery, LotterySchema } from '../database/datamodels/schemas/lottery';
+import { PlayPool, PlayPoolSchema } from '../database/datamodels/schemas/playPool';
+import { Transaction, TransactionSchema } from '../database/datamodels/schemas/transaction';
+import { BankingLotteryModule } from '../lotteries/banking/banking.lottery.module';
+import { BankingLotteryService } from '../lotteries/banking/banking.lottery.service';
+import { UsersModule } from '../users/users.module';
+import { ConstApp } from '../utils/const.app';
+import { BettingPanelController } from './betting.panel.controller';
+import { BettingPanelService } from './betting.panel.service';
 
 @Module({
     imports: [

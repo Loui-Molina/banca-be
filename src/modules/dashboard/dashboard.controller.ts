@@ -1,22 +1,23 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { DashboardDiagramDto } from '@dashboard/dtos/dashboard.dto';
-import { DashboardService } from '@dashboard/dashboard.service';
-import { ConstApp } from '@utils/const.app';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
-import { DashboardConsortiumDto } from '@dashboard/dtos/dashboard.consortium.dto';
-import { DashboardBankingDto } from '@dashboard/dtos/dashboard.banking.dto';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { DashboardGraphConsortiumDto } from '@dashboard/dtos/dashboard.graph.consortium.dto';
-import { DashboardGraphBankingDto } from '@dashboard/dtos/dashboard.graph.banking.dto';
-import { DashboardWidgetsDto } from '@dashboard/dtos/dashboard.widgets.dto';
-import { DashboardGraphBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.balance.banking.dto';
-import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
-import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
+import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Role } from '../database/datamodels/enums/role';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { DashboardService } from './dashboard.service';
+import { DashboardBankingDto } from './dtos/dashboard.banking.dto';
+import { DashboardConsortiumDto } from './dtos/dashboard.consortium.dto';
+import { DashboardDiagramDto } from './dtos/dashboard.dto';
+import { DashboardGraphBalanceBankingDto } from './dtos/dashboard.graph.balance.banking.dto';
+import { DashboardGraphBankingDto } from './dtos/dashboard.graph.banking.dto';
+import { DashboardGraphConsortiumBalanceBankingDto } from './dtos/dashboard.graph.consortium.balance.banking.dto';
+import { DashboardGraphConsortiumDto } from './dtos/dashboard.graph.consortium.dto';
+import { DashboardPlayedNumbersDto } from './dtos/dashboard.played.numbers.dto';
+import { DashboardWidgetsDto } from './dtos/dashboard.widgets.dto';
+
 
 @ApiTags('dashboard')
 @Controller('dashboard')

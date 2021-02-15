@@ -3,9 +3,10 @@ import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
-import { DataObject } from '@database/datamodels/schemas/data.object';
-import { UserPreference, UserPreferenceSchema } from '@database/datamodels/schemas/user.preference';
-import { Role } from '@database/datamodels/enums/role';
+import { Role } from '../enums/role';
+import { DataObject } from './data.object';
+import { UserPreferenceSchema, UserPreference } from './user.preference';
+
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class User extends Document implements DataObject {

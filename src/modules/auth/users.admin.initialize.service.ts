@@ -1,9 +1,9 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from '@auth/auth.service';
-import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
-import { AuthUserService } from '@auth.user/auth.user.service';
-import { Role } from '@database/datamodels/enums/role';
+import { AuthUserService } from '../auth.user/auth.user.service';
+import { Role } from '../database/datamodels/enums/role';
+import { AuthService } from './auth.service';
+import { SignUpCredentialsDto } from './dtos/sign.up.credentials.dto';
 
 @Injectable()
 export class UsersAdminInitializeService implements OnModuleInit {

@@ -1,11 +1,12 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { CommonService } from '@common.module/common.service';
-import { User } from '@database/datamodels/schemas/user';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiFoundResponse, ApiTags } from '@nestjs/swagger';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { ConstApp } from '@utils/const.app';
+import { ApiTags, ApiFoundResponse } from '@nestjs/swagger';
+import { AuthUser } from '@src/common/decorators/auth.user.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { User } from '../database/datamodels/schemas/user';
+import { ConstApp } from '../utils/const.app';
+import { CommonService } from './common.service';
+
 
 @ApiTags('common')
 @Controller('common')

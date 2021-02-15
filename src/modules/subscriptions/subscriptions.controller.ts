@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { CreateSubscriptionDto } from '@subscriptions/dto/create-subscription.dto';
-import { UpdateSubscriptionDto } from '@subscriptions/dto/update-subscription.dto';
-import { SubscriptionsService } from '@subscriptions/subscriptions.service';
+import { Controller, Post, Body, Get, Query, Put, Delete, Param } from "@nestjs/common";
+import { AuthUser } from "src/common/decorators/auth.user.decorator";
+import { ObjectId } from "mongoose";
+import { User } from "../database/datamodels/schemas/user";
+import { CreateSubscriptionDto } from "./dto/create-subscription.dto";
+import { UpdateSubscriptionDto } from "./dto/update-subscription.dto";
+import { SubscriptionsService } from "./subscriptions.service";
 
 @Controller('subscriptions')
 export class SubscriptionsController {

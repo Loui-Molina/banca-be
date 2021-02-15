@@ -2,15 +2,16 @@ import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ConstApp } from '@utils/const.app';
-import { Lottery } from '@database/datamodels/schemas/lottery';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
-import { User } from '@database/datamodels/schemas/user';
-import { ConsortiumLotteryService } from '@lotteries/consortium/consortium.lottery.service';
-import { ConsortiumLotteryDto } from '@lotteries/consortium/dtos/consortium.lottery.dto';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
-import { ConsortiumUpdateLotteryDto } from '@lotteries/consortium/dtos/consortium.update.lottery.dto';
-import { RolesGuard } from '@auth/guards/roles.guard';
+import { AuthUser } from 'src/common/decorators/auth.user.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
+import { Role } from 'src/modules/database/datamodels/enums/role';
+import { Lottery } from 'src/modules/database/datamodels/schemas/lottery';
+import { User } from 'src/modules/database/datamodels/schemas/user';
+import { ConsortiumLotteryService } from './consortium.lottery.service';
+import { ConsortiumLotteryDto } from './dtos/consortium.lottery.dto';
+import { ConsortiumUpdateLotteryDto } from './dtos/consortium.update.lottery.dto';
+
 
 @ApiTags('consortium/lotteries')
 @Controller('consortium/lotteries')

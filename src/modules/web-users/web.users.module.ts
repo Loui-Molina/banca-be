@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ConsortiumModule } from '@consortiums/consortium.module';
-import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
-import { ConstApp } from '@utils/const.app';
-import { WebUsersController } from '@web.users/web.users.controller';
-import { WebUsersService } from '@web.users/web.users.service';
-import { AuthUserModule } from '@auth.user/auth.user.module';
-import { BankingsModule } from '@bankings/bankings.module';
-import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
+import { Module } from "@nestjs/common";
+import { MongooseModule } from "@nestjs/mongoose";
+import { AuthUserModule } from "../auth.user/auth.user.module";
+import { BankingsModule } from "../bankings/bankings.module";
+import { ConsortiumModule } from "../consortiums/consortium.module";
+import { Banking, BankingSchema } from "../database/datamodels/schemas/banking";
+import { WebUser, WebUserSchema } from "../database/datamodels/schemas/web.user";
+import { ConstApp } from "../utils/const.app";
+import { WebUsersController } from "./web.users.controller";
+import { WebUsersService } from "./web.users.service";
 
 @Module({
     imports: [

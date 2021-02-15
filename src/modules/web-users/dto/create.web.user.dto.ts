@@ -1,9 +1,10 @@
-import { ObjectId } from 'mongoose';
-import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
+
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsObject, ValidateNested } from 'class-validator';
+import { IsObject, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { WebUserDto } from '@web.users/dto/web.user.dto';
+import { WebUserDto } from './web.user.dto';
+import { SignUpCredentialsDto } from 'src/modules/auth/dtos/sign.up.credentials.dto';
+
 
 export class CreateWebUserDto {
     @ApiProperty() @ValidateNested() @Type(() => SignUpCredentialsDto) user: SignUpCredentialsDto;

@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "main": "dist/main.js",
   "engines": {
-    "node":">=8.0.0"
+    "node":">8.0.0"
   },
   "scripts": {
     "api": "curl.exe --output open-api.json --url http://localhost:3000/api-json && rimraf ../banca-fe/local-packages && openapi-generator-cli generate && del open-api.json",
@@ -15,7 +15,7 @@
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "gcp-build": "npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "npm run start",
+    "start": "npm run start:prod",
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
     "test": "jest",

@@ -1,10 +1,11 @@
-import { DataObject } from '@database/datamodels/schemas/data.object';
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { Transaction, TransactionSchema } from '@database/datamodels/schemas/transaction';
-import { Bet, BetSchema } from '@database/datamodels/schemas/bet';
 import { ApiProperty } from '@nestjs/swagger';
+import { BetSchema, Bet } from './bet';
+import { DataObject } from './data.object';
+import { TransactionSchema, Transaction } from './transaction';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true, collection: 'webusers' })
 export class WebUser extends Document implements DataObject {

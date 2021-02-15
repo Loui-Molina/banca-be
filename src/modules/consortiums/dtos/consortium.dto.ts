@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 import { IsArray, IsBoolean, IsDate, IsMongoId, IsOptional, IsString } from 'class-validator';
-import { BankingDto } from '@database/dto/banking.dto';
+import { BankingDto } from '@src/modules/database/dto/banking.dto';
 
 export class ConsortiumDto {
     @ApiProperty() @IsString() ownerName: string;

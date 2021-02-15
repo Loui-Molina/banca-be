@@ -1,17 +1,17 @@
-import { Body, Controller, Delete, Get, HttpStatus, Ip, Param, Put, Query, UseGuards } from '@nestjs/common';
-import { UserDto } from '@users/dtos/user.dto';
-import { UsersService } from '@users/users.service';
-import { User } from '@database/datamodels/schemas/user';
-import { ApiCreatedResponse, ApiFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { ConstApp } from '@utils/const.app';
-import { AuthUser } from '@common/decorators/auth.user.decorator';
+import { Controller, UseGuards, Get, Query, Put, Ip, Body, HttpStatus, Delete, Param } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { ApiTags, ApiFoundResponse, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
+import { AuthUser } from "@src/common/decorators/auth.user.decorator";
+import { Roles } from "@src/common/decorators/roles.decorator";
+import { PaginationQueryDto } from "@src/common/dto/pagination-query.dto";
+import { RolesGuard } from "../auth/guards/roles.guard";
+import { Role } from "../database/datamodels/enums/role";
+import { User } from "../database/datamodels/schemas/user";
+import { ConstApp } from "../utils/const.app";
+import { ResponseDto } from "../utils/dtos/response.dto";
+import { UserDto } from "./dtos/user.dto";
+import { UsersService } from "./users.service";
 import * as mongoose from 'mongoose';
-import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
-import { ResponseDto } from '@utils/dtos/response.dto';
 
 @ApiTags('users')
 @Controller('users')

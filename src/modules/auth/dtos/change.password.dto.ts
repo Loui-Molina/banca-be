@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ConstApp } from '@utils/const.app';
 import { IsMongoId, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { ObjectId } from 'mongoose';
 
