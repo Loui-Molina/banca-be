@@ -23,7 +23,7 @@ import { TokenService } from '@auth/token.service';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { AuthRefreshToken } from '@common/decorators/auth.refresh.token.decorator';
-import { AppLogger } from '@src/common/logger/app.logger';
+import { AppLogger } from '@common/logger/app.logger';
 
 @ApiTags('auth')
 @Controller('auth')
