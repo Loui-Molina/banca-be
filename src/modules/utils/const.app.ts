@@ -44,6 +44,8 @@ export class ConstApp {
     public static readonly PASSWORD_NOT_MATCH = 'PASSWORD NOT MATCH';
     public static readonly ESTABLISHMENT_NOT_FOUND = 'ESTABLISHMENT NOT FOUND';
     public static readonly BET_NOT_FOUND = 'BET NOT FOUND';
+    public static readonly THE_LOTTERY_HAS_NOT_BEEN_PLAYED_YET = 'THE LOTTERY HAS NOT BEEN PLAYED YET';
+    public static readonly THE_RESULT_FOR_THIS_DAY_IS_ALREADY_CHARGED = 'THE RESULT FOR THIS DAY IS ALREADY CHARGED';
     public static readonly DESTINATION_ORIGIN_NOT_FOUND = 'DESTINATION || ORIGIN NOT FOUND';
     public static readonly PASSWORD_SHOULD_NOT_BE_THE_SAME_ERROR = "New password can't be the same as old one";
     public static readonly PASSWORD_SHOULD_NOT_BE_OLD = 'New password was used before';

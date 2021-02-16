@@ -91,7 +91,7 @@ export class ResultsService {
 
         if (now < checkDate) {
             //You cant add the results if the lottery has not been played yet
-            throw new BadRequestException();
+            throw new BadRequestException(ConstApp.THE_LOTTERY_HAS_NOT_BEEN_PLAYED_YET);
         }
 
         let results = await this.lotteryModel.aggregate([
@@ -107,7 +107,7 @@ export class ResultsService {
         ]);
         results = results.filter((result: ResultDto) => result.lotteryId.toString() === dto.lotteryId);
         if (results && results.length > 0) {
-            throw new BadRequestException();
+            throw new BadRequestException(ConstApp.THE_RESULT_FOR_THIS_DAY_IS_ALREADY_CHARGED);
         }
 
         const draw: Draw = new this.drawModel({
