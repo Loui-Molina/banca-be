@@ -6,6 +6,7 @@ import { Type } from 'class-transformer';
 import { BettingLimitDto } from '@database/dto/betting.limit.dto';
 import { PrizeLimitDto } from '@database/dto/prize.limit.dto';
 import { ResultDto } from '@database/dto/result.dto';
+import { BlockedNumberDto } from '@database/dto/blocked.number.dto';
 
 export class BankingLotteryDto {
     @ApiProperty({ required: false }) @IsOptional() @IsMongoId() _id?: ObjectId;
@@ -37,7 +38,6 @@ export class BankingLotteryDto {
     @ApiProperty() @IsOptional() @IsArray() @Type(() => ResultDto) results?: ResultDto[];
     @ApiProperty({ required: false }) @IsOptional() @IsString() openTime?: string;
     @ApiProperty({ required: false }) @IsOptional() @IsString() closeTime?: string;
-    @ApiProperty({ type: Number, enum: Days, isArray: true })
-    @IsEnum(Days)
-    day: Days[];
+    @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsArray() day: Days[];
+    @ApiProperty({ type: BlockedNumberDto, isArray: true }) @IsArray() blockedNumbers?: BlockedNumberDto[];
 }

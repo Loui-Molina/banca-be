@@ -37,7 +37,5 @@ export class WebUserLotteryDto {
     @ApiProperty() @IsOptional() @IsArray() @Type(() => ResultDto) results?: ResultDto[];
     @ApiProperty({ required: false }) @IsOptional() @IsString() openTime?: string;
     @ApiProperty({ required: false }) @IsOptional() @IsString() closeTime?: string;
-    @ApiProperty({ type: Number, enum: Days, isArray: true })
-    @IsEnum(Days)
-    day: Days[];
+    @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsArray() day: Days[];
 }

@@ -36,5 +36,5 @@ export class ConsortiumLotteryDto {
     @ApiProperty({ required: false }) @IsArray() @IsOptional() openTime?: string;
     @ApiProperty({ required: false }) @IsArray() @IsOptional() closeTime?: string;
     @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsEnum(Days) day: Days[];
-    @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsArray() blockedNumbers: BlockedNumberDto[];
+    @ApiProperty({ type: Number, isArray: true }) @IsArray() blockedNumbers: BlockedNumberDto[];
 }

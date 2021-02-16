@@ -55,7 +55,6 @@ export class BankingLotteryService {
                 if (flag) {
                     const lotteryOpenTime = lottery.openTime.split(':');
                     const lotteryCloseTime = lottery.closeTime.split(':');
-                    const lotteryPlayTime = lottery.playTime.split(':');
                     const date = new Date();
                     const lotteryOpenTimeDate = new Date(
                         date.getFullYear(),
@@ -123,6 +122,7 @@ export class BankingLotteryService {
                         lottery.bankings = consortiumLottery.bankingIds;
                         lottery.prizeLimits = consortiumLottery.prizeLimits;
                         lottery.bettingLimits = consortiumLottery.bettingLimits;
+                        lottery.blockedNumbers = consortiumLottery.blockedNumbers;
                         lottery.leftTime = leftTime;
                         lotteriesDtos.push(lottery);
                     }
