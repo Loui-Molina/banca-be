@@ -4,8 +4,8 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Inject,
     Ip,
-    Logger,
     Post,
     UseGuards,
     ValidationPipe,
@@ -23,13 +23,14 @@ import { TokenService } from '@auth/token.service';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { AuthRefreshToken } from '@common/decorators/auth.refresh.token.decorator';
+import { AppLogger } from '@src/common/logger/app.logger';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-    private readonly logger: Logger = new Logger(AuthController.name);
 
-    constructor(private readonly authService: AuthService, private readonly tokenService: TokenService) {}
+    constructor(private readonly authService: AuthService, private readonly tokenService: TokenService,
+      private readonly logger: AppLogger= new AppLogger()) {}
 
     //THIS METHOD SHOULDNT BE IN PROD
     //WARNING
@@ -41,6 +42,8 @@ export class AuthController {
         type: ResponseDto,
     })
     async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
+        this.logger.log("Controller sign up new ");
+        this.logger.error("Controller error up new ");
         return this.authService.signUp(signUpCredentialsDto, null);
     }
 

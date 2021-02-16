@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HealthCheckModule } from '@health-check/health.check.module';
 import { AuthModule } from '@auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
 import { CoreModule } from '@manager/core.module';
 import { DatabaseModule } from '@database/database.module';
@@ -11,6 +11,7 @@ import { TasksService } from '@src/modules/services/tasks.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConstApp } from '@utils/const.app';
 import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool';
+import { LoggerModule } from '@common/logger/logger.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool'
             isGlobal: true,
             envFilePath: ['.env'],
         }),
+        LoggerModule,
         DatabaseModule,
         AuthModule,
         CoreModule,
