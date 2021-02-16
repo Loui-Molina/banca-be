@@ -17,10 +17,10 @@ import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { ConstApp } from '@utils/const.app';
-import {WebUser} from "@database/datamodels/schemas/web.user";
-import {TransactionType} from "@database/datamodels/enums/transaction.type";
-import {Transaction} from "@database/datamodels/schemas/transaction";
-import {TransactionObjects} from "@database/datamodels/enums/transaction.objects";
+import { WebUser } from '@database/datamodels/schemas/web.user';
+import { TransactionType } from '@database/datamodels/enums/transaction.type';
+import { Transaction } from '@database/datamodels/schemas/transaction';
+import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 
 @Injectable()
 export class ResultsService {

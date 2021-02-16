@@ -17,7 +17,7 @@ import { DashboardWidgetsDto } from '@dashboard/dtos/dashboard.widgets.dto';
 import { DashboardGraphBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.balance.banking.dto';
 import { DashboardPlayedNumbersDto } from '@dashboard/dtos/dashboard.played.numbers.dto';
 import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
-import {DashboardWebuserDto} from "@dashboard/dtos/dashboard.webuser.dto";
+import { DashboardWebuserDto } from '@dashboard/dtos/dashboard.webuser.dto';
 
 @ApiTags('dashboard')
 @Controller('dashboard')

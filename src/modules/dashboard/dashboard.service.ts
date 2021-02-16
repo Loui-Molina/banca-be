@@ -23,7 +23,7 @@ import { PlayedNumbersDto } from '@dashboard/dtos/played.numbers.dto';
 import { DashboardGraphConsortiumBalanceBankingDto } from '@dashboard/dtos/dashboard.graph.consortium.balance.banking.dto';
 import { ConstApp } from '@utils/const.app';
 import { WebUser } from '@database/datamodels/schemas/web.user';
-import {DashboardWebuserDto} from "@dashboard/dtos/dashboard.webuser.dto";
+import { DashboardWebuserDto } from '@dashboard/dtos/dashboard.webuser.dto';
 
 @Injectable()
 export class DashboardService {
@@ -80,13 +80,13 @@ export class DashboardService {
             }
         }
         if (consortiumIds.length > 0) {
-            res.clusters.push(new DashboardDiagramClusterDto('cluster0', 'Consorcios', consortiumIds));
+            res.clusters.push(new DashboardDiagramClusterDto('cluster0', 'DASHBOARD.ORGANIZATION_DIAGRAM.CONSORTIUMS', consortiumIds));
         }
         if (bankingIds.length > 0) {
-            res.clusters.push(new DashboardDiagramClusterDto('cluster1', 'Bancas', bankingIds));
+            res.clusters.push(new DashboardDiagramClusterDto('cluster1', 'DASHBOARD.ORGANIZATION_DIAGRAM.BANKINGS', bankingIds));
         }
         if (webUsersIds.length > 0) {
-            res.clusters.push(new DashboardDiagramClusterDto('cluster2', 'Usuarios web', webUsersIds));
+            res.clusters.push(new DashboardDiagramClusterDto('cluster2', 'DASHBOARD.ORGANIZATION_DIAGRAM.WEBUSERS', webUsersIds));
         }
         return res;
     }
