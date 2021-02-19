@@ -191,6 +191,7 @@ export class BankingsService {
             ownerName: bankingUser ? bankingUser.name : null,
             header: banking.header,
             footer: banking.footer,
+            cancellationTime: banking.cancellationTime,
         };
     }
 

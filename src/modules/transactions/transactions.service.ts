@@ -1,20 +1,20 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import {InjectConnection, InjectModel} from '@nestjs/mongoose';
-import {Connection, Model} from 'mongoose';
-import {CreateTransactionDto} from '@transactions/dtos/create.transaction.dto';
-import {Transaction} from '@database/datamodels/schemas/transaction';
-import {User} from '@database/datamodels/schemas/user';
-import {TransactionType} from '@database/datamodels/enums/transaction.type';
-import {Consortium} from '@database/datamodels/schemas/consortium';
-import {Banking} from '@database/datamodels/schemas/banking';
-import {TransactionDto} from '@transactions/dtos/transaction.dto';
-import {TransactionObjects} from '@database/datamodels/enums/transaction.objects';
-import {Role} from '@database/datamodels/enums/role';
-import {ConsortiumService} from '@consortiums/consortium.service';
-import {ConstApp} from '@utils/const.app';
-import {SomethingWentWrongException} from '@common/exceptions/something.went.wrong.exception';
-import {BankingsService} from '@bankings/bankings.service';
-import {WebUser} from '@database/datamodels/schemas/web.user';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model } from 'mongoose';
+import { CreateTransactionDto } from '@transactions/dtos/create.transaction.dto';
+import { Transaction } from '@database/datamodels/schemas/transaction';
+import { User } from '@database/datamodels/schemas/user';
+import { TransactionType } from '@database/datamodels/enums/transaction.type';
+import { Consortium } from '@database/datamodels/schemas/consortium';
+import { Banking } from '@database/datamodels/schemas/banking';
+import { TransactionDto } from '@transactions/dtos/transaction.dto';
+import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
+import { Role } from '@database/datamodels/enums/role';
+import { ConsortiumService } from '@consortiums/consortium.service';
+import { ConstApp } from '@utils/const.app';
+import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
+import { BankingsService } from '@bankings/bankings.service';
+import { WebUser } from '@database/datamodels/schemas/web.user';
 
 @Injectable()
 export class TransactionService {
@@ -282,7 +282,7 @@ export class TransactionService {
             session.commitTransaction();
         } catch (error) {
             session.abortTransaction();
-            if(error.status === 400){
+            if (error.status === 400) {
                 throw error;
             }
             throw new SomethingWentWrongException();

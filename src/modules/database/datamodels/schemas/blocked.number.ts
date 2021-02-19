@@ -6,8 +6,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class BlockedNumber extends Document implements DataObject {
-    @Prop({ required: true }) number?: number;
-    @Prop() position?: number;
+    @Prop({ type: [Number] }) numbers?: number[];
+    @Prop({ type: [Date] }) dates?: Date[];
 
     /** Data object members*/
     @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId }) creationUserId: ObjectId;

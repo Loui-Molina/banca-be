@@ -9,8 +9,8 @@ import { ConstApp } from '@utils/const.app';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { User, UserSchema } from '@database/datamodels/schemas/user';
-import {WebUser, WebUserSchema} from "@database/datamodels/schemas/web.user";
-import {Transaction, TransactionSchema} from "@database/datamodels/schemas/transaction";
+import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
+import { Transaction, TransactionSchema } from '@database/datamodels/schemas/transaction';
 
 @Module({
     imports: [

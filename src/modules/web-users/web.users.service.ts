@@ -1,17 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { User } from '@database/datamodels/schemas/user';
-import { UsersService } from '@users/users.service';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
-import { AuthUserService } from '@auth.user/auth.user.service';
-import { ConsortiumService } from '@consortiums/consortium.service';
-import { WebUser } from '@database/datamodels/schemas/web.user';
-import { WebUserDto } from '@web.users/dto/web.user.dto';
-import { CreateWebUserDto } from '@web.users/dto/create.web.user.dto';
-import { UpdateWebUserDto } from '@web.users/dto/update.web.user.dto';
-import { Role } from '@database/datamodels/enums/role';
-import { BankingsService } from '@bankings/bankings.service';
-import { Banking } from '@database/datamodels/schemas/banking';
+import {BadRequestException, Injectable} from '@nestjs/common';
+import {User} from '@database/datamodels/schemas/user';
+import {UsersService} from '@users/users.service';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model, ObjectId} from 'mongoose';
+import {AuthUserService} from '@auth.user/auth.user.service';
+import {ConsortiumService} from '@consortiums/consortium.service';
+import {WebUser} from '@database/datamodels/schemas/web.user';
+import {WebUserDto} from '@web.users/dto/web.user.dto';
+import {CreateWebUserDto} from '@web.users/dto/create.web.user.dto';
+import {UpdateWebUserDto} from '@web.users/dto/update.web.user.dto';
+import {Role} from '@database/datamodels/enums/role';
+import {BankingsService} from '@bankings/bankings.service';
+import {Banking} from '@database/datamodels/schemas/banking';
 
 @Injectable()
 export class WebUsersService {
@@ -71,7 +71,12 @@ export class WebUsersService {
     }
 
     async create(dto: CreateWebUserDto, loggedUser: User): Promise<WebUser> {
-        const banking: Banking = await this.bankingModel.findById(dto.webUser.bankingId).exec();
+        let banking: Banking;
+        if (loggedUser.role === Role.banker) {
+            banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id }).exec();
+        } else {
+            banking = await this.bankingModel.findById(dto.webUser.bankingId).exec();
+        }
         if (!banking) {
             throw new BadRequestException();
         }
@@ -100,7 +105,12 @@ export class WebUsersService {
     }
 
     async update(dto: UpdateWebUserDto, loggedUser: User): Promise<WebUser> {
-        const banking: Banking = await this.bankingModel.findById(dto.webUser.bankingId).exec();
+        let banking: Banking;
+        if (loggedUser.role === Role.banker) {
+            banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id }).exec();
+        } else {
+            banking = await this.bankingModel.findById(dto.webUser.bankingId).exec();
+        }
         if (!banking) {
             throw new BadRequestException();
         }

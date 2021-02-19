@@ -3,7 +3,7 @@ import { ObjectId } from 'mongoose';
 import { Days } from '@database/datamodels/enums/days';
 import { Result } from '@database/datamodels/schemas/result';
 import { Lottery } from '@database/datamodels/schemas/lottery';
-import { IsArray, IsBoolean, IsEnum, IsHexColor, IsMongoId, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsHexColor, IsMongoId, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ResultDto } from '@database/dto/result.dto';
 
@@ -21,5 +21,5 @@ export class AdminLotteryResDto extends PartialType(Lottery) {
     results?: Result[];
     @ApiProperty({ required: false }) @IsString() @IsOptional() openTime?: string;
     @ApiProperty({ required: false }) @IsString() @IsOptional() closeTime?: string;
-    @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsEnum(Days) day: Days[];
+    @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsArray() day: Days[];
 }

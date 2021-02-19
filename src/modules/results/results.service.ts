@@ -17,10 +17,10 @@ import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { ConstApp } from '@utils/const.app';
-import {WebUser} from "@database/datamodels/schemas/web.user";
-import {TransactionType} from "@database/datamodels/enums/transaction.type";
-import {Transaction} from "@database/datamodels/schemas/transaction";
-import {TransactionObjects} from "@database/datamodels/enums/transaction.objects";
+import { WebUser } from '@database/datamodels/schemas/web.user';
+import { TransactionType } from '@database/datamodels/enums/transaction.type';
+import { Transaction } from '@database/datamodels/schemas/transaction';
+import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 
 @Injectable()
 export class ResultsService {
@@ -91,7 +91,7 @@ export class ResultsService {
 
         if (now < checkDate) {
             //You cant add the results if the lottery has not been played yet
-            throw new BadRequestException();
+            throw new BadRequestException(ConstApp.THE_LOTTERY_HAS_NOT_BEEN_PLAYED_YET);
         }
 
         let results = await this.lotteryModel.aggregate([
@@ -107,7 +107,7 @@ export class ResultsService {
         ]);
         results = results.filter((result: ResultDto) => result.lotteryId.toString() === dto.lotteryId);
         if (results && results.length > 0) {
-            throw new BadRequestException();
+            throw new BadRequestException(ConstApp.THE_RESULT_FOR_THIS_DAY_IS_ALREADY_CHARGED);
         }
 
         const draw: Draw = new this.drawModel({

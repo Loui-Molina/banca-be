@@ -15,7 +15,5 @@ export class AdminLotteryReqDto {
     @ApiProperty() @IsArray() @IsOptional() @Type(() => ResultDto) results?: ResultDto[];
     @ApiProperty({ required: false }) @IsOptional() @IsString() openTime?: string;
     @ApiProperty({ required: false }) @IsString() @IsOptional() closeTime?: string;
-    @ApiProperty({ type: Number, enum: Days, isArray: true })
-    @IsEnum(Days)
-    day: Days[];
+    @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsArray() day: Days[];
 }

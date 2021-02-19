@@ -34,6 +34,7 @@ export class ConsortiumLotteryService {
                     openTime: '$time.openTime',
                     closeTime: '$time.closeTime',
                     day: '$time.day',
+                    blockedNumbers: '$blockedNumbers',
                 },
             },
         ]);
@@ -46,6 +47,7 @@ export class ConsortiumLotteryService {
                 lottery.bankings = consortiumLottery.bankingIds;
                 lottery.prizeLimits = consortiumLottery.prizeLimits;
                 lottery.bettingLimits = consortiumLottery.bettingLimits;
+                lottery.blockedNumbers = consortiumLottery.blockedNumbers;
             }
         });
         return lotteries;
@@ -68,6 +70,10 @@ export class ConsortiumLotteryService {
             item.creationUserId = loggedUser._id;
             item.modificationUserId = loggedUser._id;
         });
+        dto.blockedNumbers.map((item) => {
+            item.creationUserId = loggedUser._id;
+            item.modificationUserId = loggedUser._id;
+        });
 
         const consortiumLottery: ConsortiumLottery = new this.consortiumLotteryModel({
             lotteryId: lottery._id,
@@ -76,6 +82,7 @@ export class ConsortiumLotteryService {
             modificationUserId: loggedUser._id,
             prizeLimits: dto.prizeLimits,
             bettingLimits: dto.bettingLimits,
+            blockedNumbers: dto.blockedNumbers,
         });
         const index = consortium.consortiumLotteries.findIndex(
             (item) => item.lotteryId.toString() === lottery._id.toString(),

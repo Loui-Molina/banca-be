@@ -9,7 +9,7 @@ import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { ConstApp } from '@utils/const.app';
 import { BankingsModule } from '@bankings/bankings.module';
 import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
-import {User, UserSchema} from "@database/datamodels/schemas/user";
+import { User, UserSchema } from '@database/datamodels/schemas/user';
 
 @Module({
     imports: [
