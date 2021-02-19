@@ -11,5 +11,6 @@ export class PlayDto {
     @IsObject() //FIXME ADD VALIDATION TO PlayNumbersDto
     playNumbers: PlayNumbersDto;
     @ApiProperty() @IsMongoId() lotteryId?: ObjectId;
+    @ApiProperty({ required:false }) @IsMongoId() lotteryIdSuperpale?: ObjectId;
     @ApiProperty() @IsString() lotteryName?: string;
 }

@@ -15,6 +15,15 @@ export class Play extends Document implements DataObject {
     playNumbers: PlayNumbers;
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) lotteryId?: ObjectId;
 
+    @ApiProperty({ required: false })
+    @Prop({ required: false, type: mongoose.SchemaTypes.ObjectId })
+    lotteryIdSuperpale?: ObjectId;
+
+    //Este numero sirve para ve
+    @ApiProperty({ required: false })
+    @Prop({ type: Number })
+    winSuperPalePending?: number;
+
     /** Data object members*/
     @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId }) creationUserId: ObjectId;
     @Prop() deletionDate?: Date;
