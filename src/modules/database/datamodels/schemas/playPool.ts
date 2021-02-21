@@ -13,6 +13,9 @@ export class PlayPool extends Document {
     @Prop({ required: true, type: PlayNumbersSchema })
     playNumbers: PlayNumbers;
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) lotteryId?: ObjectId;
+    @ApiProperty({ required: false })
+    @Prop({ required: false, type: mongoose.SchemaTypes.ObjectId })
+    lotteryIdSuperpale?: ObjectId;
     @ApiProperty({ type: Number }) @Prop({ required: true }) amount?: number;
     @ApiProperty({ type: Date }) @Prop({ immutable: true }) date: Date;
 }

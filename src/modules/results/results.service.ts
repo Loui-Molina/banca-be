@@ -1,26 +1,26 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Result } from '@database/datamodels/schemas/result';
-import { Draw } from '@database/datamodels/schemas/draw';
-import { User } from '@database/datamodels/schemas/user';
-import { ResultDto } from '@results/dtos/result.dto';
-import { Lottery } from '@database/datamodels/schemas/lottery';
-import { AddResultDto } from '@results/dtos/add.result.dto';
-import { Model } from 'mongoose';
-import { Consortium } from '@database/datamodels/schemas/consortium';
-import { Banking } from '@database/datamodels/schemas/banking';
-import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
-import { DominicanLotteryPrizes } from '@database/datamodels/enums/dominican.lottery.prizes';
-import { UsLotteryPrizes } from '@database/datamodels/enums/us.lottery.prizes';
-import { BrasilPrizes } from '@database/datamodels/enums/brasil.prizes';
-import { BetStatus } from '@database/datamodels/enums/bet.status';
-import { PlayTypes } from '@database/datamodels/enums/play.types';
-import { Bet } from '@database/datamodels/schemas/bet';
-import { ConstApp } from '@utils/const.app';
-import { WebUser } from '@database/datamodels/schemas/web.user';
-import { TransactionType } from '@database/datamodels/enums/transaction.type';
-import { Transaction } from '@database/datamodels/schemas/transaction';
-import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
+import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Result} from '@database/datamodels/schemas/result';
+import {Draw} from '@database/datamodels/schemas/draw';
+import {User} from '@database/datamodels/schemas/user';
+import {ResultDto} from '@results/dtos/result.dto';
+import {Lottery} from '@database/datamodels/schemas/lottery';
+import {AddResultDto} from '@results/dtos/add.result.dto';
+import {Model} from 'mongoose';
+import {Consortium} from '@database/datamodels/schemas/consortium';
+import {Banking} from '@database/datamodels/schemas/banking';
+import {ConsortiumLottery} from '@database/datamodels/schemas/consortium.lottery';
+import {DominicanLotteryPrizes} from '@database/datamodels/enums/dominican.lottery.prizes';
+import {UsLotteryPrizes} from '@database/datamodels/enums/us.lottery.prizes';
+import {BrasilPrizes} from '@database/datamodels/enums/brasil.prizes';
+import {BetStatus} from '@database/datamodels/enums/bet.status';
+import {PlayTypes} from '@database/datamodels/enums/play.types';
+import {Bet} from '@database/datamodels/schemas/bet';
+import {ConstApp} from '@utils/const.app';
+import {WebUser} from '@database/datamodels/schemas/web.user';
+import {TransactionType} from '@database/datamodels/enums/transaction.type';
+import {Transaction} from '@database/datamodels/schemas/transaction';
+import {TransactionObjects} from '@database/datamodels/enums/transaction.objects';
 
 @Injectable()
 export class ResultsService {
@@ -163,15 +163,20 @@ export class ResultsService {
                     if (!bet.amountWin) {
                         bet.amountWin = 0;
                     }
-                    bet.amountWin += amount;
                     if (amount > 0) {
                         // No se hace el chekeo de pending pq si gano una vez es ganador
+                        bet.amountWin += amount;
                         bet.betStatus = BetStatus.winner;
                     } else {
                         // Si estaba en winner no se pasa a loser pq quiere decir
                         // que gano en una loteria anterior
                         if (bet.betStatus === BetStatus.pending) {
-                            bet.betStatus = BetStatus.loser;
+                            const playsSuperPalePending = bet.plays.filter((play) => play.playType === PlayTypes.superPale && [1, 2].includes(play.winSuperPalePending)).length
+                            if (playsSuperPalePending > 0) {
+                                bet.betStatus = BetStatus.pending;
+                            } else {
+                                bet.betStatus = BetStatus.loser;
+                            }
                         }
                     }
                 }
@@ -247,7 +252,10 @@ export class ResultsService {
     ): Promise<number> {
         let c: number;
         for (const play of bet.plays) {
-            if (play.lotteryId.toString() === lottery._id.toString()) {
+            if (
+                play.lotteryId.toString() === lottery._id.toString() ||
+                play.lotteryIdSuperpale.toString() === lottery._id.toString()
+            ) {
                 if (!c) {
                     c = 0;
                 }
@@ -302,7 +310,26 @@ export class ResultsService {
                         }
                         break;
                     case PlayTypes.superPale:
-                        //TODO
+                        if (play.playNumbers.first === draw.first || play.playNumbers.second === draw.first) {
+                            // 1ra 2da o 1ra 3ra
+                            if (play.winSuperPalePending != null) {
+                                if (
+                                    (play.playNumbers.first === draw.first && play.winSuperPalePending === 2) ||
+                                    (play.playNumbers.second === draw.first && play.winSuperPalePending === 1)
+                                ) {
+                                    c += play.amount * (await this.getPrizeLimit(config, DominicanLotteryPrizes.superPale));
+                                    play.winSuperPalePending = 3;
+                                    // Ganador
+                                }
+                            } else {
+                                if (play.playNumbers.first === draw.first) {
+                                    play.winSuperPalePending = 1;
+                                }
+                                if (play.playNumbers.second === draw.first) {
+                                    play.winSuperPalePending = 2;
+                                }
+                            }
+                        }
                         break;
                 }
             }
