@@ -28,9 +28,11 @@ import { AppLogger } from '@common/logger/app.logger';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-
-    constructor(private readonly authService: AuthService, private readonly tokenService: TokenService,
-      private readonly logger: AppLogger= new AppLogger()) {}
+    constructor(
+        private readonly authService: AuthService,
+        private readonly tokenService: TokenService,
+        private readonly logger: AppLogger = new AppLogger(),
+    ) {}
 
     //THIS METHOD SHOULDNT BE IN PROD
     //WARNING
@@ -42,8 +44,8 @@ export class AuthController {
         type: ResponseDto,
     })
     async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
-        this.logger.log("Controller sign up new ");
-        this.logger.error("Controller error up new ");
+        this.logger.log('Controller sign up new ');
+        this.logger.error('Controller error up new ');
         return this.authService.signUp(signUpCredentialsDto, null);
     }
 

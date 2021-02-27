@@ -55,28 +55,13 @@ export class WebUserLotteryService {
                     }
                 });
                 if (flag) {
-                    const lotteryOpenTime = lottery.openTime.split(':');
-                    const lotteryCloseTime = lottery.closeTime.split(':');
-                    const date = new Date();
-                    const lotteryOpenTimeDate = new Date(
-                        date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate(),
-                        parseInt(lotteryOpenTime[0]),
-                        parseInt(lotteryOpenTime[1]),
-                        0,
-                    );
-                    const lotteryCloseTimeDate = new Date(
-                        date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate(),
-                        parseInt(lotteryCloseTime[0]),
-                        parseInt(lotteryCloseTime[1]),
-                        0,
-                    );
+                    const lotteryOpenTime: Date = new Date(lottery.openTime);
+                    const lotteryCloseTime: Date = new Date(lottery.closeTime);
+
                     const now = new Date();
-                    let leftTime = (lotteryCloseTimeDate.getTime() - now.getTime()) / 1000;
-                    if (!(lotteryOpenTimeDate <= now && lotteryCloseTimeDate >= now)) {
+                    now.setFullYear(1970, 0, 1);
+                    let leftTime = (lotteryCloseTime.getTime() - now.getTime()) / 1000;
+                    if (!(lotteryOpenTime <= now && lotteryCloseTime >= now)) {
                         lottery.status = false;
                         leftTime = 0;
                     }
@@ -167,28 +152,13 @@ export class WebUserLotteryService {
                     }
                 });
                 if (flag) {
-                    const lotteryOpenTime = lottery.openTime.split(':');
-                    const lotteryCloseTime = lottery.closeTime.split(':');
-                    const date = new Date();
-                    const lotteryOpenTimeDate = new Date(
-                        date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate(),
-                        parseInt(lotteryOpenTime[0]),
-                        parseInt(lotteryOpenTime[1]),
-                        0,
-                    );
-                    const lotteryCloseTimeDate = new Date(
-                        date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate(),
-                        parseInt(lotteryCloseTime[0]),
-                        parseInt(lotteryCloseTime[1]),
-                        0,
-                    );
+                    const lotteryOpenTime: Date = new Date(lottery.openTime);
+                    const lotteryCloseTime: Date = new Date(lottery.closeTime);
+
                     const now = new Date();
-                    let leftTime = (lotteryCloseTimeDate.getTime() - now.getTime()) / 1000;
-                    if (!(lotteryOpenTimeDate <= now && lotteryCloseTimeDate >= now)) {
+                    now.setFullYear(1970, 0, 1);
+                    let leftTime = (lotteryCloseTime.getTime() - now.getTime()) / 1000;
+                    if (!(lotteryOpenTime <= now && lotteryCloseTime >= now)) {
                         lottery.status = false;
                         leftTime = 0;
                     }
