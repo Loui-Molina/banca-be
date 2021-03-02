@@ -115,6 +115,8 @@ export class BankingLotteryService {
                 }
             }
         });
+        lotteriesDtos.sort((a, b) => (a.leftTime > b.leftTime ? 1 : b.leftTime > a.leftTime ? -1 : 0));
+        lotteriesDtos.sort((a, b) => (!a.leftTime ? 1 : !b.leftTime ? -1 : 0));
         return lotteriesDtos;
     }
 }
