@@ -24,7 +24,7 @@
     "noImplicitThis": true,
     //UnusedClasses
     //"noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false, // FIXME use
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
