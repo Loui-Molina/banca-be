@@ -187,7 +187,7 @@ export class BettingPanelService {
             .exec();
         playPools = playPools.filter((playPool) => playPool.lotteryId.toString() === req.lotteryId);
         for await (const play of playPools) {
-            sum += play.amount;
+            sum += play?.amount;
         }
         let finalLimit = limit.betAmount - sum;
         if (finalLimit < 0) {
@@ -214,15 +214,15 @@ export class BettingPanelService {
                 play.creationUserId = loggedUser._id;
                 play.modificationUserId = loggedUser._id;
                 plays.push(play);
-                total += play.amount;
+                total += play?.amount;
 
                 const playPool = new this.playPoolModel({
                     date: new Date(),
-                    playNumbers: play.playNumbers,
-                    playType: play.playType,
-                    lotteryId: play.lotteryId,
-                    lotteryIdSuperpale: play.lotteryIdSuperpale,
-                    amount: play.amount,
+                    playNumbers: play?.playNumbers,
+                    playType: play?.playType,
+                    lotteryId: play?.lotteryId,
+                    lotteryIdSuperpale: play?.lotteryIdSuperpale,
+                    amount: play?.amount,
                 });
                 playPool.save();
             });
@@ -282,7 +282,7 @@ export class BettingPanelService {
             const plays: Play[] = [];
             let total = 0;
             dto.plays.map((play: Play) => {
-                total += play.amount;
+                total += play?.amount;
             });
 
             if (total > balance) {
@@ -297,10 +297,10 @@ export class BettingPanelService {
                 plays.push(play);
                 const playPool = new this.playPoolModel({
                     date: new Date(),
-                    playNumbers: play.playNumbers,
-                    playType: play.playType,
-                    lotteryId: play.lotteryId,
-                    amount: play.amount,
+                    playNumbers: play?.playNumbers,
+                    playType: play?.playType,
+                    lotteryId: play?.lotteryId,
+                    amount: play?.amount,
                 });
                 playPool.save();
             });
@@ -355,17 +355,17 @@ export class BettingPanelService {
         let betFounded: Bet = null;
         try {
             const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
-            const bet = banking.bets.filter((bet) => bet._id.toString() === dto._id.toString()).pop();
-            if (bet.betStatus !== BetStatus.pending || !(await this.canCancelTicket(bet))) {
+            const bet = banking.bets.filter((bet) => bet?._id.toString() === dto._id.toString()).pop();
+            if (bet?.betStatus !== BetStatus.pending || !(await this.canCancelTicket(bet))) {
                 throw new UnauthorizedException(ConstApp.CANNOT_CANCEL_TICKET);
             }
             let total = 0;
             banking.bets.map((bet: Bet) => {
-                if (bet._id.toString() === dto._id.toString()) {
-                    bet.betStatus = BetStatus.cancelled;
+                if (bet?._id.toString() === dto._id.toString()) {
+                    bet.betStatus = BetStatus?.cancelled;
                     betFounded = bet;
-                    bet.plays.map((play: Play) => {
-                        total += play.amount;
+                    bet?.plays.map((play: Play) => {
+                        total += play?.amount;
                     });
                 }
             });
@@ -403,11 +403,11 @@ export class BettingPanelService {
 
     async getClaimTicket(dto: ClaimBetDto, loggedUser: User): Promise<BetDto> {
         const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
-        const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
+        const bet = banking.bets.filter((bet) => bet?.sn.toString() === dto.sn.toString()).pop();
         if (!bet) {
             throw new UnauthorizedException(ConstApp.CANNOT_FIND_TICKET);
         }
-        if (bet.betStatus !== BetStatus.winner) {
+        if (bet?.betStatus !== BetStatus.winner) {
             throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);
         }
         return this.mapToDto(bet);
@@ -419,20 +419,20 @@ export class BettingPanelService {
         let betFounded: Bet = null;
         try {
             const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
-            const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
+            const bet = banking.bets.filter((bet) => bet?.sn.toString() === dto.sn.toString()).pop();
             if (!bet) {
                 throw new UnauthorizedException(ConstApp.CANNOT_FIND_TICKET);
             }
-            if (bet.betStatus !== BetStatus.winner) {
+            if (bet?.betStatus !== BetStatus.winner) {
                 throw new UnauthorizedException(ConstApp.CANNOT_CLAIM_TICKET);
             }
             let amountToPay = 0;
-            banking.bets.map((bet: Bet) => {
-                if (bet.sn === dto.sn) {
+            banking?.bets.map((bet: Bet) => {
+                if (bet?.sn === dto.sn) {
                     bet.betStatus = BetStatus.claimed;
                     bet.claimDate = new Date();
                     betFounded = bet;
-                    amountToPay += bet.amountWin;
+                    amountToPay += bet?.amountWin;
                 }
             });
             const balance = await banking.calculateBalance();
@@ -469,14 +469,14 @@ export class BettingPanelService {
     async get(id: string, loggedUser: User): Promise<BetDto> {
         if (loggedUser.role === Role.webuser) {
             const webuser = await this.webUserModel.findOne({ ownerUserId: loggedUser._id });
-            const bet = webuser.bets.find((bet) => bet._id.toString() === id);
+            const bet = webuser.bets.find((bet) => bet?._id.toString() === id);
             if (!bet) {
                 throw new BadRequestException(ConstApp.BET_NOT_FOUND);
             }
             return this.mapToDto(bet);
         } else if (loggedUser.role === Role.banker) {
             const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
-            const bet = banking.bets.find((bet) => bet._id.toString() === id);
+            const bet = banking.bets.find((bet) => bet?._id.toString() === id);
             if (!bet) {
                 throw new BadRequestException(ConstApp.BET_NOT_FOUND);
             }
@@ -493,16 +493,16 @@ export class BettingPanelService {
         }
         const playDtos: PlayDto[] = [];
         for await (const play of plays) {
-            let lotteryName = (await this.lotteryModel.findOne({ _id: play.lotteryId })).name;
-            if (play.playType === PlayTypes.superPale) {
-                lotteryName += '-' + (await this.lotteryModel.findOne({ _id: play.lotteryIdSuperpale })).name;
+            let lotteryName = (await this.lotteryModel.findOne({ _id: play?.lotteryId }))?.name;
+            if (play?.playType === PlayTypes.superPale) {
+                lotteryName += '-' + (await this.lotteryModel.findOne({ _id: play?.lotteryIdSuperpale }))?.name;
             }
             playDtos.push({
-                amount: play.amount,
-                lotteryId: play.lotteryId,
-                lotteryIdSuperpale: play.lotteryIdSuperpale,
-                playNumbers: play.playNumbers,
-                playType: play.playType,
+                amount: play?.amount,
+                lotteryId: play?.lotteryId,
+                lotteryIdSuperpale: play?.lotteryIdSuperpale,
+                playNumbers: play?.playNumbers,
+                playType: play?.playType,
                 lotteryName,
             });
         }
@@ -520,7 +520,7 @@ export class BettingPanelService {
     private async canCancelTicket(bet: Bet): Promise<boolean> {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const diffMs = new Date(bet.date) - new Date();
+        const diffMs = new Date(bet?.date) - new Date();
         const diffMins = diffMs / 60000; // minutes
         return diffMins > -5;
     }
@@ -528,7 +528,7 @@ export class BettingPanelService {
     private async canSeeSn(bet: Bet): Promise<boolean> {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const diffMs = new Date(bet.date) - new Date();
+        const diffMs = new Date(bet?.date) - new Date();
         const diffMins = diffMs / 60000; // minutes
         return diffMins > -10;
     }
@@ -543,19 +543,19 @@ export class BettingPanelService {
                 return bets.reduce(function (acc, bet) {
                     return (
                         acc +
-                        (betStatus.includes(bet.betStatus)
-                            ? bet.plays.reduce(function (acc, play) {
-                                  return acc + (play.amount ? play.amount : 0);
+                        (betStatus.includes(bet?.betStatus)
+                            ? bet?.plays.reduce(function (acc, play) {
+                                  return acc + (play?.amount ? play?.amount : 0);
                               }, 0)
                             : 0)
                     );
                 }, 0);
             case PosibleSums.amountWin:
                 return bets.reduce(function (acc, bet) {
-                    return acc + (betStatus.includes(bet.betStatus) ? (bet.amountWin ? bet.amountWin : 0) : 0);
+                    return acc + (betStatus.includes(bet?.betStatus) ? (bet?.amountWin ? bet?.amountWin : 0) : 0);
                 }, 0);
             case PosibleSums.count:
-                return bets.filter((bet) => betStatus.includes(bet.betStatus)).length;
+                return bets.filter((bet) => betStatus.includes(bet?.betStatus)).length;
         }
         return 0;
     }

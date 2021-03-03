@@ -12,7 +12,7 @@
     // path to output directory
     "outDir": "./dist",
     // enable strict null checks as a best practice
-    "strictNullChecks": false,
+    "strictNullChecks": false, // FIXME set to true and fix this shit
     // Search under node_modules for non-relative imports.
     "moduleResolution": "node",
     // Process & infer types from .js files.
@@ -24,7 +24,7 @@
     "noImplicitThis": true,
     //UnusedClasses
     //"noUnusedLocals": true,
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
