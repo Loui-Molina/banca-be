@@ -3,7 +3,7 @@ import { ObjectId } from 'mongoose';
 import { Days } from '@database/datamodels/enums/days';
 import { IsArray, IsBoolean, IsEnum, IsHexColor, IsMongoId, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ResultDto } from '@database/dto/result.dto';
+import { ResultDto } from '@results/dtos/result.dto';
 
 export class AdminLotteryReqDto {
     @ApiProperty({ required: false }) @IsMongoId() @IsOptional() _id?: ObjectId;

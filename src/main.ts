@@ -1,9 +1,10 @@
-import { APP_FILTER, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from '@src/app.module';
 import { AnyExceptionFilter } from '@common/filters/any.exception.filter';
 import { ValidationPipe } from '@common/pipes/validation.pipe';
 import { AppLogger } from '@common/logger/app.logger';
+import 'source-map-support/register';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);

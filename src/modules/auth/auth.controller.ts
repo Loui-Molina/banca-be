@@ -44,8 +44,6 @@ export class AuthController {
         type: ResponseDto,
     })
     async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
-        this.logger.log('Controller sign up new ');
-        this.logger.error('Controller error up new ');
         return this.authService.signUp(signUpCredentialsDto, null);
     }
 
