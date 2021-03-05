@@ -30,13 +30,13 @@ export class AppLogger implements LoggerService {
             eol: " " + new Date().toISOString() +' \n',
             filename: 'bsolutions-%DATE%.log',
             dirname: `C:/logs`,
-            level: 'info',
+            level: 'debug',
             handleExceptions: true,
             json: false,
             maxSize: '20m',
-            datePattern: 'dd-MM-yyyy',
+            datePattern: 'DD-MM-yyyy',
         }),
-      ],exitOnError:false
+      ],exitOnError:false,
     })
   }
 

@@ -18,9 +18,11 @@ import { UserCreatedEntity } from '@users/entities/user.created.entity';
 import { UsersService } from '@users/users.service';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
-import { Event } from '@database/datamodels/schemas/event';
 import { Role } from '@database/datamodels/enums/role';
 import { TokenService } from '@auth/token.service';
+import { CreateEvent } from '../events/events/create.event';
+import { EventsConst } from '../events/events.const';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class AuthUserService {
@@ -29,8 +31,8 @@ export class AuthUserService {
     constructor(
         private readonly usersService: UsersService,
         private readonly tokenService: TokenService,
+        private readonly eventEmitter: EventEmitter2,
         @InjectConnection(ConstApp.USER) private readonly connection: Connection,
-        @InjectModel(Event.name) private readonly eventModel: Model<Event>,
     ) {}
 
     async signUp(signUpCredentialsDto: SignUpCredentialsDto, loggedUser: User): Promise<UserCreatedEntity> {
@@ -54,12 +56,6 @@ export class AuthUserService {
                 user.modificationUserId = loggedUser._id;
             }
             userCreated.user = await user.save();
-            const event = new this.eventModel({
-                name: 'Sign-up',
-                type: 'User',
-                payload: { userId: userCreated.user._id },
-            });
-            await event.save();
             this.tokenService.createRefreshToken(userCreated.user._id);
             userCreated.response = { message: ConstApp.USER_CREATED_OK, statusCode: 201 } as ResponseDto;
             await session.commitTransaction();
@@ -83,7 +79,6 @@ export class AuthUserService {
         user.name = name;
         user.username = username;
         user.modificationUserId = loggedUser._id;
-        //TODO cambio de password aca sin revision solo hay q revisar q exista una password nueva
         await user.save();
         return user;
     }

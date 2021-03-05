@@ -26,6 +26,16 @@ import { ConstApp } from '@utils/const.app';
             }),
             inject: [ConfigService],
         }),
+        MongooseModule.forRootAsync({
+            imports: [ConfigModule],
+            connectionName: ConstApp.EVENT,
+            useFactory: async (config: ConfigService) => ({
+                uri: config.get('eventDB'),
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            }),
+            inject: [ConfigService],
+        }),
     ],
 })
 export class DatabaseModule {}

@@ -42,8 +42,6 @@ export class AuthController {
         type: ResponseDto,
     })
     async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
-        this.logger.log("Controller sign up new ");
-        this.logger.error("Controller error up new ");
         return this.authService.signUp(signUpCredentialsDto, null);
     }
 
@@ -68,7 +66,6 @@ export class AuthController {
         type: ResponseSignInDto,
     })
     async singIn(@Ip() userIp: string, @Body() signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
-        this.logger.debug('UserIp ' + userIp);
         return this.authService.signIn(userIp, signInCredentialsDto);
     }
 

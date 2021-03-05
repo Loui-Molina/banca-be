@@ -1,16 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@database/datamodels/schemas/user';
 import { UsersService } from '@users/users.service';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { CreateBankingDto } from '@bankings/dto/create.banking.dto';
 import { Role } from '@database/datamodels/enums/role';
-import { Model, ObjectId } from 'mongoose';
+import { Connection, Model, ObjectId } from 'mongoose';
 import { BankingDto } from '@bankings/dto/banking.dto';
 import { UpdateBankingDto } from '@bankings/dto/update.banking.dto';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConsortiumService } from '@consortiums/consortium.service';
 import { ConstApp } from '@utils/const.app';
+import { CreateEvent } from '../events/events/create.event';
+import { EventsConst } from '../events/events.const';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { CreateBankingEvent } from '../events/events/banking/create.banking.event';
 
 @Injectable()
 export class BankingsService {
@@ -19,6 +23,8 @@ export class BankingsService {
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         private readonly userAuthService: AuthUserService,
         private readonly consortiumService: ConsortiumService,
+        @InjectConnection(ConstApp.BANKING) private readonly connection: Connection,
+        private readonly eventEmitter: EventEmitter2,
     ) {}
 
     async findAll(loggedUser: User): Promise<BankingDto[]> {
@@ -89,7 +95,6 @@ export class BankingsService {
     }
 
     async create(createBankingDto: CreateBankingDto, loggedUser: User): Promise<Banking> {
-        //TODO TRANSACTION
         const consortium = await this.consortiumService.getConsortiumForUser(createBankingDto.consortiumId, loggedUser);
         const {
             showPercentage,
@@ -108,10 +113,12 @@ export class BankingsService {
         createBankingDto.user.role = Role.banker;
 
         let createdUser: User;
-        let newObject: Banking;
+        let banking: Banking;
+        const session = await this.connection.startSession();
+        session.startTransaction();
         try {
             createdUser = (await this.userAuthService.signUp(createBankingDto.user, loggedUser)).user;
-            newObject = new this.bankingModel({
+            banking = new this.bankingModel({
                 name,
                 status,
                 consortiumId: consortium._id,
@@ -124,15 +131,24 @@ export class BankingsService {
                 header,
                 footer,
             } as Banking);
-            await newObject.save();
+            await banking.save();
             await consortium.save();
+            let createBanking = new CreateBankingEvent();
+            //createBanking.id = banking._id;
+            createBanking.description = EventsConst.CREATE_BANKING;
+            this.eventEmitter.emit(EventsConst.CREATE_EVENT, createBanking);  
+            session.commitTransaction();
         } catch (e) {
+            session.abortTransaction();
             if (createdUser) {
                 await this.usersService.delete(createdUser._id);
             }
             throw new BadRequestException(ConstApp.SOMETHING_WRONG_EXCEPTION);
         }
-        return newObject;
+        finally{
+            session.endSession();
+        }
+        return banking;
     }
 
     async update(updateBankingDto: UpdateBankingDto, loggedUser: User): Promise<Banking> {

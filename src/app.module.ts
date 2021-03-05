@@ -12,7 +12,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConstApp } from '@utils/const.app';
 import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool';
 import { LoggerModule } from '@common/logger/logger.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EventsModule } from './modules/events/events.module';
 
 @Module({
     imports: [
@@ -21,8 +21,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
             envFilePath: ['.env'],
         }),
         LoggerModule,
-        EventEmitterModule.forRoot(),
         DatabaseModule,
+        EventsModule,
         AuthModule,
         CoreModule,
         HealthCheckModule,

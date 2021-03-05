@@ -4,6 +4,7 @@ export class ConstApp {
      * */
     public static readonly USER = 'user';
     public static readonly BANKING = 'banking';
+    public static readonly EVENT = 'event';
     public static readonly SUSBCRIPTIONS = 'subscriptions';
 
     /***
@@ -58,6 +59,7 @@ export class ConstApp {
     public static readonly BALANCE_IS_NOT_ENOUGH = 'Balance is not enough';
     public static readonly NOT_LOGGED = 'NOT LOGGED';
     public static readonly UNAUTHORIZED = 'UNAUTHORIZED';
+    public static readonly EVENT_ERROR = 'EVENT_ERROR';
 
     /***
      * EXCEPTIONS MESSAGES

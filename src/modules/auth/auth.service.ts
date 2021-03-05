@@ -17,16 +17,22 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { Consortium } from '@database/datamodels/schemas/consortium';
 import { WebUser } from '@database/datamodels/schemas/web.user';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { CreateEvent } from '../events/events/create.event';
+import { sign } from 'crypto';
+import { AppLogger } from '@src/common/logger/app.logger';
+import { EventsConst } from '../events/events.const';
 
 @Injectable()
 export class AuthService {
-    private logger: Logger = new Logger(AuthService.name);
+    private logger: AppLogger = new AppLogger();
 
     constructor(
         private readonly configService: ConfigService,
         private readonly userAuthService: AuthUserService,
         private readonly jwtService: JwtService,
         private readonly tokenService: TokenService,
+        private readonly eventEmitter: EventEmitter2,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(WebUser.name) private readonly webUserModel: Model<WebUser>,
@@ -44,7 +50,11 @@ export class AuthService {
         }
         await this.verifyStatus(responsePayload);
         responseSignInDto = await this.getToken(responsePayload, userIp, false);
-
+        let signIn = new CreateEvent();
+        signIn.id = responsePayload.userId;
+        signIn.description = EventsConst.SIGN_IN;
+        signIn.time = new Date();
+        this.eventEmitter.emit(EventsConst.CREATE_EVENT, signIn);          
         return responseSignInDto;
     }
 
