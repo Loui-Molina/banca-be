@@ -1,26 +1,26 @@
-import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Result} from '@database/datamodels/schemas/result';
-import {Draw} from '@database/datamodels/schemas/draw';
-import {User} from '@database/datamodels/schemas/user';
-import {ResultDto} from '@results/dtos/result.dto';
-import {Lottery} from '@database/datamodels/schemas/lottery';
-import {AddResultDto} from '@results/dtos/add.result.dto';
-import {Model} from 'mongoose';
-import {Consortium} from '@database/datamodels/schemas/consortium';
-import {Banking} from '@database/datamodels/schemas/banking';
-import {ConsortiumLottery} from '@database/datamodels/schemas/consortium.lottery';
-import {DominicanLotteryPrizes} from '@database/datamodels/enums/dominican.lottery.prizes';
-import {UsLotteryPrizes} from '@database/datamodels/enums/us.lottery.prizes';
-import {BrasilPrizes} from '@database/datamodels/enums/brasil.prizes';
-import {BetStatus} from '@database/datamodels/enums/bet.status';
-import {PlayTypes} from '@database/datamodels/enums/play.types';
-import {Bet} from '@database/datamodels/schemas/bet';
-import {ConstApp} from '@utils/const.app';
-import {WebUser} from '@database/datamodels/schemas/web.user';
-import {TransactionType} from '@database/datamodels/enums/transaction.type';
-import {Transaction} from '@database/datamodels/schemas/transaction';
-import {TransactionObjects} from '@database/datamodels/enums/transaction.objects';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Result } from '@database/datamodels/schemas/result';
+import { Draw } from '@database/datamodels/schemas/draw';
+import { User } from '@database/datamodels/schemas/user';
+import { ResultDto } from '@results/dtos/result.dto';
+import { Lottery } from '@database/datamodels/schemas/lottery';
+import { AddResultDto } from '@results/dtos/add.result.dto';
+import { Model } from 'mongoose';
+import { Consortium } from '@database/datamodels/schemas/consortium';
+import { Banking } from '@database/datamodels/schemas/banking';
+import { ConsortiumLottery } from '@database/datamodels/schemas/consortium.lottery';
+import { DominicanLotteryPrizes } from '@database/datamodels/enums/dominican.lottery.prizes';
+import { UsLotteryPrizes } from '@database/datamodels/enums/us.lottery.prizes';
+import { BrasilPrizes } from '@database/datamodels/enums/brasil.prizes';
+import { BetStatus } from '@database/datamodels/enums/bet.status';
+import { PlayTypes } from '@database/datamodels/enums/play.types';
+import { Bet } from '@database/datamodels/schemas/bet';
+import { ConstApp } from '@utils/const.app';
+import { WebUser } from '@database/datamodels/schemas/web.user';
+import { TransactionType } from '@database/datamodels/enums/transaction.type';
+import { Transaction } from '@database/datamodels/schemas/transaction';
+import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
 
 @Injectable()
 export class ResultsService {
@@ -78,17 +78,13 @@ export class ResultsService {
         const filterDateB = new Date(`${date.getFullYear()}-${month}-${day}T23:59:59.000Z`);
 
         //Checking playTime
-        const lotteryPlayTime = lottery.playTime.split(':');
-        const checkDate = new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            parseInt(lotteryPlayTime[0]),
-            parseInt(lotteryPlayTime[1]),
-            0,
-        );
-        const now = new Date();
+        const checkDate: Date = new Date(lottery.playTime);
 
+        const now = new Date();
+        // FIXME boi GL HF
+        now.setFullYear(1970, 0, 1);
+
+        console.log({ now, checkDate });
         if (now < checkDate) {
             //You cant add the results if the lottery has not been played yet
             throw new BadRequestException(ConstApp.THE_LOTTERY_HAS_NOT_BEEN_PLAYED_YET);
@@ -171,7 +167,10 @@ export class ResultsService {
                         // Si estaba en winner no se pasa a loser pq quiere decir
                         // que gano en una loteria anterior
                         if (bet.betStatus === BetStatus.pending) {
-                            const playsSuperPalePending = bet.plays.filter((play) => play.playType === PlayTypes.superPale && [1, 2].includes(play.winSuperPalePending)).length
+                            const playsSuperPalePending = bet.plays.filter(
+                                (play) =>
+                                    play.playType === PlayTypes.superPale && [1, 2].includes(play.winSuperPalePending),
+                            ).length;
                             if (playsSuperPalePending > 0) {
                                 bet.betStatus = BetStatus.pending;
                             } else {
@@ -317,7 +316,9 @@ export class ResultsService {
                                     (play.playNumbers.first === draw.first && play.winSuperPalePending === 2) ||
                                     (play.playNumbers.second === draw.first && play.winSuperPalePending === 1)
                                 ) {
-                                    c += play.amount * (await this.getPrizeLimit(config, DominicanLotteryPrizes.superPale));
+                                    c +=
+                                        play.amount *
+                                        (await this.getPrizeLimit(config, DominicanLotteryPrizes.superPale));
                                     play.winSuperPalePending = 3;
                                     // Ganador
                                 }
