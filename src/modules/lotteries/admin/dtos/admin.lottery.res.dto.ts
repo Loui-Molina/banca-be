@@ -5,7 +5,7 @@ import { Result } from '@database/datamodels/schemas/result';
 import { Lottery } from '@database/datamodels/schemas/lottery';
 import { IsArray, IsBoolean, IsHexColor, IsMongoId, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ResultDto } from '@database/dto/result.dto';
+import { ResultDto } from '@results/dtos/result.dto';
 
 export class AdminLotteryResDto extends PartialType(Lottery) {
     @ApiProperty({ required: false }) @IsMongoId() @IsOptional() _id?: ObjectId;

@@ -77,12 +77,12 @@ export class UsersService implements Repository<User, UserDto> {
         return userUpdated;
     }
 
-    async delete(id: ObjectId): Promise<User> {
-        return this.userModel.findOneAndDelete(id).exec();
+    async delete(_id: ObjectId): Promise<User> {
+        return this.userModel.findByIdAndDelete(_id).exec();
     }
 
-    async get(id: ObjectId): Promise<User> {
-        return await this.userModel.findById(id).exec();
+    async get(_id: ObjectId): Promise<User> {
+        return await this.userModel.findById(_id).exec();
     }
 
     newUserModel(): User {
@@ -98,6 +98,6 @@ export class UsersService implements Repository<User, UserDto> {
     }
 
     async getUserByUsernameAndSalt(_id: ObjectId): Promise<User> {
-        return await this.userModel.findById(_id).select('+salt').exec();
+        return await this.userModel.findById({ _id }).select('+salt').exec();
     }
 }

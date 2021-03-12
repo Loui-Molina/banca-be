@@ -12,6 +12,7 @@ import { AuthUser } from '@common/decorators/auth.user.decorator';
 import * as mongoose from 'mongoose';
 import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
+import { ObjectId } from 'mongoose';
 
 @ApiTags('users')
 @Controller('users')
@@ -48,7 +49,7 @@ export class UsersController {
     })
     update(@Ip() userIp: string, @Body() dto: UserDto, @AuthUser() loggedUser: User): ResponseDto {
         const user = this.userService.update(dto, loggedUser, userIp);
-        let responseDto: ResponseDto = new ResponseDto();
+        const responseDto: ResponseDto = new ResponseDto();
         if (!user) {
             responseDto.statusCode = HttpStatus.BAD_REQUEST;
             responseDto.message = ConstApp.UNABLE_TO_UPDATE_USER;
@@ -64,8 +65,8 @@ export class UsersController {
         description: ConstApp.DEFAULT_DELETE_OK,
         type: User,
     })
-    delete(@Param('id') id: string): Promise<User> {
-        return this.userService.delete(new mongoose.Schema.Types.ObjectId(id));
+    delete(@Param('id') id: ObjectId): Promise<User> {
+        return this.userService.delete(id);
     }
 
     @Get(':id')

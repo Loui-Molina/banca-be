@@ -252,8 +252,8 @@ export class ResultsService {
         let c: number;
         for (const play of bet.plays) {
             if (
-                play.lotteryId.toString() === lottery._id.toString() ||
-                play.lotteryIdSuperpale.toString() === lottery._id.toString()
+                (play.lotteryId && play.lotteryId.toString()) === lottery._id.toString() ||
+                (play.lotteryIdSuperpale && play.lotteryIdSuperpale.toString()) === lottery._id.toString()
             ) {
                 if (!c) {
                     c = 0;

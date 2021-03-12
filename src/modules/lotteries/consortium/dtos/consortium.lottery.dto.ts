@@ -5,8 +5,8 @@ import { IsArray, IsBoolean, IsEnum, IsHexColor, IsMongoId, IsOptional, IsString
 import { Type } from 'class-transformer';
 import { BettingLimitDto } from '@database/dto/betting.limit.dto';
 import { PrizeLimitDto } from '@database/dto/prize.limit.dto';
-import { ResultDto } from '@database/dto/result.dto';
 import { BlockedNumberDto } from '@database/dto/blocked.number.dto';
+import { ResultDto } from '@results/dtos/result.dto';
 
 export class ConsortiumLotteryDto {
     @ApiProperty({ required: false }) @IsMongoId() @IsOptional() _id?: ObjectId;

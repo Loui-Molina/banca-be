@@ -10,9 +10,9 @@ export interface Repository<MODEL, DTO> {
 
     update(dto: DTO, loggedUser: User, ...args: any[]): Promise<MODEL | DTO>;
 
-    delete(id: ObjectId): Promise<MODEL | DTO>;
+    delete(_id: ObjectId): Promise<MODEL | DTO>;
 
-    get(id: ObjectId): Promise<MODEL | DTO>;
+    get(_id: ObjectId): Promise<MODEL | DTO>;
 
     create?(dto: DTO): Promise<MODEL | DTO>;
 }
