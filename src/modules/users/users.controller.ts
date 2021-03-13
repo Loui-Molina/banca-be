@@ -12,7 +12,6 @@ import { AuthUser } from '@common/decorators/auth.user.decorator';
 import * as mongoose from 'mongoose';
 import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
-import { ObjectId } from 'mongoose';
 
 @ApiTags('users')
 @Controller('users')
