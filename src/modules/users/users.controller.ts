@@ -65,8 +65,8 @@ export class UsersController {
         description: ConstApp.DEFAULT_DELETE_OK,
         type: User,
     })
-    delete(@Param('id') id: ObjectId): Promise<User> {
-        return this.userService.delete(id);
+    delete(@Param('id') id: string): Promise<User> {
+        return this.userService.delete(new mongoose.Schema.Types.ObjectId(id));
     }
 
     @Get(':id')
