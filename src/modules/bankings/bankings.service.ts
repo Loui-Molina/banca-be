@@ -134,7 +134,8 @@ export class BankingsService {
             await banking.save();
             await consortium.save();
             let createBanking = new CreateBankingEvent();
-            //createBanking.id = banking._id;
+            createBanking.bankingId = banking._id;
+            createBanking.consortiumId=consortium._id;
             createBanking.description = EventsConst.CREATE_BANKING;
             this.eventEmitter.emit(EventsConst.CREATE_EVENT, createBanking);  
             session.commitTransaction();
@@ -168,6 +169,12 @@ export class BankingsService {
         banking.modificationUserId = loggedUser._id;
         banking.header = updateBankingDto.header;
         banking.footer = updateBankingDto.footer;
+        let createBanking = new CreateBankingEvent();
+        createBanking.bankingId = banking._id;
+        createBanking.consortiumId=consortium._id;
+        createBanking.i
+        createBanking.description = EventsConst.UPDATE_BANKING;
+        this.eventEmitter.emit(EventsConst.CREATE_EVENT, createBanking);  
         //TODO checkear que el modificatedAt cambie
         await banking.save();
         return banking;
