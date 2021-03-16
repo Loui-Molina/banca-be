@@ -6,32 +6,32 @@ import {
     Logger,
     UnauthorizedException,
 } from '@nestjs/common';
-import {InjectConnection, InjectModel} from '@nestjs/mongoose';
-import {Connection, Model} from 'mongoose';
-import {User} from '@database/datamodels/schemas/user';
-import {Bet} from '@database/datamodels/schemas/bet';
-import {Play} from '@database/datamodels/schemas/play';
-import {BetDto} from '@betting.panel/dtos/bet.dto';
-import {CreateBetDto} from '@betting.panel/dtos/create.bet.dto';
-import {BetStatus} from '@database/datamodels/enums/bet.status';
-import {UpdateBetDto} from '@betting.panel/dtos/update.bet.dto';
-import {Banking} from '@database/datamodels/schemas/banking';
-import {TransactionType} from '@database/datamodels/enums/transaction.type';
-import {Transaction} from '@database/datamodels/schemas/transaction';
-import {TransactionObjects} from '@database/datamodels/enums/transaction.objects';
-import {ResumeSellsDto} from '@betting.panel/dtos/resume.sells.dto';
-import {ClaimBetDto} from '@betting.panel/dtos/claim.bet.dto';
-import {ConstApp} from '@utils/const.app';
-import {Lottery} from '@database/datamodels/schemas/lottery';
-import {PlayDto} from '@betting.panel/dtos/play.dto';
-import {PlayPool} from '@database/datamodels/schemas/playPool';
-import {LimitVerifyDto} from '@betting.panel/dtos/limit.verify.dto';
-import {BankingLotteryService} from '@lotteries/banking/banking.lottery.service';
-import {PlayTypes} from '@database/datamodels/enums/play.types';
-import {WebUser} from '@database/datamodels/schemas/web.user';
-import {Role} from '@database/datamodels/enums/role';
-import {BankingLotteryDto} from '@lotteries/banking/dtos/banking.lottery.dto';
-import {WebUserLotteryService} from '@lotteries/web-user/web-user.lottery.service';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model } from 'mongoose';
+import { User } from '@database/datamodels/schemas/user';
+import { Bet } from '@database/datamodels/schemas/bet';
+import { Play } from '@database/datamodels/schemas/play';
+import { BetDto } from '@betting.panel/dtos/bet.dto';
+import { CreateBetDto } from '@betting.panel/dtos/create.bet.dto';
+import { BetStatus } from '@database/datamodels/enums/bet.status';
+import { UpdateBetDto } from '@betting.panel/dtos/update.bet.dto';
+import { Banking } from '@database/datamodels/schemas/banking';
+import { TransactionType } from '@database/datamodels/enums/transaction.type';
+import { Transaction } from '@database/datamodels/schemas/transaction';
+import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
+import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
+import { ClaimBetDto } from '@betting.panel/dtos/claim.bet.dto';
+import { ConstApp } from '@utils/const.app';
+import { Lottery } from '@database/datamodels/schemas/lottery';
+import { PlayDto } from '@betting.panel/dtos/play.dto';
+import { PlayPool } from '@database/datamodels/schemas/playPool';
+import { LimitVerifyDto } from '@betting.panel/dtos/limit.verify.dto';
+import { BankingLotteryService } from '@lotteries/banking/banking.lottery.service';
+import { PlayTypes } from '@database/datamodels/enums/play.types';
+import { WebUser } from '@database/datamodels/schemas/web.user';
+import { Role } from '@database/datamodels/enums/role';
+import { BankingLotteryDto } from '@lotteries/banking/dtos/banking.lottery.dto';
+import { WebUserLotteryService } from '@lotteries/web-user/web-user.lottery.service';
 
 @Injectable()
 export class BettingPanelService {
@@ -47,16 +47,15 @@ export class BettingPanelService {
         @InjectModel(PlayPool.name) private readonly playPoolModel: Model<PlayPool>,
         private readonly bankingLotteryService: BankingLotteryService,
         private readonly webUserLotteryService: WebUserLotteryService,
-    ) {
-    }
+    ) {}
 
     async getAll(loggedUser: User): Promise<Array<BetDto>> {
         let bets: Bet[] = [];
         if (loggedUser.role === Role.webuser) {
-            const webuser = await this.webUserModel.findOne({ownerUserId: loggedUser._id});
+            const webuser = await this.webUserModel.findOne({ ownerUserId: loggedUser._id });
             bets = webuser.bets;
         } else if (loggedUser.role === Role.banker) {
-            const banking = await this.bankingModel.findOne({ownerUserId: loggedUser._id});
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
             bets = banking.bets;
         }
         const betDtos: BetDto[] = [];
@@ -67,7 +66,7 @@ export class BettingPanelService {
     }
 
     async getResumeSells(loggedUser: User): Promise<ResumeSellsDto> {
-        const banking = await this.bankingModel.findOne({ownerUserId: loggedUser._id});
+        const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
         const now = new Date();
         now.setHours(0, 0, 0, 0);
         const bets = banking.bets.filter((bet) => {
@@ -96,7 +95,7 @@ export class BettingPanelService {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
     async getFiltered(q: string, value: any): Promise<Array<BetDto>> {
-        const bets = await this.betModel.find({[q]: value}).exec();
+        const bets = await this.betModel.find({ [q]: value }).exec();
         const betsDto: BetDto[] = [];
         for await (const bet of bets) {
             betsDto.push(await this.mapToDto(bet));
@@ -131,14 +130,14 @@ export class BettingPanelService {
 
         let filter: any[] = [];
         if (req.playType === PlayTypes.direct) {
-            filter = [{'playNumbers.first': req.playNumbers.first}];
+            filter = [{ 'playNumbers.first': req.playNumbers.first }];
         }
         if (req.playType === PlayTypes.pale) {
             filter = [
                 {
                     $or: [
-                        {'playNumbers.first': req.playNumbers.first, 'playNumbers.second': req.playNumbers.second},
-                        {'playNumbers.first': req.playNumbers.second, 'playNumbers.second': req.playNumbers.first},
+                        { 'playNumbers.first': req.playNumbers.first, 'playNumbers.second': req.playNumbers.second },
+                        { 'playNumbers.first': req.playNumbers.second, 'playNumbers.second': req.playNumbers.first },
                     ],
                 },
             ];
@@ -183,7 +182,7 @@ export class BettingPanelService {
         }
         let playPools = await this.playPoolModel
             .find()
-            .and([{playType: req.playType}, {date: {$gte: filterDateA}}, {date: {$lte: filterDateB}}])
+            .and([{ playType: req.playType }, { date: { $gte: filterDateA } }, { date: { $lte: filterDateB } }])
             .and(filter)
             .exec();
         playPools = playPools.filter((playPool) => playPool.lotteryId.toString() === req.lotteryId);
@@ -202,7 +201,7 @@ export class BettingPanelService {
         session.startTransaction();
         let newObject: Bet = null;
         try {
-            const banking = await this.bankingModel.findOne({ownerUserId: loggedUser._id});
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
             if (!banking.startOfOperation) {
                 //Inicio de operacion
                 banking.startOfOperation = new Date();
@@ -273,9 +272,9 @@ export class BettingPanelService {
         session.startTransaction();
         let newObject: Bet = null;
         try {
-            const webuser = await this.webUserModel.findOne({ownerUserId: loggedUser._id});
+            const webuser = await this.webUserModel.findOne({ ownerUserId: loggedUser._id });
             const balance = await webuser.calculateBalance();
-            const banking = await this.bankingModel.findOne({_id: webuser.bankingId});
+            const banking = await this.bankingModel.findOne({ _id: webuser.bankingId });
             if (!webuser.startOfOperation) {
                 //Inicio de operacion
                 webuser.startOfOperation = new Date();
@@ -355,7 +354,7 @@ export class BettingPanelService {
         session.startTransaction();
         let betFounded: Bet = null;
         try {
-            const banking = await this.bankingModel.findOne({ownerUserId: loggedUser._id});
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
             const bet = banking.bets.filter((bet) => bet._id.toString() === dto._id.toString()).pop();
             if (bet.betStatus !== BetStatus.pending || !(await this.canCancelTicket(bet))) {
                 throw new UnauthorizedException(ConstApp.CANNOT_CANCEL_TICKET);
@@ -403,7 +402,7 @@ export class BettingPanelService {
     }
 
     async getClaimTicket(dto: ClaimBetDto, loggedUser: User): Promise<BetDto> {
-        const banking = await this.bankingModel.findOne({ownerUserId: loggedUser._id});
+        const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
         const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
         if (!bet) {
             throw new UnauthorizedException(ConstApp.CANNOT_FIND_TICKET);
@@ -419,7 +418,7 @@ export class BettingPanelService {
         session.startTransaction();
         let betFounded: Bet = null;
         try {
-            const banking = await this.bankingModel.findOne({ownerUserId: loggedUser._id});
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
             const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
             if (!bet) {
                 throw new UnauthorizedException(ConstApp.CANNOT_FIND_TICKET);
@@ -469,14 +468,14 @@ export class BettingPanelService {
 
     async get(id: string, loggedUser: User): Promise<BetDto> {
         if (loggedUser.role === Role.webuser) {
-            const webuser = await this.webUserModel.findOne({ownerUserId: loggedUser._id});
+            const webuser = await this.webUserModel.findOne({ ownerUserId: loggedUser._id });
             const bet = webuser.bets.find((bet) => bet._id.toString() === id);
             if (!bet) {
                 throw new BadRequestException(ConstApp.BET_NOT_FOUND);
             }
             return this.mapToDto(bet);
         } else if (loggedUser.role === Role.banker) {
-            const banking = await this.bankingModel.findOne({ownerUserId: loggedUser._id});
+            const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
             const bet = banking.bets.find((bet) => bet._id.toString() === id);
             if (!bet) {
                 throw new BadRequestException(ConstApp.BET_NOT_FOUND);
@@ -487,20 +486,20 @@ export class BettingPanelService {
     }
 
     async mapToDto(bet: Bet): Promise<BetDto> {
-        const {_id, plays, date, betStatus, amountWin, claimDate} = bet;
-        let {sn} = bet;
+        const { _id, plays, date, betStatus, amountWin, claimDate } = bet;
+        let { sn } = bet;
         if (!(await this.canSeeSn(bet))) {
             sn = null;
         }
         const playDtos: PlayDto[] = [];
         for await (const play of plays) {
-            const lottery = await this.lotteryModel.findOne({_id: play.lotteryId});
+            const lottery = await this.lotteryModel.findOne({ _id: play.lotteryId });
             let lotteryName = '';
             if (lottery) {
                 lotteryName = lottery.name;
             }
             if (play.playType === PlayTypes.superPale) {
-                const lottery2 = await this.lotteryModel.findOne({_id: play.lotteryIdSuperpale});
+                const lottery2 = await this.lotteryModel.findOne({ _id: play.lotteryIdSuperpale });
                 if (lottery2) {
                     lotteryName += '-' + lottery2.name;
                 }
@@ -553,8 +552,8 @@ export class BettingPanelService {
                         acc +
                         (betStatus.includes(bet.betStatus)
                             ? bet.plays.reduce(function (acc, play) {
-                                return acc + (play.amount ? play.amount : 0);
-                            }, 0)
+                                  return acc + (play.amount ? play.amount : 0);
+                              }, 0)
                             : 0)
                     );
                 }, 0);

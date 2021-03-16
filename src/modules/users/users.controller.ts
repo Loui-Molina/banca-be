@@ -12,7 +12,6 @@ import { AuthUser } from '@common/decorators/auth.user.decorator';
 import * as mongoose from 'mongoose';
 import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
-import { ObjectId } from 'mongoose';
 
 @ApiTags('users')
 @Controller('users')
@@ -65,8 +64,8 @@ export class UsersController {
         description: ConstApp.DEFAULT_DELETE_OK,
         type: User,
     })
-    delete(@Param('id') id: ObjectId): Promise<User> {
-        return this.userService.delete(id);
+    delete(@Param('id') id: string): Promise<User> {
+        return this.userService.delete(new mongoose.Schema.Types.ObjectId(id));
     }
 
     @Get(':id')
