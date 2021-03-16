@@ -30,7 +30,7 @@ export class AppLogger implements LoggerService {
                 new DailyRotateFile({
                     eol: ' ' + new Date().toISOString() + ' \n',
                     filename: 'bsolutions-%DATE%.log',
-                    dirname: `C:/logs`,
+                    dirname: `/root/logs`,
                     level: 'info',
                     handleExceptions: true,
                     json: false,

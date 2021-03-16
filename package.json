@@ -40,6 +40,7 @@
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
+    "express": "^4.17.1",
     "fastify-swagger": "^3.5.0",
     "jwt-decode": "^3.1.2",
     "latest-version": "^5.1.0",
