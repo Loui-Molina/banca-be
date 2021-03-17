@@ -6,13 +6,17 @@ import { CreateSubscriptionDto } from '@subscriptions/dto/create-subscription.dt
 import { UpdateSubscriptionDto } from '@subscriptions/dto/update-subscription.dto';
 import { SubscriptionsService } from '@subscriptions/subscriptions.service';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { Role } from '../database/datamodels/enums/role';
 
 @Controller('subscriptions')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard(), RolesGuard)
+@Roles(Role.admin)
 export class SubscriptionsController {
     constructor(private readonly subscriptionsService: SubscriptionsService) {}
 
-    /*@Post()
+    @Post()
     create(@Body() createSubscriptionDto: CreateSubscriptionDto) {
         return this.subscriptionsService.create(createSubscriptionDto);
     }
@@ -35,5 +39,5 @@ export class SubscriptionsController {
     @Delete()
     remove(@Param('id') id: ObjectId) {
         return this.subscriptionsService.delete(id);
-    }*/
+    }
 }

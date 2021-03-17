@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { HealthCheckModule } from '@health-check/health.check.module';
 import { AuthModule } from '@auth/auth.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { UtilsModule } from '@utils/utils.module';
 import { CoreModule } from '@manager/core.module';
 import { DatabaseModule } from '@database/database.module';
@@ -23,7 +22,6 @@ import { LoggerModule } from '@common/logger/logger.module';
         DatabaseModule,
         AuthModule,
         CoreModule,
-        HealthCheckModule,
         ScheduleModule.forRoot(),
         UtilsModule,
         CommonModule, // TODO CHECK IF NEEDED TO MOVE TO MANAGER MODULE

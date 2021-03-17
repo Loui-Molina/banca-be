@@ -4,11 +4,10 @@ import {
     Get,
     HttpCode,
     HttpStatus,
-    Inject,
+    
     Ip,
     Post,
     UseGuards,
-    ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
