@@ -35,7 +35,7 @@ export class AppLogger implements LoggerService {
                     handleExceptions: true,
                     json: false,
                     maxSize: '20m',
-                    datePattern: 'dd-MM-yyyy',
+                    datePattern: 'DD-MM-yyyy',
                 }),
             ],
             exitOnError: false,
