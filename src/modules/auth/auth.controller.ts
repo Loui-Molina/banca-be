@@ -36,7 +36,7 @@ export class AuthController {
 
     //THIS METHOD SHOULDNT BE IN PROD
     //WARNING
-    @Post('/sign-up')
+    /*@Post('/sign-up')
     @HttpCode(HttpStatus.CREATED)
     @ApiOkResponse({ type: ResponseDto, description: 'Successfully Registered' })
     @ApiCreatedResponse({
@@ -45,7 +45,7 @@ export class AuthController {
     })
     async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
         return this.authService.signUp(signUpCredentialsDto, null);
-    }
+    }*/
 
     @Post('/sign-up-logged')
     @UseGuards(AuthGuard())
