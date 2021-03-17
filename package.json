@@ -6,7 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "api": "curl.exe --output open-api.json --url http://localhost:3000/api-json && rimraf ../banca-fe/local-packages && openapi-generator-cli generate && del open-api.json",
+    "api": " rimraf ../banca-fe/local-packages && openapi-generator-cli generate && node package.js",
+    "api-validate": "openapi-generator-cli validate -i http://localhost:3000/api-json ",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -20,7 +21,6 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "apiBat": "rimraf ../banca-fe/local-packages && openApiPackage.bat",
     "fixMeAndStart": "npm run prebuild && npm cache clean --force && npm install && npm run start:dev"
   },
   "dependencies": {
@@ -69,6 +69,7 @@
     "@types/passport-local": "^1.0.33",
     "@types/source-map-support": "^0.5.3",
     "@types/supertest": "^2.0.10",
+    "@types/tar": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^4.11.0",
     "@typescript-eslint/parser": "^4.11.0",
     "eslint": "^7.16.0",
@@ -77,6 +78,7 @@
     "jest": "^26.6.3",
     "prettier": "^2.1.2",
     "supertest": "^6.0.0",
+    "tar": "^6.1.0",
     "ts-jest": "^26.4.3",
     "ts-loader": "^8.0.12",
     "ts-node": "^9.0.0",

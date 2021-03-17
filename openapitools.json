@@ -7,13 +7,14 @@
     "generators": {
       "angular": {
         "generatorName": "typescript-angular",
-        "output": "#{cwd}/../banca-fe/local-packages/banca-api",
-        "glob": "open-api.json",
+        "inputSpec": "http://localhost:3000/api-json",
+        "output": "../banca-fe/local-packages/banca-api",
+        "glob": "",
         "additionalProperties": {
           "ngVersion": "6.1.7",
           "npmName": "restClient",
-          "supportsES6": "true",
           "npmVersion": "6.9.0",
+          "supportsES6": "true",
           "withInterfaces": true
         }
       }
