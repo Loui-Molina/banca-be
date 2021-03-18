@@ -11,7 +11,7 @@
         "output": "../banca-fe/local-packages/banca-api",
         "glob": "",
         "additionalProperties": {
-          "ngVersion": "6.1.7",
+          "ngVersion": "11.2.5",
           "npmName": "restClient",
           "npmVersion": "6.9.0",
           "supportsES6": "true",
