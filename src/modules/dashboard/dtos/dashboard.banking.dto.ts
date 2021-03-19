@@ -20,4 +20,5 @@ export class DashboardBankingDto {
     @ApiProperty() @IsNumber() prizes: number; // Premios (winner + claimed)
     @ApiProperty() @IsNumber() pendingPrizes: number; // Premios pendientes (winner)
     @ApiProperty() @IsNumber() balance: number; // Balance
+    @ApiProperty() @IsNumber() red: number; // Balance - Premios pendientes (winner)
 }

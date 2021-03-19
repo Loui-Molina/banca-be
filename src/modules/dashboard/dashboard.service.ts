@@ -370,6 +370,8 @@ export class DashboardService {
         }
         const bankingsDto: DashboardBankingDto[] = [];
         for await (const banking of bankings) {
+            const pendingPrizes = await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.amountWin);
+            const balance = await banking.calculateBalance();
             bankingsDto.push({
                 _id: banking._id,
                 name: banking.name,
@@ -386,8 +388,9 @@ export class DashboardService {
                     PosibleSums.amount,
                 ),
                 prizes: await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
-                pendingPrizes: await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.amountWin),
-                balance: await banking.calculateBalance(),
+                pendingPrizes: pendingPrizes,
+                balance: balance,
+                red: balance - pendingPrizes,
             });
         }
         return bankingsDto;

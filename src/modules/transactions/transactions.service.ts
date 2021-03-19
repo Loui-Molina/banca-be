@@ -215,10 +215,6 @@ export class TransactionService {
                 ) {
                     throw new BadRequestException();
                 }
-                const originBalance = await originObject.calculateBalance();
-                if (dto.type === TransactionType.debit && originBalance < dto.amount) {
-                    throw new BadRequestException(ConstApp.BALANCE_IS_NOT_ENOUGH);
-                }
             }
             let destinationObject: Banking | WebUser;
             if (dto.destinationObject === TransactionObjects.banking) {
@@ -234,6 +230,10 @@ export class TransactionService {
                         .length === 0
                 ) {
                     throw new BadRequestException();
+                }
+                const destinationBalance = await destinationObject.calculateBalance();
+                if (dto.type === TransactionType.debit && destinationBalance < dto.amount) {
+                    throw new BadRequestException(ConstApp.BALANCE_IS_NOT_ENOUGH);
                 }
             }
             if (!destinationObject || !originObject) {
