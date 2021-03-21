@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@database/datamodels/schemas/user';
 import { Model } from 'mongoose';
@@ -10,6 +10,8 @@ import { PlayDto } from '@betting.panel/dtos/play.dto';
 import { Play } from '@database/datamodels/schemas/play';
 import { ConsortiumService } from '@consortiums/consortium.service';
 import { Lottery } from '@database/datamodels/schemas/lottery';
+import {Role} from "@database/datamodels/enums/role";
+import {ConstApp} from "@utils/const.app";
 
 @Injectable()
 export class TicketsService {
@@ -20,8 +22,17 @@ export class TicketsService {
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<TicketDto>> {
-        const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
-        const bankings: Array<Banking> = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+        let bankings: Array<Banking> = [];
+        switch (loggedUser.role) {
+            case Role.consortium:
+                // eslint-disable-next-line no-case-declarations
+                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
+                bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+                break;
+            case Role.admin:
+                bankings = await this.bankingModel.find().exec();
+                break;
+        }
         const tickets = [];
         for await (const banking of bankings) {
             for await (const bet of banking.bets) {
@@ -32,6 +43,7 @@ export class TicketsService {
     }
 
     private async mapTicket(bet: Bet, banking: Banking): Promise<TicketDto> {
+        const consortium = await this.consortiumService.get(banking.consortiumId.toString());
         const playDtos: PlayDto[] = [];
         for await (const play of bet.plays) {
             playDtos.push(await this.mapPlay(play));
@@ -42,6 +54,7 @@ export class TicketsService {
             betStatus: bet.betStatus,
             date: bet.date,
             bankingName: banking.name,
+            consortiumName: consortium.name,
         };
     }
 

@@ -21,7 +21,7 @@ export class TicketsController {
         description: ConstApp.DEFAULT_GET_OK,
         type: TicketDto,
     })
-    @Roles(Role.consortium)
+    @Roles(Role.admin, Role.consortium)
     getAll(@AuthUser() user: User): Promise<Array<TicketDto>> {
         return this.ticketsService.getAll(user);
     }
