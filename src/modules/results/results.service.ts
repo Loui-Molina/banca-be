@@ -80,11 +80,8 @@ export class ResultsService {
         //Checking playTime
         const checkDate: Date = new Date(lottery.playTime);
 
-        const now = new Date();
-        // FIXME boi GL HF
-        now.setFullYear(1970, 0, 1);
+        const now = new Date('1970-01-01T' + new Date().toISOString().split('T')[1]);
 
-        console.log({ now, checkDate });
         if (now < checkDate) {
             //You cant add the results if the lottery has not been played yet
             throw new BadRequestException(ConstApp.THE_LOTTERY_HAS_NOT_BEEN_PLAYED_YET);

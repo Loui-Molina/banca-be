@@ -55,10 +55,7 @@ export class BankingLotteryService {
                 if (flag) {
                     const lotteryOpenTime: Date = new Date(lottery.openTime);
                     const lotteryCloseTime: Date = new Date(lottery.closeTime);
-
-                    const now = new Date();
-                    // FIXME boi GL HF
-                    now.setFullYear(1970, 0, 1);
+                    const now = new Date('1970-01-01T' + new Date().toISOString().split('T')[1]);
                     let leftTime = (lotteryCloseTime.getTime() - now.getTime()) / 1000;
                     if (!(lotteryOpenTime <= now && lotteryCloseTime >= now)) {
                         lottery.status = false;
