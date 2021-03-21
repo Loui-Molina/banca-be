@@ -1,4 +1,4 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@database/datamodels/schemas/user';
 import { Model } from 'mongoose';
@@ -10,8 +10,8 @@ import { PlayDto } from '@betting.panel/dtos/play.dto';
 import { Play } from '@database/datamodels/schemas/play';
 import { ConsortiumService } from '@consortiums/consortium.service';
 import { Lottery } from '@database/datamodels/schemas/lottery';
-import {Role} from "@database/datamodels/enums/role";
-import {ConstApp} from "@utils/const.app";
+import { Role } from '@database/datamodels/enums/role';
+import { ConstApp } from '@utils/const.app';
 
 @Injectable()
 export class TicketsService {

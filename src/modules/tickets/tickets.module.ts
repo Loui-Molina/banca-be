@@ -1,11 +1,11 @@
-import {Module} from '@nestjs/common';
-import {MongooseModule} from '@nestjs/mongoose';
-import {Lottery, LotterySchema} from '@database/datamodels/schemas/lottery';
-import {ConstApp} from '@utils/const.app';
-import {Banking, BankingSchema} from '@database/datamodels/schemas/banking';
-import {ConsortiumModule} from '@consortiums/consortium.module';
-import {TicketsService} from "@src/modules/tickets/tickets.service";
-import {TicketsController} from "@src/modules/tickets/tickets.controller";
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
+import { ConstApp } from '@utils/const.app';
+import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
+import { ConsortiumModule } from '@consortiums/consortium.module';
+import { TicketsService } from '@src/modules/tickets/tickets.service';
+import { TicketsController } from '@src/modules/tickets/tickets.controller';
 
 @Module({
     imports: [

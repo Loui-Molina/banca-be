@@ -22,7 +22,6 @@ export class WebUsersService {
         private readonly userAuthService: AuthUserService,
         private readonly consortiumService: ConsortiumService,
         private readonly bankingService: BankingsService,
-        
     ) {}
 
     async findAll(loggedUser: User): Promise<WebUserDto[]> {

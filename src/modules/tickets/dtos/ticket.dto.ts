@@ -3,8 +3,8 @@ import { Draw } from '@database/datamodels/schemas/draw';
 import { ObjectId } from 'mongoose';
 import { IsDate, IsMongoId, IsObject, IsOptional, IsString } from 'class-validator';
 import { PlayDto } from '@betting.panel/dtos/play.dto';
-import {BetStatus} from "@database/datamodels/enums/bet.status";
-import {Prop} from "@nestjs/mongoose";
+import { BetStatus } from '@database/datamodels/enums/bet.status';
+import { Prop } from '@nestjs/mongoose';
 
 export class TicketDto {
     @ApiProperty() @IsMongoId() _id: ObjectId;
