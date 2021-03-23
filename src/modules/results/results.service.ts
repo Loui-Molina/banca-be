@@ -80,7 +80,8 @@ export class ResultsService {
         //Checking playTime
         const checkDate: Date = new Date(lottery.playTime);
 
-        const now = new Date('1970-01-01T' + new Date().toISOString().split('T')[1]);
+        const now = new Date();
+        now.setFullYear(1970, 0, 1);
 
         if (now < checkDate) {
             //You cant add the results if the lottery has not been played yet
