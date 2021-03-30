@@ -8,6 +8,7 @@ import { Consortium } from '@database/datamodels/schemas/consortium';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { BankingLotteryDto } from '@lotteries/banking/dtos/banking.lottery.dto';
 import { Days } from '@database/datamodels/enums/days';
+import { ConstApp } from '@utils/const.app';
 
 @Injectable()
 export class BankingLotteryService {
@@ -15,7 +16,8 @@ export class BankingLotteryService {
         @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
-    ) {}
+    ) {
+    }
 
     async getAll(loggedUser: User): Promise<Array<BankingLotteryDto>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
@@ -53,11 +55,11 @@ export class BankingLotteryService {
                     }
                 });
                 if (flag) {
-                    const lotteryOpenTime: Date = new Date(lottery.openTime);
-                    const lotteryCloseTime: Date = new Date(lottery.closeTime);
-                    const now = new Date();
-                    now.setFullYear(1970, 0, 1);
-                    let leftTime = (lotteryCloseTime.getTime() - now.getTime()) / 1000;
+                    const lotteryOpenTime: number = this.getHours(new Date(lottery.openTime)),
+                        lotteryCloseTime: number = this.getHours(new Date(lottery.closeTime)),
+                        now: number = this.getHours(new Date());
+
+                    let leftTime = lotteryCloseTime - now;
                     if (!(lotteryOpenTime <= now && lotteryCloseTime >= now)) {
                         lottery.status = false;
                         leftTime = 0;
@@ -116,5 +118,11 @@ export class BankingLotteryService {
         lotteriesDtos.sort((a, b) => (a.leftTime > b.leftTime ? 1 : b.leftTime > a.leftTime ? -1 : 0));
         lotteriesDtos.sort((a, b) => (!a.leftTime ? 1 : !b.leftTime ? -1 : 0));
         return lotteriesDtos;
+    }
+
+    private getHours(date: Date): number {
+        const days = date.getTime() / ConstApp.DAY_LENGTH,
+            hours = days - Math.trunc(days);
+        return hours * ConstApp.MINUTE_LENGTH;
     }
 }
