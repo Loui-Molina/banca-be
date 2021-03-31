@@ -65,12 +65,4 @@ export class ConstApp {
     public static readonly SOMETHING_WRONG_EXCEPTION = 'Something went Wrong';
 
 
-    /*TODO CHECK IF CORRECT HERE*/
-    /***
-     * TIME CONSTANSTS
-     * */
-    public static readonly SECOND_LENGTH = 1000;
-    public static readonly MINUTE_LENGTH = ConstApp.SECOND_LENGTH * 60;
-    public static readonly HOUR_LENGTH = ConstApp.MINUTE_LENGTH * 60;
-    public static readonly DAY_LENGTH = ConstApp.HOUR_LENGTH * 24;
 }

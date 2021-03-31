@@ -9,6 +9,7 @@ import { Banking } from '@database/datamodels/schemas/banking';
 import { BankingLotteryDto } from '@lotteries/banking/dtos/banking.lottery.dto';
 import { Days } from '@database/datamodels/enums/days';
 import { ConstApp } from '@utils/const.app';
+import { DateHelper, DAY_LENGTH } from '@utils/date.helper';
 
 @Injectable()
 export class BankingLotteryService {
@@ -55,15 +56,22 @@ export class BankingLotteryService {
                     }
                 });
                 if (flag) {
-                    const lotteryOpenTime: number = this.getHours(new Date(lottery.openTime)),
-                        lotteryCloseTime: number = this.getHours(new Date(lottery.closeTime)),
-                        now: number = this.getHours(new Date());
+                    const lotteryOpenTime: Date = new Date(lottery.openTime),
+                        lotteryCloseTime: Date = new Date(lottery.closeTime),
+                        now: Date = new Date();
 
-                    let leftTime = lotteryCloseTime - now;
-                    if (!(lotteryOpenTime <= now && lotteryCloseTime >= now)) {
+                    let leftTime = DateHelper.getHourlyDiff(lotteryCloseTime, now);
+                    if (
+                        !(
+                            DateHelper.getHourlyDiff(now, lotteryOpenTime) >= 0 &&
+                            DateHelper.getHourlyDiff(lotteryCloseTime, now) >= 0
+                        )
+                    ) {
                         lottery.status = false;
                         leftTime = 0;
                     }
+                    console.log({ lottery, leftTime });
+
                     const days = lottery.day;
                     let opened = false;
                     const nowDay = new Date().getDay();
@@ -104,6 +112,7 @@ export class BankingLotteryService {
                             }
                             break;
                     }
+                    console.log(`opened=${opened}`);
                     if (opened) {
                         lottery.bankings = consortiumLottery.bankingIds;
                         lottery.prizeLimits = consortiumLottery.prizeLimits;
@@ -118,11 +127,5 @@ export class BankingLotteryService {
         lotteriesDtos.sort((a, b) => (a.leftTime > b.leftTime ? 1 : b.leftTime > a.leftTime ? -1 : 0));
         lotteriesDtos.sort((a, b) => (!a.leftTime ? 1 : !b.leftTime ? -1 : 0));
         return lotteriesDtos;
-    }
-
-    private getHours(date: Date): number {
-        const days = date.getTime() / ConstApp.DAY_LENGTH,
-            hours = days - Math.trunc(days);
-        return hours * ConstApp.MINUTE_LENGTH;
     }
 }
