@@ -70,7 +70,6 @@ export class BankingLotteryService {
                         lottery.status = false;
                         leftTime = 0;
                     }
-                    console.log({ lottery, leftTime });
 
                     const days = lottery.day;
                     let opened = false;
@@ -112,7 +111,6 @@ export class BankingLotteryService {
                             }
                             break;
                     }
-                    console.log(`opened=${opened}`);
                     if (opened) {
                         lottery.bankings = consortiumLottery.bankingIds;
                         lottery.prizeLimits = consortiumLottery.prizeLimits;

@@ -96,7 +96,7 @@ export class AuthUserService {
 
     async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<ResponsePayload> {
         const { username, password } = signInCredentialsDto;
-        const user: User = await this.usersService.getSingleFilteredComplete('username', username);
+        const user: User = await this.usersService.getSingleFilteredComplete('username', username.toLowerCase());
         const responsePayload: ResponsePayload = new ResponsePayload();
         if (user && (await user.validatePassword(password))) {
             responsePayload.userId = user._id;

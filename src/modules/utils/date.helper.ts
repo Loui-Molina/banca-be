@@ -20,7 +20,7 @@ export class DateHelper {
     static getHours(date: Date): number {
         const epoch = this.getTime(date);
         const days = Math.trunc(epoch / DAY_LENGTH);
-        return epoch - days * DAY_LENGTH;
+        return epoch - days;
     }
 
     /***
