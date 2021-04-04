@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class DateHelper {
-
     /***
      * this method returns the date in miliseconds from epoch
      * epoch = 0 = Thursday 1 January 1970 00:00:00
@@ -18,9 +17,10 @@ export class DateHelper {
      * @param date plain Date Format
      */
     static getHours(date: Date): number {
-        const epoch = this.getTime(date);
+        const offset = date.getTimezoneOffset() * 60;
+        const epoch = this.getTime(date) - offset;
         const days = Math.trunc(epoch / DAY_LENGTH);
-        return epoch - days;
+        return epoch - days * DAY_LENGTH;
     }
 
     /***
@@ -57,5 +57,5 @@ export class DateHelper {
  * Time measurements in seconds
  * */
 export const MINUTE_LENGTH = 60;
-export const HOUR_LENGTH = MINUTE_LENGTH * 60;
-export const DAY_LENGTH = HOUR_LENGTH * 24;
+export const HOUR_LENGTH = 3600;
+export const DAY_LENGTH = 86400;
