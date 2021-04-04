@@ -9,7 +9,8 @@ export class DateHelper {
      */
     static getTime(date: Date): number {
         date.setSeconds(0, 0);
-        return Math.trunc(date.getTime() / 1000);
+        const offset = date.getTimezoneOffset() * MINUTE_LENGTH;
+        return Math.trunc(date.getTime() / 1000) - offset;
     }
 
     /***
@@ -17,8 +18,7 @@ export class DateHelper {
      * @param date plain Date Format
      */
     static getHours(date: Date): number {
-        const offset = date.getTimezoneOffset() * 60;
-        const epoch = this.getTime(date) - offset;
+        const epoch = this.getTime(date);
         const days = Math.trunc(epoch / DAY_LENGTH);
         return epoch - days * DAY_LENGTH;
     }
