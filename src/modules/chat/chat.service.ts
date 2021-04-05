@@ -117,7 +117,6 @@ export class ChatService {
         if (!messages) throw new BadRequestException(ConstApp.SOMETHING_WRONG_EXCEPTION);
         for (const message of messages) {
             message.readed = true;
-            console.log('msg', message.message);
             await message.save();
         }
         return true;

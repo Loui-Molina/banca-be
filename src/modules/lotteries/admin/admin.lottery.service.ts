@@ -126,7 +126,6 @@ export class AdminLotteryService {
     async delete(id: string) {
         //TODO eliminar consortiumLotteries dentro de consortiums
         const promise = await this.lotteryModel.findByIdAndRemove(id).exec();
-        console.log(`delete response ${promise}`);
         return promise;
     }
 
