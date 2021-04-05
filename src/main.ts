@@ -17,9 +17,8 @@ async function bootstrap() {
     app.setGlobalPrefix(app.get('ConfigService').get('APP_GLOBAL_PREFIX'));
     app.useGlobalFilters(new AnyExceptionFilter());
     app.useGlobalPipes(new ValidationPipe());
-
     let port: number = parseInt(process.env.PORT);
-    if (process.env.DEV) {
+    if (process.env.DEV == 'true') {
         install();
         const options = new DocumentBuilder()
             .setTitle(app.get('ConfigService').get('APP_TITLE'))
