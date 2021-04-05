@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
 
 export class DashboardWidgetsDto {
-    @ApiProperty() ticketsSold: number;
-    @ApiProperty() profits: number;
-    @ApiProperty() losses: number;
-    @ApiProperty() balance: number;
+    @ApiProperty() @IsNumber() ticketsSold: number;
+    @ApiProperty() @IsNumber() profits: number;
+    @ApiProperty() @IsNumber() prizes: number;
+    @ApiProperty() @IsNumber() balance: number;
 }

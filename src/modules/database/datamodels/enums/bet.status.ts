@@ -4,4 +4,5 @@ export enum BetStatus {
     pending = 'pending',
     winner = 'winner',
     loser = 'loser',
+    expired = 'expired',
 }

@@ -1,15 +1,4 @@
-import {
-    Body,
-    Controller,
-    Get,
-    HttpCode,
-    HttpStatus,
-    Ip,
-    Logger,
-    Post,
-    UseGuards,
-    ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 import { SignUpCredentialsDto } from '@auth/dtos/sign.up.credentials.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
@@ -21,20 +10,22 @@ import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { ResponseSignInDto } from '@auth/dtos/response.sign.in.dto';
 import { TokenService } from '@auth/token.service';
 import { RefreshToken } from '@database/datamodels/schemas/refresh.token';
-import { RolesGuard } from '@auth/guards/roles.guard';
-import { Roles } from '@common/decorators/roles.decorator';
-import { Role } from '@database/datamodels/enums/role';
 import { SignInCredentialsDto } from '@auth/dtos/sign.in.credentials.dto';
-import { ChangePasswordDto } from '@auth/dtos/change.password.dto';
+import { AuthRefreshToken } from '@common/decorators/auth.refresh.token.decorator';
+import { AppLogger } from '@common/logger/app.logger';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-    private readonly logger: Logger = new Logger(AuthController.name);
+    constructor(
+        private readonly authService: AuthService,
+        private readonly tokenService: TokenService,
+        private readonly logger: AppLogger = new AppLogger(),
+    ) {}
 
-    constructor(private readonly authService: AuthService, private readonly tokenService: TokenService) {}
-
-    @Post('/sign-up')
+    //THIS METHOD SHOULDNT BE IN PROD
+    //WARNING
+    /*@Post('/sign-up')
     @HttpCode(HttpStatus.CREATED)
     @ApiOkResponse({ type: ResponseDto, description: 'Successfully Registered' })
     @ApiCreatedResponse({
@@ -43,7 +34,7 @@ export class AuthController {
     })
     async singUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<ResponseDto> {
         return this.authService.signUp(signUpCredentialsDto, null);
-    }
+    }*/
 
     @Post('/sign-up-logged')
     @UseGuards(AuthGuard())
@@ -55,7 +46,7 @@ export class AuthController {
     })
     async singUpLogged(
         @AuthUser() user: User,
-        @Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto,
+        @Body() signUpCredentialsDto: SignUpCredentialsDto,
     ): Promise<ResponseDto> {
         return this.authService.signUp(signUpCredentialsDto, user);
     }
@@ -65,23 +56,9 @@ export class AuthController {
         description: ConstApp.DEFAULT_GET_OK,
         type: ResponseSignInDto,
     })
-    async singIn(
-        @Ip() userIp: string,
-        @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
-    ): Promise<ResponseSignInDto> {
+    async singIn(@Ip() userIp: string, @Body() signInCredentialsDto: SignInCredentialsDto): Promise<ResponseSignInDto> {
         this.logger.debug('UserIp ' + userIp);
         return this.authService.signIn(userIp, signInCredentialsDto);
-    }
-
-    @Post('/change-password')
-    @UseGuards(AuthGuard(), RolesGuard)
-    @Roles(Role.admin)
-    async changePasswordRemember(
-        @Ip() userIp: string,
-        @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
-        @AuthUser() user: User,
-    ): Promise<ResponseDto> {
-        return this.authService.changePassword(userIp, changePasswordDto, user, true);
     }
 
     @Get('/logged-user')
@@ -94,27 +71,13 @@ export class AuthController {
         return this.authService.getLoggedUser(user);
     }
 
-    @Post('/test')
-    @UseGuards(AuthGuard())
-    test(@AuthUser() user: User) {
-        console.log(user);
-    }
-
-    @Post('/test1')
-    @UseGuards(AuthGuard('refresh'))
-    test1(@AuthUser() refreshToken: RefreshToken) {
-        console.log('SUCESSFULL PASS JWT REFRESH');
-        this.logger.debug('Refresh token ' + refreshToken);
-        return refreshToken;
-    }
-
     @Get('/refresh-token')
     @UseGuards(AuthGuard('refresh'))
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: String,
     })
-    getToken(@Ip() ipAdress: string, @AuthUser() refreshToken: RefreshToken): Promise<ResponseSignInDto> {
+    getToken(@Ip() ipAdress: string, @AuthRefreshToken() refreshToken: RefreshToken): Promise<ResponseSignInDto> {
         return this.tokenService.getRefreshToken(ipAdress, refreshToken, true);
     }
 

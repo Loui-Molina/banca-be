@@ -1,15 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Banking } from '@database/datamodels/schemas/banking';
+import { IsArray, IsBoolean, IsDate, IsMongoId, IsOptional, IsString } from 'class-validator';
+import { BankingDto } from '@database/dto/banking.dto';
 
 export class ConsortiumDto {
-    @ApiProperty() ownerName: string;
-    @ApiProperty() ownerUsername: string;
-    @ApiProperty() ownerId: ObjectId;
-    @ApiProperty() _id: ObjectId;
-    @ApiProperty() name: string;
-    @ApiProperty() createdAt: Date;
-    @ApiProperty() status: boolean;
-    @ApiProperty() firstTransactionDate: Date;
-    @ApiProperty() bankings?: Banking[];
+    @ApiProperty() @IsString() ownerName: string;
+    @ApiProperty() @IsString() ownerUsername: string;
+    @ApiProperty() @IsMongoId() ownerId: ObjectId;
+    @ApiProperty() @IsMongoId() _id: ObjectId;
+    @ApiProperty() @IsString() name: string;
+    @ApiProperty() @IsDate() createdAt: Date;
+    @ApiProperty() @IsBoolean() status: boolean;
+    @ApiProperty() @IsDate() startOfOperation: Date;
+    @ApiProperty() @IsArray() @IsOptional() bankings?: BankingDto[];
 }

@@ -25,7 +25,7 @@ export class Consortium extends Document {
     @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) ownerUserId: ObjectId;
     @ApiProperty() @Prop({ required: true, unique: true }) name: string;
     @ApiProperty() @Prop({ required: true, default: false }) status: boolean;
-    @ApiProperty() @Prop() firstTransactionDate?: Date;
+    @ApiProperty() @Prop() startOfOperation?: Date;
     @ApiProperty() @Prop({ type: [TransactionSchema] }) transactions?: Transaction[];
 
     /** Data object members*/

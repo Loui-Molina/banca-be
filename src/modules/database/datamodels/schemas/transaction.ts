@@ -19,7 +19,7 @@ export class Transaction extends Document implements DataObject {
     @ApiProperty() @Prop({ required: true }) lastBalance?: number;
     @ApiProperty() @Prop({ required: true }) actualBalance?: number;
     //id del objeto donde se genero la transaccion puede ser usuario cliente, banca o consorcio
-    @ApiProperty() @Prop({ required: false, type: mongoose.SchemaTypes.ObjectId }) originId?: ObjectId = null;
+    @ApiProperty() @Prop({ required: false, type: mongoose.SchemaTypes.ObjectId }) originId?: ObjectId;
     @ApiProperty({ type: String, enum: TransactionObjects })
     @Prop({ type: String, enum: TransactionObjects })
     originObject?: TransactionObjects;

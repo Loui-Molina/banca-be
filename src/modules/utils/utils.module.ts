@@ -1,5 +1,9 @@
 import { Global, Module } from '@nestjs/common';
+import { DateHelper } from '@utils/date.helper';
 
 @Global()
-@Module({})
-export class UtilsModule {}
+@Module({
+    providers: [DateHelper],
+})
+export class UtilsModule {
+}

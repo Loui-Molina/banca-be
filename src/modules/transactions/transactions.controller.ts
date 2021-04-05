@@ -23,7 +23,7 @@ export class TransactionController {
         description: ConstApp.DEFAULT_GET_OK,
         type: TransactionDto,
     })
-    @Roles(Role.admin, Role.consortium, Role.banker)
+    @Roles(Role.admin, Role.consortium, Role.banker, Role.webuser)
     getAll(@AuthUser() loggedUser: User): Promise<Array<TransactionDto>> {
         return this.transactionService.getAll(loggedUser);
     }
@@ -57,6 +57,16 @@ export class TransactionController {
     @Roles(Role.consortium)
     createTransactionConsortium(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser: User): Promise<Transaction> {
         return this.transactionService.createTransactionConsortium(dto, loggedUser);
+    }
+
+    @Post('create/transaction/banker')
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_POST_OK,
+        type: Transaction,
+    })
+    @Roles(Role.banker)
+    createTransactionBanking(@Body() dto: CreateTransactionDto, @AuthUser() loggedUser: User): Promise<Transaction> {
+        return this.transactionService.createTransactionBanking(dto, loggedUser);
     }
 
     @Get(':id')

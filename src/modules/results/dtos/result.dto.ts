@@ -1,12 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Draw } from '@database/datamodels/schemas/draw';
 import { ObjectId } from 'mongoose';
+import { IsDate, IsMongoId, IsOptional, IsString } from 'class-validator';
 
 export class ResultDto {
-    @ApiProperty() _id: ObjectId;
-    @ApiProperty() lotteryId: ObjectId;
-    @ApiProperty() lotteryName: string;
-    @ApiProperty() date?: Date;
-    @ApiProperty() createdAt?: Date;
-    @ApiProperty() draw?: Draw;
+    @ApiProperty() @IsMongoId() _id: ObjectId;
+    @ApiProperty() @IsMongoId() lotteryId: ObjectId;
+    @ApiProperty() @IsMongoId() creationUserId: ObjectId;
+    @ApiProperty() @IsString() lotteryName: string;
+    @ApiProperty() @IsString() creationUsername: string;
+    @ApiProperty() @IsDate() @IsOptional() date?: Date;
+    @ApiProperty() @IsDate() @IsOptional() createdAt?: Date;
+    @ApiProperty() @IsDate() @IsOptional() draw?: Draw;
 }

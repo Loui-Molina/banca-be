@@ -1,18 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Prop } from '@nestjs/mongoose';
 import { Days } from '@database/datamodels/enums/days';
-import { Result, ResultSchema } from '@database/datamodels/schemas/result';
+import { IsArray, IsBoolean, IsEnum, IsHexColor, IsMongoId, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ResultDto } from '@results/dtos/result.dto';
 
 export class AdminLotteryReqDto {
-    @ApiProperty({ required: false }) _id?: ObjectId;
-    @ApiProperty() name: string;
-    @ApiProperty() nickname: string;
-    @ApiProperty() color: string;
-    @ApiProperty() playTime: string;
-    @ApiProperty() status: boolean;
-    @ApiProperty() @Prop({ type: [ResultSchema] }) results?: Result[];
-    @ApiProperty({ required: false }) openTime?: string;
-    @ApiProperty({ required: false }) closeTime?: string;
-    @ApiProperty({ type: Number, enum: Days, isArray: true }) day: Days[];
+    @ApiProperty({ required: false }) @IsMongoId() @IsOptional() _id?: ObjectId;
+    @ApiProperty() @IsString() name: string;
+    @ApiProperty() @IsString() nickname: string;
+    @ApiProperty() @IsHexColor() color: string;
+    @ApiProperty() @IsString() playTime: string;
+    @ApiProperty() @IsBoolean() status: boolean;
+    @ApiProperty() @IsArray() @IsOptional() @Type(() => ResultDto) results?: ResultDto[];
+    @ApiProperty({ required: false }) @IsOptional() @IsString() openTime?: string;
+    @ApiProperty({ required: false }) @IsString() @IsOptional() closeTime?: string;
+    @ApiProperty({ type: Number, enum: Days, isArray: true }) @IsArray() day: Days[];
 }

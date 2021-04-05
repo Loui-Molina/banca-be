@@ -8,6 +8,8 @@ import { Consortium } from '@database/datamodels/schemas/consortium';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { BankingLotteryDto } from '@lotteries/banking/dtos/banking.lottery.dto';
 import { Days } from '@database/datamodels/enums/days';
+import { ConstApp } from '@utils/const.app';
+import { DateHelper, DAY_LENGTH } from '@utils/date.helper';
 
 @Injectable()
 export class BankingLotteryService {
@@ -15,7 +17,8 @@ export class BankingLotteryService {
         @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
-    ) {}
+    ) {
+    }
 
     async getAll(loggedUser: User): Promise<Array<BankingLotteryDto>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
@@ -53,32 +56,21 @@ export class BankingLotteryService {
                     }
                 });
                 if (flag) {
-                    const lotteryOpenTime = lottery.openTime.split(':');
-                    const lotteryCloseTime = lottery.closeTime.split(':');
-                    const lotteryPlayTime = lottery.playTime.split(':');
-                    const date = new Date();
-                    const lotteryOpenTimeDate = new Date(
-                        date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate(),
-                        parseInt(lotteryOpenTime[0]),
-                        parseInt(lotteryOpenTime[1]),
-                        0,
-                    );
-                    const lotteryCloseTimeDate = new Date(
-                        date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate(),
-                        parseInt(lotteryCloseTime[0]),
-                        parseInt(lotteryCloseTime[1]),
-                        0,
-                    );
-                    const now = new Date();
-                    let leftTime = (lotteryCloseTimeDate.getTime() - now.getTime()) / 1000;
-                    if (!(lotteryOpenTimeDate <= now && lotteryCloseTimeDate >= now)) {
+                    const lotteryOpenTime: Date = new Date(lottery.openTime),
+                        lotteryCloseTime: Date = new Date(lottery.closeTime),
+                        now: Date = new Date();
+
+                    let leftTime = DateHelper.getHourlyDiff(lotteryCloseTime, now);
+                    if (
+                        !(
+                            DateHelper.getHourlyDiff(now, lotteryOpenTime) >= 0 &&
+                            DateHelper.getHourlyDiff(lotteryCloseTime, now) >= 0
+                        )
+                    ) {
                         lottery.status = false;
                         leftTime = 0;
                     }
+
                     const days = lottery.day;
                     let opened = false;
                     const nowDay = new Date().getDay();
@@ -123,12 +115,15 @@ export class BankingLotteryService {
                         lottery.bankings = consortiumLottery.bankingIds;
                         lottery.prizeLimits = consortiumLottery.prizeLimits;
                         lottery.bettingLimits = consortiumLottery.bettingLimits;
+                        lottery.blockedNumbers = consortiumLottery.blockedNumbers;
                         lottery.leftTime = leftTime;
                         lotteriesDtos.push(lottery);
                     }
                 }
             }
         });
+        lotteriesDtos.sort((a, b) => (a.leftTime > b.leftTime ? 1 : b.leftTime > a.leftTime ? -1 : 0));
+        lotteriesDtos.sort((a, b) => (!a.leftTime ? 1 : !b.leftTime ? -1 : 0));
         return lotteriesDtos;
     }
 }

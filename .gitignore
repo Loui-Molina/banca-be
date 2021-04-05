@@ -36,3 +36,5 @@ lerna-debug.log*
 
 # Other files
 yarn.lock
+.vscode/launch.json
+app.yaml

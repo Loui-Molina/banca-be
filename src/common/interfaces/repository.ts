@@ -1,16 +1,18 @@
 import { User } from '@database/datamodels/schemas/user';
 import { ObjectId } from 'mongoose';
 
-export interface Repository<T, E> {
-    getAll(limit?: number, offset?: number): Promise<Array<T>>;
+export interface Repository<MODEL, DTO> {
+    getAll(limit?: number, offset?: number): Promise<Array<MODEL | DTO>>;
 
-    getFiltered(q: string, value: any): Promise<T[]>;
+    find(q: string, value: any): Promise<MODEL[] | DTO[]>;
 
-    getSingleFiltered(q: string, value: any): Promise<T>;
+    findOne(q: string, value: any): Promise<MODEL | DTO>;
 
-    update(dto: E, loggedUser: User, ...args: any[]): Promise<T>;
+    update(dto: DTO, loggedUser: User, ...args: any[]): Promise<MODEL | DTO>;
 
-    delete(id: ObjectId): Promise<T>;
+    delete(_id: ObjectId): Promise<MODEL | DTO>;
 
-    get(id: ObjectId): Promise<T>;
+    get(_id: ObjectId): Promise<MODEL | DTO>;
+
+    create?(dto: DTO): Promise<MODEL | DTO>;
 }

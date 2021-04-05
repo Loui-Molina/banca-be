@@ -38,3 +38,9 @@ TOKEN_EXPIRES=300s
 
 userDB=mongodb://localhost:27017/users
 bankingDB=mongodb://localhost:27017/banking
+
+
+#User admin
+
+ADMIN_USER=admin
+ADMIN_PASSWORD=[fcB$Se.8d!JNhnf

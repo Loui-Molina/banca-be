@@ -8,10 +8,21 @@ import { JwtStrategy } from '@auth/jwt.strategy';
 import { AuthUserModule } from '@auth.user/auth.user.module';
 import { TokenService } from '@auth/token.service';
 import { RefreshStrategy } from '@auth/refresh.strategy';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
+import { ConstApp } from '@utils/const.app';
+import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
+import { UsersAdminInitializeService } from '@auth/users.admin.initialize.service';
+import { WebUser, WebUserSchema } from '@database/datamodels/schemas/web.user';
+import { AuthPasswordController } from '@auth/auth.password.controller';
+import { AuthPasswordService } from '@auth/auth.password.service';
 
 @Global()
 @Module({
     imports: [
+        MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: WebUser.name, schema: WebUserSchema }], ConstApp.BANKING),
         JwtModule.registerAsync({
             useFactory: async (configService: ConfigService) => {
                 return {
@@ -28,8 +39,15 @@ import { RefreshStrategy } from '@auth/refresh.strategy';
         }),
         AuthUserModule,
     ],
-    providers: [AuthService, JwtStrategy, TokenService, RefreshStrategy],
-    controllers: [AuthController],
+    providers: [
+        AuthService,
+        AuthPasswordService,
+        UsersAdminInitializeService,
+        JwtStrategy,
+        TokenService,
+        RefreshStrategy,
+    ],
+    controllers: [AuthController, AuthPasswordController],
     exports: [
         JwtModule,
         PassportModule.register({

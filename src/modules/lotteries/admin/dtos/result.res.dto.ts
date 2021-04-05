@@ -1,14 +1,15 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { Result } from '@database/datamodels/schemas/result';
+import { IsDate, IsMongoId, IsObject } from 'class-validator';
 import { Draw } from '@database/datamodels/schemas/draw';
+import { ResultDto } from '@results/dtos/result.dto';
 
-export class AdminLotteryResDto extends PartialType(Result) {
-    @ApiProperty() _id: ObjectId;
-    @ApiProperty() date: Date;
-    @ApiProperty() draw?: Draw;
-    @ApiProperty() creationUserId: ObjectId;
-    @ApiProperty() deletionDate?: Date;
-    @ApiProperty() modificationUserId: ObjectId;
-    @ApiProperty() createdAt: Date;
+export class AdminLotteryResDto extends PartialType(ResultDto) {
+    @ApiProperty() @IsMongoId() _id: ObjectId;
+    @ApiProperty() @IsDate() date: Date;
+    @ApiProperty() @IsObject() draw?: Draw;
+    @ApiProperty() @IsMongoId() creationUserId: ObjectId;
+    @ApiProperty() @IsDate() deletionDate?: Date;
+    @ApiProperty() @IsMongoId() modificationUserId: ObjectId;
+    @ApiProperty() @IsDate() createdAt: Date;
 }

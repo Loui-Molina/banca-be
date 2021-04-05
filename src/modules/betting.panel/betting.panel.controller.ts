@@ -5,7 +5,6 @@ import { User } from '@database/datamodels/schemas/user';
 import { ConstApp } from '@utils/const.app';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
-import { Bet } from '@database/datamodels/schemas/bet';
 import { BettingPanelService } from '@betting.panel/betting.panel.service';
 import { BetDto } from '@betting.panel/dtos/bet.dto';
 import { CreateBetDto } from '@betting.panel/dtos/create.bet.dto';
@@ -14,6 +13,7 @@ import { Roles } from '@common/decorators/roles.decorator';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
 import { ClaimBetDto } from '@betting.panel/dtos/claim.bet.dto';
+import { LimitVerifyDto } from '@betting.panel/dtos/limit.verify.dto';
 
 @ApiTags('betting-panel')
 @Controller('betting-panel')
@@ -24,10 +24,10 @@ export class BettingPanelController {
     @Get()
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: Bet,
+        type: BetDto,
     })
-    @Roles(Role.banker)
-    getAll(@AuthUser() loggedUser: User): Promise<Array<Bet>> {
+    @Roles(Role.banker, Role.webuser)
+    getAll(@AuthUser() loggedUser: User): Promise<Array<BetDto>> {
         return this.bettingPanelService.getAll(loggedUser);
     }
 
@@ -61,6 +61,26 @@ export class BettingPanelController {
         return this.bettingPanelService.create(dto, loggedUser);
     }
 
+    @Post('create/webuser')
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_POST_OK,
+        type: BetDto,
+    })
+    @Roles(Role.webuser)
+    createForWebUser(@Body() dto: CreateBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
+        return this.bettingPanelService.createForWebUser(dto, loggedUser);
+    }
+
+    @Post('verify-limit')
+    @ApiCreatedResponse({
+        description: ConstApp.DEFAULT_POST_OK,
+        type: Number,
+    })
+    @Roles(Role.banker, Role.webuser)
+    verifyLimit(@Body() dto: LimitVerifyDto, @AuthUser() loggedUser: User): Promise<number> {
+        return this.bettingPanelService.verifyLimit(dto, loggedUser);
+    }
+
     @Put('cancel')
     @ApiCreatedResponse({
         description: ConstApp.DEFAULT_PUT_OK,
@@ -69,6 +89,16 @@ export class BettingPanelController {
     @Roles(Role.banker)
     cancelBet(@Body() dto: UpdateBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
         return this.bettingPanelService.cancelBet(dto, loggedUser);
+    }
+
+    @Put('search/ticket')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_PUT_OK,
+        type: BetDto,
+    })
+    @Roles(Role.banker)
+    getClaimTicket(@Body() dto: ClaimBetDto, @AuthUser() loggedUser: User): Promise<BetDto> {
+        return this.bettingPanelService.getClaimTicket(dto, loggedUser);
     }
 
     @Put('claim')
@@ -86,8 +116,8 @@ export class BettingPanelController {
         description: ConstApp.DEFAULT_GET_OK,
         type: BetDto,
     })
-    @Roles(Role.banker)
-    async get(@Param('id') id: string): Promise<BetDto> {
-        return await this.bettingPanelService.get(id);
+    @Roles(Role.banker, Role.webuser)
+    async get(@Param('id') id: string, @AuthUser() loggedUser: User): Promise<BetDto> {
+        return await this.bettingPanelService.get(id, loggedUser);
     }
 }

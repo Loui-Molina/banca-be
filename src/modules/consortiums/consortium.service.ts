@@ -9,6 +9,7 @@ import { Role } from '@database/datamodels/enums/role';
 import { CreateConsortiumDto } from '@consortiums/dtos/create.consortium.dto';
 import { UsersService } from '@users/users.service';
 import { Banking } from '@database/datamodels/schemas/banking';
+import { ConstApp } from '@utils/const.app';
 
 @Injectable()
 export class ConsortiumService {
@@ -81,12 +82,14 @@ export class ConsortiumService {
     }
 
     async mapToUser(consortium: Consortium): Promise<ConsortiumDto> {
-        const foundUser = await this.userService.getSingleFiltered('_id', consortium.ownerUserId);
+        const foundUser = await this.userService.findOne('_id', consortium.ownerUserId);
+        if (!foundUser) throw new BadRequestException(ConstApp.USER_NOT_FOUND);
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+        if (!bankings) throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
         return {
             _id: consortium._id,
             name: consortium.name,
-            firstTransactionDate: consortium.firstTransactionDate,
+            startOfOperation: consortium.startOfOperation,
             status: consortium.status,
             createdAt: consortium.createdAt,
             bankings,
