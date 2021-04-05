@@ -56,13 +56,17 @@ export class WebUserLotteryService {
                     }
                 });
                 if (flag) {
-                    const lotteryOpenTime: Date = new Date(lottery.openTime);
-                    const lotteryCloseTime: Date = new Date(lottery.closeTime);
+                    const lotteryOpenTime: Date = new Date(lottery.openTime),
+                        lotteryCloseTime: Date = new Date(lottery.closeTime),
+                        now: Date = new Date();
 
-                    const now = new Date();
-                    now.setFullYear(1970, 0, 1);
-                    let leftTime = (lotteryCloseTime.getTime() - now.getTime()) / 1000;
-                    if (!(lotteryOpenTime <= now && lotteryCloseTime >= now)) {
+                    let leftTime = DateHelper.getHourlyDiff(lotteryCloseTime, now);
+                    if (
+                        !(
+                            DateHelper.getHourlyDiff(now, lotteryOpenTime) >= 0 &&
+                            DateHelper.getHourlyDiff(lotteryCloseTime, now) >= 0
+                        )
+                    ) {
                         lottery.status = false;
                         leftTime = 0;
                     }

@@ -21,6 +21,7 @@ import { WebUser } from '@database/datamodels/schemas/web.user';
 import { TransactionType } from '@database/datamodels/enums/transaction.type';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 import { TransactionObjects } from '@database/datamodels/enums/transaction.objects';
+import { DateHelper } from '@utils/date.helper';
 
 @Injectable()
 export class ResultsService {
@@ -79,11 +80,9 @@ export class ResultsService {
 
         //Checking playTime
         const checkDate: Date = new Date(lottery.playTime);
+        const now: Date = new Date();
 
-        const now = new Date();
-        now.setFullYear(1970, 0, 1);
-
-        if (now < checkDate) {
+        if (DateHelper.getHourlyDiff(now, checkDate) < 0) {
             //You cant add the results if the lottery has not been played yet
             throw new BadRequestException(ConstApp.THE_LOTTERY_HAS_NOT_BEEN_PLAYED_YET);
         }
