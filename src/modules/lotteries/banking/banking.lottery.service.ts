@@ -17,8 +17,7 @@ export class BankingLotteryService {
         @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
-    ) {
-    }
+    ) {}
 
     async getAll(loggedUser: User): Promise<Array<BankingLotteryDto>> {
         const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();

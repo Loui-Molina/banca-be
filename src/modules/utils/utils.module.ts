@@ -5,5 +5,4 @@ import { DateHelper } from '@utils/date.helper';
 @Module({
     providers: [DateHelper],
 })
-export class UtilsModule {
-}
+export class UtilsModule {}
