@@ -75,6 +75,8 @@ export class ResultsService {
         const date = new Date(dto.date);
         const month = `${date.getMonth() + 1}`.padStart(2, '0');
         const day = `${date.getDate()}`.padStart(2, '0');
+        const filterDateA = new Date(`${date.getFullYear()}-${month}-${day}T00:00:00.000Z`);
+        const filterDateB = new Date(`${date.getFullYear()}-${month}-${day}T23:59:59.000Z`);
 
         //Checking playTime
         const checkDate: Date = new Date(lottery.playTime);
@@ -87,6 +89,7 @@ export class ResultsService {
 
         let results = await this.lotteryModel.aggregate([
             { $unwind: '$results' },
+            { $match: { 'results.date': { $gte: filterDateA, $lt: filterDateB } } },
             {
                 $project: {
                     _id: '$results._id',
