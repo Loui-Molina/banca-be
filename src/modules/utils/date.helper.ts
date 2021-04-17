@@ -8,7 +8,7 @@ export class DateHelper {
      * @param date
      */
     static getTime(date: Date): number {
-        date.setSeconds(0, 0);
+        date.setMilliseconds(0);
         const offset = date.getTimezoneOffset() * MINUTE_LENGTH;
         return Math.trunc(date.getTime() / 1000) - offset;
     }
@@ -50,6 +50,14 @@ export class DateHelper {
     getTimeDiff(d1: Date, d2: Date): number {
         /*TODO IMPL*/
         return 0;
+    }
+
+    static isDateToday(d: Date): boolean {
+        return this.getDaysFromDate(this.getTime(new Date())) === this.getDaysFromDate(this.getTime(d));
+    }
+
+    private static getDaysFromDate(epochTimestamp: number): number {
+        return Math.trunc(epochTimestamp / DAY_LENGTH);
     }
 }
 

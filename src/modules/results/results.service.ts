@@ -352,4 +352,8 @@ export class ResultsService {
     async get(id: string): Promise<Result> {
         return await this.resultModel.findById(id).exec();
     }
+
+    private isPlayFromToday(bet: Bet): boolean {
+        return DateHelper.isDateToday(bet.date);
+    }
 }
