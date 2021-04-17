@@ -3,6 +3,7 @@ import { ObjectId } from 'mongoose';
 import { IsEnum, IsMongoId, IsNumber, IsObject, IsString } from 'class-validator';
 import { PlayTypes } from '@database/datamodels/enums/play.types';
 import { PlayNumbersDto } from '@database/dto/play.numbers.dto';
+import {Prop} from "@nestjs/mongoose";
 
 export class PlayDto {
     @ApiProperty({ type: String, enum: PlayTypes }) @IsEnum(PlayTypes) playType?: PlayTypes;
@@ -13,4 +14,6 @@ export class PlayDto {
     @ApiProperty() @IsMongoId() lotteryId?: ObjectId;
     @ApiProperty({ required: false }) @IsMongoId() lotteryIdSuperpale?: ObjectId;
     @ApiProperty() @IsString() lotteryName?: string;
+    @ApiProperty({ required: false, type: Boolean })
+    playWinner?: boolean;
 }

@@ -10,6 +10,7 @@ import { BetStatus } from '@database/datamodels/enums/bet.status';
 export class Bet extends Document implements DataObject {
     @ApiProperty() _id?: ObjectId;
     @ApiProperty({ type: [Play] }) @Prop({ immutable: true, type: [PlaySchema] }) plays: Play[];
+    @Prop({ type: [String] }) lotterysPlayed: string[];
     @ApiProperty({ type: Date }) @Prop({ immutable: true }) date: Date;
     @ApiProperty({ type: String }) @Prop({ required: true, immutable: true }) sn: string;
     @ApiProperty({ type: String, enum: BetStatus }) @Prop({ required: true, type: String }) betStatus?: BetStatus;

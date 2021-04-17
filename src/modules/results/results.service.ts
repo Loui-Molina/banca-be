@@ -75,8 +75,6 @@ export class ResultsService {
         const date = new Date(dto.date);
         const month = `${date.getMonth() + 1}`.padStart(2, '0');
         const day = `${date.getDate()}`.padStart(2, '0');
-        const filterDateA = new Date(`${date.getFullYear()}-${month}-${day}T00:00:00.000Z`);
-        const filterDateB = new Date(`${date.getFullYear()}-${month}-${day}T23:59:59.000Z`);
 
         //Checking playTime
         const checkDate: Date = new Date(lottery.playTime);
@@ -89,7 +87,6 @@ export class ResultsService {
 
         let results = await this.lotteryModel.aggregate([
             { $unwind: '$results' },
-            { $match: { 'results.date': { $gte: filterDateA, $lt: filterDateB } } },
             {
                 $project: {
                     _id: '$results._id',
@@ -117,15 +114,11 @@ export class ResultsService {
             creationUserId: loggedUser.id,
             modificationUserId: loggedUser.id,
         });
-        if (
-            filterDateA.getDate() == now.getDate() &&
-            filterDateA.getMonth() == now.getMonth() &&
-            filterDateA.getFullYear() == now.getFullYear()
-        ) {
-            lottery.lastDraw = draw;
-        }
+        lottery.lastDraw = draw;
+        lottery.lastDraw.creationUserId = loggedUser.id;
         lottery.results.push(result);
         await lottery.save();
+
         // Calculando ganadores
         const bankings = await this.bankingModel.find().exec();
         for (const banking of bankings) {
@@ -138,45 +131,9 @@ export class ResultsService {
                 continue;
             }
             const bets = banking.bets.filter((bet) => {
-                const month = `${bet.date.getMonth() + 1}`.padStart(2, '0');
-                const day = `${bet.date.getDate()}`.padStart(2, '0');
-                const dateParsed = new Date(`${bet.date.getFullYear()}-${month}-${day}T05:00:00.000Z`);
-                if (
-                    filterDateA <= dateParsed &&
-                    filterDateB >= dateParsed &&
-                    ![BetStatus.claimed, BetStatus.cancelled].includes(bet.betStatus)
-                ) {
-                    return true;
-                }
-                return false;
+                return this.isPlayFromToday(bet) && [BetStatus.pending].includes(bet.betStatus);
             });
-            for (const bet of bets) {
-                const amount = await this.calculateWinPlays(bet, draw, lottery, config);
-                if (amount !== null) {
-                    if (!bet.amountWin) {
-                        bet.amountWin = 0;
-                    }
-                    if (amount > 0) {
-                        // No se hace el chekeo de pending pq si gano una vez es ganador
-                        bet.amountWin += amount;
-                        bet.betStatus = BetStatus.winner;
-                    } else {
-                        // Si estaba en winner no se pasa a loser pq quiere decir
-                        // que gano en una loteria anterior
-                        if (bet.betStatus === BetStatus.pending) {
-                            const playsSuperPalePending = bet.plays.filter(
-                                (play) =>
-                                    play.playType === PlayTypes.superPale && [1, 2].includes(play.winSuperPalePending),
-                            ).length;
-                            if (playsSuperPalePending > 0) {
-                                bet.betStatus = BetStatus.pending;
-                            } else {
-                                bet.betStatus = BetStatus.loser;
-                            }
-                        }
-                    }
-                }
-            }
+            this.processBets(bets, draw, lottery, config);
             await banking.save();
         }
 
@@ -193,27 +150,27 @@ export class ResultsService {
                 continue;
             }
             const bets = webuser.bets.filter((bet) => {
-                const month = `${bet.date.getMonth() + 1}`.padStart(2, '0');
-                const day = `${bet.date.getDate()}`.padStart(2, '0');
-                const dateParsed = new Date(`${bet.date.getFullYear()}-${month}-${day}T05:00:00.000Z`);
-                if (
-                    filterDateA <= dateParsed &&
-                    filterDateB >= dateParsed &&
-                    [BetStatus.pending].includes(bet.betStatus)
-                ) {
-                    return true;
-                }
-                return false;
+                return this.isPlayFromToday(bet) && [BetStatus.pending].includes(bet.betStatus);
             });
             for (const bet of bets) {
                 const amount = await this.calculateWinPlays(bet, draw, lottery, config);
-                if (amount !== null) {
-                    if (!bet.amountWin) {
-                        bet.amountWin = 0;
+                if (!bet.amountWin) {
+                    bet.amountWin = 0;
+                }
+                bet.amountWin += amount;
+                const lotterysPlayedTotal: string[] = [];
+                for (const play of bet.plays) {
+                    if (play.lotteryId && !lotterysPlayedTotal.includes(play.lotteryId.toString())) {
+                        lotterysPlayedTotal.push(play.lotteryId.toString());
                     }
-                    bet.amountWin += amount;
-                    if (amount > 0) {
-                        bet.betStatus = BetStatus.claimed;
+                    if (play.lotteryIdSuperpale && !lotterysPlayedTotal.includes(play.lotteryIdSuperpale.toString())) {
+                        lotterysPlayedTotal.push(play.lotteryIdSuperpale.toString());
+                    }
+                }
+                if (lotterysPlayedTotal.length === bet.lotterysPlayed.length) {
+                    //Ya pasaron todas las jugadas
+                    if (bet.amountWin > 0) {
+                        bet.betStatus = BetStatus.winner;
                         const balance = await webuser.calculateBalance();
                         const transactionDestination = new this.transactionModel({
                             type: TransactionType.credit,
@@ -236,8 +193,34 @@ export class ResultsService {
             }
             await webuser.save();
         }
-
         return result;
+    }
+
+    private async processBets(bets: Bet[], draw: Draw, lottery: Lottery, config: ConsortiumLottery) {
+        for (const bet of bets) {
+            const amount = await this.calculateWinPlays(bet, draw, lottery, config);
+            if (!bet.amountWin) {
+                bet.amountWin = 0;
+            }
+            bet.amountWin += amount;
+            const lotterysPlayedTotal: string[] = [];
+            for (const play of bet.plays) {
+                if (play.lotteryId && !lotterysPlayedTotal.includes(play.lotteryId.toString())) {
+                    lotterysPlayedTotal.push(play.lotteryId.toString());
+                }
+                if (play.lotteryIdSuperpale && !lotterysPlayedTotal.includes(play.lotteryIdSuperpale.toString())) {
+                    lotterysPlayedTotal.push(play.lotteryIdSuperpale.toString());
+                }
+            }
+            if (lotterysPlayedTotal.length === bet.lotterysPlayed.length) {
+                //Ya pasaron todas las jugadas
+                if (bet.amountWin > 0) {
+                    bet.betStatus = BetStatus.winner;
+                } else {
+                    bet.betStatus = BetStatus.loser;
+                }
+            }
+        }
     }
 
     private async calculateWinPlays(
@@ -246,14 +229,18 @@ export class ResultsService {
         lottery: Lottery,
         config: ConsortiumLottery,
     ): Promise<number> {
-        let c: number;
+        let c = 0;
+        if (!bet.lotterysPlayed) {
+            bet.lotterysPlayed = [];
+        }
         for (const play of bet.plays) {
             if (
                 (play.lotteryId && play.lotteryId.toString()) === lottery._id.toString() ||
                 (play.lotteryIdSuperpale && play.lotteryIdSuperpale.toString()) === lottery._id.toString()
             ) {
-                if (!c) {
-                    c = 0;
+                // Si no esta lo incluye en el
+                if (!bet.lotterysPlayed.includes(lottery._id.toString())) {
+                    bet.lotterysPlayed.push(lottery._id.toString());
                 }
                 // Directo
                 // Doble (11,22,...), 1ra, 2da, 3ra
@@ -269,12 +256,15 @@ export class ResultsService {
                         switch (play.playNumbers.first) {
                             case draw.first:
                                 c += play.amount * (await this.getPrizeLimit(config, DominicanLotteryPrizes.first));
+                                play.playWinner = true;
                                 break;
                             case draw.second:
                                 c += play.amount * (await this.getPrizeLimit(config, DominicanLotteryPrizes.second));
+                                play.playWinner = true;
                                 break;
                             case draw.third:
                                 c += play.amount * (await this.getPrizeLimit(config, DominicanLotteryPrizes.third));
+                                play.playWinner = true;
                                 break;
                         }
                         break;
@@ -285,9 +275,11 @@ export class ResultsService {
                         ) {
                             // 1ra 2da o 1ra 3ra
                             c += play.amount * (await this.getPrizeLimit(config, DominicanLotteryPrizes.pale));
+                            play.playWinner = true;
                         } else if (play.playNumbers.first === draw.second && play.playNumbers.second === draw.third) {
                             // Pale 2-3
                             c += play.amount * (await this.getPrizeLimit(config, DominicanLotteryPrizes.paleTwoThree));
+                            play.playWinner = true;
                         }
                         break;
                     case PlayTypes.tripleta:
@@ -301,8 +293,10 @@ export class ResultsService {
                         if (matches === 3) {
                             // Tripleta
                             c += play.amount * (await this.getPrizeLimit(config, DominicanLotteryPrizes.triplet));
+                            play.playWinner = true;
                         } else if (matches === 2) {
                             c += play.amount * (await this.getPrizeLimit(config, DominicanLotteryPrizes.twoNumbers));
+                            play.playWinner = true;
                         }
                         break;
                     case PlayTypes.superPale:
@@ -317,14 +311,17 @@ export class ResultsService {
                                         play.amount *
                                         (await this.getPrizeLimit(config, DominicanLotteryPrizes.superPale));
                                     play.winSuperPalePending = 3;
+                                    play.playWinner = true;
                                     // Ganador
                                 }
                             } else {
                                 if (play.playNumbers.first === draw.first) {
                                     play.winSuperPalePending = 1;
+                                    play.playWinner = true;
                                 }
                                 if (play.playNumbers.second === draw.first) {
                                     play.winSuperPalePending = 2;
+                                    play.playWinner = true;
                                 }
                             }
                         }

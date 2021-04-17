@@ -509,6 +509,7 @@ export class BettingPanelService {
                 lotteryId: play.lotteryId,
                 lotteryIdSuperpale: play.lotteryIdSuperpale,
                 playNumbers: play.playNumbers,
+                playWinner: play.playWinner,
                 playType: play.playType,
                 lotteryName,
             });
