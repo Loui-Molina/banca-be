@@ -13,4 +13,5 @@ export class TicketDto {
     @ApiProperty() @IsString() consortiumName: string;
     @ApiProperty({ type: String, enum: BetStatus }) betStatus?: BetStatus;
     @ApiProperty({ type: Date }) date: Date;
+    @Prop({ required: false }) amountWin?: number = 0;
 }

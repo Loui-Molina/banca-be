@@ -53,6 +53,7 @@ export class TicketsWebService {
             plays: playDtos,
             betStatus: bet.betStatus,
             date: bet.date,
+            amountWin: bet.amountWin,
             bankingName: banking.name,
             consortiumName: consortium.name,
         };
@@ -75,6 +76,7 @@ export class TicketsWebService {
             amount: play.amount,
             playNumbers: play.playNumbers,
             lotteryId: play.lotteryId,
+            playWinner: play.playWinner,
             lotteryIdSuperpale: play.lotteryIdSuperpale,
             lotteryName: lotteryName,
         };
