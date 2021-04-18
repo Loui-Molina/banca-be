@@ -126,7 +126,6 @@ export class BettingPanelService {
         const month = `${date.getMonth() + 1}`.padStart(2, '0');
         const day = `${date.getDate()}`.padStart(2, '0');
         const filterDateA = new Date(`${date.getFullYear()}-${month}-${day}T00:00:00.000Z`);
-        const filterDateB = new Date(`${date.getFullYear()}-${month}-${day}T23:59:59.000Z`);
 
         let filter: any[] = [];
         if (req.playType === PlayTypes.direct) {
@@ -182,7 +181,7 @@ export class BettingPanelService {
         }
         let playPools = await this.playPoolModel
             .find()
-            .and([{ playType: req.playType }, { date: { $gte: filterDateA } }, { date: { $lte: filterDateB } }])
+            .and([{ playType: req.playType }, { date: { $gte: filterDateA } }])
             .and(filter)
             .exec();
         playPools = playPools.filter((playPool) => playPool.lotteryId.toString() === req.lotteryId);
