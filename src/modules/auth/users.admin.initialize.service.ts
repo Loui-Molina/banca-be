@@ -15,14 +15,14 @@ export class UsersAdminInitializeService implements OnModuleInit {
     ) {}
     async onModuleInit(): Promise<void> {
         const adminUser = await this.authUserService.getUserByUsernameRole(
-            this.configService.get<string>('ADMIN_USER'),
+            this.configService.get<string>('SYS_ADMIN_USER'),
             Role.sysadmin,
         );
         if (adminUser == null) {
             const signUpCredentialsDto = new SignUpCredentialsDto();
-            signUpCredentialsDto.name = this.configService.get('ADMIN_USER');
-            signUpCredentialsDto.password = this.configService.get('ADMIN_PASSWORD');
-            signUpCredentialsDto.username = this.configService.get('ADMIN_USER');
+            signUpCredentialsDto.name = this.configService.get('SYS_ADMIN_NAME');
+            signUpCredentialsDto.password = this.configService.get('SYS_ADMIN_PASSWORD');
+            signUpCredentialsDto.username = this.configService.get('SYS_ADMIN_USER');
             signUpCredentialsDto.role = Role.sysadmin;
             this.authService.signUp(signUpCredentialsDto, null);
             this.logger.debug('User created admin correctly');
