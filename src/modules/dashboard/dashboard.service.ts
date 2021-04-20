@@ -416,8 +416,8 @@ export class DashboardService {
                 throw new BadRequestException();
             }
             webusers = await this.webUserModel.find({ bankingId: banking._id }).exec();
-        } else if (loggedUser.role === Role.admin) {
-            //If is admin
+        } else if (loggedUser.role === Role.admin || loggedUser.role === Role.sysadmin) {
+            //If is admin or sysadmin
             webusers = await this.webUserModel.find().exec();
         } else {
             throw new BadRequestException();

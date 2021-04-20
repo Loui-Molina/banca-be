@@ -1,4 +1,5 @@
 export enum Role {
+    sysadmin = 'sysadmin',
     admin = 'admin', //WE-US
     banker = 'banker', //The boludo attendant
     supervisor = 'supervisor', //Zone supervisor

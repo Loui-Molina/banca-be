@@ -68,6 +68,7 @@ export class AuthService {
                 }
                 break;
             case Role.admin:
+            case Role.sysadmin:
                 break;
             case Role.webuser:
                 // eslint-disable-next-line no-case-declarations
