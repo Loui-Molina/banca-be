@@ -11,13 +11,16 @@ import { ConsortiumService } from '@consortiums/consortium.service';
 import { Lottery } from '@database/datamodels/schemas/lottery';
 import { Role } from '@database/datamodels/enums/role';
 import { TicketWebDto } from '@src/modules/tickets.web/dtos/ticket.web.dto';
+import { WebUser } from '@database/datamodels/schemas/web.user';
 
 @Injectable()
 export class TicketsWebService {
     constructor(
         private readonly consortiumService: ConsortiumService,
         @InjectModel(Banking.name) private bankingModel: Model<Banking>,
+        @InjectModel(WebUser.name) private webUserModel: Model<WebUser>,
         @InjectModel(Lottery.name) private readonly lotteryModel: Model<Lottery>,
+        @InjectModel(User.name) private readonly userModel: Model<User>,
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<TicketWebDto>> {
@@ -31,18 +34,25 @@ export class TicketsWebService {
             case Role.admin:
                 bankings = await this.bankingModel.find().exec();
                 break;
+            case Role.banker:
+                bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
+                break;
         }
         const tickets = [];
         for await (const banking of bankings) {
-            for await (const bet of banking.bets) {
-                tickets.push(await this.mapTicket(bet, banking));
+            const webusers: WebUser[] = await this.webUserModel.find({ bankingId: banking._id }).exec();
+            for await (const webuser of webusers) {
+                const user: User = await this.userModel.findById(webuser.ownerUserId).exec();
+                for await (const bet of webuser.bets) {
+                    tickets.push(await this.mapTicket(bet, user, webuser, banking));
+                }
             }
         }
         tickets.sort((a, b) => (a.date < b.date ? 1 : b.date < a.date ? -1 : 0));
         return tickets;
     }
 
-    private async mapTicket(bet: Bet, banking: Banking): Promise<TicketWebDto> {
+    private async mapTicket(bet: Bet, user: User, webuser: WebUser, banking: Banking): Promise<TicketWebDto> {
         const consortium = await this.consortiumService.get(banking.consortiumId.toString());
         const playDtos: PlayDto[] = [];
         for await (const play of bet.plays) {
@@ -56,6 +66,8 @@ export class TicketsWebService {
             amountWin: bet.amountWin,
             bankingName: banking.name,
             consortiumName: consortium.name,
+            username: user.username,
+            name: user.name,
         };
     }
 

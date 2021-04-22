@@ -10,6 +10,8 @@ export class TicketWebDto {
     @ApiProperty() @IsMongoId() _id: ObjectId;
     @ApiProperty({ type: [PlayDto] }) @IsObject() plays: PlayDto[];
     @ApiProperty() @IsString() bankingName: string;
+    @ApiProperty() @IsString() username: string;
+    @ApiProperty() @IsString() name: string;
     @ApiProperty() @IsString() consortiumName: string;
     @ApiProperty({ type: String, enum: BetStatus }) betStatus?: BetStatus;
     @ApiProperty({ type: Date }) date: Date;

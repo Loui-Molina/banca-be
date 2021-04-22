@@ -10,35 +10,27 @@ import { ChatModule } from '@chat/chat.module';
 import { SubscriptionsModule } from '@subscriptions/subscriptions.module';
 import { WebUsersModule } from '@web.users/web.users.module';
 import { TicketsModule } from '@src/modules/tickets/tickets.module';
+import { TicketsWebModule } from '@src/modules/tickets.web/tickets.web.module';
+
+const modules = [
+    ResultsModule,
+    TicketsModule,
+    TicketsWebModule,
+    ConsortiumModule,
+    BettingPanelModule,
+    TransactionsModule,
+    DashboardModule,
+    BankingsModule,
+    LotteriesModule,
+    ChatModule,
+    WebUsersModule,
+    SubscriptionsModule,
+];
 
 @Module({
-    imports: [
-        ResultsModule,
-        TicketsModule,
-        ConsortiumModule,
-        BettingPanelModule,
-        TransactionsModule,
-        DashboardModule,
-        BankingsModule,
-        LotteriesModule,
-        ChatModule,
-        WebUsersModule,
-        SubscriptionsModule,
-    ],
+    imports: [...modules],
     controllers: [],
     providers: [],
-    exports: [
-        ResultsModule,
-        TicketsModule,
-        ConsortiumModule,
-        BettingPanelModule,
-        TransactionsModule,
-        DashboardModule,
-        BankingsModule,
-        LotteriesModule,
-        ChatModule,
-        WebUsersModule,
-        SubscriptionsModule,
-    ],
+    exports: [...modules],
 })
 export class CoreModule {}

@@ -21,7 +21,7 @@ export class TicketsWebController {
         description: ConstApp.DEFAULT_GET_OK,
         type: TicketWebDto,
     })
-    @Roles(Role.admin, Role.consortium)
+    @Roles(Role.admin, Role.consortium, Role.banker)
     getAll(@AuthUser() user: User): Promise<Array<TicketWebDto>> {
         return this.ticketsWebService.getAll(user);
     }
