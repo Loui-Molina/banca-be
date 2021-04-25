@@ -7,6 +7,7 @@ import { Transaction, TransactionSchema } from '@database/datamodels/schemas/tra
 import { Bet, BetSchema } from '@database/datamodels/schemas/bet';
 import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { ApiProperty } from '@nestjs/swagger';
+import { BankingAccounting, BankingAccountingSchema } from '@database/datamodels/schemas/bankingAccounting';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true, collection: 'bankings' })
 export class Banking extends Document implements DataObject {
@@ -32,6 +33,8 @@ export class Banking extends Document implements DataObject {
     // Que porcentaje se le paga a la banca por el total de sus ventas
     @Prop({ min: 0, max: 100 }) fallbackPercentage?: number;
     @Prop() showPercentage?: boolean;
+
+    @Prop({ type: [BankingAccountingSchema] }) weeklyAccounting?: BankingAccounting[];
 
     /** Data object members*/
     @Prop({ required: true, immutable: true, type: mongoose.Schema.Types.ObjectId }) creationUserId: ObjectId;
