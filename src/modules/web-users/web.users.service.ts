@@ -12,6 +12,7 @@ import { UpdateWebUserDto } from '@web.users/dto/update.web.user.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { BankingsService } from '@bankings/bankings.service';
 import { Banking } from '@database/datamodels/schemas/banking';
+import {ConstApp} from "@utils/const.app";
 
 @Injectable()
 export class WebUsersService {
@@ -25,34 +26,26 @@ export class WebUsersService {
     ) {}
 
     async findAll(loggedUser: User): Promise<WebUserDto[]> {
-        /*let filter;
+        let bankings: Array<Banking> = [];
+        const webUsersDto: WebUserDto[] = [];
         switch (loggedUser.role) {
-            case Role.admin:
-                filter = {};
-                break;
             case Role.consortium:
                 // eslint-disable-next-line no-case-declarations
                 const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
-                filter = { consortiumId: consortium._id };
+                bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
+                break;
+            case Role.admin:
+                bankings = await this.bankingModel.find().exec();
                 break;
             case Role.banker:
-                // eslint-disable-next-line no-case-declarations
-                const consortium = await this.consortiumService.getConsortiumOfUser(loggedUser);
-                filter = { consortiumId: consortium._id };
+                bankings = await this.bankingModel.find({ ownerUserId: loggedUser._id }).exec();
                 break;
-            default:
-                throw new BadRequestException();
         }
-
-        const bankings: Array<WebUser> = await this.bankingModel.find(filter).exec();
-        const bankingsDto: WebUserDto[] = [];
         for await (const banking of bankings) {
-            bankingsDto.push(await this.mapWebUser(banking));
-        }*/
-        const webUsers: Array<WebUser> = await this.webUserModel.find().exec();
-        const webUsersDto: WebUserDto[] = [];
-        for await (const webUser of webUsers) {
-            webUsersDto.push(await this.mapWebUser(webUser));
+            const webusers: WebUser[] = await this.webUserModel.find({ bankingId: banking._id }).exec();
+            for await (const webUser of webusers) {
+                webUsersDto.push(await this.mapWebUser(webUser));
+            }
         }
         return webUsersDto;
     }
@@ -96,6 +89,9 @@ export class WebUsersService {
             } as WebUser);
             await newObject.save();
         } catch (e) {
+            if (e.message === 'Username already exists') {
+                throw new BadRequestException(ConstApp.USERNAME_EXISTS_ERROR);
+            }
             if (createdUser) {
                 await this.usersService.delete(createdUser._id);
             }

@@ -127,6 +127,9 @@ export class BankingsService {
             await newObject.save();
             await consortium.save();
         } catch (e) {
+            if (e.message === 'Username already exists') {
+                throw new BadRequestException(ConstApp.USERNAME_EXISTS_ERROR);
+            }
             if (createdUser) {
                 await this.usersService.delete(createdUser._id);
             }

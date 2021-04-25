@@ -87,8 +87,8 @@ export class BettingPanelService {
                 [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
                 PosibleSums.amount,
             ),
-            prizes: await this.sumBets(bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
-            pendingPrizes: await this.sumBets(bets, [BetStatus.pending], PosibleSums.amountWin),
+            prizes: await this.sumBets(bets, [BetStatus.claimed], PosibleSums.amountWin),
+            pendingPrizes: await this.sumBets(bets, [BetStatus.winner], PosibleSums.amountWin),
             balance: await banking.calculateBalance(),
         };
     }
