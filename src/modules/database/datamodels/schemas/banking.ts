@@ -12,7 +12,9 @@ import { BankingAccounting, BankingAccountingSchema } from '@database/datamodels
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true, collection: 'bankings' })
 export class Banking extends Document implements DataObject {
     @ApiProperty() _id?: ObjectId;
-    @ApiProperty() @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId }) consortiumId: ObjectId;
+    @ApiProperty()
+    @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId, ref: 'Consortium' })
+    consortiumId: ObjectId;
     @Prop({ type: mongoose.Schema.Types.ObjectId }) ownerUserId: ObjectId;
     @Prop({ type: BankingPreferenceSchema })
     bankingPreferences?: BankingPreference;

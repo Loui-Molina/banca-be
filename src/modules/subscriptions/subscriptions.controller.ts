@@ -6,11 +6,13 @@ import { CreateSubscriptionDto } from '@subscriptions/dto/create-subscription.dt
 import { UpdateSubscriptionDto } from '@subscriptions/dto/update-subscription.dto';
 import { SubscriptionsService } from '@subscriptions/subscriptions.service';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../auth/guards/roles.guard';
+import { RolesGuard } from '@auth/guards/roles.guard';
 import { Roles } from '@src/common/decorators/roles.decorator';
-import { Role } from '../database/datamodels/enums/role';
+import { Role } from '@database/datamodels/enums/role';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('subscriptions')
+@ApiTags('subscriptions')
 @UseGuards(AuthGuard(), RolesGuard)
 @Roles(Role.admin)
 export class SubscriptionsController {
