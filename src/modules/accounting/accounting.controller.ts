@@ -2,7 +2,6 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@auth/guards/roles.guard';
-import { AccountingService } from '@src/modules/accounting/accounting.service';
 import { ConstApp } from '@utils/const.app';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
@@ -11,6 +10,7 @@ import { AccountingDto } from '@src/modules/accounting/dto/accounting.dto';
 import { ObjectId } from 'mongoose';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
+import { AccountingService } from './accounting.service';
 
 @Controller('accounting')
 @ApiTags('accounting')

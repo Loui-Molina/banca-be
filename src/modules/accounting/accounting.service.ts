@@ -5,8 +5,8 @@ import { User } from '@database/datamodels/schemas/user';
 import { InjectModel } from '@nestjs/mongoose';
 import { Banking } from '@database/datamodels/schemas/banking';
 import { BankingAccounting } from '@database/datamodels/schemas/bankingAccounting';
-import { AccountingDto } from '@src/modules/accounting/dto/accounting.dto';
 import { Consortium } from '@database/datamodels/schemas/consortium';
+import { AccountingDto } from './dto/accounting.dto';
 
 @Injectable()
 export class AccountingService implements Repository<any, AccountingDto> {

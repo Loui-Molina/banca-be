@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AccountingController } from '@src/modules/accounting/accounting.controller';
-import { AccountingService } from '@src/modules/accounting/accounting.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { ConstApp } from '@utils/const.app';
 import { BankingAccounting, BankingAccountingSchema } from '@database/datamodels/schemas/bankingAccounting';
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
+import { AccountingController } from './accounting.controller';
+import { AccountingService } from './accounting.service';
 
 @Module({
     imports: [
