@@ -11,6 +11,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConstApp } from '@utils/const.app';
 import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool';
 import { LoggerModule } from '@common/logger/logger.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
     imports: [
@@ -18,6 +20,10 @@ import { LoggerModule } from '@common/logger/logger.module';
             isGlobal: true,
             envFilePath: ['.env'],
         }),
+        ThrottlerModule.forRoot({
+            ttl: 60,
+            limit: 10,
+          }),
         LoggerModule,
         DatabaseModule,
         AuthModule,
@@ -28,7 +34,11 @@ import { LoggerModule } from '@common/logger/logger.module';
         MongooseModule.forFeature([{ name: PlayPool.name, schema: PlayPoolSchema }], ConstApp.BANKING), // FOR tasks service
     ],
     controllers: [],
-    providers: [TasksService],
+    providers: [{
+        provide: APP_GUARD,
+        useClass: ThrottlerGuard
+      }
+      ,TasksService],
     exports: [CoreModule, UtilsModule, AuthModule, DatabaseModule],
 })
 export class AppModule {}
