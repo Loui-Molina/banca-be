@@ -11,7 +11,7 @@ import { SubscriptionsModule } from '@subscriptions/subscriptions.module';
 import { WebUsersModule } from '@web.users/web.users.module';
 import { TicketsModule } from '@src/modules/tickets/tickets.module';
 import { TicketsWebModule } from '@src/modules/tickets.web/tickets.web.module';
-import { AccountingModule } from '@src/modules/Accounting/accounting.module';
+import { AccountingModule } from '@src/modules/accounting/accounting.module';
 
 const modules = [
     AccountingModule,

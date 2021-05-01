@@ -28,8 +28,8 @@ export class AuthPasswordService {
         userLogged: User,
     ): Promise<ResponseDto> {
         const { _id, oldPassword, newPassword, verifyPassword } = changeOldPasswordDto;
-        let responseDto: ResponseDto = new ResponseDto();
-        let signInCredentialsDto: SignInCredentialsDto = new SignInCredentialsDto();
+        const responseDto: ResponseDto = new ResponseDto();
+        const signInCredentialsDto: SignInCredentialsDto = new SignInCredentialsDto();
         let changed: boolean;
         if (newPassword !== verifyPassword) {
             throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);
@@ -94,7 +94,7 @@ export class AuthPasswordService {
 
     async changePassword(userIp: string, changePasswordDto: ChangePasswordDto, userLogged: User): Promise<ResponseDto> {
         const { _id, newPassword, verifyPassword } = changePasswordDto;
-        let responseDto: ResponseDto = new ResponseDto();
+        const responseDto: ResponseDto = new ResponseDto();
         let changed: boolean;
         if (newPassword !== verifyPassword) {
             throw new BadRequestException(ConstApp.PASSWORD_NOT_MATCH);

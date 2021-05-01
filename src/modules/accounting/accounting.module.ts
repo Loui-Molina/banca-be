@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AccountingController } from '@src/modules/Accounting/accounting.controller';
-import { AccountingService } from '@src/modules/Accounting/accounting.service';
+import { AccountingController } from '@src/modules/accounting/accounting.controller';
+import { AccountingService } from '@src/modules/accounting/accounting.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Banking, BankingSchema } from '@database/datamodels/schemas/banking';
 import { ConstApp } from '@utils/const.app';
 import { BankingAccounting, BankingAccountingSchema } from '@database/datamodels/schemas/bankingAccounting';
+import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: Banking.name, schema: BankingSchema }], ConstApp.BANKING),
+        MongooseModule.forFeature([{ name: Consortium.name, schema: ConsortiumSchema }], ConstApp.BANKING),
         MongooseModule.forFeature(
             [{ name: BankingAccounting.name, schema: BankingAccountingSchema }],
             ConstApp.BANKING,
