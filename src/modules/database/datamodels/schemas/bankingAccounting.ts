@@ -5,7 +5,7 @@ import { Document, ObjectId } from 'mongoose';
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true })
 export class BankingAccounting extends Document implements DataObject {
-    @Prop({ type: mongoose.Schema.Types.Mixed }) week: any;
+    @Prop() week: Date;
     @Prop() dueBalance: number;
     @Prop() earningPercentage: number;
     @Prop() isPayed: boolean;
