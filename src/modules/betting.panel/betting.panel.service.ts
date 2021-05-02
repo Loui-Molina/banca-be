@@ -312,7 +312,7 @@ export class BettingPanelService {
                 sn: await this.createSN(),
                 betStatus: BetStatus.pending,
             });
-            await webuser.bets.push(newObject);
+            webuser.bets.push(newObject);
 
             const transaction = new this.transactionModel({
                 type: TransactionType.debit,

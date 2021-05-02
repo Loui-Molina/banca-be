@@ -64,8 +64,9 @@ export class UsersController {
         description: ConstApp.DEFAULT_DELETE_OK,
         type: User,
     })
-    delete(@Param('id') id: string): Promise<User> {
-        return this.userService.delete(new mongoose.Schema.Types.ObjectId(id));
+    delete(@Param('id') id: mongoose.ObjectId): Promise<User> {
+        console.log(id);
+        return this.userService.delete(id);
     }
 
     @Get(':id')
@@ -74,7 +75,7 @@ export class UsersController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    async get(@Param('id') id: string): Promise<User> {
-        return await this.userService.get(new mongoose.Schema.Types.ObjectId(id));
+    async get(@Param('id') id: mongoose.ObjectId): Promise<User> {
+        return await this.userService.get(id);
     }
 }
