@@ -65,7 +65,6 @@ export class UsersController {
         type: User,
     })
     delete(@Param('id') id: mongoose.ObjectId): Promise<User> {
-        console.log(id);
         return this.userService.delete(id);
     }
 
