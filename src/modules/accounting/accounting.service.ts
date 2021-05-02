@@ -72,6 +72,7 @@ export class AccountingService implements Repository<any, AccountingDto> {
                 consortium: { $arrayElemAt: ['$consortiums.name', 0] },
                 dueBalance: '$weeklyAccounting.dueBalance',
                 percentage: '$weeklyAccounting.earningPercentage',
+                _id: 0,
             })
             .exec();
     }

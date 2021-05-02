@@ -7,6 +7,8 @@ import { Banking } from '@database/datamodels/schemas/banking';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { Message } from '@database/datamodels/schemas/message';
 import { PlayPool } from '@database/datamodels/schemas/playPool';
+import { DateHelper, WEEK_LENGHT } from '@utils/date.helper';
+import { BankingAccounting } from '@database/datamodels/schemas/bankingAccounting';
 
 @Injectable()
 export class TasksService {
@@ -24,6 +26,16 @@ export class TasksService {
         this.expireBets();
         this.deleteOldMessages();
         this.deleteOldPlayPools();
+    }
+
+    @Cron('* * 18 * * *')
+    bankingBalance(): void {
+        const sunday = new Date().setHours(23, 59, 59, 0);
+        const monday = new Date(DateHelper.getWeekBefore(sunday) + 1000).getTime();
+
+        // TODO finish
+
+        let accounting: BankingAccounting;
     }
 
     async expireBets(): Promise<void> {

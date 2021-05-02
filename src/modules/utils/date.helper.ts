@@ -59,11 +59,16 @@ export class DateHelper {
     private static getDaysFromDate(epochTimestamp: number): number {
         return Math.trunc(epochTimestamp / DAY_LENGTH);
     }
+
+    static getWeekBefore(epochTimestamp: number): number {
+        return epochTimestamp - WEEK_LENGHT * 1000;
+    }
 }
 
 /***
  * Time measurements in seconds
  * */
 export const MINUTE_LENGTH = 60;
-export const HOUR_LENGTH = 3600;
-export const DAY_LENGTH = 86400;
+export const HOUR_LENGTH = MINUTE_LENGTH * 60;
+export const DAY_LENGTH = HOUR_LENGTH * 24;
+export const WEEK_LENGHT = DAY_LENGTH * 7;
