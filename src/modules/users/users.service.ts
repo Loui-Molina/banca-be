@@ -19,7 +19,13 @@ export class UsersService implements Repository<User, UserDto> {
     ) {}
 
     async getAll(limit: number, offset: number): Promise<Array<User>> {
-        return this.userModel.find().skip(offset).limit(limit).exec();
+        return this.userModel
+            .find({
+                role: { $ne: Role.sysadmin },
+            })
+            .skip(offset)
+            .limit(limit)
+            .exec();
     }
 
     async find(q: string, value: any): Promise<User[]> {
