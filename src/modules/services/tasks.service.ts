@@ -7,8 +7,9 @@ import { Banking } from '@database/datamodels/schemas/banking';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { Message } from '@database/datamodels/schemas/message';
 import { PlayPool } from '@database/datamodels/schemas/playPool';
-import { DateHelper, WEEK_LENGHT } from '@utils/date.helper';
+import { DateHelper } from '@utils/date.helper';
 import { BankingAccounting } from '@database/datamodels/schemas/bankingAccounting';
+import { Transaction } from '@database/datamodels/schemas/transaction';
 
 @Injectable()
 export class TasksService {
@@ -28,13 +29,27 @@ export class TasksService {
         this.deleteOldPlayPools();
     }
 
-    @Cron('* * 18 * * *')
-    bankingBalance(): void {
+    @Cron('59 23 * * 0')
+    async bankingBalance(): Promise<void> {
+        //Day variables
         const sunday = new Date().setHours(23, 59, 59, 0);
         const monday = new Date(DateHelper.getWeekBefore(sunday) + 1000).getTime();
 
-        // TODO finish
+        //bankings list
+        const bankings: Array<Banking> = await this.bankingModel.find().exec();
 
+        // weekly earnings total amount
+        let weeklyTotal: number;
+
+        bankings.forEach((banking: Banking) => {
+            const inRangeTransactions: Transaction[] = banking.transactions.filter((transaction: Transaction) =>
+                DateHelper.isInRange({ initialDate: monday, finalDate: sunday }, transaction.createdAt),
+            );
+            inRangeTransactions.forEach((transaction: Transaction) => {
+                //TODO CHECK HOW TO REALLY CALCULATE
+                // weeklyTotal = (transaction.type === TransactionType.debit) ? weeklyTotal - transaction.amount : weeklyTotal + amount;
+            });
+        });
         let accounting: BankingAccounting;
     }
 

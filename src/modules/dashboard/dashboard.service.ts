@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DashboardDiagramDto } from '@dashboard/dtos/dashboard.dto';
@@ -27,6 +27,8 @@ import { DashboardWebuserDto } from '@dashboard/dtos/dashboard.webuser.dto';
 
 @Injectable()
 export class DashboardService {
+    private readonly logger = new Logger(DashboardService.name);
+
     constructor(
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
@@ -424,27 +426,31 @@ export class DashboardService {
         }
         const webuserDtos: DashboardWebuserDto[] = [];
         for await (const webuser of webusers) {
-            const user = await this.userModel.findById(webuser.ownerUserId).exec();
-            const banking = await this.bankingModel.findById(webuser.bankingId).exec();
-            const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
-            webuserDtos.push({
-                _id: webuser._id,
-                name: user.name,
-                bankingName: banking.name,
-                consortiumName: consortium.name,
-                claimed: await this.sumBets(webuser.bets, [BetStatus.claimed], PosibleSums.count),
-                pending: await this.sumBets(webuser.bets, [BetStatus.pending], PosibleSums.count),
-                loser: await this.sumBets(webuser.bets, [BetStatus.loser], PosibleSums.count),
-                total: webuser.bets.length,
-                profits: await this.sumBets(
-                    webuser.bets,
-                    [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
-                    PosibleSums.amount,
-                ),
-                prizes: await this.sumBets(webuser.bets, [BetStatus.claimed], PosibleSums.amountWin),
-                pendingPrizes: await this.sumBets(webuser.bets, [BetStatus.winner], PosibleSums.amountWin),
-                balance: await webuser.calculateBalance(),
-            });
+            const user = await this.userModel.findById(webuser?.ownerUserId).exec();
+            const banking = await this.bankingModel.findById(webuser?.bankingId).exec();
+            const consortium = await this.consortiumModel.findById(banking?.consortiumId).exec();
+            try {
+                webuserDtos.push({
+                    _id: webuser._id,
+                    name: user.name,
+                    bankingName: banking.name,
+                    consortiumName: consortium.name,
+                    claimed: await this.sumBets(webuser.bets, [BetStatus.claimed], PosibleSums.count),
+                    pending: await this.sumBets(webuser.bets, [BetStatus.pending], PosibleSums.count),
+                    loser: await this.sumBets(webuser.bets, [BetStatus.loser], PosibleSums.count),
+                    total: webuser.bets.length,
+                    profits: await this.sumBets(
+                        webuser.bets,
+                        [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
+                        PosibleSums.amount,
+                    ),
+                    prizes: await this.sumBets(webuser.bets, [BetStatus.claimed], PosibleSums.amountWin),
+                    pendingPrizes: await this.sumBets(webuser.bets, [BetStatus.winner], PosibleSums.amountWin),
+                    balance: await webuser.calculateBalance(),
+                });
+            } catch (e) {
+                this.logger.error('missing esential data on getWebUsersStatistics', 'dashboard.services');
+            }
         }
         return webuserDtos;
     }
