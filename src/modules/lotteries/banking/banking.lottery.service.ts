@@ -20,7 +20,7 @@ export class BankingLotteryService {
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<BankingLotteryDto>> {
-        const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).pop();
+        const banking = (await this.bankingModel.find({ ownerUserId: loggedUser._id })).last();
         const consortium = await this.consortiumModel.findById(banking.consortiumId);
         const lotteries = await this.lotteryModel.aggregate([
             { $match: {} },
@@ -47,7 +47,7 @@ export class BankingLotteryService {
                 (item) => item.lotteryId.toString() === lottery._id.toString(),
             );
             if (consortiumLotterys.length > 0) {
-                const consortiumLottery: ConsortiumLottery = consortiumLotterys.pop();
+                const consortiumLottery: ConsortiumLottery = consortiumLotterys.last();
                 let flag = false;
                 consortiumLottery.bankingIds.map((bankingId) => {
                     if (bankingId.toString() === banking._id.toString()) {

@@ -18,6 +18,7 @@ export class TasksService {
     constructor(
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        @InjectModel(BankingAccounting.name) private readonly bankingAccountingModel: Model<BankingAccounting>,
         @InjectModel(Message.name) private readonly messageModel: Model<Message>,
         @InjectModel(PlayPool.name) private readonly playPoolModel: Model<PlayPool>,
     ) {}
@@ -45,10 +46,24 @@ export class TasksService {
             const inRangeTransactions: Transaction[] = banking.transactions.filter((transaction: Transaction) =>
                 DateHelper.isInRange({ initialDate: monday, finalDate: sunday }, transaction.createdAt),
             );
-            inRangeTransactions.forEach((transaction: Transaction) => {
-                //TODO CHECK HOW TO REALLY CALCULATE
-                // weeklyTotal = (transaction.type === TransactionType.debit) ? weeklyTotal - transaction.amount : weeklyTotal + amount;
-            });
+            const lastTransaction = inRangeTransactions.last();
+            const actualBalance = lastTransaction.actualBalance;
+            const accounting: BankingAccounting = new this.bankingAccountingModel({
+                /* TODO */
+                dueBalance: (actualBalance / 100) * banking.earningPercentage,
+                earningPercentage: banking.earningPercentage,
+            } as BankingAccounting);
+            if (
+                DateHelper.isInRange(
+                    {
+                        initialDate: monday,
+                        finalDate: sunday,
+                    },
+                    banking?.weeklyAccounting?.last()?.week,
+                )
+            ) {
+                banking.weeklyAccounting.push(accounting);
+            }
         });
         let accounting: BankingAccounting;
     }

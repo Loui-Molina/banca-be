@@ -43,11 +43,11 @@ export class UsersService implements Repository<User, UserDto> {
                 .select('+password')
                 .select('+salt')
                 .exec()
-        ).pop();
+        ).last();
     }
 
     async getSingleFiltered(q: string, value: any): Promise<User> {
-        return (await this.userModel.find({ [q]: value }).exec()).pop();
+        return (await this.userModel.find({ [q]: value }).exec()).last();
     }
 
     async update(userDto: UserDto, loggedUser: User, userIp: string): Promise<User> {

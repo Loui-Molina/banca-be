@@ -255,7 +255,7 @@ export class BankingsService {
             default:
                 throw new BadRequestException(ConstApp.UNAUTHORIZED);
         }
-        return (await this.bankingModel.find(filter).exec()).pop();
+        return (await this.bankingModel.find(filter).exec()).last();
     }
 
     async getUserBanking(loggedUser: User): Promise<Banking> {

@@ -48,7 +48,7 @@ export class WebUserLotteryService {
                 (item) => item.lotteryId.toString() === lottery._id.toString(),
             );
             if (consortiumLotterys.length > 0) {
-                const consortiumLottery: ConsortiumLottery = consortiumLotterys.pop();
+                const consortiumLottery: ConsortiumLottery = consortiumLotterys.last();
                 let flag = false;
                 consortiumLottery.bankingIds.map((bankingId) => {
                     if (bankingId.toString() === banking._id.toString()) {
@@ -151,7 +151,7 @@ export class WebUserLotteryService {
                 (item) => item.lotteryId.toString() === lottery._id.toString(),
             );
             if (consortiumLotterys.length > 0) {
-                const consortiumLottery: ConsortiumLottery = consortiumLotterys.pop();
+                const consortiumLottery: ConsortiumLottery = consortiumLotterys.last();
                 let flag = false;
                 consortiumLottery.bankingIds.map((bankingId) => {
                     if (bankingId.toString() === banking._id.toString()) {
@@ -224,7 +224,7 @@ export class WebUserLotteryService {
             }
         });
         if (lotteriesDtos.length > 0) {
-            return lotteriesDtos.pop();
+            return lotteriesDtos.last();
         }
         throw new BadRequestException(ConstApp.UNAUTHORIZED);
     }

@@ -174,7 +174,7 @@ export class ChatService {
                 if (consortiums.length === 0) {
                     throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
                 }
-                id = consortiums.pop()._id;
+                id = consortiums.last()._id;
                 break;
             case Role.banker:
                 // eslint-disable-next-line no-case-declarations
@@ -182,7 +182,7 @@ export class ChatService {
                 if (bankings.length === 0) {
                     throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
                 }
-                id = bankings.pop()._id;
+                id = bankings.last()._id;
                 break;
         }
         return id;
