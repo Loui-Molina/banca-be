@@ -323,7 +323,7 @@ export class TransactionService {
         if (consortiums.length === 0) {
             throw new BadRequestException();
         }
-        const consortium = consortiums.last();
+        const consortium = consortiums.pop();
         const bankings: Banking[] = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         let results: TransactionDto[] = await Promise.all(
             consortium.transactions.map((transaction) => this.mapToDto(transaction)),

@@ -17,7 +17,7 @@ export class ConsortiumLotteryService {
     ) {}
 
     async getAll(loggedUser: User): Promise<Array<ConsortiumLotteryDto>> {
-        const consortium = (await this.consortiumModel.find({ ownerUserId: loggedUser._id })).last();
+        const consortium = (await this.consortiumModel.find({ ownerUserId: loggedUser._id })).pop();
         const lotteries = await this.lotteryModel.aggregate([
             { $match: {} },
             {
@@ -43,7 +43,7 @@ export class ConsortiumLotteryService {
                 (item) => item.lotteryId.toString() === lottery._id.toString(),
             );
             if (consortiumLotterys.length > 0) {
-                const consortiumLottery: ConsortiumLottery = consortiumLotterys.last();
+                const consortiumLottery: ConsortiumLottery = consortiumLotterys.pop();
                 lottery.bankings = consortiumLottery.bankingIds;
                 lottery.prizeLimits = consortiumLottery.prizeLimits;
                 lottery.bettingLimits = consortiumLottery.bettingLimits;
@@ -55,7 +55,7 @@ export class ConsortiumLotteryService {
 
     async update(dto: ConsortiumUpdateLotteryDto, loggedUser: User): Promise<Lottery> {
         const lottery: Lottery = await this.get(dto._id);
-        const consortium = (await this.consortiumModel.find({ ownerUserId: loggedUser._id })).last();
+        const consortium = (await this.consortiumModel.find({ ownerUserId: loggedUser._id })).pop();
         if (!consortium) {
             throw new BadRequestException();
         }

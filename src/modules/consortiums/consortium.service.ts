@@ -32,7 +32,7 @@ export class ConsortiumService {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
     async getSingleFiltered(q: string, value: any): Promise<Consortium> {
-        return (await this.consortiumModel.find({ [q]: value }).exec()).last();
+        return (await this.consortiumModel.find({ [q]: value }).exec()).pop();
     }
 
     async create(dto: CreateConsortiumDto, loggedUser: User): Promise<Consortium> {
@@ -124,7 +124,7 @@ export class ConsortiumService {
         if (consortiums.length === 0) {
             throw new BadRequestException();
         }
-        return consortiums.last();
+        return consortiums.pop();
     }
 
     async getConsortiumName(loggedUser: User) {

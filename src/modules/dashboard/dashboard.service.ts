@@ -196,7 +196,7 @@ export class DashboardService {
         if (consortiums.length === 0) {
             throw new BadRequestException();
         }
-        const consortium = consortiums.last();
+        const consortium = consortiums.pop();
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         const balance = await consortium.calculateBalance();
         let prizes = 0;
@@ -228,7 +228,7 @@ export class DashboardService {
         if (bankings.length === 0) {
             throw new BadRequestException();
         }
-        const banking = bankings.last();
+        const banking = bankings.pop();
         return {
             balance: await banking.calculateBalance(),
             prizes: await this.sumBets(banking.bets, [BetStatus.claimed, BetStatus.winner], PosibleSums.amountWin),
@@ -263,7 +263,7 @@ export class DashboardService {
         if (bankings.length === 0) {
             throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
         }
-        const banking = bankings.last();
+        const banking = bankings.pop();
         let numbers: PlayedNumbersDto[] = [];
         const now = new Date();
         const aux: any = {};
@@ -307,7 +307,7 @@ export class DashboardService {
         if (consortiums.length === 0) {
             throw new BadRequestException();
         }
-        const consortium = consortiums.last();
+        const consortium = consortiums.pop();
         const bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
 
         let numbers: PlayedNumbersDto[] = [];
@@ -364,7 +364,7 @@ export class DashboardService {
             if (consortiums.length === 0) {
                 throw new BadRequestException();
             }
-            const consortium = consortiums.last();
+            const consortium = consortiums.pop();
             bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         } else {
             //If is admin
@@ -478,7 +478,7 @@ export class DashboardService {
             if (consortiums.length === 0) {
                 throw new BadRequestException();
             }
-            const consortium = consortiums.last();
+            const consortium = consortiums.pop();
             bankings = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         } else {
             //If is admin
@@ -501,7 +501,7 @@ export class DashboardService {
             throw new BadRequestException();
         }
         const data: DashboardGraphBalanceBankingDto[] = [];
-        const banking = bankings.last();
+        const banking = bankings.pop();
         const dates: Date[] = [];
         for (let i = 0; i < 30; i++) {
             dates.unshift(await this.sumDate(-i));

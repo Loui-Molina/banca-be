@@ -354,7 +354,7 @@ export class BettingPanelService {
         let betFounded: Bet = null;
         try {
             const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
-            const bet = banking.bets.filter((bet) => bet._id.toString() === dto._id.toString()).last();
+            const bet = banking.bets.filter((bet) => bet._id.toString() === dto._id.toString()).pop();
             if (bet.betStatus !== BetStatus.pending || !(await this.canCancelTicket(bet))) {
                 throw new UnauthorizedException(ConstApp.CANNOT_CANCEL_TICKET);
             }
@@ -402,7 +402,7 @@ export class BettingPanelService {
 
     async getClaimTicket(dto: ClaimBetDto, loggedUser: User): Promise<BetDto> {
         const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
-        const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).last();
+        const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
         if (!bet) {
             throw new UnauthorizedException(ConstApp.CANNOT_FIND_TICKET);
         }
@@ -418,7 +418,7 @@ export class BettingPanelService {
         let betFounded: Bet = null;
         try {
             const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
-            const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).last();
+            const bet = banking.bets.filter((bet) => bet.sn.toString() === dto.sn.toString()).pop();
             if (!bet) {
                 throw new UnauthorizedException(ConstApp.CANNOT_FIND_TICKET);
             }
