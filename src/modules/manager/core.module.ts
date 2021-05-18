@@ -13,7 +13,6 @@ import { TicketsModule } from '@src/modules/tickets/tickets.module';
 import { TicketsWebModule } from '@src/modules/tickets.web/tickets.web.module';
 import { AccountingModule } from '../accounting/accounting.module';
 
-
 const modules = [
     AccountingModule,
     ResultsModule,

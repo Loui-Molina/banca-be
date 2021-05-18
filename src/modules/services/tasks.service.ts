@@ -7,7 +7,7 @@ import { Banking } from '@database/datamodels/schemas/banking';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { Message } from '@database/datamodels/schemas/message';
 import { PlayPool } from '@database/datamodels/schemas/playPool';
-import { DateHelper } from '@utils/date.helper';
+import { DateHelper, MINUTE_LENGTH, SECOND_LENGTH } from '@utils/date.helper';
 import { BankingAccounting } from '@database/datamodels/schemas/bankingAccounting';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 
@@ -18,7 +18,7 @@ export class TasksService {
     constructor(
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
-        // @InjectModel(BankingAccounting.name) private readonly bankingAccountingModel: Model<BankingAccounting>,
+        @InjectModel(BankingAccounting.name) private readonly bankingAccountingModel: Model<BankingAccounting>,
         @InjectModel(Message.name) private readonly messageModel: Model<Message>,
         @InjectModel(PlayPool.name) private readonly playPoolModel: Model<PlayPool>,
     ) {}
@@ -30,11 +30,11 @@ export class TasksService {
         this.deleteOldPlayPools();
     }
 
-    @Cron('59 23 * * 0')
+    @Cron(CronExpression.EVERY_MINUTE /*'59 23 * * 0'*/)
     async bankingBalance(): Promise<void> {
         //Day variables
-        const sunday = new Date().setHours(23, 59, 59, 0);
-        const monday = new Date(DateHelper.getWeekBefore(sunday) + 1000).getTime();
+        const sunday: number = new Date().setHours(23, 59, 59, 0);
+        const monday: number = new Date(DateHelper.getWeekBefore(sunday) + SECOND_LENGTH).getTime();
 
         //bankings list
         const bankings: Array<Banking> = await this.bankingModel.find().exec();
@@ -44,27 +44,35 @@ export class TasksService {
 
         bankings.forEach((banking: Banking) => {
             const inRangeTransactions: Transaction[] = banking.transactions.filter((transaction: Transaction) =>
-                DateHelper.isInRange({ initialDate: monday, finalDate: sunday }, transaction.createdAt),
-            );
-            const lastTransaction = inRangeTransactions.last();
-            const actualBalance = lastTransaction.actualBalance;
-            /*
-                        const accounting: BankingAccounting = new this.bankingAccountingModel({
-                            /!* TODO *!/
-                            dueBalance: (actualBalance / 100) * banking.earningPercentage,
-                            earningPercentage: banking.earningPercentage,
-                        } as BankingAccounting);
-            */
-            if (
                 DateHelper.isInRange(
                     {
                         initialDate: monday,
                         finalDate: sunday,
                     },
-                    banking?.weeklyAccounting?.last()?.week,
+                    new Date(transaction.createdAt).getTime(),
+                ),
+            );
+            const lastTransaction = inRangeTransactions.last();
+            const actualBalance = lastTransaction?.actualBalance;
+            const accounting: BankingAccounting = new this.bankingAccountingModel({
+                isPayed: false,
+                modificationUserId: banking.ownerUserId,
+                creationUserId: banking.ownerUserId,
+                week: new Date(sunday),
+                dueBalance: actualBalance * (banking.earningPercentage / 100),
+                earningPercentage: banking.earningPercentage,
+            } as BankingAccounting);
+            if (
+                !DateHelper.isInRange(
+                    {
+                        initialDate: monday,
+                        finalDate: sunday,
+                    },
+                    banking?.weeklyAccounting?.last()?.week.getTime(),
                 )
             ) {
                 banking.weeklyAccounting.push(accounting);
+                banking.save();
             }
         });
         let accounting: BankingAccounting;

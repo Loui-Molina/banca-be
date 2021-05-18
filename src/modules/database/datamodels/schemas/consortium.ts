@@ -38,6 +38,7 @@ export class Consortium extends Document {
     @ApiProperty() @Prop() deletionDate?: Date;
 
     // CUSTOM FUNCTIONS
+    // eslint-disable-next-line @typescript-eslint/ban-types
     calculateBalance?: Function;
 }
 

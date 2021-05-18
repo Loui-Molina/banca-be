@@ -35,3 +35,16 @@ async function bootstrap() {
 
 // noinspection JSIgnoredPromiseFromCall
 bootstrap();
+
+interface Array<T> {
+    last(): T | undefined;
+}
+
+if (!Array.prototype.last) {
+    Array.prototype.last = function () {
+        if (!this.length) {
+            return undefined;
+        }
+        return this[this.length - 1];
+    };
+}

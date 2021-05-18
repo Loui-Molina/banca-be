@@ -69,13 +69,15 @@ export class DateHelper {
         const finalDateTime = range.finalDate instanceof Date ? this.getTime(range.finalDate) : range.finalDate;
         const dateTime = date instanceof Date ? this.getTime(date) : date;
 
-        return initialDateTime < dateTime && dateTime < finalDateTime;
+        return initialDateTime <= dateTime && dateTime <= finalDateTime;
     }
 }
 
 /***
  * Time measurements in seconds
  * */
+
+export const SECOND_LENGTH = 1000;
 export const MINUTE_LENGTH = 60;
 export const HOUR_LENGTH = MINUTE_LENGTH * 60;
 export const DAY_LENGTH = HOUR_LENGTH * 24;

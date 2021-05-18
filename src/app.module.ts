@@ -11,7 +11,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConstApp } from '@utils/const.app';
 import { PlayPool, PlayPoolSchema } from '@database/datamodels/schemas/playPool';
 import { LoggerModule } from '@common/logger/logger.module';
-import { APP_GUARD } from '@nestjs/core';
+import { BankingAccounting, BankingAccountingSchema } from '@database/datamodels/schemas/bankingAccounting';
 
 @Module({
     imports: [
@@ -26,7 +26,13 @@ import { APP_GUARD } from '@nestjs/core';
         ScheduleModule.forRoot(),
         UtilsModule,
         CommonModule, // TODO CHECK IF NEEDED TO MOVE TO MANAGER MODULE
-        MongooseModule.forFeature([{ name: PlayPool.name, schema: PlayPoolSchema }], ConstApp.BANKING), // FOR tasks service
+        MongooseModule.forFeature(
+            [
+                { name: PlayPool.name, schema: PlayPoolSchema },
+                { name: BankingAccounting.name, schema: BankingAccountingSchema },
+            ],
+            ConstApp.BANKING,
+        ), // FOR tasks service
     ],
     controllers: [],
     providers: [TasksService],
