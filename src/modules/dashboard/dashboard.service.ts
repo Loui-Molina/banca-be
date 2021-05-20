@@ -426,9 +426,9 @@ export class DashboardService {
         }
         const webuserDtos: DashboardWebuserDto[] = [];
         for await (const webuser of webusers) {
-            const user = await this.userModel.findById(webuser?.ownerUserId).exec();
-            const banking = await this.bankingModel.findById(webuser?.bankingId).exec();
-            const consortium = await this.consortiumModel.findById(banking?.consortiumId).exec();
+            const user = await this.userModel.findById(webuser.ownerUserId).exec();
+            const banking = await this.bankingModel.findById(webuser.bankingId).exec();
+            const consortium = await this.consortiumModel.findById(banking.consortiumId).exec();
             try {
                 webuserDtos.push({
                     _id: webuser._id,

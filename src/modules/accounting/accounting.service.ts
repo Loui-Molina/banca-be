@@ -82,7 +82,7 @@ export class AccountingService implements Repository<any, AccountingDto> {
         console.log({ weekId, bankingId, dto });
         const banking: Banking | null = await this.bankingModel.findById(bankingId).exec();
         banking.weeklyAccounting.find((accounting: BankingAccounting) => {
-            if (accounting?._id?.equals(weekId)) {
+            if (accounting._id.equals(weekId)) {
                 Object.keys(dto).forEach((field: string) => {
                     if (dto[field as keyof AccountingDto]) {
                         (accounting as any)[field] = dto[field as keyof AccountingDto];

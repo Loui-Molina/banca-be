@@ -12,7 +12,7 @@ import { UpdateWebUserDto } from '@web.users/dto/update.web.user.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { BankingsService } from '@bankings/bankings.service';
 import { Banking } from '@database/datamodels/schemas/banking';
-import {ConstApp} from "@utils/const.app";
+import { ConstApp } from '@utils/const.app';
 
 @Injectable()
 export class WebUsersService {
