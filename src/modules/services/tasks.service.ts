@@ -53,7 +53,10 @@ export class TasksService {
                 ),
             );
             const lastTransaction = inRangeTransactions.last();
-            const actualBalance = lastTransaction?.actualBalance;
+            let actualBalance = 0;
+            if (lastTransaction) {
+                actualBalance = lastTransaction.actualBalance;
+            }
             const accounting: BankingAccounting = new this.bankingAccountingModel({
                 isPayed: false,
                 modificationUserId: banking.ownerUserId,
@@ -62,13 +65,20 @@ export class TasksService {
                 dueBalance: actualBalance * (banking.earningPercentage / 100),
                 earningPercentage: banking.earningPercentage,
             } as BankingAccounting);
+            let lastWeeklyAccounting = new Date().getTime();
+            if (banking && banking.weeklyAccounting && banking.weeklyAccounting.last()) {
+                const last = banking.weeklyAccounting.last();
+                if (last && last.week) {
+                    lastWeeklyAccounting = last.week.getTime();
+                }
+            }
             if (
                 !DateHelper.isInRange(
                     {
                         initialDate: monday,
                         finalDate: sunday,
                     },
-                    banking?.weeklyAccounting?.last()?.week.getTime(),
+                    lastWeeklyAccounting,
                 )
             ) {
                 banking.weeklyAccounting.push(accounting);
