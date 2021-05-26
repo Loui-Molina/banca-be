@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Ip, Param, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Ip, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UsersService } from '@users/users.service';
 import { User } from '@database/datamodels/schemas/user';
@@ -19,13 +19,13 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
 
-    @Get()
+    @Post()
     @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getAll(@Query() paginationQueryDto: PaginationQueryDto): Promise<Array<User>> {
+    getAll(@Body() paginationQueryDto: PaginationQueryDto): Promise<Array<User>> {
         const { limit, offset } = paginationQueryDto;
         return this.userService.getAll(limit, offset);
     }

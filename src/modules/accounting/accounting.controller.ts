@@ -18,13 +18,13 @@ import { AccountingService } from './accounting.service';
 export class AccountingController {
     constructor(private readonly accountingService: AccountingService) {}
 
-    @Get()
+    @Post()
     @Roles(Role.admin, Role.consortium)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: AccountingDto,
     })
-    getAll(@Query() paginationQueryDto: PaginationQueryDto): Promise<Array<AccountingDto>> {
+    getAll(@Body() paginationQueryDto: PaginationQueryDto): Promise<Array<AccountingDto>> {
         const { limit, offset } = paginationQueryDto;
         return this.accountingService.getAll(limit, offset);
     }

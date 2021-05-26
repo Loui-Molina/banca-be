@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Aggregate, Connection, Model } from 'mongoose';
 import { CreateTransactionDto } from '@transactions/dtos/create.transaction.dto';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 import { User } from '@database/datamodels/schemas/user';
@@ -15,6 +15,9 @@ import { ConstApp } from '@utils/const.app';
 import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
 import { BankingsService } from '@bankings/bankings.service';
 import { WebUser } from '@database/datamodels/schemas/web.user';
+import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
+import { ResponseQueryDto } from '@common/dto/response-query.dto';
+import { pipe } from 'rxjs';
 
 @Injectable()
 export class TransactionService {
@@ -29,16 +32,16 @@ export class TransactionService {
         private readonly bankingsService: BankingsService,
     ) {}
 
-    async getAll(loggedUser: User): Promise<Array<TransactionDto>> {
+    async getAll(loggedUser: User, req: PaginationQueryDto): Promise<ResponseQueryDto> {
         switch (loggedUser.role) {
-            case Role.admin:
+            /*case Role.admin:
                 return await this.getTransactionByAdmin();
             case Role.consortium:
-                return await this.getTransactionByConsortium(loggedUser);
+                return await this.getTransactionByConsortium(loggedUser);*/
             case Role.banker:
-                return await this.getTransactionByBanking(loggedUser);
-            case Role.webuser:
-                return await this.getTransactionByWebUser(loggedUser);
+                return await this.getTransactionByBanking(loggedUser, req);
+            /*case Role.webuser:
+                return await this.getTransactionByWebUser(loggedUser);*/
             default:
                 throw new BadRequestException();
         }
@@ -302,12 +305,12 @@ export class TransactionService {
         let results: TransactionDto[] = [];
         for (const consortium of consortiums) {
             results = results.concat(
-                await Promise.all(consortium.transactions.map((transaction) => this.mapToDto(transaction))),
+                await Promise.all(consortium.transactions.map((transaction) => this.mapper(transaction))),
             );
         }
         for (const banking of bankings) {
             results = results.concat(
-                await Promise.all(banking.transactions.map((transaction) => this.mapToDto(transaction))),
+                await Promise.all(banking.transactions.map((transaction) => this.mapper(transaction))),
             );
         }
         results.sort(function (a, b) {
@@ -326,11 +329,11 @@ export class TransactionService {
         const consortium = consortiums.pop();
         const bankings: Banking[] = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
         let results: TransactionDto[] = await Promise.all(
-            consortium.transactions.map((transaction) => this.mapToDto(transaction)),
+            consortium.transactions.map((transaction) => this.mapper(transaction)),
         );
         for (const banking of bankings) {
             results = results.concat(
-                await Promise.all(banking.transactions.map((transaction) => this.mapToDto(transaction))),
+                await Promise.all(banking.transactions.map((transaction) => this.mapper(transaction))),
             );
         }
         results.sort(function (a, b) {
@@ -341,20 +344,172 @@ export class TransactionService {
         return results;
     }
 
-    private async getTransactionByBanking(loggedUser: User): Promise<Array<TransactionDto>> {
-        const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
-        if (!banking) {
-            throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
+    private async getTransactionByBanking(loggedUser: User, req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        var filters = [];
+        if (req.filters && req.filters.length > 0) {
+            // filters.push({
+            //
+            // });
         }
-        const results: TransactionDto[] = await Promise.all(
-            banking.transactions.map((transaction) => this.mapToDto(transaction)),
-        );
-        results.sort(function (a, b) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        return results;
+        const r = (
+            await this.bankingModel.aggregate([
+                {
+                    $match: {
+                        ownerUserId: loggedUser._id,
+                        // $and:[
+                        //     {
+                        //         $or:[{status : 0, StatusDate1:{$gte:somedate}}]
+                        //     }
+                        // ]
+                    },
+                },
+                { $unwind: '$transactions' },
+                {
+                    $project: {
+                        _id: '$transactions._id',
+                        type: '$transactions.type',
+                        amount: '$transactions.amount',
+                        lastBalance: '$transactions.lastBalance',
+                        actualBalance: '$transactions.actualBalance',
+                        originId: '$transactions.originId',
+                        destinationId: '$transactions.destinationId',
+                        originObject: '$transactions.originObject',
+                        destinationObject: '$transactions.destinationObject',
+                        createdAt: '$transactions.createdAt',
+                        description: '$transactions.description',
+                    },
+                },
+                {
+                    $sort: { createdAt: -1 },
+                },
+                {
+                    $facet: {
+                        metadata: [{ $count: 'total' }],
+                        data: [{ $skip: req.offset }, { $limit: req.limit }],
+                    },
+                },
+            ])
+        ).pop();
+        r.data = await this.parseDataWithMapper(r.data, this.mapper);
+        const pipeline = this.bankingModel.aggregate();
+        // if (req.limit && req.offset) {
+        //     pipeline.skip(req.offset).limit(req.limit);
+        // }
+        const originName = 'ASD';
+        const destinationName = 'ASD';
+        // if () {
+        //
+        // }
+        const rsp = await pipeline
+            .match({
+                ownerUserId: loggedUser._id,
+            })
+            .unwind('$transactions')
+            .project({
+                _id: 'transactions._id',
+                type: '$transactions.type',
+                amount: '$transactions.amount',
+                lastBalance: '$transactions.lastBalance',
+                actualBalance: '$transactions.actualBalance',
+                originId: '$transactions.originId',
+                destinationId: '$transactions.destinationId',
+                originObject: '$transactions.originObject',
+                destinationObject: '$transactions.destinationObject',
+                createdAt: '$transactions.createdAt',
+                description: '$transactions.description',
+            })
+            .lookup({
+                from: 'consortiums',
+                localField: 'originId',
+                foreignField: '_id',
+                pipeline: [
+                    {
+                        $match: {
+                            name: originName,
+                        },
+                    },
+                ],
+                as: 'consortiumsOrigin',
+            })
+            .lookup({
+                from: 'consortiums',
+                localField: 'destinationId',
+                foreignField: '_id',
+                pipeline: [
+                    {
+                        $match: {
+                            name: destinationName,
+                        },
+                    },
+                ],
+                as: 'consortiumsDestination',
+            })
+            .lookup({
+                from: 'bankings',
+                localField: 'originId',
+                foreignField: '_id',
+                pipeline: [
+                    {
+                        $match: {
+                            name: originName,
+                        },
+                    },
+                ],
+                as: 'bankingsOrigin',
+            })
+            .lookup({
+                from: 'bankings',
+                localField: 'destinationId',
+                foreignField: '_id',
+                pipeline: [
+                    {
+                        $match: {
+                            name: destinationName,
+                        },
+                    },
+                ],
+                as: 'bankingsDestination',
+            })
+            .lookup({
+                from: 'webusers',
+                localField: 'originId',
+                foreignField: '_id',
+                pipeline: [
+                    {
+                        $match: {
+                            name: originName,
+                        },
+                    },
+                ],
+                as: 'webusersOrigin',
+            })
+            .lookup({
+                from: 'webusers',
+                localField: 'destinationId',
+                foreignField: '_id',
+                pipeline: [
+                    {
+                        $match: {
+                            name: destinationName,
+                        },
+                    },
+                ],
+                as: 'webusersDestination',
+            })
+            .sort({
+                createdAt: -1,
+            })
+            .facet({
+                metadata: [{ $count: 'total' }],
+                data: [{ $skip: req.offset }, { $limit: req.limit }],
+            })
+            .exec();
+        console.log(rsp);
+        return new ResponseQueryDto(r);
+    }
+
+    async parseDataWithMapper(data: any[], mapper: any) {
+        return await Promise.all(data.map((t) => mapper(t)));
     }
 
     private async getTransactionByWebUser(loggedUser: User): Promise<Array<TransactionDto>> {
@@ -363,7 +518,7 @@ export class TransactionService {
             throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
         }
         const results: TransactionDto[] = await Promise.all(
-            webuser.transactions.map((transaction) => this.mapToDto(transaction)),
+            webuser.transactions.map((transaction) => this.mapper(transaction)),
         );
         results.sort(function (a, b) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -373,7 +528,7 @@ export class TransactionService {
         return results;
     }
 
-    private async mapToDto(transaction: Transaction): Promise<TransactionDto> {
+    mapper = async (transaction: Transaction): Promise<TransactionDto> => {
         const {
             _id,
             type,
@@ -442,5 +597,5 @@ export class TransactionService {
             createdAt: createdAt,
             description: description,
         };
-    }
+    };
 }

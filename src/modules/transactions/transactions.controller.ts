@@ -7,10 +7,11 @@ import { ConstApp } from '@utils/const.app';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
-import { TransactionDto } from '@transactions/dtos/transaction.dto';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
 import { RolesGuard } from '@auth/guards/roles.guard';
+import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
+import { ResponseQueryDto } from '@common/dto/response-query.dto';
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -18,14 +19,14 @@ import { RolesGuard } from '@auth/guards/roles.guard';
 export class TransactionController {
     constructor(private readonly transactionService: TransactionService) {}
 
-    @Get()
+    @Post('getAll')
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
-        type: TransactionDto,
+        type: ResponseQueryDto,
     })
     @Roles(Role.admin, Role.consortium, Role.banker, Role.webuser)
-    getAll(@AuthUser() loggedUser: User): Promise<Array<TransactionDto>> {
-        return this.transactionService.getAll(loggedUser);
+    getAll(@Body() req: PaginationQueryDto, @AuthUser() loggedUser: User): Promise<ResponseQueryDto> {
+        return this.transactionService.getAll(loggedUser, req);
     }
 
     @Get('search')
