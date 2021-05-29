@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Ip, Param, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Ip, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserDto } from '@users/dtos/user.dto';
 import { UsersService } from '@users/users.service';
 import { User } from '@database/datamodels/schemas/user';
@@ -12,6 +12,7 @@ import { AuthUser } from '@common/decorators/auth.user.decorator';
 import * as mongoose from 'mongoose';
 import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
+import {ResponseQueryDto} from "@common/dto/response-query.dto";
 
 @ApiTags('users')
 @Controller('users')
@@ -19,15 +20,14 @@ import { ResponseDto } from '@utils/dtos/response.dto';
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
 
-    @Get()
+    @Post()
     @Roles(Role.admin)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getAll(@Query() paginationQueryDto: PaginationQueryDto): Promise<Array<User>> {
-        const { limit, offset } = paginationQueryDto;
-        return this.userService.getAll(limit, offset);
+    getAll(@Body() req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        return this.userService.getAll(req);
     }
 
     @Get('search')

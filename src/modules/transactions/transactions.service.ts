@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Aggregate, Connection, Model } from 'mongoose';
 import { CreateTransactionDto } from '@transactions/dtos/create.transaction.dto';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 import { User } from '@database/datamodels/schemas/user';
@@ -15,6 +15,10 @@ import { ConstApp } from '@utils/const.app';
 import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
 import { BankingsService } from '@bankings/bankings.service';
 import { WebUser } from '@database/datamodels/schemas/web.user';
+import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
+import { ResponseQueryDto } from '@common/dto/response-query.dto';
+import { pipe } from 'rxjs';
+import { parseDataWithMapper } from '@utils/utils-functions';
 
 @Injectable()
 export class TransactionService {
@@ -29,16 +33,16 @@ export class TransactionService {
         private readonly bankingsService: BankingsService,
     ) {}
 
-    async getAll(loggedUser: User): Promise<Array<TransactionDto>> {
+    async getAll(loggedUser: User, req: PaginationQueryDto): Promise<ResponseQueryDto> {
         switch (loggedUser.role) {
             case Role.admin:
-                return await this.getTransactionByAdmin();
+                return await this.getTransactionByAdmin(req);
             case Role.consortium:
-                return await this.getTransactionByConsortium(loggedUser);
+                return await this.getTransactionByConsortium(loggedUser, req);
             case Role.banker:
-                return await this.getTransactionByBanking(loggedUser);
+                return await this.getTransactionByBanking(loggedUser, req);
             case Role.webuser:
-                return await this.getTransactionByWebUser(loggedUser);
+                return await this.getTransactionByWebUser(loggedUser, req);
             default:
                 throw new BadRequestException();
         }
@@ -296,84 +300,183 @@ export class TransactionService {
         return await this.transactionModel.findById(id).exec();
     }
 
-    private async getTransactionByAdmin(): Promise<Array<TransactionDto>> {
-        const consortiums: Consortium[] = await this.consortiumModel.find().exec();
-        const bankings: Banking[] = await this.bankingModel.find().exec();
-        let results: TransactionDto[] = [];
-        for (const consortium of consortiums) {
-            results = results.concat(
-                await Promise.all(consortium.transactions.map((transaction) => this.mapToDto(transaction))),
-            );
+    private async getTransactionByAdmin(req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        //TODO union con todas las transacciones de banqueros
+        const filters = [];
+        if (req.filters) {
+            for (const filter of req.filters) {
+                filters.push({ [filter.key]: { $regex: filter.value } });
+            }
         }
-        for (const banking of bankings) {
-            results = results.concat(
-                await Promise.all(banking.transactions.map((transaction) => this.mapToDto(transaction))),
-            );
-        }
-        results.sort(function (a, b) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            return new Date(b.createdAt) - new Date(a.createdAt);
+        let rsp = this.consortiumModel.aggregate().unwind('$transactions').project({
+            _id: 'transactions._id',
+            type: '$transactions.type',
+            amount: '$transactions.amount',
+            lastBalance: '$transactions.lastBalance',
+            actualBalance: '$transactions.actualBalance',
+            originId: '$transactions.originId',
+            destinationId: '$transactions.destinationId',
+            originObject: '$transactions.originObject',
+            destinationObject: '$transactions.destinationObject',
+            createdAt: '$transactions.createdAt',
+            description: '$transactions.description',
         });
-        return results;
+        if (filters.length > 0) {
+            rsp.match({
+                $and: filters,
+            });
+        }
+        rsp = rsp
+            .sort({
+                createdAt: -1,
+            })
+            .facet({
+                metadata: [{ $count: 'total' }],
+                data: [{ $skip: req.offset }, { $limit: req.limit }],
+            })
+            .exec();
+        const response = (await rsp).last();
+        response.data = await parseDataWithMapper(response.data, this.mapper);
+        return new ResponseQueryDto(response);
     }
 
-    private async getTransactionByConsortium(loggedUser: User): Promise<Array<TransactionDto>> {
-        const consortiums = await this.consortiumService.getFiltered('ownerUserId', loggedUser._id);
-        if (consortiums.length === 0) {
-            throw new BadRequestException();
+    private async getTransactionByConsortium(loggedUser: User, req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        // TODO union con transacciones de banking
+        const filters = [];
+        if (req.filters) {
+            for (const filter of req.filters) {
+                filters.push({ [filter.key]: { $regex: filter.value } });
+            }
         }
-        const consortium = consortiums.pop();
-        const bankings: Banking[] = await this.bankingModel.find({ consortiumId: consortium._id }).exec();
-        let results: TransactionDto[] = await Promise.all(
-            consortium.transactions.map((transaction) => this.mapToDto(transaction)),
-        );
-        for (const banking of bankings) {
-            results = results.concat(
-                await Promise.all(banking.transactions.map((transaction) => this.mapToDto(transaction))),
-            );
+        let rsp = this.consortiumModel
+            .aggregate()
+            .match({
+                ownerUserId: loggedUser._id,
+            })
+            .unwind('$transactions')
+            .project({
+                _id: 'transactions._id',
+                type: '$transactions.type',
+                amount: '$transactions.amount',
+                lastBalance: '$transactions.lastBalance',
+                actualBalance: '$transactions.actualBalance',
+                originId: '$transactions.originId',
+                destinationId: '$transactions.destinationId',
+                originObject: '$transactions.originObject',
+                destinationObject: '$transactions.destinationObject',
+                createdAt: '$transactions.createdAt',
+                description: '$transactions.description',
+            });
+        if (filters.length > 0) {
+            rsp.match({
+                $and: filters,
+            });
         }
-        results.sort(function (a, b) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        return results;
+        rsp = rsp
+            .sort({
+                createdAt: -1,
+            })
+            .facet({
+                metadata: [{ $count: 'total' }],
+                data: [{ $skip: req.offset }, { $limit: req.limit }],
+            })
+            .exec();
+        const response = (await rsp).last();
+        response.data = await parseDataWithMapper(response.data, this.mapper);
+        return new ResponseQueryDto(response);
     }
 
-    private async getTransactionByBanking(loggedUser: User): Promise<Array<TransactionDto>> {
-        const banking = await this.bankingModel.findOne({ ownerUserId: loggedUser._id });
-        if (!banking) {
-            throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
+    private async getTransactionByBanking(loggedUser: User, req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        const filters = [];
+        if (req.filters) {
+            for (const filter of req.filters) {
+                filters.push({ [filter.key]: { $regex: filter.value } });
+            }
         }
-        const results: TransactionDto[] = await Promise.all(
-            banking.transactions.map((transaction) => this.mapToDto(transaction)),
-        );
-        results.sort(function (a, b) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        return results;
+        let rsp = this.bankingModel
+            .aggregate()
+            .match({
+                ownerUserId: loggedUser._id,
+            })
+            .unwind('$transactions')
+            .project({
+                _id: 'transactions._id',
+                type: '$transactions.type',
+                amount: '$transactions.amount',
+                lastBalance: '$transactions.lastBalance',
+                actualBalance: '$transactions.actualBalance',
+                originId: '$transactions.originId',
+                destinationId: '$transactions.destinationId',
+                originObject: '$transactions.originObject',
+                destinationObject: '$transactions.destinationObject',
+                createdAt: '$transactions.createdAt',
+                description: '$transactions.description',
+            });
+        if (filters.length > 0) {
+            rsp.match({
+                $and: filters,
+            });
+        }
+        rsp = rsp
+            .sort({
+                createdAt: -1,
+            })
+            .facet({
+                metadata: [{ $count: 'total' }],
+                data: [{ $skip: req.offset }, { $limit: req.limit }],
+            })
+            .exec();
+        const response = (await rsp).last();
+        response.data = await parseDataWithMapper(response.data, this.mapper);
+        return new ResponseQueryDto(response);
     }
 
-    private async getTransactionByWebUser(loggedUser: User): Promise<Array<TransactionDto>> {
-        const webuser = await this.webUserModel.findOne({ ownerUserId: loggedUser._id });
-        if (!webuser) {
-            throw new BadRequestException(ConstApp.ESTABLISHMENT_NOT_FOUND);
+    private async getTransactionByWebUser(loggedUser: User, req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        const filters = [];
+        if (req.filters) {
+            for (const filter of req.filters) {
+                filters.push({ [filter.key]: { $regex: filter.value } });
+            }
         }
-        const results: TransactionDto[] = await Promise.all(
-            webuser.transactions.map((transaction) => this.mapToDto(transaction)),
-        );
-        results.sort(function (a, b) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        return results;
+        let rsp = this.webUserModel
+            .aggregate()
+            .match({
+                ownerUserId: loggedUser._id,
+            })
+            .unwind('$transactions')
+            .project({
+                _id: 'transactions._id',
+                type: '$transactions.type',
+                amount: '$transactions.amount',
+                lastBalance: '$transactions.lastBalance',
+                actualBalance: '$transactions.actualBalance',
+                originId: '$transactions.originId',
+                destinationId: '$transactions.destinationId',
+                originObject: '$transactions.originObject',
+                destinationObject: '$transactions.destinationObject',
+                createdAt: '$transactions.createdAt',
+                description: '$transactions.description',
+            });
+        if (filters.length > 0) {
+            rsp.match({
+                $and: filters,
+            });
+        }
+        rsp = rsp
+            .sort({
+                createdAt: -1,
+            })
+            .facet({
+                metadata: [{ $count: 'total' }],
+                data: [{ $skip: req.offset }, { $limit: req.limit }],
+            })
+            .exec();
+        const response = (await rsp).last();
+        response.data = await parseDataWithMapper(response.data, this.mapper);
+        return new ResponseQueryDto(response);
     }
 
-    private async mapToDto(transaction: Transaction): Promise<TransactionDto> {
+    mapper = async (transaction: Transaction): Promise<TransactionDto> => {
         const {
             _id,
             type,
@@ -442,5 +545,5 @@ export class TransactionService {
             createdAt: createdAt,
             description: description,
         };
-    }
+    };
 }

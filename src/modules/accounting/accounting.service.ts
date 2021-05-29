@@ -7,9 +7,12 @@ import { Banking } from '@database/datamodels/schemas/banking';
 import { BankingAccounting } from '@database/datamodels/schemas/bankingAccounting';
 import { Consortium } from '@database/datamodels/schemas/consortium';
 import { AccountingDto } from './dto/accounting.dto';
+import {PaginationQueryDto} from "@common/dto/pagination-query.dto";
+import {parseDataWithMapper} from "@utils/utils-functions";
+import {ResponseQueryDto} from "@common/dto/response-query.dto";
 
 @Injectable()
-export class AccountingService implements Repository<any, AccountingDto> {
+export class AccountingService {
     /* TODO CHANGE REPOSITORY PARAMS*/
     private readonly logger: Logger = new Logger(AccountingService.name);
 
@@ -50,12 +53,15 @@ export class AccountingService implements Repository<any, AccountingDto> {
         return accountingDto;
     }
 
-    async getAll(limit?: number, offset?: number): Promise<Array<AccountingDto>> {
-        const pipeline = this.bankingModel.aggregate().match({});
-        if (limit && offset) {
-            pipeline.skip(offset).limit(limit);
+    async getAll(req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        const filters = [];
+        if (req.filters) {
+            for (const filter of req.filters) {
+                filters.push({ [filter.key]: { $regex: filter.value } });
+            }
         }
-        return pipeline
+        let rsp = this.bankingModel
+            .aggregate()
             .lookup({
                 from: 'consortiums',
                 localField: 'consortiumId',
@@ -74,7 +80,22 @@ export class AccountingService implements Repository<any, AccountingDto> {
                 percentage: '$weeklyAccounting.earningPercentage',
                 _id: 0,
             })
+        if (filters.length > 0) {
+            rsp.match({
+                $and: filters,
+            });
+        }
+        rsp = rsp
+            .sort({
+                createdAt: -1,
+            })
+            .facet({
+                metadata: [{ $count: 'total' }],
+                data: [{ $skip: req.offset }, { $limit: req.limit }],
+            })
             .exec();
+        const response = (await rsp).last();
+        return new ResponseQueryDto(response);
     }
 
     async update(dto: AccountingDto): Promise<AccountingDto> {
