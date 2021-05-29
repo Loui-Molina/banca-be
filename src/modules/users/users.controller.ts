@@ -12,6 +12,7 @@ import { AuthUser } from '@common/decorators/auth.user.decorator';
 import * as mongoose from 'mongoose';
 import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
 import { ResponseDto } from '@utils/dtos/response.dto';
+import {ResponseQueryDto} from "@common/dto/response-query.dto";
 
 @ApiTags('users')
 @Controller('users')
@@ -25,9 +26,8 @@ export class UsersController {
         description: ConstApp.DEFAULT_GET_OK,
         type: User,
     })
-    getAll(@Body() paginationQueryDto: PaginationQueryDto): Promise<Array<User>> {
-        const { limit, offset } = paginationQueryDto;
-        return this.userService.getAll(limit, offset);
+    getAll(@Body() req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        return this.userService.getAll(req);
     }
 
     @Get('search')
