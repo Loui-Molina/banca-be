@@ -14,6 +14,7 @@ import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { ResumeSellsDto } from '@betting.panel/dtos/resume.sells.dto';
 import { ClaimBetDto } from '@betting.panel/dtos/claim.bet.dto';
 import { LimitVerifyDto } from '@betting.panel/dtos/limit.verify.dto';
+import { LimitsDto } from '@betting.panel/dtos/limits.dto';
 
 @ApiTags('betting-panel')
 @Controller('betting-panel')
@@ -79,6 +80,16 @@ export class BettingPanelController {
     @Roles(Role.banker, Role.webuser)
     verifyLimit(@Body() dto: LimitVerifyDto, @AuthUser() loggedUser: User): Promise<number> {
         return this.bettingPanelService.verifyLimit(dto, loggedUser);
+    }
+
+    @Get('limits')
+    @ApiFoundResponse({
+        description: ConstApp.DEFAULT_GET_OK,
+        type: LimitsDto,
+    })
+    @Roles(Role.banker, Role.webuser)
+    getLimits(@AuthUser() loggedUser: User): Promise<LimitsDto> {
+        return this.bettingPanelService.getLimits(loggedUser);
     }
 
     @Put('cancel')

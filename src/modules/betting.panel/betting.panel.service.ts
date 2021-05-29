@@ -7,7 +7,7 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, ObjectId } from 'mongoose';
 import { User } from '@database/datamodels/schemas/user';
 import { Bet } from '@database/datamodels/schemas/bet';
 import { Play } from '@database/datamodels/schemas/play';
@@ -32,6 +32,10 @@ import { WebUser } from '@database/datamodels/schemas/web.user';
 import { Role } from '@database/datamodels/enums/role';
 import { BankingLotteryDto } from '@lotteries/banking/dtos/banking.lottery.dto';
 import { WebUserLotteryService } from '@lotteries/web-user/web-user.lottery.service';
+import { BettingLimitDto } from '@database/dto/betting.limit.dto';
+import { PlayNumbersDto } from '@database/dto/play.numbers.dto';
+import { DefaultLimit, LimitsDto, RemainingLimit } from '@betting.panel/dtos/limits.dto';
+import { WebUserLotteryDto } from '@lotteries/web-user/dtos/web-user.lottery.dto';
 
 @Injectable()
 export class BettingPanelService {
@@ -193,6 +197,40 @@ export class BettingPanelService {
             finalLimit = 0;
         }
         return finalLimit;
+    }
+
+    async getLimits(loggedUser: User): Promise<LimitsDto> {
+        const lotteries: BankingLotteryDto[] = await this.getLotteriesForUser(loggedUser);
+        let defaultLimits: DefaultLimit[] = [];
+        for (const lottery of lotteries) {
+            defaultLimits = defaultLimits.concat(
+                lottery.bettingLimits
+                    .filter((limits: BettingLimitDto) => limits.status === true)
+                    .map(
+                        (limit: BettingLimitDto) =>
+                            <DefaultLimit>{
+                                lotto: lottery._id,
+                                limit: limit.betAmount,
+                                playType: limit.playType,
+                            },
+                    ),
+            );
+        }
+
+        const today: Date = new Date();
+        today.setHours(0, 0, 0, 0);
+        const playPool: PlayPool[] = await this.playPoolModel.find({ date: { $gte: today } });
+        const remainingLimits: RemainingLimit[] = playPool.map(
+            (playPool: PlayPool) =>
+                <RemainingLimit>{
+                    limit: playPool.amount,
+                    play: playPool.playNumbers,
+                    lotto: playPool.lotteryId,
+                },
+        );
+        /*TODO RENAME RemainingLimit TO DailyPlayPool
+         *  TODO ADD FILTER BY ACTUAL LOTTERIES*/
+        return <LimitsDto>{ defaultLimits, remainingLimits };
     }
 
     async create(dto: CreateBetDto, loggedUser: User): Promise<BetDto> {
@@ -524,6 +562,16 @@ export class BettingPanelService {
         };
     }
 
+    private async getLotteriesForUser(loggedUser: User): Promise<Array<BankingLotteryDto | WebUserLotteryDto>> {
+        if (loggedUser.role === Role.banker) {
+            return await this.bankingLotteryService.getAll(loggedUser);
+        }
+        if (loggedUser.role === Role.webuser) {
+            return await this.webUserLotteryService.getAll(loggedUser);
+        }
+        return null;
+    }
+
     private async canCancelTicket(bet: Bet): Promise<boolean> {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -572,4 +620,11 @@ enum PosibleSums {
     'amount',
     'amountWin',
     'count',
+}
+
+interface Limits {
+    lottery: 'ObjectId';
+    plays: PlayNumbersDto;
+    playType: PlayTypes;
+    left: number;
 }

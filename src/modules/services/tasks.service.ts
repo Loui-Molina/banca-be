@@ -30,7 +30,7 @@ export class TasksService {
         this.deleteOldPlayPools();
     }
 
-    @Cron(CronExpression.EVERY_MINUTE /*'59 23 * * 0'*/)
+    @Cron(/*CronExpression.EVERY_MINUTE*/ '59 23 * * 0')
     async bankingBalance(): Promise<void> {
         //Day variables
         const sunday: number = new Date().setHours(23, 59, 59, 0);
