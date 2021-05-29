@@ -7,9 +7,9 @@ import { Banking } from '@database/datamodels/schemas/banking';
 import { BankingAccounting } from '@database/datamodels/schemas/bankingAccounting';
 import { Consortium } from '@database/datamodels/schemas/consortium';
 import { AccountingDto } from './dto/accounting.dto';
-import {PaginationQueryDto} from "@common/dto/pagination-query.dto";
-import {parseDataWithMapper} from "@utils/utils-functions";
-import {ResponseQueryDto} from "@common/dto/response-query.dto";
+import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
+import { parseDataWithMapper } from '@utils/utils-functions';
+import { ResponseQueryDto } from '@common/dto/response-query.dto';
 
 @Injectable()
 export class AccountingService {
@@ -79,7 +79,7 @@ export class AccountingService {
                 dueBalance: '$weeklyAccounting.dueBalance',
                 percentage: '$weeklyAccounting.earningPercentage',
                 _id: 0,
-            })
+            });
         if (filters.length > 0) {
             rsp.match({
                 $and: filters,

@@ -11,7 +11,7 @@ import { ObjectId } from 'mongoose';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
 import { AccountingService } from './accounting.service';
-import {ResponseQueryDto} from "@common/dto/response-query.dto";
+import { ResponseQueryDto } from '@common/dto/response-query.dto';
 
 @Controller('accounting')
 @ApiTags('accounting')
