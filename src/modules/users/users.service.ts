@@ -7,9 +7,12 @@ import { UserDto } from '@users/dtos/user.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { ConstApp } from '@utils/const.app';
 import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
+import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
+import { parseDataWithMapper } from '@utils/utils-functions';
+import { ResponseQueryDto } from '@common/dto/response-query.dto';
 
 @Injectable()
-export class UsersService implements Repository<User, UserDto> {
+export class UsersService {
     private readonly logger: Logger = new Logger(UsersService.name);
 
     constructor(
@@ -18,14 +21,32 @@ export class UsersService implements Repository<User, UserDto> {
         @InjectConnection(ConstApp.USER) private readonly connection: Connection,
     ) {}
 
-    async getAll(limit: number, offset: number): Promise<Array<User>> {
-        return this.userModel
-            .find({
-                role: { $ne: Role.sysadmin },
+    async getAll(req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        const filters = [];
+        if (req.filters) {
+            for (const filter of req.filters) {
+                filters.push({ [filter.key]: { $regex: filter.value } });
+            }
+        }
+        let rsp = this.userModel.aggregate().match({
+            role: { $ne: Role.sysadmin },
+        });
+        if (filters.length > 0) {
+            rsp.match({
+                $and: filters,
+            });
+        }
+        rsp = rsp
+            .sort({
+                createdAt: -1,
             })
-            .skip(offset)
-            .limit(limit)
+            .facet({
+                metadata: [{ $count: 'total' }],
+                data: [{ $skip: req.offset }, { $limit: req.limit }],
+            })
             .exec();
+        const response = (await rsp).last();
+        return new ResponseQueryDto(response);
     }
 
     async find(q: string, value: any): Promise<User[]> {

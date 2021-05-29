@@ -11,6 +11,7 @@ import { ObjectId } from 'mongoose';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
 import { AccountingService } from './accounting.service';
+import {ResponseQueryDto} from "@common/dto/response-query.dto";
 
 @Controller('accounting')
 @ApiTags('accounting')
@@ -18,15 +19,14 @@ import { AccountingService } from './accounting.service';
 export class AccountingController {
     constructor(private readonly accountingService: AccountingService) {}
 
-    @Post()
+    @Post('/getAll')
     @Roles(Role.admin, Role.consortium)
     @ApiFoundResponse({
         description: ConstApp.DEFAULT_GET_OK,
         type: AccountingDto,
     })
-    getAll(@Body() paginationQueryDto: PaginationQueryDto): Promise<Array<AccountingDto>> {
-        const { limit, offset } = paginationQueryDto;
-        return this.accountingService.getAll(limit, offset);
+    getAll(@Body() req: PaginationQueryDto): Promise<ResponseQueryDto> {
+        return this.accountingService.getAll(req);
     }
 
     @Get('/get')
