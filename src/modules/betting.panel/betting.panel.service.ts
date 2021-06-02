@@ -226,6 +226,7 @@ export class BettingPanelService {
                     limit: playPool.amount,
                     play: playPool.playNumbers,
                     lotto: playPool.lotteryId,
+                    playType: playPool.playType,
                 },
         );
         /*TODO RENAME RemainingLimit TO DailyPlayPool

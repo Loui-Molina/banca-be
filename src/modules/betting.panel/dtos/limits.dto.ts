@@ -16,5 +16,6 @@ export interface DefaultLimit {
 export interface RemainingLimit {
     lotto: ObjectId;
     play: PlayNumbersDto;
+    playType: PlayTypes;
     limit: number;
 }
