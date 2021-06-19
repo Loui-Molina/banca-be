@@ -11,12 +11,14 @@ import { Banking } from '@database/datamodels/schemas/banking';
 import { AuthUserService } from '@auth.user/auth.user.service';
 import { ConsortiumService } from '@consortiums/consortium.service';
 import { ConstApp } from '@utils/const.app';
+import { BankingPercentage } from '@database/datamodels/schemas/banking.percentage';
 
 @Injectable()
 export class BankingsService {
     constructor(
         private readonly usersService: UsersService,
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
+        @InjectModel(BankingPercentage.name) private readonly bankingPercentageModel: Model<BankingPercentage>,
         private readonly userAuthService: AuthUserService,
         private readonly consortiumService: ConsortiumService,
     ) {}
@@ -95,7 +97,7 @@ export class BankingsService {
             showPercentage,
             name,
             status,
-            earningPercentage,
+            bankingPercentage,
             header,
             footer,
             cancellationTime,
@@ -109,6 +111,17 @@ export class BankingsService {
 
         let createdUser: User;
         let newObject: Banking;
+        const bankingPercentages: BankingPercentage[] = [];
+        for (const item of bankingPercentage) {
+            bankingPercentages.push(
+                await new this.bankingPercentageModel({
+                    amount: item.amount,
+                    playType: item.playType,
+                    modificationUserId: loggedUser._id,
+                    creationUserId: loggedUser._id,
+                }),
+            );
+        }
         try {
             createdUser = (await this.userAuthService.signUp(createBankingDto.user, loggedUser)).user;
             newObject = new this.bankingModel({
@@ -119,7 +132,7 @@ export class BankingsService {
                 showPercentage: showPercentage,
                 creationUserId: loggedUser._id,
                 modificationUserId: loggedUser._id,
-                earningPercentage,
+                bankingPercentage: bankingPercentages,
                 cancellationTime,
                 header,
                 footer,
@@ -133,6 +146,7 @@ export class BankingsService {
             if (createdUser) {
                 await this.usersService.delete(createdUser._id);
             }
+            console.log('E', e);
             throw new BadRequestException(ConstApp.SOMETHING_WRONG_EXCEPTION);
         }
         return newObject;
@@ -147,9 +161,21 @@ export class BankingsService {
         //FIXME TRANSACTION
         await this.userAuthService.updateUser(updateBankingDto.ownerUserId, updateBankingDto.user, loggedUser);
         const banking: Banking = await this.bankingModel.findById(updateBankingDto._id);
+        const bankingPercentages: BankingPercentage[] = [];
+        for (const item of updateBankingDto.bankingPercentage) {
+            bankingPercentages.push(
+                await new this.bankingPercentageModel({
+                    amount: item.amount,
+                    playType: item.playType,
+                    modificationUserId: loggedUser._id,
+                    creationUserId: loggedUser._id,
+                }),
+            );
+        }
         banking.name = updateBankingDto.name;
         banking.status = updateBankingDto.status;
         banking.showPercentage = updateBankingDto.showPercentage;
+        banking.bankingPercentage = bankingPercentages;
         banking.cancellationTime = updateBankingDto.cancellationTime;
         banking.consortiumId = loggedUser.role === Role.admin ? consortium._id : banking.consortiumId;
         banking.modificationUserId = loggedUser._id;
@@ -177,7 +203,7 @@ export class BankingsService {
         return (await this.getSingleFiltered('ownerUserId', loggedUser._id, loggedUser)).name;
     }
 
-    private async mapBanking(banking: BankingDto): Promise<BankingDto> {
+    private async mapBanking(banking: BankingDto | Banking): Promise<BankingDto> {
         // we get the username of the assigned user
         const bankingUser = await this.usersService.findOne('_id', banking.ownerUserId);
         return {
@@ -189,7 +215,7 @@ export class BankingsService {
             showPercentage: banking.showPercentage,
             startOfOperation: banking.startOfOperation,
             status: banking.status,
-            earningPercentage: banking.earningPercentage,
+            bankingPercentage: banking.bankingPercentage,
             ownerUsername: bankingUser ? bankingUser.username : null,
             ownerName: bankingUser ? bankingUser.name : null,
             header: banking.header,

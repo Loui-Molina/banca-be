@@ -62,8 +62,8 @@ export class TasksService {
                 modificationUserId: banking.ownerUserId,
                 creationUserId: banking.ownerUserId,
                 week: new Date(sunday),
-                dueBalance: actualBalance * (banking.earningPercentage / 100),
-                earningPercentage: banking.earningPercentage,
+                dueBalance: actualBalance * (0 / 100), // TODO new percentage
+                earningPercentage: 0, // TODO new percentage
             } as BankingAccounting);
             let lastWeeklyAccounting = new Date().getTime();
             if (banking && banking.weeklyAccounting && banking.weeklyAccounting.last()) {

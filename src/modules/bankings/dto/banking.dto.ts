@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { IsBoolean, IsDate, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
+import {IsArray, IsBoolean, IsDate, IsEnum, IsMongoId, IsNumber, IsObject, IsOptional, IsString} from 'class-validator';
+import {PlayTypes} from "@database/datamodels/enums/play.types";
+import {BankingPercentage} from "@database/datamodels/schemas/banking.percentage";
+import {PlayNumbersDto} from "@database/dto/play.numbers.dto";
 
 export class BankingDto {
     @ApiProperty() @IsMongoId() @IsOptional() _id?: ObjectId;
@@ -13,7 +16,9 @@ export class BankingDto {
     @ApiProperty() @IsDate() @IsOptional() createdAt?: Date;
     @ApiProperty() @IsDate() @IsOptional() startOfOperation?: Date;
     @ApiProperty() @IsBoolean() @IsOptional() showPercentage?: boolean;
-    @ApiProperty() @IsNumber() @IsOptional() earningPercentage?: number;
+    @ApiProperty({ type: [BankingPercentage] })
+    @IsArray()
+    bankingPercentage: BankingPercentage[];
     @ApiProperty() @IsNumber() @IsOptional() cancellationTime?: number;
     @ApiProperty() @IsString() header: string;
     @ApiProperty() @IsString() footer: string;

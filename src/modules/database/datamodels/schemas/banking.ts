@@ -8,6 +8,9 @@ import { Bet, BetSchema } from '@database/datamodels/schemas/bet';
 import { Lottery, LotterySchema } from '@database/datamodels/schemas/lottery';
 import { ApiProperty } from '@nestjs/swagger';
 import { BankingAccounting, BankingAccountingSchema } from '@database/datamodels/schemas/bankingAccounting';
+import {BankingPercentage, BankingPercentageSchema} from "@database/datamodels/schemas/banking.percentage";
+import {Play} from "@database/datamodels/schemas/play";
+import {IsArray} from "class-validator";
 
 @Schema({ timestamps: true, optimisticConcurrency: true, useNestedStrict: true, strict: true, collection: 'bankings' })
 export class Banking extends Document implements DataObject {
@@ -30,10 +33,11 @@ export class Banking extends Document implements DataObject {
     @ApiProperty() @Prop({ required: true }) header: string;
     @ApiProperty() @Prop({ required: true }) footer: string;
 
-    // Que porcentaje se le paga a la banca por cada jugada
-    @Prop({ min: 0, max: 100 }) earningPercentage?: number;
-    // Que porcentaje se le paga a la banca por el total de sus ventas
-    @Prop({ min: 0, max: 100 }) fallbackPercentage?: number;
+    // Que porcentaje se le paga a la banca por cada jugada y su tipo
+    @ApiProperty({ type: [BankingPercentage] })
+    @IsArray()
+    @Prop({ type: [BankingPercentageSchema] })
+    bankingPercentage: BankingPercentage[];
     @Prop() showPercentage?: boolean;
 
     @Prop({ type: [BankingAccountingSchema] }) weeklyAccounting?: BankingAccounting[];
