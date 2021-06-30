@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Repository } from '@common/interfaces/repository';
 import { Model, ObjectId } from 'mongoose';
 import { User } from '@database/datamodels/schemas/user';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,8 +7,8 @@ import { BankingAccounting } from '@database/datamodels/schemas/bankingAccountin
 import { Consortium } from '@database/datamodels/schemas/consortium';
 import { AccountingDto } from './dto/accounting.dto';
 import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
-import { parseDataWithMapper } from '@utils/utils-functions';
 import { ResponseQueryDto } from '@common/dto/response-query.dto';
+import { FilterQueryTypeEnumDto } from '@common/dto/filter-query-type-enum.dto';
 
 @Injectable()
 export class AccountingService {
@@ -55,9 +54,14 @@ export class AccountingService {
 
     async getAll(req: PaginationQueryDto): Promise<ResponseQueryDto> {
         const filters = [];
+        let interval: { initial: Date; final: Date };
         if (req.filters) {
             for (const filter of req.filters) {
-                filters.push({ [filter.key]: { $regex: filter.value } });
+                if (filter.type === FilterQueryTypeEnumDto.daterange) {
+                    interval = { initial: filter.value[0], final: filter.value[1] };
+                } else {
+                    filters.push({ [filter.key]: { $regex: filter.value } });
+                }
             }
         }
         let rsp = this.bankingModel
@@ -81,21 +85,25 @@ export class AccountingService {
                 _id: 0,
             });
         if (filters.length > 0) {
+            const appliedFilters: any = [filters];
+            if (interval) {
+                appliedFilters.push({ week: { $gte: interval.initial, $lte: interval.final } });
+            }
             rsp.match({
-                $and: filters,
+                $and: appliedFilters,
             });
         }
         rsp = rsp
             .sort({
                 createdAt: -1,
             })
-            .facet({
-                metadata: [{ $count: 'total' }],
-                data: [{ $skip: req.offset }, { $limit: req.limit }],
-            })
+            /*            .facet({
+metadata: [{ $count: 'total' }],
+data: [{ $skip: req?.offset }, { $limit: req?.limit }],
+})*/
             .exec();
-        const response = (await rsp).last();
-        return new ResponseQueryDto(response);
+        const response = (await rsp)?.last();
+        return response ? new ResponseQueryDto(response) : null;
     }
 
     async update(dto: AccountingDto): Promise<AccountingDto> {
