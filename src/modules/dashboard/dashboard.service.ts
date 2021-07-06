@@ -356,7 +356,10 @@ export class DashboardService {
         };
     }
 
-    async getBankingsStatistics(loggedUser: User): Promise<DashboardBankingDto[]> {
+    async getBankingsStatistics(
+        loggedUser: User,
+        interval: { initial: Date; final: Date },
+    ): Promise<DashboardBankingDto[]> {
         let bankings: Array<Banking> = [];
         if (loggedUser.role === Role.consortium) {
             //If is consortium
@@ -372,24 +375,30 @@ export class DashboardService {
         }
         const bankingsDto: DashboardBankingDto[] = [];
         for await (const banking of bankings) {
-            const pendingPrizes = await this.sumBets(banking.bets, [BetStatus.winner], PosibleSums.amountWin);
+            const bets = banking.bets.filter((value) =>
+                interval && interval.initial && interval.final
+                    ? new Date(interval.initial).getTime() < new Date(value.date).getTime() &&
+                      new Date(value.date).getTime() < new Date(interval.final).getTime()
+                    : true,
+            );
+            const pendingPrizes = await this.sumBets(bets, [BetStatus.winner], PosibleSums.amountWin);
             const balance = await banking.calculateBalance();
             bankingsDto.push({
                 _id: banking._id,
                 name: banking.name,
-                cancelled: await this.sumBets(banking.bets, [BetStatus.cancelled], PosibleSums.count),
-                expired: await this.sumBets(banking.bets, [BetStatus.expired], PosibleSums.count),
-                claimed: await this.sumBets(banking.bets, [BetStatus.claimed], PosibleSums.count),
-                pending: await this.sumBets(banking.bets, [BetStatus.pending], PosibleSums.count),
-                winner: await this.sumBets(banking.bets, [BetStatus.winner], PosibleSums.count),
-                loser: await this.sumBets(banking.bets, [BetStatus.loser], PosibleSums.count),
-                total: banking.bets.length,
+                cancelled: await this.sumBets(bets, [BetStatus.cancelled], PosibleSums.count),
+                expired: await this.sumBets(bets, [BetStatus.expired], PosibleSums.count),
+                claimed: await this.sumBets(bets, [BetStatus.claimed], PosibleSums.count),
+                pending: await this.sumBets(bets, [BetStatus.pending], PosibleSums.count),
+                winner: await this.sumBets(bets, [BetStatus.winner], PosibleSums.count),
+                loser: await this.sumBets(bets, [BetStatus.loser], PosibleSums.count),
+                total: bets.length,
                 profits: await this.sumBets(
-                    banking.bets,
+                    bets,
                     [BetStatus.expired, BetStatus.claimed, BetStatus.pending, BetStatus.winner, BetStatus.loser],
                     PosibleSums.amount,
                 ),
-                prizes: await this.sumBets(banking.bets, [BetStatus.claimed], PosibleSums.amountWin),
+                prizes: await this.sumBets(bets, [BetStatus.claimed], PosibleSums.amountWin),
                 pendingPrizes: pendingPrizes,
                 balance: balance,
                 red: balance - pendingPrizes,

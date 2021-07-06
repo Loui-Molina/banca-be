@@ -25,8 +25,8 @@ export class AccountingController {
         description: ConstApp.DEFAULT_GET_OK,
         type: AccountingDto,
     })
-    getAll(@Body() req: PaginationQueryDto): Promise<ResponseQueryDto> {
-        return this.accountingService.getAll(req);
+    getAll(@Body() req: PaginationQueryDto, @AuthUser() loggedUser: User): Promise<ResponseQueryDto> {
+        return this.accountingService.getAll(req, loggedUser);
     }
 
     @Get('/get')

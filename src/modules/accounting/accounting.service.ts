@@ -8,6 +8,8 @@ import { Consortium } from '@database/datamodels/schemas/consortium';
 import { AccountingDto } from './dto/accounting.dto';
 import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
 import { ResponseQueryDto } from '@common/dto/response-query.dto';
+import { DashboardService } from '@dashboard/dashboard.service';
+import { DashboardBankingDto } from '@dashboard/dtos/dashboard.banking.dto';
 import { FilterQueryTypeEnumDto } from '@common/dto/filter-query-type-enum.dto';
 
 @Injectable()
@@ -19,6 +21,7 @@ export class AccountingService {
         @InjectModel(Banking.name) private readonly bankingModel: Model<Banking>,
         @InjectModel(Consortium.name) private readonly consortiumModel: Model<Consortium>,
         @InjectModel(BankingAccounting.name) private readonly bankingAccountingModel: Model<BankingAccounting>,
+        private readonly dashboardService: DashboardService,
     ) {}
 
     async create(dto: any, user: User): Promise<AccountingDto> {
@@ -52,7 +55,7 @@ export class AccountingService {
         return accountingDto;
     }
 
-    async getAll(req: PaginationQueryDto): Promise<ResponseQueryDto> {
+    async getAll(req: PaginationQueryDto, loggedUser: User): Promise<ResponseQueryDto> {
         const filters = [];
         let interval: { initial: Date; final: Date };
         if (req.filters) {
@@ -64,46 +67,12 @@ export class AccountingService {
                 }
             }
         }
-        let rsp = this.bankingModel
-            .aggregate()
-            .lookup({
-                from: 'consortiums',
-                localField: 'consortiumId',
-                foreignField: '_id',
-                as: 'consortiums',
-            })
-            .unwind('$weeklyAccounting')
-            .project({
-                bankingId: '$_id',
-                weekId: '$weeklyAccounting._id',
-                week: '$weeklyAccounting.week',
-                isPayed: '$weeklyAccounting.isPayed',
-                banking: '$name',
-                consortium: { $arrayElemAt: ['$consortiums.name', 0] },
-                dueBalance: '$weeklyAccounting.dueBalance',
-                percentage: '$weeklyAccounting.earningPercentage',
-                _id: 0,
-            });
-        if (filters.length > 0) {
-            const appliedFilters: any = [filters];
-            if (interval) {
-                appliedFilters.push({ week: { $gte: interval.initial, $lte: interval.final } });
-            }
-            rsp.match({
-                $and: appliedFilters,
-            });
-        }
-        rsp = rsp
-            .sort({
-                createdAt: -1,
-            })
-            /*            .facet({
-metadata: [{ $count: 'total' }],
-data: [{ $skip: req?.offset }, { $limit: req?.limit }],
-})*/
-            .exec();
-        const response = (await rsp)?.last();
-        return response ? new ResponseQueryDto(response) : null;
+
+        const bankingsStatistics: DashboardBankingDto[] = await this.dashboardService.getBankingsStatistics(
+            loggedUser,
+            interval,
+        );
+        return bankingsStatistics ? new ResponseQueryDto({ data: bankingsStatistics }) : null;
     }
 
     async update(dto: AccountingDto): Promise<AccountingDto> {

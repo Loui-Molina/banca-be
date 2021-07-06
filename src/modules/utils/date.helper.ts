@@ -64,6 +64,10 @@ export class DateHelper {
         return epochTimestamp - WEEK_LENGHT * 1000;
     }
 
+    static getDayBefore(epochTimestamp: number): number {
+        return epochTimestamp - DAY_LENGTH * 1000;
+    }
+
     static isInRange(range: { initialDate: Date | number; finalDate: Date | number }, date: Date | number): boolean {
         const initialDateTime = range.initialDate instanceof Date ? this.getTime(range.initialDate) : range.initialDate;
         const finalDateTime = range.finalDate instanceof Date ? this.getTime(range.finalDate) : range.finalDate;

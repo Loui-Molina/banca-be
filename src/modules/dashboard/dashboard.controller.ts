@@ -52,7 +52,7 @@ export class DashboardController {
     })
     @Roles(Role.admin, Role.consortium)
     getBankingsStatistics(@AuthUser() loggedUser: User): Promise<DashboardBankingDto[]> {
-        return this.dashboardService.getBankingsStatistics(loggedUser);
+        return this.dashboardService.getBankingsStatistics(loggedUser, null);
     }
 
     @Get('webuser-statistics')

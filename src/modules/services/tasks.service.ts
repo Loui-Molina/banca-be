@@ -7,7 +7,7 @@ import { Banking } from '@database/datamodels/schemas/banking';
 import { BetStatus } from '@database/datamodels/enums/bet.status';
 import { Message } from '@database/datamodels/schemas/message';
 import { PlayPool } from '@database/datamodels/schemas/playPool';
-import { DateHelper, MINUTE_LENGTH, SECOND_LENGTH } from '@utils/date.helper';
+import { DateHelper, SECOND_LENGTH } from '@utils/date.helper';
 import { BankingAccounting } from '@database/datamodels/schemas/bankingAccounting';
 import { Transaction } from '@database/datamodels/schemas/transaction';
 
@@ -30,24 +30,24 @@ export class TasksService {
         this.deleteOldPlayPools();
     }
 
-    @Cron(/*CronExpression.EVERY_MINUTE*/ '59 23 * * 0')
+    // @Cron('59 11 */1 */1 *')
     async bankingBalance(): Promise<void> {
         //Day variables
-        const sunday: number = new Date().setHours(23, 59, 59, 0);
-        const monday: number = new Date(DateHelper.getWeekBefore(sunday) + SECOND_LENGTH).getTime();
+        const dayEnd: number = new Date().setHours(23, 59, 59, 0);
+        const dayStart: number = new Date(DateHelper.getDayBefore(dayEnd) + SECOND_LENGTH).getTime();
 
         //bankings list
         const bankings: Array<Banking> = await this.bankingModel.find().exec();
 
         // weekly earnings total amount
-        let weeklyTotal: number;
+        let dailyTotal: number;
 
         bankings.forEach((banking: Banking) => {
             const inRangeTransactions: Transaction[] = banking.transactions.filter((transaction: Transaction) =>
                 DateHelper.isInRange(
                     {
-                        initialDate: monday,
-                        finalDate: sunday,
+                        initialDate: dayStart,
+                        finalDate: dayEnd,
                     },
                     new Date(transaction.createdAt).getTime(),
                 ),
@@ -61,24 +61,26 @@ export class TasksService {
                 isPayed: false,
                 modificationUserId: banking.ownerUserId,
                 creationUserId: banking.ownerUserId,
-                week: new Date(sunday),
-                dueBalance: actualBalance * (0 / 100), // TODO new percentage
+                week: new Date(dayEnd),
+                dueBalance: actualBalance, // TODO new percentage
                 earningPercentage: 0, // TODO new percentage
             } as BankingAccounting);
-            let lastWeeklyAccounting = new Date().getTime();
-            if (banking && banking.weeklyAccounting && banking.weeklyAccounting.last()) {
-                const last = banking.weeklyAccounting.last();
-                if (last && last.week) {
-                    lastWeeklyAccounting = last.week.getTime();
-                }
-            }
+            const lastWeeklyAccounting = new Date().getTime();
+            /*
+      if (banking && banking.weeklyAccounting && banking.weeklyAccounting.last()) {
+          const last = banking.weeklyAccounting.last();
+          if (last && last.week) {
+              lastWeeklyAccounting = last.week.getTime();
+          }
+      }
+*/
             if (
                 !DateHelper.isInRange(
                     {
-                        initialDate: monday,
-                        finalDate: sunday,
+                        initialDate: dayStart,
+                        finalDate: dayEnd,
                     },
-                    lastWeeklyAccounting,
+                    banking?.weeklyAccounting?.last()?.week.getTime(),
                 )
             ) {
                 banking.weeklyAccounting.push(accounting);

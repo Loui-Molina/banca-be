@@ -1,14 +1,12 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model, ObjectId } from 'mongoose';
-import { Repository } from '@common/interfaces/repository';
 import { User } from '@database/datamodels/schemas/user';
 import { UserDto } from '@users/dtos/user.dto';
 import { Role } from '@database/datamodels/enums/role';
 import { ConstApp } from '@utils/const.app';
 import { SomethingWentWrongException } from '@common/exceptions/something.went.wrong.exception';
 import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
-import { parseDataWithMapper } from '@utils/utils-functions';
 import { ResponseQueryDto } from '@common/dto/response-query.dto';
 
 @Injectable()

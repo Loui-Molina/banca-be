@@ -6,6 +6,7 @@ import { BankingAccounting, BankingAccountingSchema } from '@database/datamodels
 import { Consortium, ConsortiumSchema } from '@database/datamodels/schemas/consortium';
 import { AccountingController } from './accounting.controller';
 import { AccountingService } from './accounting.service';
+import { DashboardModule } from '@dashboard/dashboard.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { AccountingService } from './accounting.service';
             [{ name: BankingAccounting.name, schema: BankingAccountingSchema }],
             ConstApp.BANKING,
         ),
+        DashboardModule,
     ],
     controllers: [AccountingController],
     providers: [AccountingService],
