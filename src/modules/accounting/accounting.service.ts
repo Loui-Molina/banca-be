@@ -11,7 +11,6 @@ import { ResponseQueryDto } from '@common/dto/response-query.dto';
 import { DashboardService } from '@dashboard/dashboard.service';
 import { DashboardBankingDto } from '@dashboard/dtos/dashboard.banking.dto';
 import { FilterQueryTypeEnumDto } from '@common/dto/filter-query-type-enum.dto';
-import { FilterQueryDto } from '@common/dto/filter-query.dto';
 
 @Injectable()
 export class AccountingService {
@@ -56,11 +55,11 @@ export class AccountingService {
         return accountingDto;
     }
 
-    async getAll(req: FilterQueryDto[], loggedUser: User): Promise<ResponseQueryDto> {
+    async getAll(req: PaginationQueryDto, loggedUser: User): Promise<ResponseQueryDto> {
         const filters = [];
         let interval: { initial: Date; final: Date };
-        if (req) {
-            for (const filter of req) {
+        if (req.filters) {
+            for (const filter of req.filters) {
                 if (filter.type === FilterQueryTypeEnumDto.daterange) {
                     interval = { initial: filter.value[0], final: filter.value[1] };
                 } else {

@@ -5,13 +5,13 @@ import { RolesGuard } from '@auth/guards/roles.guard';
 import { ConstApp } from '@utils/const.app';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@database/datamodels/enums/role';
+import { PaginationQueryDto } from '@common/dto/pagination-query.dto';
 import { AccountingDto } from '@src/modules/accounting/dto/accounting.dto';
 import { ObjectId } from 'mongoose';
 import { AuthUser } from '@common/decorators/auth.user.decorator';
 import { User } from '@database/datamodels/schemas/user';
 import { AccountingService } from './accounting.service';
 import { ResponseQueryDto } from '@common/dto/response-query.dto';
-import { FilterQueryDto } from '@common/dto/filter-query.dto';
 
 @Controller('accounting')
 @ApiTags('accounting')
@@ -25,7 +25,7 @@ export class AccountingController {
         description: ConstApp.DEFAULT_GET_OK,
         type: AccountingDto,
     })
-    getAll(@Body() req: FilterQueryDto[], @AuthUser() loggedUser: User): Promise<ResponseQueryDto> {
+    getAll(@Body() req: PaginationQueryDto, @AuthUser() loggedUser: User): Promise<ResponseQueryDto> {
         return this.accountingService.getAll(req, loggedUser);
     }
 
