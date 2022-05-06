@@ -24,7 +24,7 @@ export class UsersAdminInitializeService implements OnModuleInit {
             signUpCredentialsDto.password = this.configService.get('SYS_ADMIN_PASSWORD');
             signUpCredentialsDto.username = this.configService.get('SYS_ADMIN_USER');
             signUpCredentialsDto.role = Role.sysadmin;
-            this.authService.signUp(signUpCredentialsDto, null);
+            await this.authService.signUp(signUpCredentialsDto, null);
             this.logger.debug('User created admin correctly');
         }
     }

@@ -1,5 +1,5 @@
-const tar = require('tar');
-const rimraf = require('rimraf');
+// import rimraf from 'rimraf';
+import tar from 'tar';
 
 tar.create(
     {
@@ -9,7 +9,7 @@ tar.create(
     },
     ['banca-api'],
     /*() => {
-      /!*TODO uncomment went tgz is usable*!/
-      // rimraf.sync('../banca-fe/local-packages/banca-api');
-  },*/
+  /!*TODO uncomment went tgz is usable*!/
+  // rimraf.sync('../banca-fe/local-packages/banca-api');
+},*/
 );
